@@ -18,8 +18,10 @@ __realloc (void *r, size_t n)
 	struct mem_chunk *p;
 	long sz;
 
-	/* obscure features: realloc(NULL,n) is the same as malloc(n)
-	 *  		     realloc(p, 0) is the same as free(p)
+	/* obscure features:
+	 * 
+	 * realloc(NULL,n) is the same as malloc(n)
+	 * realloc(p, 0) is the same as free(p)
 	 */
 	if (!r)
 		return __malloc(n);
@@ -32,7 +34,7 @@ __realloc (void *r, size_t n)
 	p = ((struct mem_chunk *) r) - 1;
 	sz = (n + sizeof(struct mem_chunk) + 7) & ~7;
 
-	if (p->size > sz + ((sizeof(struct mem_chunk) + 7) & ~7))
+	if (p->size > (sz + ((2 * sizeof(struct mem_chunk) + 7) & ~7)))
 	{
 		/* resize down */
 		void *newr;
