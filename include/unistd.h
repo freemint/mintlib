@@ -428,8 +428,8 @@ __EXTERN char *	initstate __PROTO((unsigned int __seed, char *__arg_state,
 __EXTERN void	psignal	__PROTO((int, const char *));
 __EXTERN long 	random	__PROTO((void));
 __EXTERN long	_read	__PROTO((int, void *, unsigned long));
-__EXTERN int	readlink __PROTO((char *__filename, char *__linkto, int __siz));
-__EXTERN int	__readlink __PROTO((char *__filename, char *__linkto, int __siz));
+__EXTERN int	readlink __PROTO((const char *__filename, char *__linkto, int __siz));
+__EXTERN int	__readlink __PROTO((const char *__filename, char *__linkto, int __siz));
 __EXTERN void *	sbrk	__PROTO((size_t));
 __EXTERN void *	_sbrk	__PROTO((long));
 __EXTERN int	setegid	__PROTO((int));

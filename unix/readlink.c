@@ -22,9 +22,7 @@
  */
 
 int
-__readlink(unxname, buf, siz)
-	char *unxname, *buf;
-	int siz;
+__readlink (const char *unxname, char *buf, int siz)
 {
 	long r;
 	size_t l;
