@@ -22,6 +22,8 @@
 #include <mintbind.h>
 #include <limits.h>
 
+#include "lib.h" /* _unx2dos */
+
 #include "tzstruct.h"
 #include "new_york.h"
 
@@ -170,12 +172,11 @@ int __tzload (register const char* name, register struct state* sp)
       extern int __libc_unix_names;
       char* filename = (char*) name;
       char buf[PATH_MAX];
-      extern int _unx2dos __P ((char*, char*, unsigned long));
       
       if (!__libc_unix_names) 
         {
           filename = buf;
-          (void) _unx2dos ((char*) name, filename, PATH_MAX);
+          (void) _unx2dos ((char*) name, filename, sizeof (buf));
         }
             
       if ((fid = Fopen (filename, O_RDONLY)) < 0)
