@@ -152,9 +152,9 @@ const char* const _sys_errlist[] = {
   N_("Argument list too long"),		/* 125 - E2BIG */
   N_("Interrupted system call restarted"),	/* 126 - ERESTART */
   N_("Channel number out of range"),	/* 127 - ECHRNG */
-  N_("Sound system is not locked"),	/* 128 - ESNDNOTLOCK */
+  N_("Interrupted function call"),	/* 128 - EINTR */
   N_("Sound system is already locked"), /* 129 - ESNDLOCKED */
-  N_("Interrupted function call"),	/* 130 - EINTR */
+  N_("Sound system is not locked"),	/* 130 - ESNDNOTLOCK */
   N_("Level 2 not synchronized"),	/* 131 - EL2NSYNC */
   N_("Level 3 halted"),			/* 132 - EL3HLT */
   N_("Level 3 reset"),			/* 133 - EL3RST */
