@@ -1,6 +1,7 @@
 /* gethostname -- for now, fake by looking in environment */
 /* (written by Eric R. Smith, placed in the public domain) */
 
+#include <errno.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>

@@ -3,6 +3,7 @@
 
 /* Modified by Guido Flohr: If no domain name available
    return the empty string instead of "(none)".  */
+#include <errno.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
