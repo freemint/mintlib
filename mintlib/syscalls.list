@@ -49,7 +49,7 @@ ioctl			int	int int ptr
 stty			int	int ptr
 gtty			int	int ptr
 ftruncate		int	int long
-creat			int	ptr short
+creat			int	ptr int
 fcntl			int	int int ...
 setsid			int
 setuid			int	int
@@ -80,10 +80,10 @@ setreuid		int	int int
 chdir			int	ptr
 access			int	ptr int
 getgroups		int	int ptr
-chown			int	ptr short short
+chown			int	ptr int int
 select			int	int ptr ptr ptr
 getrusage		int	int ptr
-initgroups		int	ptr short
+initgroups		int	ptr int
 setgroups		int	long ptr
 getrlimit		int	int ptr
 setrlimit		int	int ptr
@@ -94,7 +94,7 @@ utime			int	ptr ptr
 mkdir			int	ptr int
 stat			int	ptr ptr
 sync			int
-chmod			int	ptr short
+chmod			int	ptr int
 unlink			int	ptr
 chroot			int	ptr
 fchmod			int	int long
