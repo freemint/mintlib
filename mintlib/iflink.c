@@ -15,6 +15,9 @@
 #include <net/if.h>
 #include <mint/iflink.h>
 
+#include <limits.h>
+#include "lib.h" /* _unx2dos */
+
 /*
  * link device to network interface.
  */
@@ -22,7 +25,6 @@ int
 if_link (device, ifname)
 	char *device, *ifname;
 {
-	extern int _unx2dos (const char *, char *);
 	struct iflink ifl;
 	int sockfd;
 	long r;
@@ -31,7 +33,7 @@ if_link (device, ifname)
 	if (sockfd < 0) {
 		return -1;
 	}
-	_unx2dos (device, ifl.device);
+	_unx2dos (device, ifl.device, PATH_MAX);
 	strncpy (ifl.ifname, ifname, sizeof (ifl.ifname));
 	r = ioctl (sockfd, SIOCSIFLINK, &ifl);
 	if (r < 0) {

@@ -52,6 +52,10 @@ static char sccsid[] = "@(#)pty.c	5.6 (Berkeley) 5/10/91";
 #include <osbind.h>
 #include <mintbind.h>
 
+#include <limits.h>
+#include "lib.h" /* _dos2unx */
+
+
 int
 openpty(amaster, aslave, name, termp, winp)
 	int *amaster, *aslave;
@@ -96,11 +100,8 @@ openpty(amaster, aslave, name, termp, winp)
 
 					*amaster = master;
 					*aslave = slave;
-					if (name) {
-						extern int _dos2unx (char *,
-							char *);
-						_dos2unx (link, name);
-					}
+					if (name)
+						_dos2unx (link, name, PATH_MAX); /* XXX */
 					if (termp)
 						(void) tcsetattr(slave, 
 							TCSAFLUSH, termp);
