@@ -41,12 +41,16 @@
 #define powerof2(x)	((((x)-1)&(x))==0)
 
 /* Macros for min/max.  */
+#ifndef MIN
 #define MIN(a,b) \
     ({__typeof__ (a) _a = (a); __typeof__ (b) _b = (b);     \
-	      _a < _b ? _a : _b; })
+	      _a < _b ? _a : _b; }
+#endif
+#ifndef MAX
 #define MAX(a,b) \
     ({__typeof__ (a) _a = (a); __typeof__ (b) _b = (b);  \
 	      _a > _b ? _a : _b; })
+#endif
 
 /* Unit of `st_blocks'.  */
 #define DEV_BSIZE       512
