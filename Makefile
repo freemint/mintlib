@@ -67,6 +67,7 @@ install-include: all install-include-recursive
 install-man: all install-man-recursive
 
 clean: clean-recursive
+	rm -r .deps includepath CFILES
 
 bakclean: bakclean-recursive
 
