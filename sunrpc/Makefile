@@ -14,7 +14,7 @@ srcdir = .
 top_srcdir = ..
 subdir = sunrpc
 
-SUBDIRS =
+SUBDIRS = 
 
 have_check = no
 
@@ -22,7 +22,12 @@ include $(top_srcdir)/configvars
 
 default: all
 
-all-here: rpcgen rpcinfo
+rpcsvc = bootparam_prot.x mount.x rex.x rusers.x yppasswd.x key_prot.x \
+nfs_prot.x rquota.x sm_inter.x klm_prot.x nlm_prot.x rstat.x spray.x
+rpcsvc_hdrs = $(rpcsvc:.x=.h)
+rpcsvc_funcs = $(addprefix x, $(rpcsvc:.x=.c))
+
+all-here: rpcgen rpcinfo $(rpcsvc_hdrs:.h=.stmp) $(rpcsvc_funcs:.c=.stmp)
 
 dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
@@ -47,13 +52,68 @@ rpcgen: $(RPCGENOBJS) $(CRT0) $(libs)
 rpcinfo: $(RPCINFOOBJS) $(CRT0) $(libs)
 	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(RPCINFOOBJS) -o $@ $(LIBS)
 
+install: all-here install-rpcsvc-programs install-rpcsvc-headers
+
+uninstall: uninstall-rpcsvc-programs uninstall-rpcsvc-headers
+
+# Not suitable for cross-compiling.
 ifndef CROSS
-install: all-here
+rpcgen-cmd = $(srcdir)/rpcgen `$(CC) -print-file-name=cpp | \
+			       sed -e "s,/cpp$$,," \
+			           -e "s,^cpp$$,," \
+			           -e "s,^..*,-Y &,"`
+
+# XDR headers.
+$(rpcsvc:%.x=%.h): %.h: %.stmp
+	@:
+%.stmp: %.x rpcgen
+	-@rm -f $(@stmp=T) $@
+	$(rpcgen-cmd) -h $< -o $(@:stmp=T)
+	$(MOVEIFCHANGE) $(@:stmp=T) $(@:stmp=h)
+	touch $@
+
+# XDR functions.
+$(rcpsvc:%.x=x%.c): x%.c: x%.stmp
+	@:
+x%.stmp: %.x rpcgen
+	-@rm -f $(@:stmp=T) $@
+	$(rpcgen-cmd) -c $< -o $(@:stmp=T)
+	$(MOVEIFCHANGE) $(@:stmp=T) $(@:stmp=c)
+	touch $@
+	
+install-rpcsvc-programs: rpcgen rpcinfo
 	$(mkinstalldirs) $(bindir)
 	$(INSTALL) -m 755 rpcgen $(bindir)
 	$(mkinstalldirs) $(sbindir)
 	$(INSTALL) -m 755 rpcinfo $(sbindir)
+
+uninstall-rpcsvc-programs:
+	rm -f $(bindir)/rpcgen
+	rm -f $(sbindir)/rpcinfo
+	
+# End of non-cross section.
+else
+# Cross section
+
+install-rpcsvc-programs:
+
+uninstall-rpcsvc-programs:
+
+# End of cross section
 endif
+
+install-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
+	$(mkinstalldirs) $(includedir)/rpcsvc
+	for header in $(rpcsvc_hdrs); do \
+	  $(INSTALL) -m 644 $$header $(includedir)/rpcsvc; \
+	  echo "$(INSTALL) -m 644 $$header $(includedir)/rpcsvc"; \
+	done; \
+
+uninstall-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
+	for header in $(rpcsvc_hdrs); do \
+	  rm -f $(includedir)/rpcsvc/$$header; \
+	  echo "rm -f $(includedir)/rpcsvc/$$header"; \
+	done; \
 
 install-man:
 	sections=""; \

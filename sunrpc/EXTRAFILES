@@ -4,4 +4,9 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES 
+SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES netname.c \
+publickey.c bootparam_prot.x mount.x rex.x rusers.x yppasswd.x key_prot.x \
+nfs_prot.x rquota.x sm_inter.x klm_prot.x nlm_prot.x rstat.x spray.x \
+bootparam_prot.h mount.h rex.h rusers.h yppasswd.h key_prot.h \
+nfs_prot.h rquota.h sm_inter.h klm_prot.h nlm_prot.h rstat.h spray.h \
+RPCSVCCFILES

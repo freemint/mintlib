@@ -1,0 +1,6 @@
+# XDR source files for librpcsvc.a.
+
+RPCSVCCFILES = xbootparam_prot.c xmount.c xrex.c xrusers.c xyppasswd.c \
+xkey_prot.c xnfs_prot.c xrquota.c xsm_inter.c xklm_prot.c xnlm_prot.c \
+xrstat.c xspray.c
+
