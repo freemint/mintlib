@@ -8,12 +8,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #include <limits.h>
 #include <dirent.h>

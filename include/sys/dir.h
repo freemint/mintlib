@@ -11,9 +11,14 @@
         <sys/dir.h> is provided for BSD compatibility\n"
 #endif
 
-/* note that the presence of _SYS_DIR_H causes dirent.h to
- * behave differently
- */
 #include <sys/dirent.h>
+
+#define direct		dirent
+#define d_fileno	d_ino
+#define d_namlen	d_reclen
+
+#define DIRSIZ(dp) 	__DIRENTSIZ((dp)->d_namlen)
+#define MAXNAMLEN	_LIB_NAME_MAX
+
 
 #endif

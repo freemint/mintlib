@@ -6,11 +6,7 @@
  * Written by Eric R. Smith and placed in the public domain
  */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #include <limits.h>
 #include <dirent.h>
@@ -19,12 +15,12 @@
 /* not POSIX */
 
 void
-seekdir(dirp, loc)
+seekdir(dirp, pos)
 	DIR *dirp;
-	off_t loc;
+	long int pos;
 {
 	rewinddir(dirp);
-	while (dirp->buf.d_off != loc) {
+	while (dirp->buf.d_off != pos) {
 		if (!readdir(dirp))
 			break;
 	}

@@ -247,6 +247,7 @@ __EXTERN char* strsep __P ((char** __stringp,
 
 #ifdef	__USE_GNU
 /* Compare S1 and S2 as strings holding name & indices/version numbers.  */
+__EXTERN int __strverscmp __P ((const char* __s1, const char* __s2));
 __EXTERN int strverscmp __P ((const char* __s1, const char* __s2));
 
 /* Return a string describing the meaning of the signal number in SIG.  */

@@ -18,7 +18,7 @@
 
 /* not POSIX */
 
-off_t
+long int
 telldir(dirp)
 	DIR *dirp;
 {

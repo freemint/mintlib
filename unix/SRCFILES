@@ -4,18 +4,109 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = access.c alarm.c chdir.c chmod.c chown.c chroot.c close.c \
-closedir.c creat.c dup.c dup2.c execve.c fchmod.c fchown.c fcntl.c flock.c \
-fork.c fstat.c fsync.c ftruncate.c getdomainname.c getdtabl.c getegid.c \
-geteuid.c getgid.c getgroups.c gethostid.c gethostname.c getitimer.c \
-getpagesize.c getpgrp.c getpid.c getppid.c getpriority.c getrlimit.c \
-getrusage.c gettimeofday.c getuid.c gtty.c ioctl.c kill.c killpg.c \
-link.c lseek.c lstat.c mkdir.c mkfifo.c mknod.c nice.c open.c opendir.c \
-pause.c pipe.c poll.c ptrace.c read.c readdir.c readlink.c reboot.c rename.c rmdir.c \
-sbrk.c select.c setegid.c seteuid.c setgid.c setgroups.c setitimer.c \
-setpgid.c setpgrp.c setpriority.c setregid.c setreuid.c setrlimit.c setsid.c \
-settimeofday.c setuid.c sigaction.c sigblock.c signal.c \
-sigpause.c sigpending.c sigprocmask.c sigreturn.c sigsetmask.c sigsuspend.c \
-sigvec.c stat.c statfs.c stime.c stty.c symlink.c sync.c sysinfo.c time.c \
-times.c truncate.c umask.c uname.c unlink.c utime.c utimes.c vfork.S wait.c \
-wait3.c wait4.c waitpid.c write.c
+SRCFILES = \
+	access.c \
+	alarm.c \
+	chdir.c \
+	chmod.c \
+	chown.c \
+	chroot.c \
+	close.c \
+	creat.c \
+	dup.c \
+	dup2.c \
+	execve.c \
+	fchmod.c \
+	fchown.c \
+	fcntl.c \
+	flock.c \
+	fork.c \
+	fstat.c \
+	fsync.c \
+	ftruncate.c \
+	getdomainname.c \
+	getdtabl.c \
+	getegid.c \
+	geteuid.c \
+	getgid.c \
+	getgroups.c \
+	gethostid.c \
+	gethostname.c \
+	getitimer.c \
+	getpagesize.c \
+	getpgrp.c \
+	getpid.c \
+	getppid.c \
+	getpriority.c \
+	getrlimit.c \
+	getrusage.c \
+	gettimeofday.c \
+	getuid.c \
+	gtty.c \
+	ioctl.c \
+	kill.c \
+	killpg.c \
+	link.c \
+	lseek.c \
+	lstat.c \
+	mkdir.c \
+	mkfifo.c \
+	mknod.c \
+	nice.c \
+	open.c \
+	pause.c \
+	pipe.c \
+	poll.c \
+	ptrace.c \
+	read.c \
+	readlink.c \
+	reboot.c \
+	rename.c \
+	rmdir.c \
+	sbrk.c \
+	select.c \
+	setegid.c \
+	seteuid.c \
+	setgid.c \
+	setgroups.c \
+	setitimer.c \
+	setpgid.c \
+	setpgrp.c \
+	setpriority.c \
+	setregid.c \
+	setreuid.c \
+	setrlimit.c \
+	setsid.c \
+	settimeofday.c \
+	setuid.c \
+	sigaction.c \
+	sigblock.c \
+	signal.c \
+	sigpause.c \
+	sigpending.c \
+	sigprocmask.c \
+	sigreturn.c \
+	sigsetmask.c \
+	sigsuspend.c \
+	sigvec.c \
+	stat.c \
+	statfs.c \
+	stime.c \
+	stty.c \
+	symlink.c \
+	sync.c \
+	sysinfo.c \
+	time.c \
+	times.c \
+	truncate.c \
+	umask.c \
+	uname.c \
+	unlink.c \
+	utime.c \
+	utimes.c \
+	vfork.S \
+	wait.c \
+	wait3.c \
+	wait4.c \
+	waitpid.c \
+	write.c

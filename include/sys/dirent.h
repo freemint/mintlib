@@ -3,110 +3,135 @@
 #ifndef _SYS_DIRENT_H
 #define _SYS_DIRENT_H 1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 #ifndef _TYPES_H
-# ifdef __TURBOC__
-#  include <sys\types.h>
-# else
-#  include <sys/types.h>
-# endif
+# include <sys/types.h>
 #endif
 
 #ifndef NAME_MAX
 # include <limits.h>
 #endif
 
-#ifdef __MINT__
-# ifndef _OSTRUCT_H
-#  include <ostruct.h>
+__BEGIN_DECLS
+
+#include <bits/types.h>
+
+/* This file defines `struct dirent'.
+
+   It defines the macro `_DIRENT_HAVE_D_NAMLEN' iff there is a `d_namlen'
+   member that gives the length of `d_name'.
+
+   It defines the macro `_DIRENT_HAVE_D_RECLEN' iff there is a `d_reclen'
+   member that gives the size of the entire directory entry.
+
+   It defines the macro `_DIRENT_HAVE_D_OFF' iff there is a `d_off'
+   member that gives the file offset of the next directory entry.
+
+   It defines the macro `_DIRENT_HAVE_D_TYPE' iff there is a `d_type'
+   member that gives the type of the file.
+ */
+
+#include <bits/dirent.h>
+
+#if (defined __USE_BSD || defined __USE_MISC) && !defined d_fileno
+# define d_ino	d_fileno		 /* Backward compatibility.  */
+#endif
+
+/* These macros extract size information from a `struct dirent *'.
+   They may evaluate their argument multiple times, so it must not
+   have side effects.  Each of these may involve a relatively costly
+   call to `strlen' on some systems, so these values should be cached.
+
+   _D_EXACT_NAMLEN (DP)	returns the length of DP->d_name, not including
+   its terminating null character.
+
+   _D_ALLOC_NAMLEN (DP)	returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
+   that is, the allocation size needed to hold the DP->d_name string.
+   Use this macro when you don't need the exact length, just an upper bound.
+   This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
+   */
+
+#ifdef _DIRENT_HAVE_D_NAMLEN
+# define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
+# define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
+#else
+# define _D_EXACT_NAMLEN(d) (strlen ((d)->d_name))
+# ifdef _DIRENT_HAVE_D_RECLEN
+#  define _D_ALLOC_NAMLEN(d) (((char *) (d) + (d)->d_reclen) - &(d)->d_name[0])
+# else
+#  define _D_ALLOC_NAMLEN(d) (sizeof (d)->d_name > 1 ? sizeof (d)->d_name : \
+			      _D_EXACT_NAMLEN (d) + 1)
 # endif
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#ifndef _LIB_NAME_MAX
-#  define _LIB_NAME_MAX NAME_MAX
-#endif
+/* This is the data type of directory stream objects.
+   The actual structure is opaque to users.  */
+typedef struct __dirstream DIR;
 
-struct dirent {
-       long            d_ino;          /* garbage under TOS */
-       off_t           d_off;          /* position in directory  */
-       short           d_reclen;       /* for us, length of d_name */
-#ifndef __MINT__
-/* the following (except for d_name) are unique to TOS */
-       struct dirent   *d_next;        /* ptr to next struct dirent in list */
-       unsigned char   d_attribute;    /* file modes from Fsfirst()  */
-       unsigned short  d_time, d_date; /* TOS date and time for file */
-       long            d_size;         /* file size */
-       char            d_name[1];
-#else
-       char            d_name[NAME_MAX+1];
-#endif
-};
+/* Open a directory stream on NAME.
+   Return a DIR stream on the directory, or NULL if it could not be opened.  */
+extern DIR *__opendir (__const char *__name) __THROW;
+extern DIR *opendir (__const char *__name) __THROW;
 
-#ifndef __MINT__
-typedef struct _DIR {
-       struct dirent *D_list;          /* list of directory entries */
-       struct dirent *D_curpos;        /* current position in list  */
-       char          *D_path;          /* path to this directory    */
-       struct _DIR   *D_nxtdir;        /* next DIR in opendir chain */
-} DIR;
+/* Close the directory stream DIRP.
+   Return 0 if successful, -1 if not.  */
+extern int __closedir (DIR *__dirp) __THROW;
+extern int closedir (DIR *__dirp) __THROW;
 
-#else
+/* Read a directory entry from DIRP.  Return a pointer to a `struct
+   dirent' describing the entry, or NULL for EOF or error.  The
+   storage returned may be overwritten by a later readdir call on the
+   same DIR stream.  */
+extern struct dirent *__readdir (DIR *__dirp) __THROW;
+extern struct dirent *readdir (DIR *__dirp) __THROW;
 
-typedef struct _DIR {
-	short	status;		/* status of the search so far: */
-#define _INSEARCH	0	/* need to call Fsnext for a new entry */
-#define _STARTSEARCH	1	/* Fsfirst called once, successfully */
-#define _NMFILE		2	/* no more files in directory */
-	_DTA	dta;		/* TOS DTA for this directory */
-	char	*dirname;	/* directory of the search (used under
-				   TOS for rewinddir) */
-	struct dirent buf;	/* dirent struct for this directory */
-	long	handle;		/* Dreaddir handle */
-} DIR;
-
-#endif /* __MINT__ */
-
-#ifndef __MINT__
-#define __DIRENTSIZ(x) (sizeof(struct dirent) + (x) + 1)
-#else
-#define __DIRENTSIZ(x) (sizeof(struct dirent))
-#endif
-
-/* allow BSD emulation via sys/dir.h */
-
-#ifdef _SYS_DIR_H
-#define direct		dirent
-#define d_fileno	d_ino
-#define d_namlen	d_reclen
-
-#define DIRSIZ(dp) 	__DIRENTSIZ((dp)->d_namlen)
-#define MAXNAMLEN	_LIB_NAME_MAX
-#endif
-
-__EXTERN DIR *		opendir	__PROTO((const char *dirname));
-__EXTERN struct dirent *readdir	__PROTO((DIR *dirp));
-__EXTERN struct dirent *__readdir	__PROTO((DIR *dirp));
 #if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
-__EXTERN int readdir_r __PROTO ((DIR *__dirp, struct dirent *__entry,
-			         struct dirent **__result));
-#endif /* not __USE_POSIX and not __USE_MISC */
-__EXTERN void		rewinddir __PROTO((DIR *dirp));
-__EXTERN int		closedir  __PROTO((DIR *dirp));
-__EXTERN off_t	telldir	__PROTO((DIR *dirp));
-__EXTERN void	seekdir	__PROTO((DIR *dirp, off_t loc));
-__EXTERN int	alphasort __PROTO((struct dirent **, struct dirent **));
-
-#ifdef __cplusplus
-}
+extern int readdir_r (DIR *__restrict __dirp,
+		      struct dirent *__restrict __entry,
+		      struct dirent **__restrict __result) __THROW;
 #endif
+
+/* Rewind DIRP to the beginning of the directory.  */
+extern void rewinddir (DIR *__dirp) __THROW;
+
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
+
+/* Seek to position POS on DIRP.  */
+extern void seekdir (DIR *__dirp, long int __pos) __THROW;
+
+/* Return the current position of DIRP.  */
+extern long int telldir (DIR *__dirp) __THROW;
+
+#endif /* Use BSD or misc or xopen.  */
+
+#if defined __USE_BSD || defined __USE_MISC
+
+/* Scan the directory DIR, calling SELECTOR on each directory entry.
+   Entries for which SELECT returns nonzero are individually malloc'd,
+   sorted using qsort with CMP, and collected in a malloc'd array in
+   *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
+extern int scandir (__const char *__restrict __dir,
+		    struct dirent ***__restrict __namelist,
+		    int (*__selector) (__const struct dirent *),
+		    int (*__cmp) (__const void *, __const void *)) __THROW;
+
+/* Function to compare two `struct dirent's alphabetically.  */
+extern int alphasort (__const void *__e1, __const void *__e2) __THROW;
+
+# ifdef __USE_GNU
+/* Function to compare two `struct dirent's by name & version.  */
+extern int versionsort (__const void *__e1, __const void *__e2) __THROW;
+# endif
+
+#endif /* Use BSD or misc.  */
+
+
+__END_DECLS
 
 #endif /* _SYS_DIRENT_H */

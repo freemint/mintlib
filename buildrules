@@ -43,6 +43,7 @@ $(INCLUDES) $(DEFS) $(DEFS-$(<F)) $(DEFS-$(DIRSTEM)))
 -include $(top_srcdir)/CFILES
 
 cryptdir   := $(top_srcdir)/crypt
+direntdir  := $(top_srcdir)/dirent
 gmpdir     := $(top_srcdir)/gmp
 logindir   := $(top_srcdir)/login
 mintlibdir := $(top_srcdir)/mintlib
@@ -60,12 +61,13 @@ sysvipcdir := $(top_srcdir)/sysvipc
 termiosdir := $(top_srcdir)/termios
 timedir    := $(top_srcdir)/time
 unixdir    := $(top_srcdir)/unix
-srcdirs   := $(cryptdir) $(gmpdir) $(logindir) $(mintlibdir) \
+srcdirs   := $(cryptdir) $(direntdir) $(gmpdir) $(logindir) $(mintlibdir) \
   $(miscdir) $(posixdir) $(pwdgrpdir) $(shadowdir) $(signaldir) $(socketdir) \
   $(stdiiodir) $(stdiodir) $(stdlibdir) $(stringdir) $(sysvipcdir) $(termiosdir) \
   $(timedir) $(unixdir)
 
 CRYPTSRCS   := $(addprefix $(cryptdir)/,   $(CRYPTCFILES))
+DIRENTSRCS  := $(addprefix $(direntdir)/,  $(DIRENTCFILES))
 GMPSRCS     := $(addprefix $(gmpdir)/,     $(GMPCFILES))
 LOGINSRCS   := $(addprefix $(logindir)/,   $(LOGINCFILES))
 MINTLIBSRCS := $(addprefix $(mintlibdir)/, $(MINTLIBCFILES))
@@ -83,7 +85,7 @@ SYSVIPCSRCS := $(addprefix $(sysvipcdir)/, $(SYSVIPCCFILES))
 TERMIOSSRCS := $(addprefix $(termiosdir)/, $(TERMIOSCFILES))
 TIMESRCS    := $(addprefix $(timedir)/,    $(TIMECFILES))
 UNIXSRCS    := $(addprefix $(unixdir)/,    $(UNIXCFILES))
-SRCS := $(CRYPTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
+SRCS := $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
   $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(SHADOWSRCS) $(SIGNALSRCS) \
   $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) $(STRINGSRCS) \
   $(SYSVIPCSRCS) $(TERMIOSSRCS) $(TIMESRCS) $(UNIXSRCS)
@@ -106,6 +108,7 @@ CFLAGS-crypt = -O3 -fexpensive-optimizations
 DEFS-stdio_init.c = -D_STATBUF_ST_BLKSIZE
 
 CRYPTOBJS   := $(addsuffix .o, $(basename $(notdir $(CRYPTSRCS))))
+DIRENTOBJS  := $(addsuffix .o, $(basename $(notdir $(DIRENTSRCS))))
 GMPOBJS     := $(addsuffix .o, $(basename $(notdir $(GMPSRCS))))
 LOGINOBJS   := $(addsuffix .o, $(basename $(notdir $(LOGINSRCS))))
 MINTLIBOBJS := $(addsuffix .o, $(basename $(notdir $(MINTLIBSRCS))))
@@ -123,11 +126,11 @@ SYSVIPCOBJS := $(addsuffix .o, $(basename $(notdir $(SYSVIPCSRCS))))
 TERMIOSOBJS := $(addsuffix .o, $(basename $(notdir $(TERMIOSSRCS))))
 TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
 UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
-OBJS := $(CRYPTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
+OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) \
   $(SYSVIPCOBJS) $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
-LIBCOBJS := $(CRYPTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
+LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) \
   $(TIMEOBJS) $(UNIXOBJS)
@@ -167,7 +170,7 @@ uninstall-man:
 ifndef top_distdir    # Not needed when making distributions.
 
 # Copy SRCFILES from source directory here.
-$(top_srcdir)/CFILES: $(cryptdir)/SRCFILES \
+$(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
   $(gmpdir)/SRCFILES $(logindir)/SRCFILES $(mintlibdir)/SRCFILES \
   $(miscdir)/SRCFILES $(posixdir)/SRCFILES $(pwdgrpdir)/SRCFILES \
   $(shadowdir)/SRCFILES $(signaldir)/SRCFILES $(socketdir)/SRCFILES \
@@ -177,6 +180,7 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES \
 	rm -f $@
 	echo "# This file is a generated secondary file. Do not edit." >$@
 	sed -e 's,^SRCFILES *=,CRYPTCFILES =,g' $(cryptdir)/SRCFILES >>$@
+	sed -e 's,^SRCFILES *=,DIRENTCFILES =,g' $(direntdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,GMPCFILES =,g' $(gmpdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,LOGINCFILES =,g' $(logindir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,MINTLIBCFILES =,g' $(mintlibdir)/SRCFILES >>$@
