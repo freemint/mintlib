@@ -157,8 +157,8 @@ res_send(buf, buflen, answer, anslen)
 				msg.msg_namelen = 0;
 				msg.msg_iov = iov;
 				msg.msg_iovlen = 2;
-				msg.msg_accrights = 0;
-				msg.msg_accrightslen = 0;
+				msg.msg_control = 0;
+				msg.msg_controllen = 0;
 				
 				if (sendmsg(s, &msg, 0) != sizeof(len) + buflen) {
 					terrno = errno;

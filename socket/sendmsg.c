@@ -55,8 +55,8 @@ __sendmsg (int fd, const struct msghdr *msg, int flags)
 			new_msg.msg_namelen = UN_OFFSET + strlen (un.sun_path);
 			new_msg.msg_iov = msg->msg_iov;
 			new_msg.msg_iovlen = msg->msg_iovlen;
-			new_msg.msg_accrights = msg->msg_accrights;
-			new_msg.msg_accrightslen = msg->msg_accrightslen;
+			new_msg.msg_control = msg->msg_control;
+			new_msg.msg_controllen = msg->msg_controllen;
 			
 			cmd.msg = &new_msg;
 		} else {

@@ -186,11 +186,86 @@ struct msghdr
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     int msg_iovlen;		/* Number of elements in the vector.  */
 
-    __ptr_t msg_accrights;	/* Access rights information.  */
-    socklen_t msg_accrightslen;	/* Length of access rights information.  */
+    __ptr_t msg_control;	/* Access rights information.  */
+    socklen_t msg_controllen;	/* Length of access rights information.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
+
+/* Structure used for storage of ancillary data object information.  */
+struct cmsghdr
+  {
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
+				   of cmsghdr structure.  */
+    int cmsg_level;		/* Originating protocol.  */
+    int cmsg_type;		/* Protocol specific type.  */
+    __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
+    /* XXX Perhaps this should be removed.  */
+  };
+
+/* Ancillary data object manipulation macros.  */
+#if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
+# define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+#else
+# define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
+#endif
+#define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
+#define CMSG_FIRSTHDR(mhdr) \
+  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
+   ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
+#define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
+			 & (size_t) ~(sizeof (size_t) - 1))
+#define CMSG_SPACE(len) (CMSG_ALIGN (len) \
+			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+#define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
+
+extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
+				      struct cmsghdr *__cmsg) __THROW;
+#ifdef __USE_EXTERN_INLINES
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE extern __inline
+# endif
+_EXTERN_INLINE struct cmsghdr *
+__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
+{
+  if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
+    /* The kernel header does this so there may be a reason.  */
+    return 0;
+
+  __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
+			       + CMSG_ALIGN (__cmsg->cmsg_len));
+  if ((unsigned char *) (__cmsg + 1) > ((unsigned char *) __mhdr->msg_control
+					+ __mhdr->msg_controllen)
+      || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
+	  > ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
+    /* No more entries.  */
+    return 0;
+  return __cmsg;
+}
+#endif	/* Use `extern inline'.  */
+
+
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+enum
+  {
+    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
+#define SCM_RIGHTS SCM_RIGHTS
+#ifdef __USE_BSD
+    SCM_CREDENTIALS = 0x02,     /* Credentials passing.  */
+# define SCM_CREDENTIALS SCM_CREDENTIALS
+#endif
+    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
+  };
+
+/* User visible structure for SCM_CREDENTIALS message */
+
+struct ucred
+{
+  pid_t pid;			/* PID of sending process.  */
+  uid_t uid;			/* UID of sending process.  */
+  gid_t gid;			/* GID of sending process.  */
+};
 
 
 /* Protocol number used to manipulate socket-level options
@@ -227,6 +302,18 @@ enum
     SO_LINGER = 11,		/* Block on close of a reliable
 				   socket to transmit pending data.  */
 #define SO_LINGER SO_LINGER
+    SO_PASSCRED = 16,
+#define SO_PASSCRED SO_PASSCRED
+    SO_PEERCRED = 17,
+#define SO_PEERCRED SO_PEERCRED
+    SO_RCVLOWAT = 18,
+#define SO_RCVLOWAT SO_RCVLOWAT
+    SO_SNDLOWAT = 19,
+#define SO_SNDLOWAT SO_SNDLOWAT
+    SO_RCVTIMEO = 20,
+#define SO_RCVTIMEO SO_RCVTIMEO
+    SO_SNDTIMEO = 21,
+#define SO_SNDTIMEO SO_SNDTIMEO
     SO_CHKSUM = 40,		/*  */
 #define SO_CHKSUM SO_CHKSUM
     SO_DROPCONN = 41		/*  */

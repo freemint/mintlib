@@ -34,8 +34,8 @@ __readv (int fd, struct iovec *iov, ssize_t niov)
 		m.msg_namelen = 0;
 		m.msg_iov = (struct iovec*) iov;
 		m.msg_iovlen = niov;
-		m.msg_accrights = 0;
-		m.msg_accrightslen = 0;
+		m.msg_control = 0;
+		m.msg_controllen = 0;
 		
 		r = recvmsg (fd, &m, 0);
 		if (r >= 0 || errno != -ENOSYS)
