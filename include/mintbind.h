@@ -449,6 +449,36 @@ __extension__								\
 })
 #endif
 
+#define trap_1_wlllll(n, a, b, c, d, e)					\
+__extension__								\
+({									\
+	register long retvalue __asm__("d0");				\
+	long _a = (long)(a);						\
+	long _b = (long)(b);						\
+	long _c = (long)(c);						\
+	long _d = (long)(d);						\
+	long _e = (long)(e);						\
+	    								\
+	__asm__ volatile						\
+	(								\
+		"movl    %6,sp@-;"					\
+		"movl    %5,sp@-;"					\
+		"movl    %4,sp@-;"					\
+		"movl    %3,sp@-;"					\
+		"movl    %2,sp@-;"					\
+		"movw    %1,sp@-;"					\
+		"trap    #1;"						\
+		"lea     sp@(22),sp"					\
+	: "=r"(retvalue)			/* outputs */		\
+	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
+	  "r"(_d), "r"(_e)			/* inputs  */		\
+	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	  AND_MEMORY							\
+	);								\
+									\
+	retvalue;							\
+})
+
 #else
 
 #ifdef __GNUC__
@@ -481,6 +511,10 @@ __extension__								\
 
 #endif /* __GNUC_INLINE__ */
 
+#define Slbopen(name, path, min_ver, sl, fn)			\
+		trap_1_wlllll(0x16, (long)(name), (long)(path), (long)(min_ver), (long)(sl), (long)(fn))
+#define Slbclose(sl)						\
+		trap_1_wl(0x17, (long)(sl))
 #define	Syield()						\
 		(int)trap_1_w(0xff)
 #define Fpipe(ptr)						\
