@@ -10,6 +10,7 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/param.h>
 #include <sys/poll.h>
 #include <alloca.h>
 #include <string.h>
@@ -91,9 +92,11 @@ __select (nfds, readfds, writefds, exceptfds, timeout)
 	if (retval < 0)
 		return retval;
 	else {
-		if (readfds) FD_ZERO (readfds);
-		if (exceptfds) FD_ZERO (exceptfds);
-		if (writefds) FD_ZERO (writefds);
+		u_int sz = howmany (nfds, NFDBITS) * sizeof (fd_mask);
+		
+		if (readfds) __bzero (readfds, sz);
+		if (exceptfds) __bzero (exceptfds, sz);
+		if (writefds) __bzero (writefds, sz);
 		
 		if (retval) for (i = 0; i < nfds; i++) {
 			if (pfds[i].revents & POLLIN
