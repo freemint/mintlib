@@ -93,28 +93,37 @@ int __ioctl(fd, cmd, arg)
 #ifdef __MINT__
 		case TIOCNOTTY:
 			if (__mint) {
-#if 1
+				/* To be on the safe side, always reset
+				 * the isatty()-flags to "unknown" first
+				 */
+				__open_stat[__OPEN_INDEX(-1)].status =
+					FH_UNKNOWN;
+				__open_stat[__OPEN_INDEX(fd)].status =
+					FH_UNKNOWN;
+
 				/* First try the generic kernel ioctl if
 				   already available.  */
 				r = Fcntl (fd, (long) arg, TIOCNOTTY);
-				if (r != -ENOSYS && r != -EINVAL) {
+				if (r >= 0)
+				{
+					return 0;
+				}
+				else if (r != -ENOSYS && r != -EINVAL) {
 					__set_errno (-r);
 					return -1;
 				}
-#endif
 				
 				if ((fd < 0) || !(_isctty(fd))) {
 					__set_errno (EBADF);
 					return -1;
 				}
 				(void) Fclose(fd);
+				r = Fclose(-1);
+				if (r >= 0)
+					return 0;
 				null_fd = (int) Fopen(/* __mint < 9 ? "V:\\null"
 						:*/ "U:\\dev\\null", O_RDWR);
 				(void) Fforce(-1, null_fd);
-				__open_stat[__OPEN_INDEX(-1)].status =
-					FH_UNKNOWN;
-				__open_stat[__OPEN_INDEX(fd)].status =
-					FH_UNKNOWN;
 				if (null_fd != fd) {
 					(void) Fforce(fd, null_fd);
 					(void) Fclose(null_fd);
@@ -124,9 +133,18 @@ int __ioctl(fd, cmd, arg)
 			break;
 		case TIOCSCTTY:
 			if (__mint) {
+				/* To be on the safe side, always reset
+				 * the isatty()-flags to "unknown" first
+				 */
+				__open_stat[__OPEN_INDEX(-1)].status =
+					FH_UNKNOWN;
+				__open_stat[__OPEN_INDEX(fd)].status =
+					FH_UNKNOWN;
+
 				r = Fcntl (fd, (long) arg, TIOCSCTTY);
-				
-				if (r != -ENOSYS && r != -EINVAL) {
+				if (r >= 0)
+					return 0;
+				else if (r != -ENOSYS && r != -EINVAL) {
 					__set_errno (-r);
 					return -1;
 				}
