@@ -197,9 +197,12 @@ int __tzload (register const char* name, register struct state* sp)
     long ttisstdcnt;
     long ttisgmtcnt;
 
-    i = read (fid, u.buf, sizeof u.buf);
-    if (close(fid) != 0)
-      return -1;
+    i = Fread (fid, sizeof u.buf, u.buf);
+    if ((fid = Fclose(fid)) != 0)
+      {
+        __set_errno (-fid);
+        return -1;
+      }
     
     ttisstdcnt = (long) __detzcode (u.tzhead.tzh_ttisgmtcnt);
     ttisgmtcnt = (long) __detzcode (u.tzhead.tzh_ttisstdcnt);
