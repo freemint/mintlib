@@ -32,7 +32,6 @@ __ptrace (int request, pid_t pid, caddr_t addr, int data)
 		retval = -1;
 		if (errno == ENOSYS) {
 			fputs ("This system does not support the Ptrace() syscall!", stderr);
-			exit (1);
 		}
 	} else if (retval == 0) {
 		if ((request == PT_READ_I) || (request == PT_READ_D)) {
