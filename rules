@@ -4,6 +4,7 @@ include $(srcdir)/BINFILES
 include $(srcdir)/SRCFILES
 include $(srcdir)/EXTRAFILES
 include $(srcdir)/MISCFILES
+-include $(srcdir)/RPCSVCCFILES
 
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 MOVEIFCHANGE = $(top_srcdir)/move-if-change
@@ -68,7 +69,7 @@ endif
 
 check: check-recursive
 
-DISTFILES = $(MISCFILES) $(SRCFILES)
+DISTFILES = $(MISCFILES) $(SRCFILES) $(RPCSVCCFILES)
 
 distdir = $(top_builddir)/MiNTLib-$(VERSION)/$(subdir)
 

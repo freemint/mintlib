@@ -19,8 +19,9 @@ endif
 libc := libc$(qualifier).a
 libiio := libiio$(qualifier).a
 libsocket := libsocket$(qualifier).a
+librpcsvc := librpcsvc$(qualifier).a
 
-LIBS := $(libc) $(libiio) $(libsocket)
+LIBS := $(libc) $(libiio) $(libsocket) $(librpcsvc)
 
 ifeq ($(USE_WEAK_SYMBOLS), yes)
 ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
@@ -75,6 +76,7 @@ MINTLIBSRCS := $(addprefix $(mintlibdir)/, $(MINTLIBCFILES))
 MISCSRCS    := $(addprefix $(miscdir)/,    $(MISCCFILES))
 POSIXSRCS   := $(addprefix $(posixdir)/,   $(POSIXCFILES))
 PWDGRPSRCS  := $(addprefix $(pwdgrpdir)/,  $(PWDGRPCFILES))
+RPCSVCSRCS  := $(addprefix $(sunrpcdir)/,  $(RPCSVCCFILES))
 SHADOWSRCS  := $(addprefix $(shadowdir)/,  $(SHADOWCFILES))
 SIGNALSRCS  := $(addprefix $(signaldir)/,  $(SIGNALCFILES))
 SOCKETSRCS  := $(addprefix $(socketdir)/,  $(SOCKETCFILES))
@@ -88,9 +90,10 @@ TERMIOSSRCS := $(addprefix $(termiosdir)/, $(TERMIOSCFILES))
 TIMESRCS    := $(addprefix $(timedir)/,    $(TIMECFILES))
 UNIXSRCS    := $(addprefix $(unixdir)/,    $(UNIXCFILES))
 SRCS := $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
-  $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(SHADOWSRCS) $(SIGNALSRCS) \
-  $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) $(STRINGSRCS) \
-  $(SUNRPCSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) $(TIMESRCS) $(UNIXSRCS)
+  $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(RPCSVCSRCS) $(SHADOWSRCS) \
+  $(SIGNALSRCS) $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) \
+  $(STRINGSRCS) $(SUNRPCSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) $(TIMESRCS) \
+  $(UNIXSRCS)
 
 ifeq ($(libsize), _p)
 CFLAGS-_mon.S = -DPROFILING
@@ -108,6 +111,20 @@ DEFS-ident_sock.c = -DVERSION=\"$(VERSION)\"
 CFLAGS-crypt = -O3 -fexpensive-optimizations
 # This relies on a correctly working fstat()!
 DEFS-stdio_init.c = -D_STATBUF_ST_BLKSIZE
+# These source come from ... you know where
+DEFS-xbootparam_prot.c = -Wno-unused
+DEFS-xmount.c = -Wno-unused
+DEFS-xrex.c = -Wno-unused
+DEFS-xrusers.c = -Wno-unused
+DEFS-xyppasswd.c = -Wno-unused
+DEFS-xkey_prot.c = -Wno-unused
+DEFS-xnfs_prot.c = -Wno-unused
+DEFS-xrquota.c = -Wno-unused
+DEFS-xsm_inter.c = -Wno-unused
+DEFS-xklm_prot.c = -Wno-unused
+DEFS-xnlm_prot.c= -Wno-unused
+DEFS-xrstat.c = -Wno-unused
+DEFS-xspray.c= -Wno-unused
 
 CRYPTOBJS   := $(addsuffix .o, $(basename $(notdir $(CRYPTSRCS))))
 DIRENTOBJS  := $(addsuffix .o, $(basename $(notdir $(DIRENTSRCS))))
@@ -117,6 +134,7 @@ MINTLIBOBJS := $(addsuffix .o, $(basename $(notdir $(MINTLIBSRCS))))
 MISCOBJS    := $(addsuffix .o, $(basename $(notdir $(MISCSRCS))))
 POSIXOBJS   := $(addsuffix .o, $(basename $(notdir $(POSIXSRCS))))
 PWDGRPOBJS  := $(addsuffix .o, $(basename $(notdir $(PWDGRPSRCS))))
+RPCSVCOBJS  := $(addsuffix .o, $(basename $(notdir $(RPCSVCSRCS))))
 SHADOWOBJS  := $(addsuffix .o, $(basename $(notdir $(SHADOWSRCS))))
 SIGNALOBJS  := $(addsuffix .o, $(basename $(notdir $(SIGNALSRCS))))
 SOCKETOBJS  := $(addsuffix .o, $(basename $(notdir $(SOCKETSRCS))))
@@ -130,9 +148,10 @@ TERMIOSOBJS := $(addsuffix .o, $(basename $(notdir $(TERMIOSSRCS))))
 TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
 UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
 OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
-  $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
-  $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) \
-  $(SUNRPCOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
+  $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
+  $(SIGNALOBJS) $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) \
+  $(STRINGOBJS) $(SUNRPCOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) $(TIMEOBJS) \
+  $(UNIXOBJS)
 LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSVIPCOBJS) \
@@ -178,8 +197,9 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
   $(miscdir)/SRCFILES $(posixdir)/SRCFILES $(pwdgrpdir)/SRCFILES \
   $(shadowdir)/SRCFILES $(signaldir)/SRCFILES $(socketdir)/SRCFILES \
   $(stdiiodir)/SRCFILES $(stdiodir)/SRCFILES $(stdlibdir)/SRCFILES \
-  $(stringdir)/SRCFILES $(sunrpcdir)/SRCFILES $(sysvipcdir)/SRCFILES \
-  $(termiosdir)/SRCFILES $(timedir)/SRCFILES $(unixdir)/SRCFILES
+  $(stringdir)/SRCFILES $(sunrpcdir)/SRCFILES $(sunrpcdir)/RPCSVCCFILES \
+  $(sysvipcdir)/SRCFILES $(termiosdir)/SRCFILES $(timedir)/SRCFILES \
+  $(unixdir)/SRCFILES
 	rm -f $@
 	echo "# This file is a generated secondary file. Do not edit." >$@
 	sed -e 's,^SRCFILES *=,CRYPTCFILES =,g' $(cryptdir)/SRCFILES >>$@
@@ -198,6 +218,7 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
 	sed -e 's,^SRCFILES *=,STDLIBCFILES =,g' $(stdlibdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,STRINGCFILES =,g' $(stringdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SUNRPCCFILES =,g' $(sunrpcdir)/SRCFILES >>$@
+	sed -e 's,^SRCFILES *=,RPCSVCCFILES =,g' $(sunrpcdir)/RPCSVCCFILES >> $@
 	sed -e 's,^SRCFILES *=,SYSVIPCCFILES =,g' $(sysvipcdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TERMIOSCFILES =,g' $(termiosdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TIMECFILES =,g' $(timedir)/SRCFILES >>$@
@@ -238,6 +259,11 @@ $(libsocket): $(SOCKETOBJS) $(SUNRPCOBJS)
 	$(AR) cru $@ $(SOCKETOBJS) $(SUNRPCOBJS)
 	$(RANLIB) $@
 
+$(librpcsvc): $(RPCSVCOBJS)
+	rm -f $@
+	$(AR) cru $@ $(RPCSVCOBJS)
+	$(RANLIB) $@
+	
 $(top_srcdir)/include/linker.h: $(top_srcdir)/include/linker.h.in \
   $(top_srcdir)/configvars
 	(cd $(top_srcdir)/include && $(MAKE) linker.h)

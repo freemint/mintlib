@@ -48,6 +48,7 @@ Group: Development/Libraries/Libc
 # condition makes sense.
 Requires: mintlib binutils gcc >= 2.95.2
 Obsoletes: mintnet-devel
+Obsoletes: mintlib-mshort
 Conflicts: bzip2 < 0.9.5d-2
 Conflicts: cflib < 11m-3
 Conflicts: cracklib < 2.7-3
@@ -85,12 +86,6 @@ Requires: mintlib-devel
 Summary: MiNTLib libs with profiling information
 Summary(de): MiNTLib-Bibliotheken mit Profiling-Informationen.
 Group: Development/Libraries/Libc
-Requires: mintlib-devel
-
-%package mshort
-Summary: MiNTLib libs with 16 bit int type (obsolete!)
-Summary(de): MiNTLib-Bibliotheken mit 16-Bit-Integern (obsolet!)
-Group: Development/Libraries/libc
 Requires: mintlib-devel
 
 %ifarch m68kmint
@@ -389,20 +384,6 @@ die dem Profiler erlauben, die Ausführung von Programmen zu verfolgen.
 Dieses Paket wird nur zum Profilen der MiNTLib selber benötigt.  Es
 ist nicht notwendig, um andere Programme zu profilen.
 
-%description mshort
-These are the MiNTLib libraries compiled with the compiler flag -mshort
-that makes the data type int only 16 bits wide.
-
-WARNING: This package is considered obsolete and support for it will
-cease soon.  Read README.mshort in the doc directory for details.
-
-%description -l de mshort
-Dies sind die MiNTLib-Bibliotheken mit der Compiler-Option -mshort kompiliert,
-wodurch der Datentyp int nur noch 16 Bits weit ist.
-
-WARNUNG: Dieses Paket ist obsolet, und wird bald aufgegeben.  Details
-sind der Datei README.mshort im doc-Verzeichnis zu entnehmen.
-
 %prep
 %setup -q
 
@@ -447,12 +428,11 @@ mkdir -p %{_prefix}%{crossprefix}/include/bits 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/mint 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/net 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/netinet 2>/dev/null ||:
+mkdir -p %{_prefix}%{crossprefix}/include/nfs 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/protocols 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/rpc 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/rpcsvc 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/sys 2>/dev/null ||:
-mkdir -p %{_prefix}%{crossprefix}/lib/m68020-60/mshort 2>/dev/null ||:
-mkdir -p %{_prefix}%{crossprefix}/lib/mshort 2>/dev/null ||:
 
 %ifarch m68kmint
 %post
@@ -529,6 +509,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/zoneinfo
 /usr/sbin/*
 /sbin/tzinit
+/usr/bin/*
 %else # Cross-lib
 %files
 %defattr(-,root,root)
@@ -543,12 +524,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/lib/libc.a
 %{_prefix}%{crossprefix}/lib/libiio.a
 %{_prefix}%{crossprefix}/lib/libsocket.a
+%{_prefix}%{crossprefix}/lib/librpcsvc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libc020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libsocket.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libsocket020.a
+%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
+%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
 %{_prefix}%{crossprefix}/include/COPYMINT
 %{_prefix}%{crossprefix}/include/COPYING.LIB
 %{_prefix}%{crossprefix}/include/*.h
@@ -558,6 +542,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/include/mint/*.h
 %{_prefix}%{crossprefix}/include/net/*.h
 %{_prefix}%{crossprefix}/include/netinet/*.h
+%{_prefix}%{crossprefix}/include/nfs/*.h
 %{_prefix}%{crossprefix}/include/protocols/*.h
 %{_prefix}%{crossprefix}/include/rpc/*.h
 %{_prefix}%{crossprefix}/include/rpcsvc/*.h
@@ -568,29 +553,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/lib/libc_g.a
 %{_prefix}%{crossprefix}/lib/libiio_g.a
 %{_prefix}%{crossprefix}/lib/libsocket_g.a
+%{_prefix}%{crossprefix}/lib/librpcsvc_g.a
 
 %files profile
 %defattr(-,root,root)
 %{_prefix}%{crossprefix}/lib/libc_p.a
 %{_prefix}%{crossprefix}/lib/libiio_p.a
 %{_prefix}%{crossprefix}/lib/libsocket_p.a
-
-%files mshort
-%defattr(-,root,root)
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libc16020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libiio.a
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libiio16020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libsocket.a
-%{_prefix}%{crossprefix}/lib/m68020-60/mshort/libsocket16020.a
-%{_prefix}%{crossprefix}/lib/mshort/libc.a
-%{_prefix}%{crossprefix}/lib/mshort/libc16.a
-%{_prefix}%{crossprefix}/lib/mshort/libiio.a
-%{_prefix}%{crossprefix}/lib/mshort/libiio16.a
-%{_prefix}%{crossprefix}/lib/mshort/libsocket.a
-%{_prefix}%{crossprefix}/lib/mshort/libsocket16.a
+%{_prefix}%{crossprefix}/lib/librpcsvc_p.a
 
 %changelog
+* Fri Apr 13 2001 Guido Flohr <guido@freemint.de>
+- Removed mshort packages.
+- Install librpc.a, rpcgen, and rpcinfo.  FIXME: rpcgen should
+  actually go into devel package.
+
 * Tue Apr 10 2001 Guido Flohr <guido@freemint.de>
 - Added rpc stuff.
 

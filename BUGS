@@ -201,3 +201,11 @@ stdio/vfscanf.c: Guido
   is seekable it will be fseek'd in front of the x, if it isn't we
   lose.
 
+librpcsvc.a: Guido
+  This library is made from generated source files.  The files are generated
+  by rpcgen and rpcgen depends on libc.a and libsocket.a.  However, librpcsvc.a
+  is made along with the other libraries _before_ rpcgen is being built.  
+  Consequently if the generated librpcsvc source files change this is not
+  detected by make, better said, it is detected too late.  I think we can
+  live with that little bug because things will actually never change ...
+  
