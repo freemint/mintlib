@@ -11,6 +11,10 @@
 # define MAXHOSTNAMELEN 64
 #endif
 
+#ifndef	NGROUPS
+# define NGROUPS	NGROUPS_MAX
+#endif
+
 #ifdef __MINT__
 # define HZ		200		/* ticks/second reported by times() */
 # define NCARGS		1024		/* actually, we don't limit this */
@@ -37,8 +41,12 @@
 #define powerof2(x)	((((x)-1)&(x))==0)
 
 /* Macros for min/max.  */
-#define	MIN(a,b) (((a)<(b))?(a):(b))
-#define	MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a,b) \
+    ({__typeof__ (a) _a = (a); __typeof__ (b) _b = (b);     \
+	      _a < _b ? _a : _b; })
+#define MAX(a,b) \
+    ({__typeof__ (a) _a = (a); __typeof__ (b) _b = (b);  \
+	      _a > _b ? _a : _b; })
 
 /* Unit of `st_blocks'.  */
 #define DEV_BSIZE       512

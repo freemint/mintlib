@@ -478,13 +478,6 @@ cache_spot (register des_block *key, char *name,
 #define UNKNOWN 	-2	/* grouplen, if cached cred is unknown user */
 #define INVALID		-1	/* grouplen, if cache entry is invalid */
 
-#ifdef __MINT__
-/* XXX */
-#ifndef NGROUPS
-#define NGROUPS 8
-#endif
-#endif
-
 struct bsdcred
 {
   uid_t uid;			/* cached uid */

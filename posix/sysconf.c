@@ -38,7 +38,7 @@ __sysconf (int var)
 	case _SC_OPEN_MAX:
 		return 45; /* think I read this somewhere */
 	case _SC_NGROUPS_MAX:
-		return 0; /* this is bad news :-( */
+		return NGROUPS_MAX;
 	case _SC_CHILD_MAX:
 		return UNLIMITED; /* good 'ol TOS :-) */
 	default:

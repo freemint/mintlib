@@ -10,7 +10,7 @@
 
 /* These are the MiNT specific limits.  */
 
-#define NGROUPS_MAX 0		/* No supplementary groups.  */
+#define NGROUPS_MAX 8		/* 8 supplementary groups.  */
 #define ARG_MAX 32767
 #define CHILD_MAX 999
 #define OPEN_MAX 32
