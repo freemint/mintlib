@@ -3,7 +3,7 @@
 # serve both as input to "make" and a Bourne shell.
 
 # Define this to the version of the package.
-VERSION=0.56.1
+VERSION=0.57
 
 # Uncomment this out if you want extra libraries that are optimized
 # for m68020 processors.
