@@ -1,26 +1,19 @@
 /* sleep -- sleep for a specified number of seconds */
-/* usleep -- sleep for a specified number of microSecond */
 /* written by Eric R. Smith and placed in the public domain */
 /* extensively rehacked by entropy for mint >= 0.95, still public domain */
 
-#include <time.h>
-#include <mintbind.h>
-#include <signal.h>
-#include <unistd.h>
-#include <limits.h>
 #include <errno.h>
+#include <limits.h>
+#include <signal.h>
+#include <time.h>
+#include <unistd.h>
+#include <mint/mintbind.h>
+
 /* _clock() has a rez of CLOCKS_PER_SEC ticks/sec */
-
-#define USEC_PER_TICK (1000000L / ((unsigned long)CLOCKS_PER_SEC))
-#define	USEC_TO_CLOCK_TICKS(us)	((us) / USEC_PER_TICK )
-
-__EXTERN clock_t _clock __PROTO((void));
-
-static unsigned long _alarm __PROTO((unsigned long secs));
+clock_t _clock (void);
 
 static unsigned long
-_alarm(secs)
-	unsigned long secs;
+_alarm (unsigned long secs)
 {
 	unsigned long r;
 
@@ -33,18 +26,14 @@ _alarm(secs)
 	return (unsigned long) r;
 }
 
-static void __CDECL alarm_catch __PROTO((long signum));
-
-static void __CDECL
-alarm_catch(signum)
-	long signum;
+static void
+alarm_catch (long signum)
 {
 	return;
 }
 
 unsigned int
-sleep(n)
-	unsigned int n;
+sleep (unsigned int n)
 {
 	unsigned long stop;
 	long old_alarm_func;
@@ -54,17 +43,6 @@ sleep(n)
 	extern int __mint;
 
 	if (__mint) {
-/*
-		if (__mint < 95) {
-			while (n > 32) {
-				(void)Fselect(32000, 0L, 0L, 0L);
-				n -= 32;
-			}
-			if (n > 0)
-			  (void)Fselect(1000*n, 0L, 0L, 0L);
-			return 0;
-		}
-*/
 		if (n == 0)
 			return 0;
 		/* Clear any existing alarm, but save its expire time.
@@ -125,26 +103,4 @@ sleep(n)
 			;
 	}
 	return 0;
-}
-
-/*
- * Sleep for usec microSeconds 
- * the actual suspension time can be arbitrarily longer
- *
- */
-void
-usleep(usec)
-	unsigned long usec;
-{
-	unsigned long	stop;
-	int r = -ENOSYS;
-
-	if (usec >= 1000)
-		r = Fselect((unsigned)(usec/1000), 0L, 0L, 0L);
-
-	if (r == -ENOSYS) {
-		stop = _clock() + USEC_TO_CLOCK_TICKS(usec);
-		while (_clock() < stop)
-			;
-	}
 }
