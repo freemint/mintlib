@@ -49,7 +49,7 @@ memstats(meminfo)
 }
 
 int
-getpagesize()
+__getpagesize(void)
 {
 	long meminfo[4];
 
@@ -60,3 +60,5 @@ getpagesize()
 	memstats(meminfo);
 	return (int) ((meminfo[2] > DEF_PAGESIZE) ? meminfo[2] : DEF_PAGESIZE);
 }
+
+weak_alias (__getpagesize, getpagesize)
