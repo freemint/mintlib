@@ -1,3 +1,136 @@
+2001-09-27 Thursday 16:39  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/: mintbind.h, osbind.h:
+
+	Cleanup, dropped gcc 1.x support.
+	
+2001-09-27 Thursday 16:37  Frank Naumann <fnaumann@freemint.de>
+
+	* include/net/if.h:
+
+	Added missing union member.
+	
+2001-09-27 Thursday 16:36  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/dir.h:
+
+	Removed conflicting #define with the new bits/dirent.h header.
+	
+2001-09-27 Thursday 16:33  Frank Naumann <fnaumann@freemint.de>
+
+	* sunrpc/svc.c:
+
+	Added workaround for unimplemented poll feature.
+	
+2001-09-27 Thursday 16:31  Frank Naumann <fnaumann@freemint.de>
+
+	* include/MISCFILES, include/socklib.h, socket/accept.c,
+	socket/bind.c, socket/connect.c, socket/gethostnamadr.c,
+	socket/getnetbyaddr.c, socket/getnetbyname.c, socket/getnetent.c,
+	socket/getpeername.c, socket/getproto.c, socket/getprotoent.c,
+	socket/getprotoname.c, socket/getservbyname.c,
+	socket/getservbyport.c, socket/getservent.c, socket/getsockname.c,
+	socket/getsockopt.c, socket/ident_sock.c, socket/inet_lnaof.c,
+	socket/inet_makeaddr.c, socket/inet_netof.c, socket/inet_network.c,
+	socket/inet_ntoa.c, socket/listen.c, socket/rcmd.c, socket/recv.c,
+	socket/recvfrom.c, socket/recvmsg.c, socket/res_comp.c,
+	socket/res_debug.c, socket/res_init.c, socket/res_mkquery.c,
+	mintlib/SRCFILES, mintlib/ident.c, mintlib/ident_dummy_gem.c,
+	socket/res_query.c, socket/res_send.c, socket/send.c,
+	socket/sendmsg.c, socket/sendto.c, socket/sethostent.c,
+	socket/setsockopt.c, socket/shutdown.c, socket/socket.c,
+	socket/socketpair.c, startup/crt0.S,
+	mintlib/ident_dummy_socketlib.c, mintlib/ig.c:
+
+	Removed socklib.h, added global Ident_socklib reference to crt0.S.
+	
+2001-09-20 Thursday 18:17  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: setjmp.h, mint/ostruct.h:
+
+	Removed unused stuff.
+	
+2001-09-20 Thursday 18:17  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/socket.h:
+
+	Fixed typo.
+	
+2001-09-18 Tuesday 16:51  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/getpagesize.c:
+
+	Completly rewritten to get rid of broken U:\proc stuff.
+	
+2001-09-18 Tuesday 16:50  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/access.c, mintlib/do_stat.c, mintlib/getenv.c,
+	mintlib/isatty.c, mintlib/main.c, mintlib/quickstat.c,
+	stdio/setvbuf.c, unix/open.c:
+
+	Cleanup and minor corrections.
+	
+2001-09-14 Friday 10:02  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/stat.h:
+
+	Corrected all types to the right form (added __).
+	
+2001-09-14 Friday 10:01  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/do_stat.c:
+
+	Additional check for empty strings. Return now correct ENOENT then.
+	
+2001-09-14 Friday 10:00  Frank Naumann <fnaumann@freemint.de>
+
+	* termios/: SRCFILES, cfmakeraw.c, tcgetsid.c:
+
+	Added two new functions, cfmakeraw and tcgetsid. The first is often
+	used by Linux programs.
+	
+2001-09-12 Wednesday 23:02  Guido Flohr <guido@freemint.de>
+
+	* mintlib/globals.c:
+
+	make stderr unbuffered (fixes stderr redirection bug)
+	
+2001-09-07 Friday 16:30  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/errno.h:
+
+	Cleanup.
+	
+2001-09-07 Friday 16:30  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/: SRCFILES, getpgid.c:
+
+	Added missing getpgid function.
+	
+2001-08-21 Tuesday 08:34  Frank Naumann <fnaumann@freemint.de>
+
+	* include/netinet/if_ether.h:
+
+	Fixed typo.
+	
+2001-08-15 Wednesday 10:16  Frank Naumann <fnaumann@freemint.de>
+
+	* include/unistd.h:
+
+	Bugfix, lseek must use __off_t instead off_t in prototype.
+	
+2001-08-14 Tuesday 10:16  Frank Naumann <fnaumann@freemint.de>
+
+	* sunrpc/Makefile:
+
+	Fixed crosscompiling bug in Makefile.
+	
+2001-08-14 Tuesday 10:07  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib.spec, mintlib.spec.in:
+
+	Updated for 0.57 release.
+	
 2001-08-09 Thursday 18:35  Frank Naumann <fnaumann@freemint.de>
 
 	* ChangeLog
