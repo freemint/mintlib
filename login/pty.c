@@ -92,7 +92,7 @@ openpty(amaster, aslave, name, termp, winp)
 			} else {
 				(void) chown(line, getuid(), ttygid);
 				(void) chmod(line, S_IRUSR|S_IWUSR|S_IWGRP);
-				if ((slave = open(line, O_RDWR, 0)) != -1) {
+				if ((slave = open(line, O_RDWR | O_NOCTTY, 0)) != -1) {
 					/* tesche: we're not interested in whether the link already existed or not */
 					link[LINKCHAR1] = *cp1;
 					link[LINKCHAR2] = *cp2;
