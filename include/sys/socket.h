@@ -60,9 +60,13 @@ enum
 #define SHUT_RDWR	SHUT_RDWR
 };
 
-/* This is the type we use for generic socket address arguments.  */
+/* This is the type we use for generic socket address arguments.
 
-#if defined __cplusplus
+   With GCC 2.7 and later, the funky union causes redeclarations or
+   uses with any of the listed types to be allowed without complaint.
+   G++ 2.7 does not support transparent unions so there we want the
+   old-style declaration, too.  */
+#if defined __cplusplus || !__GNUC_PREREQ (2, 7) || !defined __USE_GNU
 # define __SOCKADDR_ARG		struct sockaddr *__restrict
 # define __CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else
