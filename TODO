@@ -3,10 +3,7 @@ o includepath: Guido
   stamp file and move-if-change.
 
 o sunrpc/: Guido
-  Binaries don't get installed.
-
-o mintlib.spec.in: Guido
-  Finish sunrpc stuff.
+  Install rpc database in /etc.
 
 o Rewrite ctermid.c and cuserid.c.
 
@@ -56,4 +53,3 @@ o Rewrite nlist.c to handle all binary formats.
 o Implement i18n/l10n stuff from GNU libc.
 
 o A lot of sysconf stuff still missing.
-  
