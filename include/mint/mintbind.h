@@ -12,8 +12,6 @@
 
 __BEGIN_DECLS
 
-#ifdef __GNUC_INLINE__
-
 /* see osbind.h for __extension__ and AND_MEMORY */
 
 #define trap_1_wwlw(n, a, b, c)						\
@@ -161,7 +159,6 @@ __extension__								\
 	retvalue;							\
 })
 
-#if __GNUC__ > 1
 #define trap_1_wwllll(n, a, b, c, d, e)					\
 __extension__								\
 ({									\
@@ -189,39 +186,6 @@ __extension__								\
 	);								\
 	retvalue;							\
 })
-#else
-#define trap_1_wwllll(n, a, b, c, d, e)					\
-({									\
-	register long retvalue __asm__("d0");				\
-	short _a = (short)(a);			\
-	long  _b = (long) (b);			\
-	long  _c = (long) (c);			\
-	long  _d = (long) (d);			\
-	long  _e = (long) (e);			\
-	    								\
-	__asm__ volatile						\
-	("\
-		movl    %4,sp@-; \
-		movl    %3,sp@-; \
-		movl    %2,sp@-; \
-		movl    %1,sp@-; \
-		movw    %0,sp@-	"					\
-	:					      /* outputs */	\
-	: "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e) /* inputs  */	\
-	);								\
-									\
-	__asm__ volatile						\
-	("\
-		movw    %1,sp@-; \
-		trap    #1;	\
-		lea     sp@(20),sp "					\
-	: "=r"(retvalue)			/* outputs */		\
-	: "g"(n)				/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
-	);								\
-	retvalue;							\
-})
-#endif
 
 #define trap_1_wllll(n, a, b, c, d)					\
 __extension__								\
@@ -345,37 +309,6 @@ __extension__								\
 	retvalue;							\
 })
 
-#else
-
-#ifdef __GNUC__
-# ifndef __MSHORT__
-#  define __LONG_TRAPS__
-# endif
-#endif
-
-#ifndef __LONG_TRAPS__
-# ifndef trap_1_w
-#  define trap_1_w(n)		gemdos(n)
-#  define trap_1_wl(n,a)		gemdos(n, (long)(a))
-#  define trap_1_wll(n, a, b)	gemdos(n, (long)(a), (long)(b))
-#  define trap_1_ww(n,a)		gemdos(n, a)
-#  define trap_1_www(n,a,b)	gemdos(n, a, b)
-#  define trap_1_wwlll(n,a,b,c,d) gemdos(n, a, (long)(b), (long)(c), (long)(d))
-#  define trap_1_wwll(n, a, b, c)	gemdos(n, a, (long)(b), (long)(c))
-#  define trap_1_wlw(n, a, b)	gemdos(n, (long)(a), b)
-#  define trap_1_wlww(n, a, b, c)	gemdos(n, (long)(a), b, c)
-#  define trap_13_w(n)		bios(n)
-#  define trap_14_w(n)		xbios(n)
-# endif
-# define trap_1_wwlw(n,a,b,c)	gemdos(n, a, (long)(b), c)
-# define trap_1_wwww(n,a,b,c)	gemdos(n, a, b, c)
-# define trap_1_wwl(n, a, b)	gemdos(n, a, (long)(b))
-# define trap_1_wwwl(n,a,b,c)	gemdos(n, a, b, (long)(c))
-# define trap_1_wwllll(n, a, b, c, d, e) \
-		gemdos(n, a, (long)(b), (long)(c), (long)(d), (long)(e))
-#endif /* __LONG_TRAPS__ */
-
-#endif /* __GNUC_INLINE__ */
 
 #define Srealloc(newsize)					\
 		trap_1_wl(0x15, (long)(newsize))
