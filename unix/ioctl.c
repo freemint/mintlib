@@ -93,10 +93,7 @@ int __ioctl(fd, cmd, arg)
 #ifdef __MINT__
 		case TIOCNOTTY:
 			if (__mint) {
-#if 0
-/* FIXME
- * fn: don't work in interaction with other parts of the mintlib
- */
+#if 1
 				/* First try the generic kernel ioctl if
 				   already available.  */
 				r = Fcntl (fd, (long) arg, TIOCNOTTY);
@@ -129,7 +126,7 @@ int __ioctl(fd, cmd, arg)
 			if (__mint) {
 				r = Fcntl (fd, (long) arg, TIOCSCTTY);
 				
-				if (r != ENOSYS && r != -EINVAL) {
+				if (r != -ENOSYS && r != -EINVAL) {
 					__set_errno (-r);
 					return -1;
 				}
