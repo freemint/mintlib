@@ -14,7 +14,7 @@
 
 
 int
-socketpair (int domain, int type, int proto, int fds[2])
+__socketpair (int domain, int type, int proto, int fds[2])
 {
 	if (__libc_newsockets) {
 		short _fds[2];
@@ -59,3 +59,4 @@ socketpair (int domain, int type, int proto, int fds[2])
 		return 0;
 	}
 }
+weak_alias (__socketpair, socketpair)

@@ -14,7 +14,7 @@
 
 
 int
-send (int fd, const void *buf, ssize_t buflen, int flags)
+__send (int fd, const void *buf, ssize_t buflen, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Fsendto (fd, buf, buflen, flags, NULL, 0);
@@ -45,3 +45,4 @@ send (int fd, const void *buf, ssize_t buflen, int flags)
 		return r;
 	}
 }
+weak_alias (__send, send)

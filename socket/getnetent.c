@@ -53,8 +53,7 @@ static char *net_aliases[MAXALIASES];
 int _net_stayopen;
 
 void
-setnetent(f)
-	int f;
+__setnetent (int f)
 {
 	if (netf == NULL)
 		netf = fopen(_PATH_NETWORKS, "r" );
@@ -62,9 +61,10 @@ setnetent(f)
 		rewind(netf);
 	_net_stayopen |= f;
 }
+weak_alias (__setnetent, setnetent)
 
 void
-endnetent()
+__endnetent (void)
 {
 	if (netf) {
 		fclose(netf);
@@ -72,9 +72,10 @@ endnetent()
 	}
 	_net_stayopen = 0;
 }
+weak_alias (__endnetent, endnetent)
 
 struct netent *
-getnetent()
+__getnetent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -120,3 +121,4 @@ again:
 	*q = NULL;
 	return (&net);
 }
+weak_alias (__getnetent, getnetent)

@@ -13,7 +13,7 @@
 
 
 int
-getsockopt (int fd, int level, int optname, void *optval, size_t *optlen)
+__getsockopt (int fd, int level, int optname, void *optval, size_t *optlen)
 {
 	if (__libc_newsockets) {
 		long r = Fgetsockopt (fd, level, optname, optval, optlen);
@@ -53,3 +53,4 @@ getsockopt (int fd, int level, int optname, void *optval, size_t *optlen)
 		return 0;
 	}
 }
+weak_alias (__getsockopt, getsockopt)

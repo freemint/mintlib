@@ -18,7 +18,7 @@
 
 
 int
-connect (int fd, struct sockaddr *addr, size_t addrlen)
+__connect (int fd, struct sockaddr *addr, size_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fconnect (fd, addr, addrlen);
@@ -65,3 +65,4 @@ connect (int fd, struct sockaddr *addr, size_t addrlen)
 		return 0;
 	}
 }
+weak_alias (__connect, connect)

@@ -19,7 +19,7 @@
 
 
 int
-recvfrom (int fd, void *buf, ssize_t buflen, int flags, struct sockaddr *addr, size_t *addrlen)
+__recvfrom (int fd, void *buf, ssize_t buflen, int flags, struct sockaddr *addr, size_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Frecvfrom (fd, buf, buflen, flags, addr, addrlen);
@@ -75,3 +75,4 @@ recvfrom (int fd, void *buf, ssize_t buflen, int flags, struct sockaddr *addr, s
 		return r;
 	}
 }
+weak_alias (__recvfrom, recvfrom)

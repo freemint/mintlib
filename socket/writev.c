@@ -12,7 +12,7 @@
 
 
 ssize_t
-writev (int fd, const struct iovec *iov, ssize_t niov)
+__writev (int fd, const struct iovec *iov, ssize_t niov)
 {
 	if (__libc_newsockets) {
 		long r = Fwritev (fd, iov, niov);
@@ -68,3 +68,4 @@ writev (int fd, const struct iovec *iov, ssize_t niov)
 		}
 	}
 }
+weak_alias (__writev, writev)

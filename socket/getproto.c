@@ -38,19 +38,23 @@ static char sccsid[] = "@(#)getproto.c	5.6 (Berkeley) 6/1/90";
 #include "socklib.h"
 #include <netdb.h>
 
+void __setprotoent (int f);
+void __endprotoent (void);
+struct protoent * __getprotoent (void);
+
 extern int _proto_stayopen;
 
 struct protoent *
-getprotobynumber(proto)
-	register int proto;
+__getprotobynumber (int proto)
 {
 	register struct protoent *p;
 
-	setprotoent(_proto_stayopen);
-	while ((p = getprotoent()))
+	__setprotoent(_proto_stayopen);
+	while ((p = __getprotoent()))
 		if (p->p_proto == proto)
 			break;
 	if (!_proto_stayopen)
-		endprotoent();
+		__endprotoent();
 	return (p);
 }
+weak_alias (__getprotobynumber, getprotobynumber)

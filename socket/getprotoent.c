@@ -52,8 +52,7 @@ static char *proto_aliases[MAXALIASES];
 int _proto_stayopen;
 
 void
-setprotoent(f)
-	int f;
+__setprotoent (int f)
 {
 	if (protof == NULL)
 		protof = fopen(_PATH_PROTOCOLS, "rt" );
@@ -61,9 +60,10 @@ setprotoent(f)
 		rewind(protof);
 	_proto_stayopen |= f;
 }
+weak_alias (__setprotoent, setprotoent)
 
 void
-endprotoent()
+__endprotoent (void)
 {
 	if (protof) {
 		fclose(protof);
@@ -71,9 +71,10 @@ endprotoent()
 	}
 	_proto_stayopen = 0;
 }
+weak_alias (__endprotoent, endprotoent)
 
 struct protoent *
-getprotoent()
+__getprotoent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -118,3 +119,4 @@ again:
 	*q = NULL;
 	return (&proto);
 }
+weak_alias (__getprotoent, getprotoent)

@@ -13,7 +13,7 @@
 
 
 int
-shutdown (int fd, int how)
+__shutdown (int fd, int how)
 {
 	if (__libc_newsockets) {
 		long r = Fshutdown (fd, how);
@@ -42,3 +42,4 @@ shutdown (int fd, int how)
 		return 0;
 	}
 }
+weak_alias (__shutdown, shutdown)

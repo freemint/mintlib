@@ -149,8 +149,7 @@ typedef union {
 int h_errno;
 
 static void
-dotrimdomain(c)
-char *c;
+dotrimdomain (char *c)
 {
 	/* assume c points to the start of a host name; trim off any 
 	   domain name matching any of the trimdomains */
@@ -165,8 +164,7 @@ char *c;
 }
 
 static struct hostent *
-trim_domains(h)
-struct hostent *h;
+trim_domains (struct hostent *h)
 {
 	if(numtrimdomains){
 		int i;
@@ -203,8 +201,8 @@ Sun 4/690 would not work.  This variable is set to 10 to accomodate our
 version of reality */
 #define MAXINTERFACES (10)
 
-static void reorder_addrs(h)
-struct hostent *h;
+static void
+reorder_addrs (struct hostent *h)
 {
 	static struct {
 		char iname[16];
@@ -290,7 +288,7 @@ struct hostent *h;
 }
 
 static void
-init_services()
+init_services (void)
 {
 	char *cp, *dp, buf[BUFSIZ];
 	register int cc = 0;
@@ -489,10 +487,7 @@ init_services()
 }
 
 static struct hostent *
-getanswer(answer, anslen, iquery)
-	querybuf *answer;
-	int anslen;
-	int iquery;
+getanswer (querybuf *answer, int anslen, int iquery)
 {
 	register HEADER *hp;
 	register u_char *cp;
@@ -633,8 +628,7 @@ getanswer(answer, anslen, iquery)
 }
 
 struct hostent *
-gethostbyname(name)
-	const char *name;
+__gethostbyname (const char *name)
 {
 	querybuf buf;
 	register const char *cp;
@@ -722,11 +716,10 @@ gethostbyname(name)
 	}
 	return ((struct hostent *) NULL);
 }
+weak_alias (__gethostbyname, gethostbyname)
 
 struct hostent *
-gethostbyaddr(addr, len, type)
-	const char *addr;
-	int len, type;
+__gethostbyaddr (const char *addr, int len, int type)
 {
 	int n;
 	querybuf buf;
@@ -863,10 +856,10 @@ gethostbyaddr(addr, len, type)
 	}
 	return ((struct hostent *)NULL);
 }
+weak_alias (__gethostbyaddr, gethostbyaddr)
 
 void
-_sethtent(f)
-	int f;
+_sethtent (int f)
 {
 	if (hostf == NULL)
 		hostf = fopen(_PATH_HOSTS, "rt" );
@@ -876,7 +869,7 @@ _sethtent(f)
 }
 
 void
-_endhtent()
+_endhtent (void)
 {
 	if (hostf && !stayopen) {
 		(void) fclose(hostf);
@@ -885,7 +878,7 @@ _endhtent()
 }
 
 struct hostent *
-_gethtent()
+_gethtent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -953,8 +946,7 @@ again:
  *                     - John DiMarco <jdd@cdf.toronto.edu>
  */ 
 struct hostent *
-_gethtbyname(name)
-	char *name;
+_gethtbyname (char *name)
 {
 	register struct hostent *p;
 	register char **cp;
@@ -1096,9 +1088,7 @@ _gethtbyname(name)
 }
 
 struct hostent *
-_gethtbyaddr(addr, len, type)
-	const char *addr;
-	int len, type;
+_gethtbyaddr (const char *addr, int len, int type)
 {
 	register struct hostent *p;
 
@@ -1112,8 +1102,7 @@ _gethtbyaddr(addr, len, type)
 
 #ifdef NIS
 static struct hostent *
-_getnishost(name, map)
-	char *name, *map;
+_getnishost (char *name, char *map)
 {
 	register char *cp, **q;
 	char *result;

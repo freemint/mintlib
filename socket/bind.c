@@ -18,7 +18,7 @@
 
 
 int
-bind (int fd, struct sockaddr *addr, size_t addrlen)
+__bind (int fd, struct sockaddr *addr, size_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fbind (fd, addr, addrlen);
@@ -65,3 +65,4 @@ bind (int fd, struct sockaddr *addr, size_t addrlen)
 		return 0;
 	}
 }
+weak_alias (__bind, bind)

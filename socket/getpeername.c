@@ -19,7 +19,7 @@
 
 
 int
-getpeername (int fd, struct sockaddr *addr, size_t *addrlen)
+__getpeername (int fd, struct sockaddr *addr, size_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fgetpeername (fd, addr, addrlen);
@@ -73,3 +73,4 @@ getpeername (int fd, struct sockaddr *addr, size_t *addrlen)
 		return 0;
 	}
 }
+weak_alias (__getpeername, getpeername)

@@ -39,17 +39,20 @@ static char sccsid[] = "@(#)getnetbyname.c	5.7 (Berkeley) 2/24/91";
 #include <netdb.h>
 #include <string.h>
 
+void __setnetent (int f);
+void __endnetent (void);
+struct netent * __getnetent (void);
+
 extern int _net_stayopen;
 
 struct netent *
-getnetbyname(name)
-	register const char *name;
+__getnetbyname (const char *name)
 {
 	register struct netent *p;
 	register char **cp;
 
-	setnetent(_net_stayopen);
-	while ((p = getnetent())) {
+	__setnetent(_net_stayopen);
+	while ((p = __getnetent())) {
 		if (strcmp(p->n_name, name) == 0)
 			break;
 		for (cp = p->n_aliases; *cp != 0; cp++)
@@ -58,6 +61,7 @@ getnetbyname(name)
 	}
 found:
 	if (!_net_stayopen)
-		endnetent();
+		__endnetent();
 	return (p);
 }
+weak_alias (__getnetbyname, getnetbyname)

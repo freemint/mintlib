@@ -12,7 +12,7 @@
 
 
 ssize_t
-readv (int fd, struct iovec *iov, ssize_t niov)
+__readv (int fd, struct iovec *iov, ssize_t niov)
 {
 	if (__libc_newsockets) {
 		long r = Freadv (fd, iov, niov);
@@ -74,3 +74,4 @@ readv (int fd, struct iovec *iov, ssize_t niov)
 		}
 	}
 }
+weak_alias (__readv, readv)

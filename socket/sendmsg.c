@@ -18,7 +18,7 @@
 
 
 int
-sendmsg (int fd, const struct msghdr *msg, int flags)
+__sendmsg (int fd, const struct msghdr *msg, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Fsendmsg (fd, msg, flags);
@@ -70,3 +70,4 @@ sendmsg (int fd, const struct msghdr *msg, int flags)
 		return r;
 	}
 }
+weak_alias (__sendmsg, sendmsg)

@@ -38,20 +38,23 @@ static char sccsid[] = "@(#)getnetbyaddr.c	5.7 (Berkeley) 6/1/90";
 #include "socklib.h"
 #include <netdb.h>
 
+void __setnetent (int f);
+void __endnetent (void);
+struct netent * __getnetent (void);
+
 extern int _net_stayopen;
 
 struct netent *
-getnetbyaddr(net, type)
-	register long net;
-	register int type;
+__getnetbyaddr (long net, int type)
 {
 	register struct netent *p;
 
-	setnetent(_net_stayopen);
-	while ((p = getnetent()))
+	__setnetent(_net_stayopen);
+	while ((p = __getnetent()))
 		if (p->n_addrtype == type && p->n_net == net)
 			break;
 	if (!_net_stayopen)
-		endnetent();
+		__endnetent();
 	return (p);
 }
+weak_alias (__getnetbyaddr, getnetbyaddr)

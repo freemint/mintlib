@@ -14,7 +14,7 @@
 
 
 int
-recv (int fd, void *buf, ssize_t buflen, int flags)
+__recv (int fd, void *buf, ssize_t buflen, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Frecvfrom (fd, buf, buflen, flags, NULL, NULL);
@@ -45,3 +45,4 @@ recv (int fd, void *buf, ssize_t buflen, int flags)
 		return r;
 	}
 }
+weak_alias (__recv, recv)

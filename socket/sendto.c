@@ -18,7 +18,7 @@
 
 
 int
-sendto (int fd, const void *buf, ssize_t buflen, int flags, const struct sockaddr *addr, size_t addrlen)
+__sendto (int fd, const void *buf, ssize_t buflen, int flags, const struct sockaddr *addr, size_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fsendto (fd, buf, buflen, flags, addr, addrlen);
@@ -69,3 +69,4 @@ sendto (int fd, const void *buf, ssize_t buflen, int flags, const struct sockadd
 		return r;
 	}
 }
+weak_alias (__sendto, sendto)

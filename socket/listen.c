@@ -13,7 +13,7 @@
 
 
 int
-listen (int fd, int backlog)
+__listen (int fd, int backlog)
 {
 	if (__libc_newsockets) {
 		long r = Flisten (fd, backlog);
@@ -42,3 +42,4 @@ listen (int fd, int backlog)
 		return 0;
 	}
 }
+weak_alias (__listen, listen)

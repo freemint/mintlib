@@ -39,17 +39,20 @@ static char sccsid[] = "@(#)getprotoname.c	5.7 (Berkeley) 2/24/91";
 #include <netdb.h>
 #include <string.h>
 
+void __setprotoent (int f);
+void __endprotoent (void);
+struct protoent * __getprotoent (void);
+
 extern int _proto_stayopen;
 
 struct protoent *
-getprotobyname(name)
-	register const char *name;
+__getprotobyname (const char *name)
 {
 	register struct protoent *p;
 	register char **cp;
 
-	setprotoent(_proto_stayopen);
-	while ((p = getprotoent())) {
+	__setprotoent(_proto_stayopen);
+	while ((p = __getprotoent())) {
 		if (strcmp(p->p_name, name) == 0)
 			break;
 		for (cp = p->p_aliases; *cp != 0; cp++)
@@ -58,6 +61,7 @@ getprotobyname(name)
 	}
 found:
 	if (!_proto_stayopen)
-		endprotoent();
+		__endprotoent();
 	return (p);
 }
+weak_alias (__getprotobyname, getprotobyname)

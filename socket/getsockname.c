@@ -19,7 +19,7 @@
 
 
 int
-getsockname (int fd, struct sockaddr *addr, size_t *addrlen)
+__getsockname (int fd, struct sockaddr *addr, size_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fgetsockname (fd, addr, addrlen);
@@ -72,3 +72,4 @@ getsockname (int fd, struct sockaddr *addr, size_t *addrlen)
 		return 0;
 	}
 }
+weak_alias (__getsockname, getsockname)

@@ -53,8 +53,7 @@ static char *serv_aliases[MAXALIASES];
 int _serv_stayopen;
 
 void
-setservent(f)
-	int f;
+__setservent (int f)
 {
 	if (servf == NULL)
 		servf = fopen(_PATH_SERVICES, "rt" );
@@ -62,9 +61,10 @@ setservent(f)
 		rewind(servf);
 	_serv_stayopen |= f;
 }
+weak_alias (__setservent, setservent)
 
 void
-endservent()
+__endservent (void)
 {
 	if (servf) {
 		fclose(servf);
@@ -72,9 +72,10 @@ endservent()
 	}
 	_serv_stayopen = 0;
 }
+weak_alias (__endservent, endservent)
 
 struct servent *
-getservent()
+__getservent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -121,3 +122,4 @@ again:
 	*q = NULL;
 	return (&serv);
 }
+weak_alias (__getservent, getservent)

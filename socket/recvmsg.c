@@ -19,7 +19,7 @@
 
 
 int
-recvmsg (int fd, struct msghdr *msg, int flags)
+__recvmsg (int fd, struct msghdr *msg, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Frecvmsg (fd, msg, flags);
@@ -62,3 +62,4 @@ recvmsg (int fd, struct msghdr *msg, int flags)
 		return r;
 	}
 }
+weak_alias (__recvmsg, recvmsg)

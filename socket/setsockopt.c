@@ -13,7 +13,7 @@
 
 
 int
-setsockopt (int fd, int level, int optname, void *optval, size_t optlen)
+__setsockopt (int fd, int level, int optname, void *optval, size_t optlen)
 {
 	if (__libc_newsockets) {
 		long r = Fsetsockopt (fd, level, optname, optval, optlen);
@@ -45,3 +45,4 @@ setsockopt (int fd, int level, int optname, void *optval, size_t optlen)
 		return 0;
 	}
 }
+weak_alias (__setsockopt, setsockopt)

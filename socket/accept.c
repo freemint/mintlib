@@ -19,7 +19,7 @@
 
 
 int
-accept (int fd, struct sockaddr *addr, size_t *addrlen)
+__accept (int fd, struct sockaddr *addr, size_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Faccept (fd, addr, addrlen);
@@ -73,3 +73,4 @@ accept (int fd, struct sockaddr *addr, size_t *addrlen)
 		return newsock;
 	}
 }
+weak_alias (__accept, accept)

@@ -39,23 +39,26 @@ static char sccsid[] = "@(#)getservbyport.c	5.7 (Berkeley) 2/24/91";
 #include <netdb.h>
 #include <string.h>
 
+void __setservent (int f);
+void __endservent (void);
+struct servent * __getservent (void);
+
 extern int _serv_stayopen;
 
 struct servent *
-getservbyport(port, proto)
-	int port;
-	const char *proto;
+__getservbyport (int port, const char *proto)
 {
 	register struct servent *p;
 
-	setservent(_serv_stayopen);
-	while ((p = getservent())) {
+	__setservent(_serv_stayopen);
+	while ((p = __getservent())) {
 		if (p->s_port != port)
 			continue;
 		if (proto == 0 || strcmp(p->s_proto, proto) == 0)
 			break;
 	}
 	if (!_serv_stayopen)
-		endservent();
+		__endservent();
 	return (p);
 }
+weak_alias (__getservbyport, getservbyport)

@@ -14,7 +14,7 @@
 
 
 int
-socket (int domain, int type, int proto)
+__socket (int domain, int type, int proto)
 {
 	if (__libc_newsockets) {
 		long r = Fsocket (domain, type, proto);
@@ -53,3 +53,4 @@ socket (int domain, int type, int proto)
 		return sockfd;
 	}
 }
+weak_alias (__socket, socket)
