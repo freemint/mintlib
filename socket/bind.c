@@ -18,7 +18,7 @@
 
 
 int
-__bind (int fd, struct sockaddr *addr, size_t addrlen)
+__bind (int fd, struct sockaddr *addr, socklen_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fbind (fd, addr, addrlen);

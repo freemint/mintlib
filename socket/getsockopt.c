@@ -11,9 +11,13 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+#ifdef __MSHORT__
+#error socklen_t is unsigned int, must be wrapped for the syscall
+#endif
+
 
 int
-__getsockopt (int fd, int level, int optname, void *optval, size_t *optlen)
+__getsockopt (int fd, int level, int optname, void *optval, socklen_t *optlen)
 {
 	if (__libc_newsockets) {
 		long r = Fgetsockopt (fd, level, optname, optval, optlen);

@@ -17,9 +17,13 @@
 #include "sncpy.h"
 #include "sockets_global.h"
 
+#ifdef __MSHORT__
+#error socklen_t is unsigned int, must be wrapped for the syscall
+#endif
+
 
 int
-__accept (int fd, struct sockaddr *addr, size_t *addrlen)
+__accept (int fd, struct sockaddr *addr, socklen_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Faccept (fd, addr, addrlen);

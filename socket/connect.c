@@ -18,7 +18,7 @@
 
 
 int
-__connect (int fd, struct sockaddr *addr, size_t addrlen)
+__connect (int fd, struct sockaddr *addr, socklen_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fconnect (fd, addr, addrlen);

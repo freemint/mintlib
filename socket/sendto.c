@@ -18,7 +18,7 @@
 
 
 int
-__sendto (int fd, const void *buf, ssize_t buflen, int flags, const struct sockaddr *addr, size_t addrlen)
+__sendto (int fd, const void *buf, ssize_t buflen, int flags, const struct sockaddr *addr, socklen_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fsendto (fd, buf, buflen, flags, addr, addrlen);
