@@ -310,8 +310,6 @@ long	__builtin_labs(long);
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _STDLIB_H */
