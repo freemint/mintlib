@@ -6,3 +6,4 @@
 #define HAVE_MEMPCPY 1
 #define HAVE_DIRENT_H 1
 #define HAVE_ALLOCA_H 1
+#define HAVE_STDLIB_H 1

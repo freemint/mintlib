@@ -35,8 +35,7 @@
 # include <locale/localeinfo.h>
 #else
 # include <sys/types.h>
-__EXTERN char* __strerror_r __PROTO ((int errnum, char* buf, size_t buflen));
-__EXTERN void* __mempcpy __PROTO ((void* dstpp, const void* srcpp, size_t len));
+# include <string.h>
 #endif
 
 /* This code is shared between the standard stdio implementation found
@@ -1570,7 +1569,9 @@ do_positional:
 	  break
 
 	T (PA_CHAR, pa_char, int); /* Promoted.  */
+#ifndef __MINT__
 	T (PA_WCHAR, pa_wchar, wint_t);
+#endif
 	T (PA_INT|PA_FLAG_SHORT, pa_short_int, int); /* Promoted.  */
 	T (PA_INT, pa_int, int);
 	T (PA_INT|PA_FLAG_LONG, pa_long_int, long int);
