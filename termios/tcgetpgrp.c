@@ -30,7 +30,7 @@ tcgetpgrp(fd)
 
   r = Fcntl((short) fd, (long) &pg, TIOCGPGRP);
   if (r < 0) {
-    errno = (int) -r;
+    __set_errno ((int) -r);
     return -1;
   }
 #if 0
@@ -47,26 +47,9 @@ tcgetpgrp(fd)
 #else
   /* Sigh.  Some programs (notably bash) rely on this giving an error. */
   if (pg == 0) {
-    errno = ENOENT;
+    __set_errno (ENOENT);
     return -1;
   }
 #endif
   return (pid_t) pg;
-}
-
-int
-tcsetpgrp(fd, pgrp)
-  int fd;
-  pid_t pgrp;
-{
-  long r;
-  long pg;
-
-  pg = (long) pgrp;
-  r = Fcntl((short) fd, (long) &pg, TIOCSPGRP);
-  if (r < 0) {
-    errno = (int) -r;
-    return -1;
-  }
-  return 0;
 }

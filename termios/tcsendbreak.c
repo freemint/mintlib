@@ -27,7 +27,7 @@ tcsendbreak(fd, duration)
   oldmask = Psigblock(~0L);
   r = Fcntl((short) fd, (long) 0, TIOCSBRK);
   if (r < 0) {
-    errno = (int) -r;
+    __set_errno ((int) -r);
     r = -1;
   } else {
     /* POSIX says a duration of 0 sends a break 250 to 500 ms long. */
@@ -39,7 +39,7 @@ tcsendbreak(fd, duration)
     (void) Fselect((short) duration, 0L, 0L, 0L);
     r = Fcntl((short) fd, (long) 0, TIOCCBRK);
     if (r < 0) {
-      errno = (int) -r;
+      __set_errno ((int) -r);
       r = -1;
     } else {
       r = 0;

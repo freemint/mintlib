@@ -42,7 +42,7 @@ tcflow(fd, action)
       break;
   }
   if (r < 0) {
-    errno = (int) -r;
+    __set_errno ((int) -r);
     return -1;
   }
   return 0;
