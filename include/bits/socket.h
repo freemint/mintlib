@@ -119,6 +119,9 @@ enum __socket_type
 #define	AF_MAX		PF_MAX
 
 
+/* Maximum queue length specifiable by listen.  */
+#define SOMAXCONN	128
+
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>
 

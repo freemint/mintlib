@@ -42,7 +42,6 @@ struct rusage
     long ru_nivcsw;	    /* Involuntary context switches.  */
   };
 
-#define RLIM_INFINITY	0x7fffffffL
 
 /* Values for the first argument to `getrlimit' and `setrlimit'.  */
 enum __rlimit_resource
@@ -66,11 +65,24 @@ enum __rlimit_resource
     RLIMIT_CORE = 6,
 #define RLIMIT_CORE RLIMIT_CORE
     /* Maximum number of files the process can open.  */
-    RLIMIT_OPEN_FILES = 7
+    RLIMIT_OPEN_FILES = 7,
 #define RLIMIT_OPEN_FILES RLIMIT_OPEN_FILES
+    /* libc compatible definitions */
+    RLIMIT_OFILE = RLIMIT_OPEN_FILES,
+#define RLIMIT_OFILE RLIMIT_OFILE
+    RLIMIT_NOFILE = RLIMIT_OPEN_FILES,
+#define RLIMIT_NOFILE RLIMIT_NOFILE
+
+    /* Number of limit flavors.  */
+    RLIMIT_NLIMITS = 8,
+#define RLIMIT_NLIMITS RLIMIT_NLIMITS  
+    /* Traditional name for same.  */
+    RLIM_NLIMITS = RLIMIT_NLIMITS
+#define RLIM_NLIMITS RLIM_NLIMITS  
   };
 
-#define RLIM_NLIMITS      RLIMIT_OPEN_FILES  
+#define RLIM_INFINITY	0x7fffffffL
+
 
 /* Used by [gs]etrlimit.  */
 struct rlimit 
