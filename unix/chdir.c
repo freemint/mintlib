@@ -21,7 +21,6 @@ int
 __chdir (const char *dir)
 {
 	char *tmp = NULL;
-	int old = -1;
 	int r;
 
 	if (dir == NULL) {
@@ -49,9 +48,6 @@ __chdir (const char *dir)
 	else if (dir[1] == ':') {
 		if (!__libc_unix_names) {
 			int drv;
-
-			/* save old drive */
-			old = Dgetdrv();
 
 			drv = toupper(dir[0]) - 'A';
 			Dsetdrv(drv);
@@ -85,10 +81,6 @@ __chdir (const char *dir)
 
 	if (tmp)
 		__free (tmp);
-
-	/* restore old drive */
-	if (old >= 0)
-		Dsetdrv(old);
 
 	return r;
 }
