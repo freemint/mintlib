@@ -1,6 +1,6 @@
 #include <features.h>
 
-char __Ident_gnulib[] = "$Patchlevel: MiNTLib "
+char __Ident_gnulib[] = "$Version: MiNTLib "
 #ifdef __M68020__
 "-m68020-60 "
 #endif

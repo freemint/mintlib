@@ -39,7 +39,6 @@
 static char sccsid[] = "@(#)inet_makeaddr.c	5.6 (Berkeley) 2/24/91";
 #endif /* LIBC_SCCS and not lint */
 
-#include "socklib.h"
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>

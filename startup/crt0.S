@@ -12,8 +12,9 @@
 | executable; if a library is not used, then the extern is
 | satisfied by a dummy in the library
 
-	.globl	___Ident_gem
 	.globl	___Ident_gnulib
+	.globl	___Ident_socketlib
+	.globl	___Ident_gem
 
 |
 | Assumption: basepage is passed in a0 for accessories; for programs

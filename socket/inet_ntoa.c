@@ -44,7 +44,6 @@ static char sccsid[] = "@(#)inet_ntoa.c	5.6 (Berkeley) 2/24/91";
  * to base 256 d.d.d.d representation.
  */
 
-#include "socklib.h"
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

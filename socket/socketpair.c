@@ -4,7 +4,6 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <socklib.h>
 
 #include <mint/mintbind.h>
 #include <sys/socket.h>

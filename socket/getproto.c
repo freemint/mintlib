@@ -35,7 +35,6 @@
 static char sccsid[] = "@(#)getproto.c	5.6 (Berkeley) 6/1/90";
 #endif /* LIBC_SCCS and not lint */
 
-#include "socklib.h"
 #include <netdb.h>
 
 void __setprotoent (int f);

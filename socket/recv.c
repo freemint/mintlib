@@ -3,7 +3,6 @@
  */
 
 #include <errno.h>
-#include <socklib.h>
 #include <stdlib.h>
 
 #include <mint/mintbind.h>

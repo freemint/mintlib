@@ -35,7 +35,6 @@
 static char sccsid[] = "@(#)rcmd.c	5.24 (Berkeley) 2/24/91";
 #endif /* LIBC_SCCS and not lint */
 
-#include "socklib.h"
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <sys/stat.h>

@@ -70,7 +70,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	shadow.h \
 	signal.h \
 	sockios.h \
-	socklib.h \
 	st-out.h \
 	stdint.h \
 	stdio.h \

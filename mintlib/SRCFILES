@@ -43,8 +43,9 @@ SRCFILES = \
 	gmon.c \
 	heapbase.c \
 	ident.c \
+	ident_dummy_gem.c \
+	ident_dummy_socketlib.c \
 	iflink.c \
-	ig.c \
 	inistack.c \
 	inode.c \
 	isatty.c \

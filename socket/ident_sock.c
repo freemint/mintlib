@@ -3,4 +3,4 @@
 #include <features.h>
 
 
-char _Ident_socketlib[] = "$Version: SocketLib: MiNTLib "VERSION" ";
+char __Ident_socketlib[] = "$SocketLib: MiNTLib "VERSION" $";

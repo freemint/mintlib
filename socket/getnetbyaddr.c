@@ -35,7 +35,6 @@
 static char sccsid[] = "@(#)getnetbyaddr.c	5.7 (Berkeley) 6/1/90";
 #endif /* LIBC_SCCS and not lint */
 
-#include "socklib.h"
 #include <netdb.h>
 
 void __setnetent (int f);

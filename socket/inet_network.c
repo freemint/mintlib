@@ -39,7 +39,6 @@
 static char sccsid[] = "@(#)inet_network.c	5.8 (Berkeley) 2/24/91";
 #endif /* LIBC_SCCS and not lint */
 
-#include "socklib.h"
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

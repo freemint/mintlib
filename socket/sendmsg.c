@@ -4,7 +4,6 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <socklib.h>
 #include <string.h>
 #include <support.h>
 
