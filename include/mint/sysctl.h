@@ -119,7 +119,8 @@ struct ctlname
 # define KERN_IOV_MAX		11	/* int: max iovec's for readv(2) etc. */
 # define KERN_LOGIN_NAME_MAX	12	/* int: max length login name + NUL */
 # define KERN_BOOTTIME		13	/* struct: time kernel was booted */
-# define KERN_MAXID		14	/* number of valid kern ids */
+# define KERN_INITIALTPA	14	/* int: max TPA size of a process */
+# define KERN_MAXID		15	/* number of valid kern ids */
 
 # define CTL_KERN_NAMES \
 { \
@@ -137,6 +138,7 @@ struct ctlname
 	{ "iov_max", CTLTYPE_INT }, \
 	{ "login_name_max", CTLTYPE_INT }, \
 	{ "boottime", CTLTYPE_STRUCT }, \
+	{ "initialtpa", CTLTYPE_INT }, \
 }
 
 
@@ -149,7 +151,8 @@ struct ctlname
 # define HW_NCPU	 	4	/* int: number of cpus */
 # define HW_BYTEORDER	 	5	/* int: machine byte order */
 # define HW_PAGESIZE	 	6	/* int: software page size */
-# define HW_MAXID		7	/* number of valid hw ids */
+# define HW_FREEPHYSMEM		7	/* int: free physical memory */
+# define HW_MAXID		8	/* number of valid hw ids */
 
 # define CTL_HW_NAMES \
 { \
@@ -160,6 +163,7 @@ struct ctlname
 	{ "ncpu", CTLTYPE_INT }, \
 	{ "byteorder", CTLTYPE_INT }, \
 	{ "pagesize", CTLTYPE_INT }, \
+	{ "freephysmem", CTLTYPE_INT }, \
 }
 
 

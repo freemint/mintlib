@@ -521,7 +521,8 @@ __extension__								\
 #define Ptrace(request, pid, addr, data)		\
 		trap_1_wwwll(0x140, (short)(request), (short)(pid), \
 			      (long)(addr), (long)(data))
-/* 0x141 */
+#define Mvalidate(pid,addr,size)				\
+		trap_1_wwll (0x141, (short)(pid), (long)(addr), (long)(size))
 #define Dxreaddir(len, handle, buf, xattr, xret)		\
 		trap_1_wwllll(0x142, (short)(len), (long)(handle), \
 			      (long)(buf), (long)(xattr), (long)(xret))
