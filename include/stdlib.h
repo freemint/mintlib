@@ -46,7 +46,7 @@ typedef struct {
 # define __ldiv_t_defined	1
 #endif
 
-#if defined __USE_ISOC9X && !defined __lldiv_t_defined
+#if defined __USE_ISOC99 && !defined __lldiv_t_defined
 /* Returned by `lldiv'.  */
 __extension__ typedef struct {
 	long long int quot;		/* Quotient.  */
@@ -72,7 +72,7 @@ extern int atoi (__const char *__nptr) __THROW;
 /* Convert a string to a long integer.  */
 extern long int atol (__const char *__nptr) __THROW;
 
-#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
+#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
 /* This function will be part of the standard C library in ISO C 9X.  */
 extern long long int atoll (__const char *__nptr) __THROW;
 #endif
@@ -81,7 +81,7 @@ extern long long int atoll (__const char *__nptr) __THROW;
 extern double strtod (__const char *__restrict __nptr,
 		      char **__restrict __endptr) __THROW;
 
-#ifdef	__USE_ISOC9X
+#ifdef	__USE_ISOC99
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float strtof (__const char *__restrict __nptr,
 		     char **__restrict __endptr) __THROW;
@@ -107,7 +107,7 @@ extern long long int strtouq (__const char* __nptr, char** _endptr,
                                          int __base) __THROW;
 #endif  /* GCC and use BSD.  */
 
-#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
+#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
 /* These functions will be part of the standard C library in ISO C 9X.  */
 /* Convert a string to a quadword integer.  */
 extern long long int strtoll (__const char* __nptr, char** _endptr,
@@ -234,7 +234,7 @@ extern long labs (long __x) __THROW;
 extern div_t div (int __numer, int __denom) __THROW __attribute__ ((__const__));
 extern ldiv_t ldiv (long int __numer, long int __denom) __THROW
      __attribute__ ((__const__));
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 __extension__ extern lldiv_t lldiv (long long int __numer,
 				   long long int __denom) __THROW
      __attribute__ ((__const__));

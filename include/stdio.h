@@ -425,7 +425,7 @@ vprintf (const char *__restrict __fmt, __gnuc_va_list __arg) __THROW
 }
 #endif /* Optimizing.  */
 
-#if defined __USE_BSD || defined __USE_ISOC9X
+#if defined __USE_BSD || defined __USE_ISOC99
 /* Maximum chars of output to write in MAXLEN.  */
 extern int __snprintf __P ((char *__s, size_t __maxlen,
 			    __const char *__format, ...))
@@ -473,7 +473,7 @@ extern int scanf __P ((__const char *__restrict __format, ...));
 extern int sscanf __P ((__const char *__restrict __s,
 			__const char *__restrict __format, ...));
 
-#ifdef	__USE_ISOC9X
+#ifdef	__USE_ISOC99
 /* Read formatted input from S into argument list ARG.  */
 extern int __vfscanf __P ((FILE *__s, __const char *__format,
 			   __gnuc_va_list __arg));
