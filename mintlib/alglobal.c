@@ -1,7 +1,7 @@
 /*
  * lineA globals for both inline and non-inline lineA bindings
  */
-#include <linea.h>
+#include <mint/linea.h>
 	/* global vars */
 /* Pointer to line a parameter block returned by init 	*/
  __LINEA *__aline;

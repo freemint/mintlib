@@ -9,6 +9,7 @@ MISCFILES = MISCFILES \
 	errno.h \
 	falcon.h \
 	iflink.h \
+	linea.h \
 	mintbind.h \
 	mouse.h \
 	nfs.h \
@@ -16,6 +17,7 @@ MISCFILES = MISCFILES \
 	ostruct.h \
 	ptrace.h \
 	random.h \
+	screen.h \
 	slb.h \
 	ssystem.h \
 	sysctl.h \

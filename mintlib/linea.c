@@ -4,7 +4,7 @@
  */
 
 #define __NO_INLINE__
-#include <linea.h>
+#include <mint/linea.h>
 
 void linea0()                                                   
 {

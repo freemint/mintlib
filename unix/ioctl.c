@@ -9,7 +9,7 @@
 #include <mintbind.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <linea.h>	/* for TIOCGWINSZ under TOS */
+#include <mint/linea.h>	/* for TIOCGWINSZ under TOS */
 #include <support.h>
 
 #ifdef __TURBOC__

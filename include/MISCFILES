@@ -38,7 +38,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	lastlog.h \
 	libgen.h \
 	limits.h \
-	linea.h \
 	linker.h \
 	locale.h \
 	macros.h \
@@ -65,7 +64,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	resolv.h \
 	rtent.h \
 	sched.h \
-	screen.h \
 	search.h \
 	setjmp.h \
 	sgtty.h \
