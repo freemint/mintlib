@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <linewrap.h>
+#include "linewrap.h"
 
 void __line_wrap_output (FILE *, int);
 
