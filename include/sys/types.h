@@ -96,7 +96,10 @@ typedef __caddr_t caddr_t;
 #endif
 
 #if defined __USE_SVID || defined __USE_XOPEN
+#ifndef key_t
 typedef __key_t key_t;
+# define key_t key_t
+#endif
 #endif
 
 #ifdef __USE_XOPEN

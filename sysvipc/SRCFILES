@@ -1,0 +1,19 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = \
+	ftok.c \
+	msgctl.c \
+	msgget.c \
+	msgrcv.c \
+	msgsnd.c \
+	semctl.c \
+	semget.c \
+	semop.c \
+	shmat.c \
+	shmctl.c \
+	shmdt.c \
+	shmget.c
