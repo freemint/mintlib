@@ -90,7 +90,11 @@ LONGDOUBLESIZE=0x0c
 # routines remove stale include files from your system's include
 # directories.  Unless you build an rpm or do cross-compiling
 # you should leave that as "yes".
-HEADER_CLEANUP=yes
+ifeq ($(CROSS),yes)
+ HEADER_CLEANUP=no
+else
+ HEADER_CLEANUP=yes
+endif
 
 # Define this to the name of your ar program.
 AR=$(toolprefix)ar
