@@ -1,9 +1,9 @@
 
 #ifndef _MINT_XBRA_H
-#define _MINT_XBRA_H
+# define _MINT_XBRA_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 __BEGIN_DECLS

@@ -9,10 +9,12 @@
 */
 
 #ifndef	_SYS_RESOURCE_H
-#define	_SYS_RESOURCE_H	1
+# define _SYS_RESOURCE_H 1
 
 /* Get the definition of struct timeval.  */
-#include <sys/time.h>
+#ifndef	_SYS_TIME_H
+# include <sys/time.h>
+#endif
 
 __BEGIN_DECLS
 
@@ -94,18 +96,18 @@ struct rlimit
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-__EXTERN int getrlimit __PROTO ((enum __rlimit_resource __resource,
-			         struct rlimit *__rlimits));
-__EXTERN int __getrlimit __PROTO ((enum __rlimit_resource __resource,
-			           struct rlimit *__rlimits));
+extern int getrlimit (enum __rlimit_resource __resource,
+		      struct rlimit *__rlimits) __THROW;
+extern int __getrlimit (enum __rlimit_resource __resource,
+		        struct rlimit *__rlimits) __THROW;
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-__EXTERN int setrlimit __PROTO ((enum __rlimit_resource __resource,
-			         struct rlimit *__rlimits));
-__EXTERN int __setrlimit __PROTO ((enum __rlimit_resource __resource,
-			           struct rlimit *__rlimits));
+extern int setrlimit (enum __rlimit_resource __resource,
+		      struct rlimit *__rlimits) __THROW;
+extern int __setrlimit (enum __rlimit_resource __resource,
+		        struct rlimit *__rlimits) __THROW;
 
 /* Possible values for first argument to `getrusage'.  */
 enum __rusage_who 
@@ -120,10 +122,10 @@ enum __rusage_who
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-__EXTERN int getrusage __PROTO ((enum __rusage_who __who, 
-                                 struct rusage *__usage));
-__EXTERN int __getrusage __PROTO ((enum __rusage_who __who, 
-                                   struct rusage *__usage));
+extern int getrusage (enum __rusage_who __who, 
+                      struct rusage *__usage) __THROW;
+extern int __getrusage (enum __rusage_who __who, 
+                        struct rusage *__usage) __THROW;
 
 #if 0
 /* Function depends on CMD:
@@ -133,8 +135,8 @@ __EXTERN int __getrusage __PROTO ((enum __rusage_who __who,
    3 = Return the maximum possible address of the data segment.
    4 = Return the maximum number of files that the calling process can open.
    Returns -1 on errors.  */
-__EXTERN long int ulimit __PROTO ((int __cmd, long int __newlimit));
-__EXTERN long int __ulimit __PROTO ((int __cmd, long int __newlimit));
+extern long int ulimit (int __cmd, long int __newlimit) __THROW;
+extern long int __ulimit (int __cmd, long int __newlimit) __THROW;
 #endif
 
 #define PRIO_MIN -20   /* The smallest valid priority value.  */
@@ -165,20 +167,20 @@ enum __priority_which
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
-__EXTERN int getpriority __PROTO ((enum __priority_which __which, int __who));
-__EXTERN int __getpriority __PROTO ((enum __priority_which __which, int __who));
+extern int getpriority (enum __priority_which __which, int __who) __THROW;
+extern int __getpriority (enum __priority_which __which, int __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
-__EXTERN int setpriority __PROTO ((enum __priority_which __which, int __who,
-			     int __prio));
-__EXTERN int __setpriority __PROTO ((enum __priority_which __which, int __who,
-			     int __prio));
+extern int setpriority (enum __priority_which __which, int __who,
+			int __prio) __THROW;
+extern int __setpriority (enum __priority_which __which, int __who,
+			  int __prio) __THROW;
 
 /* Increment the priority of the current process by INCREMENT.  Return
    value is not meaningful.  */
-__EXTERN int nice __PROTO ((int increment));
-__EXTERN int __nice __PROTO ((int increment));
+extern int nice (int increment) __THROW;
+extern int __nice (int increment) __THROW;
 
 __END_DECLS
 

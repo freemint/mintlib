@@ -11,8 +11,8 @@
 #ifndef	_SYS_PTRACE_H
 # define _SYS_PTRACE_H	1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 #ifndef _SYS_TYPES_H
@@ -39,7 +39,7 @@ __BEGIN_DECLS
 #define PTRACE_DETACH		PT_DETACH
 #define PTRACE_SYSCALL		PT_SYSCALL
 
-int ptrace (int _request, pid_t _pid, caddr_t _addr, int _data);
+extern int ptrace (int _request, pid_t _pid, caddr_t _addr, int _data) __THROW;
 
 __END_DECLS
 

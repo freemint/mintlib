@@ -11,9 +11,11 @@
 #ifndef	_SYS_SYSTEMINFO_H
 #define	_SYS_SYSTEMINFO_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
+
+__BEGIN_DECLS
 
 /* Possible values for the first argument of `sysinfo'.  */
 enum __sysinfo_command {
@@ -135,11 +137,9 @@ enum __sysinfo_command {
  * long value and the provided buffer size is not large enough
  * the required size is returned and nothing gets copied.
  */
-__EXTERN int sysinfo __PROTO ((enum __sysinfo_command command, char* buf, 
-                               long bufsize));
+extern int sysinfo (enum __sysinfo_command __command, char* __buf,
+		    long __bufsize) __THROW;
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _SYS_SYSTEMINFO_H */

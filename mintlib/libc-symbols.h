@@ -12,10 +12,10 @@
    and for using symbol sets and linker warnings with GNU ld.  */
 
 #ifndef _LIBC_SYMBOLS_H
-#define _LIBC_SYMBOLS_H	1
+# define _LIBC_SYMBOLS_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>  /* Will also include <linker.h>.  */
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 /* See <linker.h>.  That is also one of the files that you have to edit

@@ -4,13 +4,17 @@
  */
 
 #ifndef _LOCALE_H
-#define _LOCALE_H
+# define _LOCALE_H 1
 
 #ifndef	_FEATURES_H
 # include <features.h>
 #endif
 
 __BEGIN_DECLS
+
+/* Get NULL from <stddef.h>.  */
+#define	__need_NULL
+#include <stddef.h>
 
 #define LC_ALL          0x003F
 #define LC_COLLATE      0x0001
@@ -19,10 +23,6 @@ __BEGIN_DECLS
 #define LC_NUMERIC      0x0008
 #define LC_TIME         0x0010
 #define LC_MESSAGES	0x0020
-
-#ifndef NULL
-#define NULL		__NULL
-#endif
 
 struct lconv {
         char    *decimal_point;
@@ -45,10 +45,10 @@ struct lconv {
         char    n_sign_posn;
 };
 
-__EXTERN char *		setlocale  __PROTO((int category, const char *locale));
+extern char *setlocale (int category, const char *locale) __THROW;
 /* default is supposed to be setlocale(LC_ALL, "C") */
 
-__EXTERN struct lconv *	localeconv __PROTO((void));
+extern struct lconv *localeconv (void) __THROW;
 
 __END_DECLS
 

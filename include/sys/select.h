@@ -22,7 +22,7 @@
 /*	POSIX 1003.1g: 6.2 Select from File Descriptor Sets <sys/select.h>  */
 
 #ifndef _SYS_SELECT_H
-#define _SYS_SELECT_H	1
+# define _SYS_SELECT_H 1
 
 #ifndef	_FEATURES_H
 # include <features.h>
@@ -75,12 +75,12 @@ typedef __fd_set fd_set;
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-__EXTERN int __select __P ((int __nfds, __fd_set *__readfds,
-			    __fd_set *__writefds, __fd_set *__exceptfds,
-			    struct timeval *__timeout));
-__EXTERN int select __P ((int __nfds, __fd_set *__readfds,
-			  __fd_set *__writefds, __fd_set *__exceptfds,
-			  struct timeval *__timeout));
+extern int select (int __nfds, __fd_set *__readfds,
+		   __fd_set *__writefds, __fd_set *__exceptfds,
+		   struct timeval *__timeout) __THROW;
+extern int __select (int __nfds, __fd_set *__readfds,
+		     __fd_set *__writefds, __fd_set *__exceptfds,
+		     struct timeval *__timeout) __THROW;
 
 #ifdef __USE_GNU
 /* XXX Once/if POSIX.1g gets official this prototype will be available
@@ -88,10 +88,10 @@ __EXTERN int select __P ((int __nfds, __fd_set *__readfds,
 /* Same as above only that the TIMEOUT value is given with higher
    resolution and a sigmask which is been set temporarily.  This version
    should be used.  */
-__EXTERN int pselect __P ((int __nfds, __fd_set *__readfds,
-			   __fd_set *__writefds, __fd_set *__exceptfds,
-			   const struct timespec *__timeout,
-			   const __sigset_t *__sigmask));
+extern int pselect (int __nfds, __fd_set *__readfds,
+		    __fd_set *__writefds, __fd_set *__exceptfds,
+		    const struct timespec *__timeout,
+		    const __sigset_t *__sigmask) __THROW;
 #endif
 
 __END_DECLS

@@ -41,9 +41,9 @@ __BEGIN_DECLS
 
 /* Reboot the system or enable/disable CTRL-ALT-DEL keystroke.  */
 #ifndef __MSHORT__
-__EXTERN int reboot __PROTO ((int __howto));
+extern int reboot (int __howto) __THROW;
 #else
-__EXTERN int reboot __PROTO ((long int __howto));
+extern int reboot (long int __howto) __THROW;
 #endif
 
 __END_DECLS

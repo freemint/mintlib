@@ -3,10 +3,10 @@
  */
 
 #ifndef _MINT_BASEPAGE_H
-#define	_MINT_BASEPAGE_H 1
+# define _MINT_BASEPAGE_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 __BEGIN_DECLS
@@ -29,7 +29,7 @@ typedef struct basep {
     char	p_cmdlin[128];	/* command line image */
 } BASEPAGE;
 
-extern	BASEPAGE	*_base;
+extern BASEPAGE *_base;
 
 __END_DECLS
 

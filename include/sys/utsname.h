@@ -1,4 +1,4 @@
-/*  sys/time.h -- MiNTLib.
+/*  sys/utsname.h -- MiNTLib.
     Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
@@ -11,8 +11,8 @@
 #ifndef	_SYS_UTSNAME_H
 #define	_SYS_UTSNAME_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 #ifndef _SYS_PARAM_H
@@ -40,7 +40,7 @@ struct utsname {
 };
 
 /* Fill INFO with the system information obtained via sysinfo.  */
-__EXTERN int uname __PROTO ((struct utsname* info));
+extern int uname (struct utsname* info) __THROW;
 
 __END_DECLS
 

@@ -20,7 +20,7 @@
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 #ifndef	_SYS_POLL_H
-#define	_SYS_POLL_H	1
+# define _SYS_POLL_H 1
 
 #ifndef _FEATURES_H
 # include <features.h>
@@ -51,10 +51,10 @@ struct pollfd
    an event to occur; if TIMEOUT is -1, block until an event occurs.
    Returns the number of file descriptors with events, zero if timed out,
    or -1 for errors.  */
-extern int __poll __P ((struct pollfd *__fds, unsigned long int __nfds,
-			__int32_t __timeout));
-extern int poll __P ((struct pollfd *__fds, unsigned long int __nfds,
-		      __int32_t __timeout));
+extern int poll (struct pollfd *__fds, unsigned long int __nfds,
+		 __int32_t __timeout) __THROW;
+extern int __poll (struct pollfd *__fds, unsigned long int __nfds,
+		   __int32_t __timeout) __THROW;
 
 __END_DECLS
 

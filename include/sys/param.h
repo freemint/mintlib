@@ -1,6 +1,6 @@
 
 #ifndef _SYS_PARAM_H
-#define _SYS_PARAM_H 1
+# define _SYS_PARAM_H 1
 
 #define	MAXPATHLEN	128		/* same as FILENAME_MAX in stdio.h */
 #define	NOFILE		20		/* same as OPEN_MAX in limits.h */

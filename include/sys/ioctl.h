@@ -1,9 +1,9 @@
 
 #ifndef	_SYS_IOCTL_H
-#define _SYS_IOCTL_H 1
+# define _SYS_IOCTL_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 __BEGIN_DECLS
@@ -298,9 +298,9 @@ struct _mutimbuf {
 	unsigned short modtime, moddate;
 };
 
-__EXTERN int ioctl	__PROTO((int, int, void *));
-__EXTERN int stty	__PROTO((int, struct sgttyb *));
-__EXTERN int gtty	__PROTO((int, struct sgttyb *));
+extern int ioctl (int, int, void *) __THROW;
+extern int stty	(int, struct sgttyb *) __THROW;
+extern int gtty	(int, struct sgttyb *) __THROW;
 
 __END_DECLS
 

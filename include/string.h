@@ -9,14 +9,13 @@
 # include <features.h>
 #endif
 
-#define __need_size_t
-#include <stddef.h>
-
 __BEGIN_DECLS
 
-#ifndef NULL
-#define NULL __NULL
-#endif
+/* Get size_t and NULL from <stddef.h>.  */
+#define __need_size_t
+#define	__need_NULL
+#include <stddef.h>
+
 
 /* Copy N bytes of SRC to DEST.  */
 __EXTERN void* memcpy __P ((void*  __dest,

@@ -19,8 +19,8 @@
 # undef __need_time_t
 #endif
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 /* Structure returned by the `ftime' function.  */
@@ -33,6 +33,6 @@ struct timeb {
 };
 
 /* For compatibility reasons.  Actually obsoleted by gettimeofday().  */
-__EXTERN int ftime __PROTO((struct timeb *__timebuf));
+extern int ftime (struct timeb *__timebuf) __THROW;
 
 #endif	/* _SYS_TIMEB_h */

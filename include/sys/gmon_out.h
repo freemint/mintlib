@@ -26,7 +26,7 @@
    identifying the type of records, followed by records specific data. */
 
 #ifndef _SYS_GMON_OUT_H
-#define _SYS_GMON_OUT_H	1
+# define _SYS_GMON_OUT_H 1
 
 #ifndef	_FEATURES_H
 # include <features.h>

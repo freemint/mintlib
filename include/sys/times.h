@@ -11,8 +11,8 @@
 #ifndef	_SYS_TIMES_H
 #define	_SYS_TIMES_H
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 #ifndef _TIME_H
@@ -30,8 +30,8 @@ struct tms {
   clock_t tms_cstime;    /* Terminated childrens' system CPU time.  */
 };
 
-__EXTERN clock_t times __PROTO((struct tms*));
-__EXTERN clock_t __times __PROTO((struct tms*));
+extern clock_t times (struct tms *) __THROW;
+extern clock_t __times (struct tms *) __THROW;
 
 __END_DECLS
 

@@ -1,83 +1,52 @@
+
 #ifndef _MINIMAL_H
 #define _MINIMAL_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifndef _OSBIND_H
-#include <osbind.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 int errno;
+
 #ifndef __MINT__
 int _console_dev = 2;
-#endif
 
-#ifndef __MINT__
+extern __EXITING __exit (long) __NORETURN; /* def in crt0.c */
+int raise (int sig);
+void _exit (int status);
 
-__EXTERN __EXITING __exit __PROTO((long)) __NORETURN; /* def in crt0.c */
-int 	  raise	__PROTO((int sig));
-void	 _exit  __PROTO((int status));
+void _exit(int status) { __exit((long)status); }
 
-void _exit(status)
-	int status;
-{
-    __exit((long)status);
-}
-
-int
-raise(sig)
-int sig;
-{
-	return 0;
-}
+int raise (int sig) { return 0; }
 
 #else
 
-__EXTERN __EXITING _exit __PROTO((int)) __NORETURN;
+extern __EXITING _exit (int) __NORETURN;
 #define __exit _exit
 
 #endif /* __MINT__ */
 
-void	 _init_signal __PROTO((void));
-void	  exit  __PROTO((int status));
-void	 _main  __PROTO((long argc, char **argv, char **environ));
-void __main __PROTO ((void));
+void _init_signal (void);
+void exit (int status);
+void _main (long argc, char **argv, char **environ);
+void __main (void);
 
 
-void
-_init_signal()
-{
-}
+void _init_signal (vodi) { }
 
-__EXITING
-exit(status)
-	int status;
-{
-	__exit(status);
-}
+__EXITING exit (int status) { __exit(status); }
 
-void __main ()
-{
-}
+void __main (void) { }
 
-void _main(argc, argv, environ)
-	long argc;
-	char **argv;
-	char **environ;
+void _main (long argc, char **argv, char **environ)
 {
 	/* Avoid prototyping main, it will conflict with user's version */
-	__EXTERN int main ();
+	extern int main ();
 	exit(main((int)argc, argv, environ));
 }
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _MINIMAL_H */

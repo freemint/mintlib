@@ -1,7 +1,7 @@
 /* header file for POSIX directory access routines */
 
 #ifndef _SYS_DIRENT_H
-#define _SYS_DIRENT_H 1
+# define _SYS_DIRENT_H 1
 
 #ifndef _FEATURES_H
 # include <features.h>

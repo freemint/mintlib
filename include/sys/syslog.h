@@ -39,6 +39,10 @@
 #ifndef _SYS_SYSLOG_H
 # define _SYS_SYSLOG_H 1
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 #define	_PATH_LOG	"/dev/log"
 
 /*
@@ -192,20 +196,20 @@ CODE facilitynames[] =
 __BEGIN_DECLS
 
 /* Close desriptor used to write to system logger.  */
-__EXTERN void closelog __P ((void));
+extern void closelog (void) __THROW;
 
 /* Open connection to system logger.  */
-__EXTERN void openlog __P ((__const char *__ident, int __option,
-			  int __facility));
+extern void openlog (__const char *__ident, int __option,
+		     int __facility) __THROW;
 
 /* Set the log mask level.  */
-__EXTERN int setlogmask __P ((int __mask));
+extern int setlogmask (int __mask) __THROW;
 
 /* Generate a log message using FMT string and option arguments.  */
-__EXTERN void syslog __P ((int __pri, __const char *__fmt, ...));
+extern void syslog (int __pri, __const char *__fmt, ...) __THROW;
 
 /* Generate a log message using FMT and using arguments pointed to by AP.  */
-__EXTERN void vsyslog __P ((int __pri, __const char *__fmt, _BSD_VA_LIST_ __ap));
+extern void vsyslog (int __pri, __const char *__fmt, _BSD_VA_LIST_ __ap) __THROW;
 
 __END_DECLS
 

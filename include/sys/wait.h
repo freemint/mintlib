@@ -1,8 +1,8 @@
 #ifndef _WAIT_H
 #define _WAIT_H
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
 #ifndef _SYS_TYPES_H
@@ -87,20 +87,20 @@ typedef union wait __union_wait_t;
 #define WAIT_MYPGRP     0       /* Any process in my process group.  */
 #endif
 
-__EXTERN pid_t wait     __PROTO((__WP status));
-__EXTERN pid_t __wait     __PROTO((__WP status));
+extern pid_t wait (__WP status) __THROW;
+extern pid_t __wait (__WP status) __THROW;
 
 #ifdef __USE_BSD
 struct rusage;  /* Don't depend on sys/resource.h.  */
 
-__EXTERN pid_t wait3    __PROTO((__WP status, int mode, struct rusage *rusage));
-__EXTERN pid_t __wait3    __PROTO((__WP status, int mode, struct rusage *rusage));
-__EXTERN pid_t wait4 __PROTO((pid_t pid, __WP status, int options, struct rusage *rusage));
-__EXTERN pid_t __wait4 __PROTO((pid_t pid, __WP status, int options, struct rusage *rusage));
+extern pid_t wait3 (__WP status, int mode, struct rusage *rusage) __THROW;
+extern pid_t __wait3 (__WP status, int mode, struct rusage *rusage) __THROW;
+extern pid_t wait4 (pid_t pid, __WP status, int options, struct rusage *rusage) __THROW;
+extern pid_t __wait4 (pid_t pid, __WP status, int options, struct rusage *rusage) __THROW;
 #endif /* __USE_BSD */
 
-__EXTERN pid_t waitpid  __PROTO((pid_t pid, int* status, int options));
-__EXTERN pid_t __waitpid  __PROTO((pid_t pid, int* status, int options));
+extern pid_t waitpid (pid_t pid, int* status, int options) __THROW;
+extern pid_t __waitpid (pid_t pid, int* status, int options) __THROW;
 
 __END_DECLS
 

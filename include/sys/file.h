@@ -1,12 +1,15 @@
 
 #ifndef _SYS_FILE_H
-#define _SYS_FILE_H 1
+# define _SYS_FILE_H 1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
 
+__BEGIN_DECLS
+
 #ifdef __MINT__
+
 /* lockf() comands */
 #define LOCK_SH	1	/* shared lock */
 #define LOCK_EX	2	/* exclusive lock */
@@ -16,9 +19,12 @@
 #define FREAD  1
 #define FWRITE 2
 
-__EXTERN int		flock	__PROTO((int, int));
-__EXTERN int		__flock	__PROTO((int, int));
-#endif
+extern int flock (int, int) __THROW;
+extern int __flock (int, int) __THROW;
+
+#endif /* __MINT__ */
+
+__END_DECLS
 
 #include <fcntl.h>
 

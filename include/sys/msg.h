@@ -19,7 +19,7 @@
 /* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
 
 #ifndef _SYS_MSG_H
-#define _SYS_MSG_H
+# define _SYS_MSG_H 1
 
 #ifndef	_FEATURES_H
 # include <features.h>

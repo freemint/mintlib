@@ -3,8 +3,8 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 __BEGIN_DECLS
@@ -13,13 +13,13 @@ __BEGIN_DECLS
 #define P_NOWAIT	1
 #define P_OVERLAY	2
 
-__EXTERN int	spawnv	__PROTO((int, const char *, char *const *));
-__EXTERN int	spawnve	__PROTO((int, const char *, char *const *, char *const *));
-__EXTERN int	_spawnve __PROTO((int, const char *, char *const *, char *const *));
-__EXTERN int	spawnvp	__PROTO((int, const char *, char *const *));
-__EXTERN int	spawnle	__PROTO((int, const char *, ...));
-__EXTERN int	spawnl	__PROTO((int, const char *, ...));
-__EXTERN int	spawnlp	__PROTO((int, const char *, ...));
+extern int spawnv (int, const char *, char *const *) __THROW;
+extern int spawnve (int, const char *, char *const *, char *const *) __THROW;
+extern int _spawnve (int, const char *, char *const *, char *const *) __THROW;
+extern int spawnvp (int, const char *, char *const *) __THROW;
+extern int spawnle (int, const char *, ...) __THROW;
+extern int spawnl (int, const char *, ...) __THROW;
+extern int spawnlp (int, const char *, ...) __THROW;
 
 __END_DECLS
 
