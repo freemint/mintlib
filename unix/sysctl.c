@@ -22,22 +22,13 @@ int
 __sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
           const void *new, unsigned long newlen)
 {
-	static int __have_sysctl = 1;
-
-	if (__have_sysctl) {
-		int ret;
-
-		ret = Psysctl (name, namelen, old, oldlenp, new, newlen);
-		if (ret < 0) {
-			if (ret == -ENOSYS)
-				__have_sysctl = 0;
-			__set_errno (-ret);
-			return -1;
-		}
-		return ret;
+	int ret;
+	
+	ret = Psysctl (name, namelen, old, oldlenp, new, newlen);
+	if (ret < 0) {
+		__set_errno (-ret);
+		return -1;
 	}
-
-	__set_errno (ENOSYS);
-	return -1;
+	return ret;
 }
 weak_alias (__sysctl, sysctl)

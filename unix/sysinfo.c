@@ -17,17 +17,17 @@
 #include <sys/systeminfo.h>
 #include <sys/utsname.h>
 #include <sys/param.h>
-#include <sys/cookie.h>
+#include <mint/cookie.h>
 #include <mint/mintbind.h>
 
 #include "lib.h"
 
 /* In case you still haven't got the prototype in stdlib.h where
    it belongs.  */ 
-extern int putenv __PROTO ((const char* string));
+extern int putenv (const char* string);
 
 /* Helper functions.  */
-static void fast_strncpy __PROTO ((char* to, char* from, long bytes));
+static void fast_strncpy (char* to, char* from, long bytes);
 
 /* Prototypes for sub-functions.  */
 
