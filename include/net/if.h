@@ -42,7 +42,7 @@ enum
 #define IFF_NOTRAILERS	IFF_NOTRAILERS
     IFF_RUNNING = 0x40,		/* Resources allocated.  */
 #define IFF_RUNNING	IFF_RUNNING
-    IFF_NOARP = 0x80,		/* No address resolution protocol.  */
+    IFF_NOARP = 0x80		/* No address resolution protocol.  */
 #define IFF_NOARP	IFF_NOARP
 
 #if 0
@@ -139,6 +139,7 @@ struct	ifreq {
 	char	ifr_name[IFNAMSIZ];		/* if name, e.g. "en0" */
 	union {
 		struct	sockaddr ifru_addr;
+		struct	sockaddr ifru_hwaddr;
 		struct	sockaddr ifru_dstaddr;
 		struct	sockaddr ifru_broadaddr;
 		struct	sockaddr ifru_netmask;
@@ -149,6 +150,7 @@ struct	ifreq {
 		caddr_t	ifru_data;
 	} ifr_ifru;
 #define	ifr_addr	ifr_ifru.ifru_addr	/* address */
+#define	ifr_hwaddr	ifr_ifru.ifru_hwaddr	/* hardware address */
 #define	ifr_dstaddr	ifr_ifru.ifru_dstaddr	/* other end of p-to-p link */
 #define	ifr_broadaddr	ifr_ifru.ifru_broadaddr	/* broadcast address */
 #define	ifr_netmask	ifr_ifru.ifru_netmask	/* netmask */

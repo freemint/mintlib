@@ -56,6 +56,9 @@ extern in_addr_t inet_network (__const char *__cp) __THROW;
    is a pointer to an internal array containing the string.  */
 extern char *inet_ntoa (struct in_addr __in) __THROW;
 
+#if 0
+/* not integrated */
+
 /* Convert from presentation format of an Internet number in buffer
    starting at CP to the binary network format and store result for
    interface type AF in buffer starting at BUF.  */
@@ -102,6 +105,7 @@ extern unsigned int inet_nsap_addr (__const char *__cp,
    a presentation form and place result in BUF.  */
 extern char *inet_nsap_ntoa (int __len, __const unsigned char *__cp,
 			     char *__buf) __THROW;
+#endif
 #endif
 
 __END_DECLS

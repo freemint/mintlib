@@ -40,6 +40,10 @@
 # include <netinet/in_systm.h>
 #endif
 
+#ifndef _NETINET_IN_H
+# include <netinet/in.h>
+#endif
+
 __BEGIN_DECLS
 
 /*

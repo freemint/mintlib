@@ -1,4 +1,15 @@
 # This file gets included by the Makefile in this directory to determine
 # the files that should go both into binary and source distributions.
 
-MISCFILES = MISCFILES bpf.h if.h if_arp.h if_ppp.h if_sl.h route.h slcompress.h
+MISCFILES = MISCFILES \
+	\
+	bpf.h \
+	ethernet.h \
+	ethertypes.h \
+	if.h \
+	if_arp.h \
+	if_ether.h \
+	if_ppp.h \
+	if_sl.h \
+	route.h \
+	slcompress.h
