@@ -277,11 +277,13 @@ generate_bindings_old(FILE *out, SYSTAB *tab)
 				l = l->next;
 			}
 			
-			fprintf(out, "(");
+			fprintf(out, "(0x%x", i);
 			arg = 'a';
 			l = call->args;
 			while (l)
 			{
+				fprintf(out, ",");
+				
 				if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 				{
 					fprintf(out, "(long)");
@@ -310,8 +312,6 @@ generate_bindings_old(FILE *out, SYSTAB *tab)
 				
 				arg++;
 				l = l->next;
-				
-				if (l) fprintf(out, ",");
 			}
 			fprintf(out, ")");
 			
