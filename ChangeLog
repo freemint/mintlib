@@ -1,3 +1,171 @@
+2004-01-22 Thursday 22:47  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.57.4 for new release.
+	
+2004-01-22 Thursday 22:43  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/posix_fallocate.c:
+
+	Use block size from fstat instead fstatfs.
+	
+2004-01-22 Thursday 22:22  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/: SRCFILES, posix_fallocate.c:
+
+	Added missing function posix_fallocate (imported from glibc).
+	
+2004-01-16 Friday 15:15  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/syscalls.master:
+
+	Synchronized with kernel.
+	
+2004-01-16 Friday 14:59  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/cookie.h:
+
+	Added CT60 cookie value.
+	
+2004-01-16 Friday 11:18  Standa Opichal <opichals@seznam.cz>
+
+	* include/bits/socket.h:
+
+	RFC 2553: protocol-independent placeholder for socket addresses
+	is sometimes used to detect ipv6 availability (e.g. ntpd sources).
+	Ifdefed out.
+	
+	Report if causing problems with some packages.
+	
+2004-01-16 Friday 11:15  Standa Opichal <opichals@seznam.cz>
+
+	* include/sys/time.h, unix/adjtime.c, include/mint/mintbind.h,
+	unix/SRCFILES:
+
+	New FreeMiNT syscall Tadjtime() binding and the unix/adjtime()
+	implementation.
+	
+2003-12-21 Sunday 16:11  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* include/mint/mintbind.h:
+
+	Added trap_wllw needed by Dreadlabel() for example.
+	
+2003-11-17 Monday 20:23  Ralph Lowinski <altf4@freemint.de>
+
+	* stdio/vfscanf.c:
+
+	type modifier 'l' (= long integer) wasn't interpreted for libiio
+	
+2003-10-08 Wednesday 15:23  Frank Naumann <fnaumann@freemint.de>
+
+	* dirent/closedir.c, dirent/opendir.c, dirent/readdir.c,
+	mintlib/assert-perr.c, mintlib/assert.c, mintlib/crtinit.c,
+	mintlib/do_fstat.c, mintlib/do_stat.c, mintlib/getcwd.c,
+	mintlib/getenv.c, mintlib/getumask.c, mintlib/globals.c,
+	mintlib/heapbase.c, mintlib/inistack.c, mintlib/inode.c,
+	mintlib/lib.h, mintlib/libc_fatal.c, mintlib/main.c,
+	mintlib/malloc.c, mintlib/putenv.c, mintlib/quickstat.c,
+	mintlib/rewinddi.c, mintlib/setenv.c, mintlib/spawn.c,
+	mintlib/spawnve.c, mintlib/thread.c, mintlib/unx2dos.c,
+	stdlib/atexit.c, time/clock.c, unix/getrusage.c, unix/kill.c,
+	unix/sbrk.c, unix/sigaction.c, unix/sigblock.c, unix/signal.c,
+	unix/sigsetmask.c, unix/sysinfo.c, unix/times.c, unix/umask.c,
+	unix/write.c:
+
+	Code cleanup, moved lot of redundant extern declarations into
+	mintlib/lib.h.
+	
+2003-10-08 Wednesday 12:31  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/realloc.c:
+
+	Increased resize down threshold a little bit.
+	
+2003-10-08 Wednesday 12:21  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/realloc.c:
+
+	Simplified realloc(), don't directly manipulate the data structures
+	if the block is decreased (there was a bad side effect in conjunction
+	with malloc/free).
+	
+2003-09-18 Thursday 10:56  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/: printf_fp.c, printf_fphex.c, printf_size.c:
+
+	Use ssize_t instead int, contributed by Markus Oberhumer.
+	
+2003-08-19 Tuesday 14:38  Standa Opichal <opichals@seznam.cz>
+
+	* mintlib/do_chown16.c:
+
+	Fchown() syscall semantics changed to follow symlinks.
+	
+	This is now in sync with the libc specification.
+	
+	The mintlib falls back to Fchown() if the new Fchown16() syscall
+	is not present (older kernel is in use).
+	
+2003-08-19 Tuesday 11:35  Standa Opichal <opichals@seznam.cz>
+
+	* include/unistd.h, include/mint/mintbind.h, include/mint/osbind.h,
+	mintlib/SRCFILES, mintlib/do_chown16.c, mintlib/lib.h,
+	mintlib/syscalls.list, unix/SRCFILES, unix/chown.c, unix/lchown.c:
+
+	Fixing the chown() to follow symlinks and creating lchown() binding.
+	
+	Both uses the sys_f_chown16 syscall implementation in mintlib/do_chown16.c
+	
+2003-08-19 Tuesday 11:30  Standa Opichal <opichals@seznam.cz>
+
+	* sunrpc/key_call.c:
+
+	int -> pid_t to remove compiler warnings
+	
+2003-07-02 Wednesday 21:55  Frank Naumann <fnaumann@freemint.de>
+
+	* include/unistd.h, misc/SRCFILES, misc/setmode.c:
+
+	Added BSD functions setmode/getmode.
+	
+2003-07-02 Wednesday 21:07  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/stat.h:
+
+	Added missing S_ISTXT definition (same as S_ISVTX).
+	
+2003-07-02 Wednesday 07:45  Frank Naumann <fnaumann@freemint.de>
+
+	* include/features.h.in:
+
+	Don't define __USE_FILE_OFFSET64 if requested, not ready yet.
+	
+2003-04-22 Tuesday 11:15  Frank Naumann <fnaumann@freemint.de>
+
+	* stdlib/longlong.h:
+
+	Fixed some warnings under gcc3 (patch supplied by Patrice Mandin).
+	
+2003-03-15 Saturday 08:57  Frank Naumann <fnaumann@freemint.de>
+
+	* include/minimal.h:
+
+	Corrected type (reported from Marc-Anton Kehr).
+	
+2003-03-14 Friday 09:22  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib.spec, mintlib.spec.in:
+
+	Updated.
+	
+2003-03-14 Friday 08:48  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
 2003-03-14 Friday 08:39  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars:
