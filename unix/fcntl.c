@@ -11,18 +11,40 @@
 #include "lib.h"
 
 #ifdef __STDC__
-int __fcntl_v (int f, int cmd, va_list args)
+int __fcntl_v (int fd, int cmd, va_list args)
 #else
-int __fcntl_v (f, cmd)
+int __fcntl_v (fd, cmd)
 int f;
 int cmd;
 #endif
 {
 	long r;
 
-	r = Fcntl(f, va_arg(args, void *), cmd);
+	r = Fcntl(fd, va_arg(args, void *), cmd);
 	if (r == -ELOCKED)
 		r = -EACCES;
+#ifndef __PURE_MINT_SUPPORT__
+	if (r == -ENOSYS && !__mint) {
+		switch (cmd) {
+			case F_GETFL: {
+				switch (fd) {
+					case 0:
+						r = O_RDONLY;
+						break;
+					case 1:
+						r = O_WRONLY;
+						break;
+					case 2:
+					default:
+						r = O_RDWR;
+						break;
+						
+				}
+				break;
+			}
+		}
+	}
+#endif
 	if (r < 0) {
 		__set_errno (-r);
 		r = -1L;
