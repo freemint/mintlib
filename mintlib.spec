@@ -1,6 +1,6 @@
 # mintlib.spec.in -- MiNTLib.
 # Copyright (C) 2000, 2001 Guido Flohr <guido@freemint.de>
-# Copyright (C) 2001 Frank Naumann <fnaumann@freemint.de>
+# Copyright (C) 2001, 2002, 2003 Frank Naumann <fnaumann@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -27,14 +27,14 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.57.1
+Version       : 0.57.3
 Release       : 1
 Group         : Base
 Copyright     : distributable
 
 Packager      : Frank Naumann <fnaumann@freemint.de>
 Vendor        : Sparemint
-URL           : http//wh58-508.st.uni-magdeburg.de/sparemint/misc/code/mintlib/
+URL           : http://sparemint.atariforge.net/sparemint/misc/code/mintlib/
 
 %ifarch m68kmint
 BuildRequires : pdksh gawk
@@ -65,7 +65,8 @@ Requires      : gcc >= 2.95.2
 Obsoletes     : mintnet-devel
 #Conflicts    : mintlib-mshort
 Conflicts     : audiofile-devel < 0.1.9-3
-#Conflicts    : bind			not really useful
+Conflicts     : bind <= 4.9.7
+Conflicts     : bind-utils <= 4.9.7
 #Conflicts    : binutils < 2.9.1-6	Overkill and not really used
 Conflicts     : bzip2 < 0.9.5d-2
 Conflicts     : cflib < 11m-3
@@ -92,7 +93,7 @@ Conflicts     : popt < 1.3-4
 Conflicts     : readline-devel < 2.2.1-5
 #Conflicts    : rpm-devel < 3.0.2-8	not possible at the moment
 Conflicts     : slang < 1.2.2-3
-#Conflicts    : tcp_wrappers < 7.6-2	not really useful
+Conflicts     : tcp_wrappers < 7.6-2	not really useful
 #Conflicts    : tetex < 1.0.6-2		Overkill and not really used
 Conflicts     : w3c-libwww-devel < 5.2.8-3
 Conflicts     : zlib-devel < 1.1.3-5
@@ -596,6 +597,9 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Fri Mar 14 2003 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.57.3 stable release
+
 * Thu Aug 09 2001 Frank Naumann <fnaumann@freemint.de>
 - updated to 0.57 stable release
 
