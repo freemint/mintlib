@@ -13,4 +13,5 @@ stpncpy.c strcasecmp.c strcasestr.c strcat.c strchr.c strcmp.c strcoll.c \
 strcpy.c strcspn.c strdup.c strerror.c strerror_r.c strfry.c strlen.c \
 strlwr.c strncasecmp.c strncat.c strncmp.c strncpy.c strndup.c strnlen.c \
 strpbrk.c strrchr.c strrev.c strsep.c strsignal.c strspn.c strstr.c \
-strtoimax.c strtoumax.c strtok.c strtok_r.c strupr.c strverscmp.c strxfrm.c
+strtoimax.c strtoumax.c strtok.c strtok_r.c strupr.c strverscmp.c strxfrm.c \
+swab.c
