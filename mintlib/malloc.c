@@ -15,31 +15,38 @@
 #include <osbind.h>
 #include "lib.h"
 
-extern long _stksize;
-void *_malloc __PROTO((unsigned long));
 
+extern void *__malloc __P ((size_t __n));
+extern void __free __P ((void* __param));
+
+extern void __mallocChunkSize __P ((size_t __siz));
+extern void __malloczero __P ((int __yes));
+
+/* CAUTION: use _mallocChunkSize() to tailor to your environment,
+ *          do not make the default too large, as the compiler
+ *          gets screwed on a 1M machine otherwise (stack/heap clash)
+ */
 /* minimum chunk to ask OS for */
 static size_t MINHUNK =	8192L;	/* default */
-static size_t MAXHUNK = 32*1024L; /* max. default */
+static size_t MAXHUNK = 32 * 1024L; /* max. default */
 
-	/* CAUTION: use _mallocChunkSize() to tailor to your environment,
-		    do not make the default too large, as the compiler
-		    gets screwed on a 1M machine otherwise (stack/heap clash)
-	 */
-
-/* linked list of free blocks struct defined in lib.h */
-
-struct mem_chunk _mchunk_free_list = { VAL_FREE, NULL, 0L };
+/* tune chunk size */
+void __mallocChunkSize (size_t siz) { MAXHUNK = MINHUNK = siz; }
+weak_alias (__mallocChunkSize, _mallocChunkSize)
 
 /* flag to control zero'ing of malloc'ed chunks */
-static int _ZeroMallocs = 0;
+static int ZeroMallocs = 0;
 
-#ifdef __GNUC__
-asm(".stabs \"_malloc\",5,0,0,__malloc"); /* dept of clean tricks */
-#endif
+/* Set zero block after malloc flag */
+void __malloczero (int yes) { ZeroMallocs = yes; }
+weak_alias (__malloczero, _malloczero)
 
-void * _malloc(n)
-unsigned long n; 
+/* linked list of free blocks struct defined in lib.h */
+struct mem_chunk _mchunk_free_list = { VAL_FREE, NULL, 0L };
+
+
+void *
+__malloc (size_t n)
 {
   struct mem_chunk *p, *q;
   long sz;
@@ -125,17 +132,19 @@ unsigned long n;
 
   q->next = NULL;	
   q++;	/* hand back ptr to after chunk desc */
-  if(_ZeroMallocs != 0)
-      _bzero((void *)q, (long)(n - sizeof(struct mem_chunk)));
+  if(ZeroMallocs != 0)
+      __bzero((void *)q, (size_t)(n - sizeof(struct mem_chunk)));
   
   return((void * )q);
 }
+weak_alias (__malloc, malloc)
 
-void free(param)
-	void *param;
+void
+__free (void *param)
 {
   struct mem_chunk *o, *p, *q, *s;
   struct mem_chunk *r = (struct mem_chunk *) param;
+  extern long _stksize;
   extern void *_heapbase;
   extern short _split_mem;
 
@@ -234,29 +243,4 @@ void free(param)
 	  } else p->next = r;
 	}
 }
-
-/*
- * Set zero block after malloc flag
- */
-void _malloczero(yes)
-int yes;
-{
-    _ZeroMallocs = yes;
-}
-
-/*
- * tune chunk size
- */
-void _mallocChunkSize (siz)
-size_t siz;
-{
-    MAXHUNK = MINHUNK = siz;
-}
-
-#ifndef __GNUC__
-void * malloc(n)
-size_t n; 
-{
-  return _malloc((unsigned long) n);
-}
-#endif
+weak_alias (__free, free)

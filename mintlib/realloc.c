@@ -11,17 +11,13 @@
 #include <unistd.h>
 #include "lib.h"
 
-__EXTERN void *_malloc __PROTO((unsigned long));
-__EXTERN void _bzero __PROTO((void *, unsigned long));
-void *_realloc __PROTO((void *, unsigned long));
+extern void *__malloc __P ((size_t __n));
+extern void __free __P ((void* __param));
+extern void *__realloc __P ((void* __r, size_t __n));
 
-#ifdef __GNUC__
-asm(".stabs \"_realloc\",5,0,0,__realloc"); /* dept of clean tricks */
-#endif
 
-void * _realloc(_r, n)
-void *_r;
-unsigned long n;
+void *
+__realloc (void *_r, size_t n)
 {
   struct mem_chunk *p, *q, *r = (struct mem_chunk *) _r;
   long sz;
@@ -30,9 +26,9 @@ unsigned long n;
  *  		     realloc(p, 0) is the same as free(p)
  */
   if (!r)
-	return _malloc(n);
+	return __malloc(n);
   if (n == 0) {
-	free(_r);
+	__free(_r);
 	return NULL;
   }
   p = r - 1;
@@ -43,7 +39,7 @@ unsigned long n;
 	q = (struct mem_chunk * )(((long) p) + sz);
 	q->size = p->size - sz;
         q->valid = VAL_ALLOC;
-	free(q + 1);
+	__free(q + 1);
 	p->size = sz;
 	}
     else 
@@ -71,12 +67,12 @@ unsigned long n;
       }
     else
       {
-      q = (struct mem_chunk * )_malloc(n);
+      q = __malloc(n);
       if (q != NULL)
 	{
 	n = p->size - sizeof(struct mem_chunk);
-	_bcopy(r, q, n);
-        free(r);	/* free r only if we got a new block */
+	__bcopy(r, q, n);
+        __free(r);	/* free r only if we got a new block */
         }
       /* else we could try to mlalloc the rest and hope that we can merge */
       r = q;
@@ -85,12 +81,4 @@ unsigned long n;
   /* else current block will do just fine */
   return((void * )r);
 }
-
-#ifndef __GNUC__
-void * realloc(_r, n)
-void *_r;
-size_t n;
-{
-  return _realloc(_r, (unsigned long) n);
-}
-#endif
+weak_alias (__realloc, realloc)
