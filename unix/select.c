@@ -81,19 +81,21 @@ __select (nfds, readfds, writefds, exceptfds, timeout)
 	
 	if (timeout == NULL) 
 		msec_timeout = -1;
-	else
-		msec_timeout = timeout->tv_sec * 1000 + timeout->tv_usec / 1000;
+	else {
+		msec_timeout = timeout->tv_sec * 1000;
+		msec_timeout += (timeout->tv_usec + 999) / 1000;
+	}
 	
 	retval = __poll (pfds, nfds, msec_timeout);
 	
-	if (retval <= 0)
+	if (retval < 0)
 		return retval;
 	else {
 		if (readfds) FD_ZERO (readfds);
 		if (exceptfds) FD_ZERO (exceptfds);
 		if (writefds) FD_ZERO (writefds);
 		
-		for (i = 0; i < nfds; i++) {
+		if (retval) for (i = 0; i < nfds; i++) {
 			if (pfds[i].revents & POLLIN
 			    || pfds[i].revents & POLLRDNORM
 			    || pfds[i].revents & POLLRDBAND)
