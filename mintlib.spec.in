@@ -1,5 +1,5 @@
 # mintlib.spec.in -- MiNTLib.
-# Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+# Copyright (C) 2000, 2001 Guido Flohr <guido@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -448,6 +448,8 @@ mkdir -p %{_prefix}%{crossprefix}/include/mint 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/net 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/netinet 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/protocols 2>/dev/null ||:
+mkdir -p %{_prefix}%{crossprefix}/include/rpc 2>/dev/null ||:
+mkdir -p %{_prefix}%{crossprefix}/include/rpcsvc 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/sys 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/lib/m68020-60/mshort 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/lib/mshort 2>/dev/null ||:
@@ -557,6 +559,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/include/net/*.h
 %{_prefix}%{crossprefix}/include/netinet/*.h
 %{_prefix}%{crossprefix}/include/protocols/*.h
+%{_prefix}%{crossprefix}/include/rpc/*.h
+%{_prefix}%{crossprefix}/include/rpcsvc/*.h
 %{_prefix}%{crossprefix}/include/sys/*.h
 
 %files debug
@@ -587,6 +591,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/lib/mshort/libsocket16.a
 
 %changelog
+* Tue Apr 10 2001 Guido Flohr <guido@freemint.de>
+- Added rpc stuff.
+
 * Sat May 7 2000 Guido Flohr <guido@freemint.de>
 - Fixed for cross-rpm (thanks to Frank Naumann <fnaumann@freemint.de>).
 
