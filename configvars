@@ -75,9 +75,9 @@ CC=$(toolprefix)gcc
 # Only used when cross-compiling:
 # Define this to the size (in bytes) of a long double for your 
 # cross-compiler.  If you have an older gcc version it is probably
-# 0x08.  It should be 0x0a (decimal 12) however.  If in doubt leave 
-# it as it is (i. e. 0x0a).
-LONGDOUBLESIZE=0x0a
+# 0x08.  It should be 0x0c (decimal 12) however.  If in doubt leave 
+# it as it is (i. e. 0x0c).
+LONGDOUBLESIZE=0x0c
 
 # Define this to "no" if you don't want to let the installation 
 # routines remove stale include files from your system's include

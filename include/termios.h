@@ -109,6 +109,7 @@ struct termios {
 
 /* output modes */
 #define OPOST	0x0001
+#define ONLCR	0x0002
 
 /* control modes */
 #define CLOCAL	0x0001

@@ -26,13 +26,16 @@
 #define PF_UNIX		1
 #define PF_INET		2
 #define	PF_APPLETALK	5
+#define PF_MAX		32 /* Taken from Linux */
 
 /* Address families, same as above */
 #define AF_UNSPEC	PF_UNSPEC
 #define AF_UNIX		PF_UNIX
+#define	AF_LOCAL	PF_UNIX
 #define AF_INET		PF_INET
 #define	AF_APPLETALK	PF_APPLETALK
 #define AF_LINK		200
+#define AF_MAX		PF_MAX
 
 /* Flags for send/recv */
 #define MSG_OOB		0x0001
