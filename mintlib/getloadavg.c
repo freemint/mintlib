@@ -1,25 +1,19 @@
-#include <compiler.h>
-#ifdef __TURBOC__
-#include <sys\param.h>
-#else
-#include <sys/param.h>
-#endif
-#include <unistd.h>
+
 #include <errno.h>
-#include <mintbind.h>
+#include <unistd.h>
+#include <sys/param.h>
+#include <mint/mintbind.h>
 
 int
-getloadavg (loadavg, nelem)
-     double *loadavg;
-     int nelem;
+getloadavg(double *loadavg, int nelem)
 {
   long uptime, avenrun[3], r;
   int i;
 
-  r = Suptime (&uptime, avenrun);
+  r = Suptime(&uptime, avenrun);
   if (r < 0)
     {
-      __set_errno (-r);
+      __set_errno(-r);
       return -1;
     }
 

@@ -339,18 +339,6 @@ __EXTERN int strcmpi __P (( const char* , const char*));
 __EXTERN int strncmpi __P (( const char* , const char* , size_t ));
 #endif
 
-#if defined(__LATTICE__) && !defined(_NO_INLINE)
-
-int __builtin_strcmp (const char* , const char*);
-char* __builtin_strcpy (char* , const char*);
-size_t __builtin_strlen (const char*);
-
-#define strcmp __builtin_strcmp
-#define strcpy __builtin_strcpy
-#define strlen __builtin_strlen
-
-#endif
-
 __END_DECLS
 
 #endif /* _STRING_H */

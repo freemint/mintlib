@@ -6,12 +6,6 @@
  * Written by Eric R. Smith and placed in the public domain
  */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
 #include <limits.h>
 #include <dirent.h>
 #include "lib.h"
@@ -19,8 +13,7 @@
 /* not POSIX */
 
 long int
-telldir(dirp)
-	DIR *dirp;
+telldir(DIR *dirp)
 {
 	return dirp->buf.d_off;
 }

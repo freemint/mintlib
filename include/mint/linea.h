@@ -757,43 +757,6 @@ extern short  (**__funcs) __PROTO((void));
 
 	/* Functions */
 
-#ifdef __LATTICE__
-
-void linea0(void);
-void linea1(void);
-int linea2(void);
-void linea3(void);
-void linea4(void);
-void linea5(void);
-void linea6(void);
-void linea7(BBPB *);
-void linea8(void);
-void linea9(void);
-void lineaa(void);
-void lineab(void);
-void lineac(void *);
-void linead(int,int,SFORM *,void *);
-void lineae(void);
-void lineaf(void);
-
-#pragma inline linea1()	{register d2,a2; "a001";}
-#pragma inline d0=linea2()	{register d2,a2; "a002";}
-#pragma inline linea3()	{register d2,a2; "a003";}
-#pragma inline linea4()	{register d2,a2; "a004";}
-#pragma inline linea5()	{register d2,a2; "a005";}
-#pragma inline linea6()	{register d2,a2; "a006";}
-#pragma inline linea7(a6)	{register d2,a2; "a007";}
-#pragma inline linea8()	{register d2,a2; "a008";}
-#pragma inline linea9()	{register d2,a2; "a009";}
-#pragma inline lineaa()	{register d2,a2; "a00a";}
-#pragma inline lineab()	{register d2,a2; "a00b";}
-#pragma inline lineac(a2)	{register d2,a6; "a00c";}
-#pragma inline linead(d0,d1,a0,a2)	{register d2,a6; "a00d";}
-#pragma inline lineae()	{register d2,a2; "a00e";}
-#pragma inline lineaf()	{register d2,a2; "a00f";}
-
-#else
-
 #ifdef __GNUC_INLINE__
 
 #define linea0() 							\
@@ -1028,8 +991,6 @@ __EXTERN void lineae __PROTO((void));
 __EXTERN void lineaf __PROTO((void));
 
 #endif /* __GNUC_INLINE__ */
-
-#endif /* __LATTICE__ */
 
 __END_DECLS
 

@@ -379,16 +379,6 @@ extern char* canonicalize_file_name (__const char* __name) __THROW;
 extern char* realpath (__const char* __name, char* __resolved) __THROW;
 #endif
 
-#if defined(__LATTICE__) && !defined(_NO_INLINE)
-
-int	__builtin_abs(int);
-long	__builtin_labs(long);
-
-#define abs(i)	__builtin_abs(i);
-#define labs(l)	__builtin_labs(l);
-
-#endif
-
 __END_DECLS
 
 #endif /* _STDLIB_H */

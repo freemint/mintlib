@@ -1,5 +1,4 @@
 /*
- *
  * Crtinit: C run-time initialization code.
  * Written by Eric R. Smith, and placed in the public domain.
  * Use at your own risk.
@@ -50,15 +49,6 @@
  *             convert env string to format usable
  *		(atari get your act together!!)
  *
- * 09-20-92 hyc
- *	Support base relative addressing, for shared-text execution.
- *	Also merged in some stuff from ++jrb's crt0.c.
- *
- * Turbo / Pure C version 21-6-92 um
- *   the Turbo / Pure linker reserves stack space in the BSS and sets
- *   the symbol _StkSize to its size. If _StkSize is set to 0, we use
- *   _stksize etc. as usual
- *
  * 19 Jan 93 hohmuth
  *	new variable _PgmSize, holds size of program area
  *	(useful when doing Ptermres)
@@ -75,7 +65,6 @@
  * applications (gulam is a notable example) that implement only
  * part of the standard and don't set the command byte to 0x127.
  */
-
 #if 0
 #define STRICTLY_COMPATIBLE_WITH_STANDARD
 #endif
@@ -96,7 +85,7 @@
 extern BASEPAGE *_base;
 extern char **environ;
 extern long __libc_argc;
-extern char** __libc_argv;
+extern char **__libc_argv;
 
 /* size to be allocated for the stack */
 extern long _stksize;		/* picked up from user or from stksiz.c */
@@ -118,185 +107,130 @@ extern long _initial_stack;	/* picked up from user or from inistack.c */
 
 extern unsigned long _PgmSize;	/* total size of program area */
 
-#ifdef __TURBOC__
-extern char *_StkLim;	/* for Turbo / Pure C stack checking */
-extern _StkSize; /* set by linker */
-#endif
-
 /* are we an app? */
 extern short _app;
 
 /* are we on a split addr mem ST */
 extern short _split_mem;
 
-static long parseargs	__PROTO((BASEPAGE *));
+static long parseargs(BASEPAGE *);
 
 /*
  * accessories start here:
  */
+static char *acc_argv[] = { "", NULL }; /* no name and no arguments */
 
-static char	*acc_argv[] = {"", (char *) 0}; /* no name and no arguments */
+extern char *program_invocation_name;
+extern char *program_invocation_short_name;
 
-extern char* program_invocation_name;
-extern char* program_invocation_short_name;
-
-void _acc_main()
+void
+_acc_main(void)
 {
-#ifdef __TURBOC__
-	if (&_StkSize == 0)
-	{
-#endif
-
 	if (_stksize == 0 || _stksize == -1L)
 		_stksize = MINKEEP;
 
 	if (_stksize < 0)
 		_stksize = -_stksize;
-	_stksize &= 0xfffffffeL;	/* stack on word boundary */
 
-#ifdef __TURBOC__
-	}
-	else
-	{
-		/* This compound statement is executed if the Pure linker
-		has reserved space for the stack in the BSS */
-		_stksize = (long) &_StkSize;
-		_heapbase = _base->p_bbase + _base->p_blen - _stksize;
-	}
-	_StkLim = (char *) _heapbase + 256;	 /* for stack checking */
-#endif
-  
+	/* stack on word boundary */
+	_stksize &= 0xfffffffeL;
+
 	if (_heapbase == 0) {
 		_heapbase = (void *)Malloc(_stksize);
 	}
 	_setstack((char *) _heapbase + _stksize);
-	_app = 0;				/* this is an accessory */
+
+	/* this is an accessory */
+	_app = 0;
 
 	_main(1L, acc_argv, acc_argv);
 	/*NOTREACHED*/
 }
 
-void _crtinit()
+void
+_crtinit(void)
 {
+	extern void etext();	/* a "function" to fake out pc-rel addressing */
+
 	register BASEPAGE *bp;
 	register long m;
 	register long freemem;
-#ifdef __GNUC__
-	extern void etext();	/* a "function" to fake out pc-rel addressing */
-#endif
-	_app = 1;	/* its an application */
+
+	/* its an application */
+	_app = 1;
 
 	bp = _base;
 
-	m = parseargs(bp);	/* m = # bytes used by environment + args */
+	/* m = # bytes used by environment + args */
+	m = parseargs(bp);
 
-/* make m the total number of bytes required by program sans stack/heap */
+	/* make m the total number of bytes required by program sans stack/heap */
 	m += (bp->p_tlen + bp->p_dlen + bp->p_blen + sizeof(BASEPAGE));
 	m = (m + 3L) & (~3L);
 
-#ifdef __TURBOC__
-	if (&_StkSize == 0)
-	{
-#endif
-
-/* freemem the amount of free mem accounting for MINFREE at top */
-	if((freemem = (long)bp->p_hitpa - (long)bp - MINFREE - m) <= 0L)
+	/* freemem the amount of free mem accounting for MINFREE at top */
+	if ((freemem = (long)bp->p_hitpa - (long)bp - MINFREE - m) <= 0L)
 	    goto notenough;
 	
-	if(_initial_stack)
-	{
+	if (_initial_stack) {
 	    /* the primary use of _initial_stack will be in dumping */
 	    /* applications where only a heap for malloc makes sense */
-	    _heapbase = (void *) ((long)bp + m);
+	    _heapbase = (void *)((long)bp + m);
 	    _stksize = _initial_stack;
 	} else {
-	    if (_stksize >= -1L)
-		_split_mem = 1; /* malloc from Malloc first, then from own heap */
+		if (_stksize >= -1L)
+			/* malloc from Malloc first, then from own heap */
+			_split_mem = 1;
 	}
 
 	if (_stksize == -1L) {
-	    _stksize = freemem;
-	    _heapbase = (void *) ((long)bp + m);
-	} else if (_stksize == 0L) {	/* free all but MINKEEP */
-	    _stksize = MINKEEP;
-	} else if (_stksize == 1L) { 	/* keep 1/4, free 3/4 */
-	    _stksize = freemem >> 2;
-	} else if (_stksize ==  2L) {	/* keep 1/2, free 1/2 */
-	    _stksize = freemem >> 1;
-	} else if (_stksize == 3L) {	/* keep 3/4, free 1/4 */
-	    _stksize = freemem - (freemem >> 2); 
-	} else {
-	    if(_stksize < -1L) { /* keep |_stksize|, use heap for mallocs */
-		_stksize = -_stksize;
+		_stksize = freemem;
 		_heapbase = (void *)((long)bp + m);
-	    }
+	} else if (_stksize == 0L) {	/* free all but MINKEEP */
+		_stksize = MINKEEP;
+	} else if (_stksize == 1L) { 	/* keep 1/4, free 3/4 */
+		_stksize = freemem >> 2;
+	} else if (_stksize ==  2L) {	/* keep 1/2, free 1/2 */
+		_stksize = freemem >> 1;
+	} else if (_stksize == 3L) {	/* keep 3/4, free 1/4 */
+		_stksize = freemem - (freemem >> 2); 
+	} else {
+		if(_stksize < -1L) {	/* keep |_stksize|, use heap for mallocs */
+			_stksize = -_stksize;
+			_heapbase = (void *)((long)bp + m);
+		}
 	}
-	
-/* make m the total number of bytes including stack */
+
+	/* make m the total number of bytes including stack */
 	_stksize = _stksize & (~3L);
 	m += _stksize;
 
-/* make sure there's enough room for the stack */
+	/* make sure there's enough room for the stack */
 	if (((long)bp + m) > ((long)bp->p_hitpa - MINFREE))
 	    goto notenough;
 
-/* set up the new stack to bp + m  */
-
-#ifdef __TURBOC__
-	{
-		char *tmp;
-		tmp = (char *) bp + m;
-		_setstack(tmp);
-		_StkLim = tmp - _stksize + 256; /* for stack checking */
-	}
-#else
+	/* set up the new stack to bp + m  */
 	_setstack((char *)bp + m);
-#endif
 
-#ifdef __TURBOC__
-	} /* if (&_StkSize == 0) */
-	else
-	{
-		/* This compound statement is executed if the Pure linker
-		has reserved space for the stack in the BSS */
-		_stksize = (long) &_StkSize;
-		_stksize = _stksize & (~3L);
-		
-		{
-			char *tmp;
-			tmp = (char *) bp->p_bbase + bp->p_blen;
-			_setstack(tmp);
-			_StkLim = tmp - _stksize + 256; /* for stack checking */
-			_heapbase = NULL; /* no mallocs from heap */
-		}
-	}
-#endif /* __TURBOC__ */
-
-/* shrink the TPA */
+	/* shrink the TPA */
 	(void)Mshrink(bp, m);
 
-/* keep length of program area */
+	/* keep length of program area */
 	_PgmSize = m;
 
-/* establish handlers,  call the main routine */
+	/* establish handlers,  call the main routine */
 	_init_signal();
 
-/* start profiling, if we were linked with gcrt0.o */
-#ifdef __GNUC__
+	/* start profiling, if we were linked with gcrt0.o */
 	_monstartup((void *)bp->p_tbase, (void *)((long)etext - 1));
-#else
-	_monstartup((void *)(bp->p_tbase), 
-		   (void *)((long)bp->p_tbase +  bp->p_tlen));
-#endif
 
 	_main(__libc_argc, __libc_argv, environ);
 	/* not reached normally */
 
 notenough:
 	Cconws("Fatal error: insufficient memory\r\n");
-		Pterm(-1);
+	Pterm(-1);
 }
-
 
 /*
  * parseargs(bp): parse the environment and arguments pointed to by the
@@ -308,19 +242,18 @@ notenough:
  * The MWC extended argument passing scheme is assumed.
  *
  */
-
-static long parseargs(bp)
-	BASEPAGE *bp;
+static long
+parseargs(BASEPAGE *bp)
 {
 	long count = 4;		/* compensate for aligning */
 	long  i;
 	char *from, *cmdln, *to;
 	char **envp, **arg;
 	char *null_list = 0;
-/* flag to indicate desktop-style arg. passing */
+	/* flag to indicate desktop-style arg. passing */
 	long desktoparg;
 
-/* handle the environment first */
+	/* handle the environment first */
 
 	environ = envp = (char **)(( (long)bp->p_bbase + bp->p_blen + 4) & (~3));
 	from = bp->p_env;

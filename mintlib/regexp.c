@@ -32,16 +32,7 @@
 #include <string.h>
 #include <regexp.h>
 #include <stdio.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
-#ifndef _COMPILER_H
-# include <compiler.h>
-#endif
+#include <sys/types.h>
 
 /* The first byte of the regexp internal "program" is actually this magic
  * number; the start node begins in the second byte.

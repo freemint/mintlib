@@ -8,18 +8,12 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
 #include <limits.h>
 #include <dirent.h>
 #include <errno.h>
-#include <osbind.h>
-#include <mintbind.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
+
 #include "lib.h"
 
 /* See the comment in opendir.c/readdir.c for the use (or better non-use)
@@ -28,8 +22,7 @@
 extern ino_t __inode;	/* in stat.c */
 
 void
-rewinddir(dirp)
-	DIR *dirp;
+rewinddir(DIR *dirp)
 {
 	long r;
 	_DTA *olddta;
@@ -40,7 +33,7 @@ rewinddir(dirp)
 		return;
 	}
 
-/* I wish POSIX had allowed an error to occur here! */
+	/* I wish POSIX had allowed an error to occur here! */
 	if (!dirp->dirname) {
 		return;
 	}

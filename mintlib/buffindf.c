@@ -18,13 +18,7 @@
 #include <compiler.h>
 #include <support.h>
 #include <stddef.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
+#include <sys/types.h>
 #include <string.h>
 
 #include "lib.h"
@@ -39,11 +33,10 @@
 
 static const char *const nullext[] = { NULL };
 
-static int EXISTS __PROTO((const char *));
+static int EXISTS (const char *);
 
 static int
-EXISTS(name)
-	const char *name;
+EXISTS(const char *name)
 {
 	struct stat dummy;
 
@@ -56,10 +49,8 @@ EXISTS(name)
 
 
 char *
-_buffindfile(fname, fpath, fext, try)
-      const char *fname, *fpath, *const *fext; 
-      char *try;
-
+_buffindfile(const char *fname, const char *fpath, const char *const *fext,
+	     char *try)
 {
       char *s, *extplace, c;
       char const *const *nextext;

@@ -11,21 +11,19 @@
 #ifndef _ITOA_H
 #define _ITOA_H
 
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
 /* Convert VALUE into ASCII in base BASE (2..36).
    Write backwards starting the character just before BUFLIM.
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-#include <features.h>
+char * _itoa (unsigned long long int value, char *buflim,
+	      unsigned int base, int upper_case);
 
-__EXTERN char* _itoa __PROTO((unsigned long long int value, char* buflim,
-			      unsigned int base, int upper_case));
-
-#ifdef __TURBOC__
-static char*
-#else
-extern __inline char* __attribute__ ((unused))
-#endif
+extern __inline char * __attribute__ ((unused))
 _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
@@ -54,12 +52,8 @@ _itoa_word (unsigned long value, char *buflim,
   return bp;
 }
 
-#ifdef __TURBOC__
-static char*
-#else
-extern __inline char* __attribute__ ((unused))
-#endif
-_fitoa_word (unsigned long value, char* buf, unsigned int base, int upper_case)
+extern __inline char * __attribute__ ((unused))
+_fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
 {
   char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
   char* cp = _itoa_word (value, tmpbuf + sizeof value * 4, base, upper_case);
@@ -68,12 +62,8 @@ _fitoa_word (unsigned long value, char* buf, unsigned int base, int upper_case)
   return buf;
 }
 
-#ifdef __TURBOC__
-static char*
-#else
-extern __inline char* __attribute__ ((unused))
-#endif
-_fitoa (unsigned long long value, char* buf, unsigned int base, int upper_case)
+extern __inline char * __attribute__ ((unused))
+_fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
 {
   char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
   char* cp = _itoa (value, tmpbuf + sizeof value * 4, base, upper_case);

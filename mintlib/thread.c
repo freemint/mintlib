@@ -26,25 +26,9 @@
 
 #define SIZE 4096L
 
-#ifdef __MBASE__	/* gcc -mbaserel data/bss base */
-#define mbasep() \
-({	register long retvalue __asm__(__MBASESTR__);	\
-	retvalue;					\
-})
-#define fixmbasep(addr) (void) \
-({						\
-	__asm__ volatile			\
-	(" movl    %0,"__MBASESTR__ ";"		\
-	:			/* outputs */	\
-	: "g"(addr)	        /* inputs */	\
-	);					\
-})
-#endif /* __MBASE__ */
-
 extern long _childtime;			/* in main.c */
 extern long _sigpending, _sigmask;	/* in signal.c */
 extern sighandler_t _sig_handler[NSIG];	/* ditto */
-
 
 /* this is used by wait() and wait3() to retrieve the child's exit code */
 long __waitval = -ENOENT;
@@ -52,25 +36,14 @@ long __waitval = -ENOENT;
 /* and this is used to retrieve the child's time */
 long __waittime = 0;
 
-static void __CDECL startup __PROTO((BASEPAGE *));
-
 static void __CDECL
-startup(b)
-	register BASEPAGE *b;
+startup(register BASEPAGE *b)
 {
-	register int (*func) __PROTO((long));
+	register int (*func)(long);
 	register long arg;
-
-#ifdef __TURBOC__
-	extern void *_StkLim;	/* avoid stack checking */
-	_StkLim = NULL;
-#endif
-	_setstack( ((char *)b) + SIZE );
-	func = (int (*) __PROTO((long)))b->p_dbase;
+	_setstack(((char *)b) + SIZE);
+	func = (int (*)(long))b->p_dbase;
 	arg = b->p_dlen;
-#ifdef __MBASE__
-	fixmbasep((long) (b->p_bbase));
-#endif /* __MBASE__ */
 #if 1
 	/* copy from parents basepage for debuggers... */
 	b->p_tbase = _base->p_tbase;
@@ -84,11 +57,8 @@ startup(b)
 }
 
 /* use long instead of int so vfork works OK with -mshort */
-
 long
-tfork(func, arg)
-	int (*func) __PROTO((long));
-	long arg;
+tfork(int (*func)(long), long arg)
 {
 	register BASEPAGE *b;
 	register long pid;
@@ -104,15 +74,13 @@ tfork(func, arg)
 	b->p_dbase = (char *)func;
 	b->p_dlen = arg;
 	b->p_hitpa = ((char *)b) + SIZE + 256;
-#ifdef __MBASE__
-	b->p_bbase = (char *) mbasep();
-#endif /* __MBASE__ */
  
 	pid = Pexec(104, 0L, b, 0L);
 	if (pid == -ENOSYS)
-	  {
-	/* save the signal masks and signal handlers, the child may change
-           them */
+	{
+		/* save the signal masks and signal handlers,
+		 * the child may change them
+		 */
 		savpending = _sigpending;
 		_sigpending = 0;
 		savmask = _sigmask;
@@ -126,7 +94,7 @@ tfork(func, arg)
 		pid = Pexec(4, 0L, b, 0L);
 
 		_base = savbase;
-	/* restore signal stuff */
+		/* restore signal stuff */
 		for (i = 0; i < NSIG; i++)
 			_sig_handler[i] = savhandler[i];
 		_sigmask = savmask;
