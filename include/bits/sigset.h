@@ -49,7 +49,7 @@ typedef unsigned long int __sigset_t;
 
 /* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
    overflow if `sigset_t' is wider than `int'.  */
-#define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
+#define	__sigmask(sig)	(((__sigset_t) 1) << (sig))
 
 #define	__sigemptyset(set)	((*(set) = (__sigset_t) 0), 0)
 #define	__sigfillset(set)	((*(set) = ~(__sigset_t) 0), 0)

@@ -18,8 +18,6 @@
 
 #include <errno.h>
 #include <signal.h>
-#define __need_NULL
-#include <stddef.h>
 
 /* Combine sets LEFT and RIGHT by logical AND and place result in DEST.  */
 int
@@ -28,7 +26,7 @@ sigandset (dest, left, right)
      const sigset_t *left;
      const sigset_t *right;
 {
-  if (dest == NULL || left == NULL || right == NULL)
+  if (!dest || !left || !right)
     {
       __set_errno (EINVAL);
       return -1;

@@ -29,7 +29,7 @@ __sigprocmask (how, set, oset)
   	
   	switch (how) {
     		case SIG_BLOCK:
-      			oldmask = Psigblock (sigmask (*set));
+      			oldmask = Psigblock (*set);
       			break;
     		case SIG_UNBLOCK:
       			oldmask = Psigblock (0L);

@@ -52,7 +52,7 @@ __sigwait (const sigset_t *set, int *sig)
      value which does not describe a legal signal number.  */
   was_sig = -1;
 
-  for (this = 1; this < NSIG; ++this)
+  for (this = 1; this < __NSIG; ++this)
     if (__sigismember (set, this))
       {
 	/* Unblock this signal.  */

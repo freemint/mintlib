@@ -14,11 +14,12 @@ long _sigmask;
 long _sigpending;
 
 void
-_init_signal()
+_init_signal (void)
 {
 	int i;
 
-	for (i = 0; i < NSIG; i++)
+	for (i = 0; i < __NSIG; i++)
 		_sig_handler[i] = SIG_DFL;
+
 	_sigpending = _sigmask = 0;
 }

@@ -11,12 +11,13 @@
 #include <errno.h>
 #include <signal.h>
 
+/* Delete SIGNO from SET.  */
 int
 sigdelset (set, signo)
 	sigset_t *set;
   	int signo;
 {
-	if ((!set) || (signo >= __NSIG)) {
+	if (!set || signo <= 0 || signo >= __NSIG) {
 		__set_errno (EINVAL);
     		return -1;
   	}

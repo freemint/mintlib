@@ -143,7 +143,7 @@ __EXTERN int	sigblock    __P((long mask));
 __EXTERN int	__sigblock    __P((long mask));
 #endif
 /* a mask for signals */
-#define sigmask(__sig) (1L << (__sig))
+#define sigmask(__sig) __sigmask(__sig)
 #endif /* BSD */
 
 #ifdef __USE_MISC
