@@ -13,68 +13,82 @@
 
 
 void *
-__realloc (void *_r, size_t n)
+__realloc (void *r, size_t n)
 {
-  struct mem_chunk *p, *q, *r = (struct mem_chunk *) _r;
-  long sz;
+	struct mem_chunk *p;
+	long sz;
 
-/* obscure features: realloc(NULL,n) is the same as malloc(n)
- *  		     realloc(p, 0) is the same as free(p)
- */
-  if (!r)
-	return __malloc(n);
-  if (n == 0) {
-	__free(_r);
-	return NULL;
-  }
-  p = r - 1;
-  sz = (n + sizeof(struct mem_chunk) + 7) & ~7;
+	/* obscure features: realloc(NULL,n) is the same as malloc(n)
+	 *  		     realloc(p, 0) is the same as free(p)
+	 */
+	if (!r)
+		return __malloc(n);
 
-  if (p->size > sz + ((sizeof (struct mem_chunk) + 7) & ~7))
-	{			/* block too big, split in two */
-	q = (struct mem_chunk * )(((long) p) + sz);
-	q->size = p->size - sz;
-        q->valid = VAL_ALLOC;
-	__free(q + 1);
-	p->size = sz;
+	if (n == 0) {
+		__free(r);
+		return NULL;
 	}
-    else 
-  if (p->size < sz)
-    {			/* block too small, get new one */
-    struct mem_chunk *s, *t;
-    q = &_mchunk_free_list;
-    t = _mchunk_free_list.next;
-    while (t != NULL && t < p)
-      {
-      q = t;
-      t = t->next;
-      }
 
-    /* merge after if possible */
-    s = (struct mem_chunk * )(((long) p) + p->size);
-    if (t != NULL && s >= t && p->size + t->size >= sz
-	&& t->valid != VAL_BORDER)
-      {
-      assert(s == t);
-      p->size += t->size;
-      q->next = t->next;
-      t->size = 0;
-      t->next = NULL;
-      }
-    else
-      {
-      q = __malloc(n);
-      if (q != NULL)
+	p = ((struct mem_chunk *) r) - 1;
+	sz = (n + sizeof(struct mem_chunk) + 7) & ~7;
+
+	if (p->size > sz + ((sizeof(struct mem_chunk) + 7) & ~7))
 	{
-	n = p->size - sizeof(struct mem_chunk);
-	__bcopy(r, q, n);
-        __free(r);	/* free r only if we got a new block */
-        }
-      /* else we could try to mlalloc the rest and hope that we can merge */
-      r = q;
-    }
-  }
-  /* else current block will do just fine */
-  return((void * )r);
+		/* resize down */
+		void *newr;
+
+		newr = __malloc(n);
+		if (newr)
+		{
+			__bcopy(r, newr, n);
+		        __free(r);
+
+			r = newr;
+		}
+		/* else
+		 * malloc failed; can be safely ignored as the new block
+		 * is smaller
+		 */
+	}
+	else if (p->size < sz)
+	{
+		/* block too small, get new one */
+		struct mem_chunk *q, *s, *t;
+
+		q = &_mchunk_free_list;
+		t = _mchunk_free_list.next;
+		while (t && t < p)
+		{
+			q = t;
+			t = t->next;
+		}
+
+		/* merge after if possible */
+		s = (struct mem_chunk * )(((long) p) + p->size);
+		if (t && s >= t && p->size + t->size >= sz
+		    && t->valid != VAL_BORDER)
+		{
+			assert(s == t);
+
+			p->size += t->size;
+			q->next = t->next;
+			t->size = 0;
+			t->next = NULL;
+		}
+		else
+		{
+			void *newr;
+
+			newr = __malloc(n);
+			if (newr)
+			{
+				__bcopy(r, newr, p->size - sizeof(struct mem_chunk));
+			        __free(r);
+			}
+			r = newr;
+		}
+	}
+
+	return (void *) r;
 }
 weak_alias (__realloc, realloc)
