@@ -91,6 +91,7 @@ SRCS := $(CRYPTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
 ifeq ($(libsize), _p)
 CFLAGS-_mon.S = -DPROFILING
 endif
+NOCFLAGS-crtinit.c = -pg -fomit-frame-pointer
 NOCFLAGS-gmon.c = -pg -fomit-frame-pointer
 NOCFLAGS-mcount.c = -pg -fomit-frame-pointer
 NOCFLAGS-profil-freq.c = -pg -fomit-frame-pointer
