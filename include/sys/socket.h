@@ -24,19 +24,17 @@
 
 #include <features.h>
 
-__BEGIN_DECLS
-
 #include <sys/uio.h>
 #define	__need_size_t
 #include <stddef.h>
 
 
+__BEGIN_DECLS
+
 /* This operating system-specific header file defines the SOCK_*, PF_*,
    AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',
    `struct msghdr', and `struct linger' types.  */
 #include <bits/socket.h>
-
-__BEGIN_DECLS
 
 #ifdef __USE_BSD
 /* This is the 4.3 BSD `struct sockaddr' format, which is used as wire
