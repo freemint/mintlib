@@ -521,8 +521,8 @@ __extension__								\
 #define Ptrace(request, pid, addr, data)		\
 		trap_1_wwwll(0x140, (short)(request), (short)(pid), \
 			      (long)(addr), (long)(data))
-#define Mvalidate(pid,addr,size)				\
-		trap_1_wwll (0x141, (short)(pid), (long)(addr), (long)(size))
+#define Mvalidate(pid,addr,size,flags)				\
+		trap_1_wwlll (0x141, (short)(pid), (long)(addr), (long)(size), (long)(flags))
 #define Dxreaddir(len, handle, buf, xattr, xret)		\
 		trap_1_wwllll(0x142, (short)(len), (long)(handle), \
 			      (long)(buf), (long)(xattr), (long)(xret))
@@ -642,7 +642,8 @@ __extension__								\
 #define Pmsgrcv(msqid, msgp, msgsz, msgtyp, msgflg) \
 		trap_1_wlllll(0x17b,(long)(msqid),(long)(msgp),(long)(msgsz),(long)(msgtyp),(long)(msgflg))
 /* 0x17c */
-/* 0x17d */
+#define Maccess(addr,size,mode) \
+		trap_1_wllw (0x141, (long)(addr), (long)(size), (short)(mode))
 /* 0x17e */
 /* 0x17f */
 
