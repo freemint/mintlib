@@ -38,7 +38,7 @@ _enoent (const char *path)
 			dir_seen = 1;
 
 			*s = '\0';
-			r = Fstat (path, &st, 0, 0);
+			r = __sys_stat (path, &st, 0, 0);
 			*s = saved;
 
 			if (r == -ENOSYS 

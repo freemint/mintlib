@@ -45,7 +45,7 @@ find_ino (char *dir, struct stat *sb, char *buf, size_t buflen)
 
 	while (Dreaddir (sizeof (dbuf), drv, &dbuf) == 0) {
 		strcpy (where, dbuf.name);
-		if (Fstat (_name, &testsb, 0, 0))
+		if (__sys_stat (_name, &testsb, 0, 0))
 			continue;
 		if (testsb.st_dev == sb->st_dev &&
 		    testsb.st_ino == sb->st_ino) {
@@ -77,7 +77,7 @@ ttyname_r (int fd, char *buf, size_t buflen)
 		return 0;
 	}
 
-	if (Ffstat (fd, &sb, 0))
+	if (__sys_fstat (fd, &sb, 0))
 		return -1;
 
 	/* try the devices first */

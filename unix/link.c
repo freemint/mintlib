@@ -35,9 +35,9 @@ __link (const char *_old, const char *_new)
 		struct stat sb;
 
 		if ((r == -ENOTDIR)) {
-			if (_enoent (Fstat (old, &sb, 1, 0) ? old : new))
+			if (_enoent (__sys_stat (old, &sb, 1, 0) ? old : new))
 				r = -ENOENT;
-		} else if ((r == -EACCES) && (!Fstat (new, &sb, 1, 0)))
+		} else if ((r == -EACCES) && (!__sys_stat (new, &sb, 1, 0)))
 			r = -EEXIST;
 		__set_errno ((int) -r);
 		return -1;

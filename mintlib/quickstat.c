@@ -9,7 +9,7 @@
 */
 
 /* Modified by Frank Naumann <fnaumann@freemint.de>:
-   - Use Fstat syscall wrapper  */
+   - Use __sys_stat syscall wrapper  */
    
 #include <alloca.h>
 #include <ctype.h>
@@ -57,7 +57,7 @@ __quickstat (const char *_path, struct stat *st, int lflag)
   	    	nval = _unx2dos(_path, path, sizeof (tmpbuf));
 	}
 
-	r = Fstat (path, st, lflag, 0);
+	r = __sys_stat (path, st, lflag, 0);
 	if (r != -ENOSYS) {
 		if (r) {
 			if ((r == -ENOTDIR) && _enoent (path)) {

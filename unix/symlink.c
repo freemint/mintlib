@@ -42,7 +42,7 @@ __symlink (const char *old, const char *new)
 		if ((r == -ENOTDIR)) {
 			if (_enoent(path))
 				r = -ENOENT;
-		} else if ((r == -EACCES) && (!Fstat (path, &sb, 1, 0)))
+		} else if ((r == -EACCES) && (!__sys_stat (path, &sb, 1, 0)))
 			r = -EEXIST;
 		__set_errno (-r);
 		return -1;

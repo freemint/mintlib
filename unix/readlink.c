@@ -36,7 +36,7 @@ __readlink (const char *unxname, char *buf, size_t siz)
 			struct stat sb;
 
 			/* UNIX gives EINVAL, not EACCES, on non-links */
-			if ((Fstat (filename, &sb, 1, 0) == 0)
+			if ((__sys_stat (filename, &sb, 1, 0) == 0)
 			    && ((sb.st_mode & S_IFMT) != S_IFLNK)) {
 				r = -EINVAL;
 			}

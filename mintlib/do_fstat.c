@@ -18,7 +18,7 @@
 #include "lib.h"
 
 long
-Ffstat (short fd, struct stat *st, int exact)
+__sys_fstat (short fd, struct stat *st, int exact)
 {
 	long r;
 
@@ -89,7 +89,7 @@ __do_fstat (int fd, struct stat *st, int exact)
 {
 	long r;
 
-	r = Ffstat (fd, st, exact);
+	r = __sys_fstat (fd, st, exact);
 	if (r != -ENOSYS) {
 		if (r) {
 			__set_errno (-r);

@@ -68,7 +68,7 @@ __mknod (const char *path, mode_t mode, dev_t dev)
 			if ((err == -ENOTDIR)) {
 				if (_enoent(_path))
 					err = -ENOENT;
-			} else if ((err == -EACCES) && (!Fstat (_path, &sb, 1, 0)))
+			} else if ((err == -EACCES) && (!__sys_stat (_path, &sb, 1, 0)))
 				err = -EEXIST;
 			__set_errno (-err);
 			return -1;

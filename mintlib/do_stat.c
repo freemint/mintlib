@@ -30,7 +30,7 @@
  * to struct stat
  */
 long
-Fstat (const char *path, struct stat *st, int lflag, int exact)
+__sys_stat (const char *path, struct stat *st, int lflag, int exact)
 {
 	long r;
 
@@ -137,7 +137,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 		nval = _unx2dos (_path, path, sizeof (pathbuf));
 	}
 
-	r = Fstat (path, st, lflag, 1);
+	r = __sys_stat (path, st, lflag, 1);
 	if (r != -ENOSYS) {
 		if (r) {
 			if ((r == -ENOTDIR) && _enoent(path)) {

@@ -94,13 +94,13 @@ struct xattr
   long res2[2];
 };
 
-long Fstat (const char *path, struct stat *st, int lflag, int exact);
-long Ffstat (short fd, struct stat *st, int exact);
+long __sys_stat(const char *path, struct stat *st, int lflag, int exact);
+long __sys_fstat(short fd, struct stat *st, int exact);
 
-int __quickstat (const char *_path, struct stat *st, int lflag);
-int __do_stat (const char *_path, struct stat *st, int lflag);
-int __do_fstat (int fd, struct stat *st, int exact);
-int __do_lock (int fd, int cmd, long size, int whence);
+int __quickstat(const char *_path, struct stat *st, int lflag);
+int __do_stat(const char *_path, struct stat *st, int lflag);
+int __do_fstat(int fd, struct stat *st, int exact);
+int __do_lock(int fd, int cmd, long size, int whence);
 
 
 #endif /* _LIB_H */

@@ -32,9 +32,9 @@ __rename(const char *_oldname, const char *_newname)
 	    _unx2dos(_newname, newname, sizeof (newnamebuf));
 	  }
 	
-	xattr = Fstat (newname, &newstat, 1, 0);
+	xattr = __sys_stat (newname, &newstat, 1, 0);
 	if (xattr == 0)
-	  xattr = Fstat (oldname, &oldstat, 1, 0);
+	  xattr = __sys_stat (oldname, &oldstat, 1, 0);
 	if (xattr == 0)
 	  {
 	    /* Find some errors.  FIXME:  That should be done conditionally
@@ -92,7 +92,7 @@ __rename(const char *_oldname, const char *_newname)
 
 	if (rval < 0) {
 		if ((rval == -ENOTDIR) && (xattr != -ENOSYS) &&
-		    (_enoent(Fstat (oldname, &oldstat, 1, 0) ? oldname : newname)))
+		    (_enoent(__sys_stat (oldname, &oldstat, 1, 0) ? oldname : newname)))
 			rval = -ENOENT;
 		__set_errno (-rval);
 		rval = -1;

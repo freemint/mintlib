@@ -81,9 +81,9 @@ __utime (const char *_filename, const struct utimbuf *_tset)
 		    
 			_dos2unx (_filename, fn, len);
 		    	if (fn[0] == '/' && strrchr (fn, '/') == fn
-		        	&& Fstat (filename, &sb, 1, 0) == 0
+		        	&& __sys_stat (filename, &sb, 1, 0) == 0
 				&& S_ISLNK (sb.st_mode)
-				&& Fstat (filename, &sb, 0, 0) == 0) {
+				&& __sys_stat (filename, &sb, 0, 0) == 0) {
 					/* What should we do now?  Fake success 
 					   or change the stamp of the target 
 					   of the link instead?  Faking success
