@@ -83,6 +83,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	sysexits.h \
 	syslog.h \
 	sysvars.h \
+	tar.h \
 	tcfloat.h \
 	tchars.h \
 	tcmath.h \
