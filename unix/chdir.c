@@ -61,9 +61,13 @@ __chdir (const char *dir)
 				return -1;
 			}
 
-	  		strcpy (tmp, dir);
+	  		if (toupper(dir[0]) == 'U' && dir[2]) {
+		  		strcpy (tmp +1, dir +3);
 
-			tmp[1] = tolower(tmp[0]);
+		  	} else {
+		  		strcpy (tmp +2, dir +2);
+				tmp[1] = tolower(dir[0]);
+			}
 			tmp[0] = '/';
 
 			dir = tmp;
