@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ * 
  * ioctl() emulation for MiNT; written by Eric R. Smith and placed
  * in the public domain
  */
@@ -144,6 +146,13 @@ int __ioctl(fd, cmd, arg)
 	}
 
 	if (__mint) {
+	  
+	  /* first try the systemcall */
+	  r = Fcntl(fd, arg, cmd);
+	  
+	  /* if failed fallback to some brain damaged emulation */
+	  if (r == -ENOSYS || r == -EINVAL)
+	  
 	  switch (cmd) {
 	    case TIOCCDTR:
 	      baud = 0;
@@ -222,10 +231,13 @@ int __ioctl(fd, cmd, arg)
 		cmd = TIOCSETN;
 	      }
 */
+#if 0
+/* moved to the top */
 	      /*FALLTHRU*/
 	    default:
 	      r = Fcntl(fd, arg, cmd);
 	      break;
+#endif
 	    }
 	}
 	else if (istty) {
