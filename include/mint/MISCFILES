@@ -1,5 +1,6 @@
 # This file gets included by the Makefile in this directory to determine
 # the files that should go both into binary and source distributions.
+# $Id$
 
 MISCFILES = MISCFILES \
 	\
@@ -10,6 +11,7 @@ MISCFILES = MISCFILES \
 	iflink.h \
 	mintbind.h \
 	mouse.h \
+	nfs.h \
 	osbind.h \
 	ostruct.h \
 	ptrace.h \
