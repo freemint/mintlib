@@ -28,11 +28,6 @@ __sigaction(sig, act, oact)
 	static short have_psigaction = 1;
 
 	if (have_psigaction) {
-		if (Psigaction(-1,NULL,NULL) == -ENOSYS)
-			have_psigaction = 0;
-	}
-		
-	if (have_psigaction) {
 		struct ksigact {
 			__KerSigfunc	sa_handler;	/* pointer to signal handler */
 			long		sa_mask;	/* additional signals masked during delivery */
@@ -63,6 +58,10 @@ __sigaction(sig, act, oact)
 		}
 		r = Psigaction(sig, (act ? &kact : 0L), (oact ? &koact : 0L));
 		if (r < 0) {
+			if (r == -ENOSYS) {
+				have_psigaction = 0; /* don't try again */
+				goto no_psigaction;
+			}
 			errno = (int) -r;
 			return -1;
 		}
@@ -80,6 +79,7 @@ __sigaction(sig, act, oact)
 		}
 	}
 	else {
+no_psigaction:
 		if (act)
 			oldfunc = signal(sig, act->sa_handler);
 		else {
