@@ -20,7 +20,6 @@ SRCFILES = \
 	clnt_unix.c \
 	create_xid.c \
 	des_crypt.c \
-	des_impl.c \
 	des_soft.c \
 	get_myaddr.c \
 	getrpcport.c \
