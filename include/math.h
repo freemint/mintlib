@@ -20,7 +20,6 @@
  ************************************************************************
  */
 
-
 /*
  *  FILE
  *
@@ -37,7 +36,6 @@
  *
  */
 
-
 #ifndef	_FEATURES_H
 # include <features.h>
 #endif
@@ -270,10 +268,12 @@ extern double asinh (double) __THROW;
 
 #ifndef __STRICT_ANSI__
 
+#ifndef dabs
 #if _INLINE_MATH
 # define dabs(x) fabs(x)
 #else
 extern double dabs (double) __THROW;
+#endif
 #endif
 
 extern double copysign (double, double) __THROW;
