@@ -1,6 +1,6 @@
 /*
  * GNU-C Bindings for Falcon XBIOS functions
- * -- hyc 11-9-92 (uunet!hanauma.Jpl.Nasa.Gov!hyc)
+ * -- hyc 11-9-1992 (uunet!hanauma.Jpl.Nasa.Gov!hyc)
  */
 
 #ifndef _FALCON_H
@@ -9,6 +9,7 @@
 #ifndef _MINT_OSBIND_H
 # include <mint/osbind.h>
 #endif
+
 
 #ifndef trap_14_wwwwww
 #define trap_14_wwwwww(n,a,b,c,d,e)					\
@@ -140,6 +141,7 @@ __extension__								\
 })
 #endif
 
+
 /*
  * Video
  */
@@ -159,7 +161,7 @@ __extension__								\
 #define	BPS2		1
 #define	BPS1		0
 
-/* Montype return values */
+/* VgetMonitor() return values */
 enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 
 /* VsetSync flags - 0=internal, 1=external */
@@ -168,13 +170,12 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define	VID_VSYNC	2
 #define	VID_HSYNC	4
 
-
-#define Vsetscreen(lscrn,pscrn,rez,mode)					\
-	(short)trap_14_wllww((short)5,(long)(lscrn),(long)(pscrn),	\
+#define VsetScreen(lscrn,pscrn,rez,mode)					\
+	(void)trap_14_wllww((short)5,(long)(lscrn),(long)(pscrn),	\
 		(short)(rez),(short)(mode))
-#define Vsetmode(mode)							\
+#define VsetMode(mode)							\
 	(short)trap_14_ww((short)88,(short)(mode))
-#define Montype()							\
+#define VgetMonitor()							\
 	(short)trap_14_w((short)89)
 #define	VgetSize(mode)							\
 	(long)trap_14_ww((short)91,(short)(mode))
@@ -186,8 +187,11 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define VgetRGB(index,count,array)					\
 	(void)trap_14_wwwl((short)94,(short)(index),(short)(count),	\
 		(long *)(array))
+#define Validmode(mode)							\
+	(short)trap_14_ww((short)95,(short)(mode))
 #define VsetMask(andmask,ormask)					\
 	(short)trap_14_www((short)150,(short)(andmask),(short)(ormask))
+
 
 /*
  * Sound
@@ -224,7 +228,7 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define	RTATTEN		1	/* Right channel atten */
 #define	LTGAIN		2	/* Left input gain */
 #define	RTGAIN		3	/* Right channel gain */
-	/* gain and attenuation in 1.5db units, 0x00V0, V:0-15 */
+	/* gain and attenuation in 1.5 dB units, 0x00V0, V:0-15 */
 #define	ADDERIN		4	/* Select inputs to adder 0=off, 1=on */
 #define	ADCIN		1	/* Input from ADC */
 #define	MATIN		2	/* Input from connection matrix */
@@ -344,6 +348,7 @@ typedef struct SndBufPtr {
 	long reserve2;
 } SndBufPtr;
 
+
 #define Locksnd()							\
 	(long)trap_14_w((short)128)
 #define Unlocksnd()							\
@@ -375,6 +380,7 @@ typedef struct SndBufPtr {
 	(long)trap_14_ww((short)140,(short)(reset))
 #define Buffptr(ptr)							\
 	(long)trap_14_wl((short)141,(long)(ptr))
+
 
 /*
  * DSP functions
