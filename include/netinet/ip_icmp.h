@@ -41,9 +41,7 @@
 #ifndef _NETINET_IP_ICMP_H
 #define _NETINET_IP_ICMP_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
+#include <netinet/in_systm.h>
 
 /*
  * Structure of an icmp header.

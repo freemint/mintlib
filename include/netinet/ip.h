@@ -36,10 +36,7 @@
 #ifndef _NETINET_IP_H
 #define _NETINET_IP_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-
+#include <netinet/in_systm.h>
 
 /*
  * Definitions for internet protocol version 4.

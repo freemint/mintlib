@@ -14,5 +14,6 @@ MISCFILES = MISCFILES \
 	ostruct.h \
 	ptrace.h \
 	random.h \
+	slb.h \
 	ssystem.h \
 	xbra.h
