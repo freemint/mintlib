@@ -26,6 +26,7 @@ MISCFILES = MISCFILES \
 	sigstack.h \
 	sockaddr.h \
 	socket.h \
+	statfs.h \
 	stdio_lim.h \
 	string.h \
 	string2.h \

@@ -1,41 +1,27 @@
 /* 
- * statfs.h -- structure for statfs() call.
+ * Definitions for getting information about a filesystem.
  */
 
-#ifndef _SYS_STATFS_H
-#define _SYS_STATFS_H
+#ifndef	_SYS_STATFS_H
+#define	_SYS_STATFS_H	1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+__BEGIN_DECLS
+
+/* Get the system-specific definition of `struct statfs'.  */
+#include <bits/statfs.h>
+
+extern int statfs (__const char *__file, struct statfs *__buf) __THROW;
+extern int __statfs (__const char *__file, struct statfs *__buf) __THROW;
+
+#if 0
+extern int fstatfs (int __fildes, struct statfs *__buf) __THROW;
+extern int __fstatfs (int __fildes, struct statfs *__buf) __THROW;
 #endif
 
-#include <bits/types.h>
+__END_DECLS
 
-struct statfs {
-  long f_type;		/* type of info, zero for now */
-  long f_bsize;		/* fundamental file system block size */
-  long f_blocks;	/* total blocks in file system */
-  long f_bfree;		/* free blocks */
-/*
- * Remaining fields are here for BSD compatibility, but they aren't really
- * used for a standard TOS-ish filesystem
- */
-  long f_bavail;	/* free blocks available to non-super-user */
-  long f_files;		/* total file nodes in file system */
-  long f_ffree;		/* free file nodes in fs */
-  __fsid_t f_fsid;	/* file system id */
-  long f_spare[7];	/* spare for later */
-};
-
-__EXTERN int	statfs	__PROTO((const char *path, struct statfs *buf));
-__EXTERN int	__statfs	__PROTO((const char *path, struct statfs *buf));
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* _SYS_STATFS_H */
+#endif	/* sys/statfs.h */
