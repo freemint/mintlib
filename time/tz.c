@@ -13,6 +13,7 @@
     1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov).
 */
 
+#include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -177,8 +178,11 @@ int __tzload (register const char* name, register struct state* sp)
           (void) _unx2dos ((char*) name, filename, PATH_MAX);
         }
             
-      if ((fid = Fopen (filename, O_RDONLY)) == -1)
-        return -1;
+      if ((fid = Fopen (filename, O_RDONLY)) < 0)
+        {
+          __set_errno (-fid);
+          return -1;
+        }
     }
   }
 
