@@ -361,7 +361,7 @@ __extension__								\
 	retvalue;							\
 })
 
-#define trap_1_wlllw(n, a, b, c)					\
+#define trap_1_wlllw(n, a, b, c, d)					\
 __extension__								\
 ({									\
 	register long retvalue __asm__("d0");				\
