@@ -43,7 +43,8 @@ CFLAGS = -Wall -O
 COMPILE = $(CC) $(CFLAGS)
 
 syscalls.stmp: gen-syscall syscalls.master
-	./gen-syscall syscalls.master
+	echo "TRAPS=" > SRCFILES.traps
+#	./gen-syscall syscalls.master
 	touch $@
 
 gen-syscall: $(gen_objs)
