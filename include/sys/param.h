@@ -1,3 +1,4 @@
+
 #ifndef _SYS_PARAM_H
 #define _SYS_PARAM_H 1
 
@@ -20,8 +21,27 @@
 
 #define FSCALE 2048
 
-/* FIXME:  Shouldn't this be 512?  */
-#define DEV_BSIZE		1024
+#include <sys/types.h>
+
+/* Bit map related macros.  */
+#define	setbit(a,i)	((a)[(i)/NBBY] |= 1<<((i)%NBBY))
+#define	clrbit(a,i)	((a)[(i)/NBBY] &= ~(1<<((i)%NBBY)))
+#define	isset(a,i)	((a)[(i)/NBBY] & (1<<((i)%NBBY)))
+#define	isclr(a,i)	(((a)[(i)/NBBY] & (1<<((i)%NBBY))) == 0)
+
+/* Macros for counting and rounding.  */
+#ifndef howmany
+# define howmany(x, y)	(((x)+((y)-1))/(y))
+#endif
+#define	roundup(x, y)	((((x)+((y)-1))/(y))*(y))
+#define powerof2(x)	((((x)-1)&(x))==0)
+
+/* Macros for min/max.  */
+#define	MIN(a,b) (((a)<(b))?(a):(b))
+#define	MAX(a,b) (((a)>(b))?(a):(b))
+
+/* Unit of `st_blocks'.  */
+#define DEV_BSIZE       512
 
 /* GNU autoconf checks for BYTE_ORDER here.  We do it the favor.  */
 #include <endian.h>
