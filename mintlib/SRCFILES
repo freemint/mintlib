@@ -67,7 +67,6 @@ SRCFILES = \
 	pselect.c \
 	putenv.c \
 	quickstat.c \
-	raise.c \
 	realloc.c \
 	regexp.c \
 	regsup.c \

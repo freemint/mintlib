@@ -5,9 +5,12 @@
 #include <unistd.h>
 #include <signal.h>
 
+int __getpid (void);
+
 int
-raise(sig)
-int sig;
+raise (sig)
+     int sig;
 {
-	return kill(getpid(), sig);
+  return __kill (__getpid (), sig);
 }
+weak_alias (raise, gsignal)
