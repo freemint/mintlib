@@ -10,8 +10,10 @@ SRCFILES = \
 	dirname.c \
 	err.c \
 	error.c \
+	getdirname.c \
 	getpass.c \
 	getusershell.c \
+	group_member.c \
 	hsearch.c \
 	hsearch_r.c \
 	insremque.c \

@@ -7,6 +7,7 @@
 SRCFILES = \
 	bsd_getpgrp.c \
 	bsd_setpgrp.c \
+	euidaccess.c \
 	execl.c \
 	execle.c \
 	execlp.c \
@@ -18,10 +19,14 @@ SRCFILES = \
 	getopt_init.c \
 	glob.c \
 	isfdtype.c \
+	isfdtype.c \
+	pread.c \
+	pwrite.c \
 	raise.c \
 	regex.c \
 	remove.c \
 	sleep.c \
 	sysconf.c \
 	system.c \
+	usleep.c \
 	wordexp.c
