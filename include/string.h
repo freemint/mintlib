@@ -47,6 +47,7 @@ __EXTERN void* memchr __P ((const void* __s, int __c, size_t __n));
 #ifdef __USE_GNU
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
+__EXTERN void* __rawmemchr __P ((const void* __s, int __c));
 __EXTERN void* rawmemchr __P ((const void* __s, int __c));
 #endif
 

@@ -52,12 +52,10 @@ extern in_addr_t inet_netof (struct in_addr __in) __THROW;
    in numbers-and-dots natation starting at CP.  */
 extern in_addr_t inet_network (__const char *__cp) __THROW;
 
+
 /* Convert Internet number in IN to ASCII representation.  The return value
    is a pointer to an internal array containing the string.  */
 extern char *inet_ntoa (struct in_addr __in) __THROW;
-
-#if 0
-/* not integrated */
 
 /* Convert from presentation format of an Internet number in buffer
    starting at CP to the binary network format and store result for
@@ -69,9 +67,8 @@ extern int inet_pton (int __af, __const char *__restrict __cp,
    type AF in buffer starting at CP to presentation form and place
    result in buffer of length LEN astarting at BUF.  */
 extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
-				char *__restrict __buf, size_t __len)
+				char *__restrict __buf, socklen_t __len)
      __THROW;
-#endif
 
 
 /* The following functions are not part of XNS 5.2.  */
@@ -80,7 +77,6 @@ extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
    into binary data and store the result in the structure INP.  */
 extern in_addr_t inet_aton (__const char *__cp, struct in_addr *__inp) __THROW;
 
-#if 0
 /* Format a network number NET into presentation format and place result
    in buffer starting at BUF with length of LEN bytes.  */
 extern char *inet_neta (in_addr_t __net, char *__buf, size_t __len) __THROW;
@@ -107,7 +103,6 @@ extern unsigned int inet_nsap_addr (__const char *__cp,
    a presentation form and place result in BUF.  */
 extern char *inet_nsap_ntoa (int __len, __const unsigned char *__cp,
 			     char *__buf) __THROW;
-#endif
 #endif
 
 __END_DECLS
