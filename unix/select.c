@@ -91,7 +91,7 @@ __select (nfds, readfds, writefds, exceptfds, timeout)
 	else {
 		if (readfds) FD_ZERO (readfds);
 		if (exceptfds) FD_ZERO (exceptfds);
-		if (writefds) FD_ZERO (exceptfds);
+		if (writefds) FD_ZERO (writefds);
 		
 		for (i = 0; i < nfds; i++) {
 			if (pfds[i].revents & POLLIN
