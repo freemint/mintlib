@@ -17,12 +17,15 @@ int
 socketpair (int domain, int type, int proto, int fds[2])
 {
 	if (__libc_newsockets) {
-		long r = Fsocketpair (domain, type, proto, fds);
+		short _fds[2];
+		long r = Fsocketpair (domain, type, proto, _fds);
 		if (r != -ENOSYS) {
 			if (r < 0) {
 				__set_errno (-r);
 				return -1;
 			}
+			fds[0] = _fds[0];
+			fds[1] = _fds[1];
 			return 0;
 		} else
 			__libc_newsockets = 0;

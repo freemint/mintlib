@@ -552,8 +552,8 @@ __extension__								\
 		trap_1_wlll(0x160,(long)(domain),(long)(type),(long)(protocol))
 #define Fsocketpair(domain, type, protocol, rsv) \
 		trap_1_wllll(0x161,(long)(domain),(long)(type),(long)(protocol),(long)(rsv))
-#define Faccept(fh, name, anamelen) \
-		trap_1_wwll(0x162,(short)(fh),(long)(name),(long)(anamelen))
+#define Faccept(fh, name, namelen) \
+		trap_1_wwll(0x162,(short)(fh),(long)(name),(long)(namelen))
 #define Fconnect(fh, name, namelen) \
 		trap_1_wwll(0x163,(short)(fh),(long)(name),(long)(namelen))
 #define Fbind(fh, name, namelen) \
@@ -572,10 +572,10 @@ __extension__								\
 		trap_1_wwllll(0x16a,(short)(fh),(long)(level),(long)(name),(long)(val),(long)(valsize))
 #define Fgetsockopt(fh, level, name, val, avalsize) \
 		trap_1_wwllll(0x16b,(short)(fh),(long)(level),(long)(name),(long)(val),(long)(avalsize))
-#define Fgetpeername(fh, asa, alen) \
-		trap_1_wwll(0x16c,(short)(fh),(long)(asa),(long)(alen))
-#define Fgetsockname(fh, asa, alen) \
-		trap_1_wwll(0x16d,(short)(fh),(long)(asa),(long)(alen))
+#define Fgetpeername(fh, addr, addrlen) \
+		trap_1_wwll(0x16c,(short)(fh),(long)(addr),(long)(addrlen))
+#define Fgetsockname(fh, addr, addrlen) \
+		trap_1_wwll(0x16d,(short)(fh),(long)(addr),(long)(addrlen))
 #define Fshutdown(fh, how) \
 		trap_1_wwl(0x16e,(short)(fh),(long)(how))
 /* 0x16f */
