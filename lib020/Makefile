@@ -16,7 +16,7 @@ subdir = lib020
 
 libsize = 020
 instdir = m68020-60
-cflags = -m68020-60 -m68881
+cflags = -m68020-60
 
 default: all
 

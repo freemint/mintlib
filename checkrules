@@ -13,7 +13,7 @@ type=
 
 # These are additional CFLAGS passed to the compiler and the linker.
 # For fpu/m68020 libs:
-#	cflags=-m68020-60 -m68881
+#	cflags=-m68020-60
 # If you change this you must run "make checkclean".
 cflags=
 

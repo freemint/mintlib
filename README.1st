@@ -36,11 +36,11 @@ the library that you want.
 
 Now test the multilib features of your gcc:
 
-	$ gcc -m68020-60 -m68881 --print-file-name=libc.a
+	$ gcc -m68020-60 --print-file-name=libc.a
 	/usr/lib/m68020-60/libc.a
 	$ gcc -mshort --print-file-name=libc.a
 	/usr/lib/mshort/libc.a
-	$ gcc -m68020-60 -m68881 -mshort --print-file-name=libc.a
+	$ gcc -m68020-60 -mshort --print-file-name=libc.a
 	/usr/lib/m68020-60/mshort/libc.a
 	$ gcc --print-file-name crt0.o
 	/usr/lib/crt0.o
