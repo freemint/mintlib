@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /* Slightly modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
+/* $Id$ */
 
 /*
  *	ISO C Standard: 4.9 INPUT/OUTPUT	<stdio.h>
@@ -250,7 +251,7 @@ extern int __stdio_check_offset __P ((FILE *__stream));
 
 #ifdef	__USE_SVID
 /* Default path prefix for `tempnam' and `tmpnam'.  */
-#define	P_tmpdir	"/usr/tmp"
+#define	P_tmpdir	"/tmp"
 #endif
 
 
