@@ -103,7 +103,7 @@ struct rpcent {
  * Error return codes from gethostbyname() and gethostbyaddr()
  * (left in extern int h_errno).
  */
-#define h_errno errno
+extern int h_errno;
 
 #define	HOST_NOT_FOUND	1 /* Authoritative Answer Host not found */
 #define	TRY_AGAIN	2 /* Non-Authoritive Host not found, or SERVERFAIL */
