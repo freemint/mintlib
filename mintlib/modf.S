@@ -112,7 +112,7 @@ _modf:
 	moveml	sp@+,d0-d1	|
 	rts
 
-#endif __M68881__
+#endif /* __M68881__ */
 #ifdef sfp004
 
 comm =	 -6
@@ -152,4 +152,4 @@ _modf:
 	movel	a0@,d1
  	rts
 
-#endif	sfp004
+#endif	/* sfp004 */

@@ -27,7 +27,7 @@ m_Inf:
 	.long	0x00000000
 # endif
 	.even
-#endif	ERROR_CHECK
+#endif	/* ERROR_CHECK */
 _ldexp:
 #if !defined (__M68881__) && !defined (sfp004)
 
@@ -93,7 +93,7 @@ rangerr:
 	pea	Stderr		|
 	jbsr	_fprintf	|
 	addql	#8,a7		|
-#endif ERROR_CHECK
+#endif /* ERROR_CHECK */
 
 	moveml	__infinitydf,d0-d1 | return HUGE_VAL (same as in <math.h>)
 	tstw	d2
@@ -103,7 +103,7 @@ L0:
 	moveml	sp@+,d2-d7	| pop saved reggies
 	rts
 
-#else	__M68881__ || sfp004
+#else	/* __M68881__ || sfp004 */
 #ifdef	__M68881__
 |#######################################################################
 |
@@ -134,7 +134,7 @@ L0:
 	fmoved	fp0,a7@-		| get double from fp0
 	moveml	a7@+,d0-d1
 
-#endif  __M68881__
+#endif  /* __M68881__ */
 #ifdef	sfp004
 
 | add exponent to floating point number
@@ -190,7 +190,7 @@ zahl =	  0	|	fpu data reg
 	.long	0x0c688900, 0xfff067f8
 	movel	a0@,d0
 	movel	a0@,d1
-#endif	sfp004
+#endif	/* sfp004 */
 
 #ifdef	ERROR_CHECK
 	lea	double_max,a0	|
@@ -219,7 +219,7 @@ error_exit:
 	jbsr	_fprintf	|
 	addql	#8,a7		|
 	moveml	a7@+,d0-d1
-#endif	ERROR_CHECK
+#endif	/* ERROR_CHECK */
 	rts
 
 #endif	/* !__M68881__ && !sfp004	*/

@@ -61,7 +61,7 @@
 LC0:
 	.ascii "normdf: OVERFLOW\12\15\0"
 	.even
-# endif	ERROR_CHECK
+# endif	/* ERROR_CHECK */
 
 	| C entry, for procs dealing with the internal representation :
 	| double __normdf(long long mant, int exp, int sign, int rbits);
@@ -201,7 +201,7 @@ oflow:
 	addql	#8,a7		|
 	moveq	#Erange,d0
 	Emove	d0,Errno
-#endif	ERROR_CHECK
+#endif	/* ERROR_CHECK */
 
 |	moveml	pc@(__infinitydf),d0-d1 | return infinity value
 	moveml	__infinitydf,d0-d1 | return infinty value
@@ -212,4 +212,4 @@ oflow:
 	moveml	sp@+,d2-d7	| should really cause trap ?!? (mjr: why?)
 	rts
 
-#endif __M68881__
+#endif /* __M68881__ */

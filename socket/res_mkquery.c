@@ -69,7 +69,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 #ifdef DEBUG
 	if (_res.options & RES_DEBUG)
 		printf("res_mkquery(%d, %s, %d, %d)\n", op, dname, class, type);
-#endif DEBUG
+#endif /* DEBUG */
 	/*
 	 * Initialize header fields.
 	 */
@@ -206,7 +206,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 		hp->ancount = htons(0);
 		break;
 
-#endif ALLOW_UPDATES
+#endif /* ALLOW_UPDATES */
 	}
 	return (cp - buf);
 }

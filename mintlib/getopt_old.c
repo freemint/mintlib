@@ -16,6 +16,7 @@
    interface.  */
    
 #include <stdio.h>
+#include <string.h>
 #define _AVOID_GPL  /* This will rename FUNC to __FUNC_old.  */
 #include <unistd.h>
 

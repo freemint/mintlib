@@ -85,7 +85,7 @@ L0:				| norm_df does not affect a0 or a1
 				| d0-d1 has normalized mantissa
 	rts
 
-#endif	!__M68881__ && !sfp004
+#endif	/* !__M68881__ && !sfp004 */
 #ifdef	__M68881__
 
 |
@@ -134,7 +134,7 @@ null_:
 #endif
 	rts
 
-#endif	__M68881__
+#endif	/* __M68881__ */
 #ifdef	sfp004
 
 | remove exponent from floating point number
@@ -224,4 +224,4 @@ nonzero:
 	bset	#31,d0			| =>  negate result
 fini:	rts
 
-#endif	sfp004
+#endif	/* sfp004 */

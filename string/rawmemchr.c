@@ -39,6 +39,8 @@
 # include <limits.h>
 #endif
 
+#include <stdlib.h>
+
 #define LONG_MAX_32_BITS 2147483647
 
 #ifndef LONG_MAX
