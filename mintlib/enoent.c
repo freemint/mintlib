@@ -1,3 +1,5 @@
+/* $Id */
+
 #include <errno.h>
 #include <string.h>
 
@@ -16,6 +18,7 @@ decides if UNIX would have returned ENOENT instead.
 
 FIXED: First check if the complete path itself is not a directory.  In
 this case ENOTDIR is correct. --gfl
+
 */
 
 int
@@ -25,7 +28,8 @@ _enoent(path)
   register char *s;
   struct xattr st;
   long oldmask, xattr;
-
+  int dir_seen = 0;
+  
   for (s = path; *s; s++)
     /* nop */;
   oldmask = Psigblock(~0L);
@@ -36,6 +40,7 @@ _enoent(path)
     
     if (*s == '\\' || *s == '/')
     {
+      ++dir_seen;
       *s = '\0';
       xattr = Fxattr (0, path, &st);
       *s = saved;
@@ -50,5 +55,5 @@ _enoent(path)
     }
   }
   (void) Psigsetmask(oldmask);
-  return 1; /* should have been ENOENT */
+  return dir_seen ? 1 : 0; /* should have been ENOENT */
 }
