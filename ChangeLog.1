@@ -1,0 +1,791 @@
+2000-05-06 Frank Naumann <fnaumann@freemint.de>:
+
+	* include/mintbind.h: Corrected binding for Dsetkey().
+	
+2000-05-03 Guido Flohr <guido@freemint.de>:
+
+	* time/tz.c: Fixed compiler warning.
+	* mintlib/alloca.S: Moved to ...
+	* stdlib/alloca.S: ... here.  Also renamed alloca() to __alloca()
+	  with weak alias.
+	* include/alloca.h: Added internal prototypes.
+	* include/stdlib.h: Include <alloca.h>.
+	* posix/wordexp.c: Removed __alloca macro.
+	* mintlib/memcopy.h: New file, needed by msort.
+	
+2000-05-02 Guido Flohr <guido@freemint.de>:
+
+	* include/sys/stat.h: New macros S_IFSOCK and S_ISSOCK
+	  (proposed by Frank Naumann <fnaumann@freemint.de>).
+	* mintlib/main.c: Abort when compiled for m68020 or fpu support
+	  and the required hardware is not available.
+	* mintlib/libc_fatal.c: Include program name in error message.
+	* stdlib/msort.c: New.
+	* stdlib/qsort.c: Replaced with version from GNU libc 2.1.3
+	  (proposed by Frank Naumann <fnaumann@freemint.de>).  This
+	  version tries to use the faster msort algorithm first if
+	  the necessary memory is available.	  
+
+2000-04-28 Guido Flohr <guido@freemint.de>:
+	* mintlib/do_stat.c, mintlib/quickstat.c, unix/fstat.c: Always
+	  count in 512 bytes blocks.
+	
+2000-04-16 Guido Flohr <guido@freemint.de>:
+
+	* include/bits/types.h: typedef __time_t to long int and not to
+	  __int32_t since that provokes conflicts with existing sources
+	  (reported by Marc-Anton Kehr <m.kehr@ndh.net>).
+	  
+2000-04-10 Guido Flohr <guido@freemint.de>:
+
+	* include/compiler.h: Define "unix" (and similar macros) to 1 and 
+	  not to empty.
+	  
+2000-04-09 Guido Flohr <guido@freemint.de>:
+
+	* string/argz-replace.c, time/tz.c: Fixed compiler warnings.
+	* stdio/getw.c, stdio/putw.c: Added (were forgotten).
+	
+2000-04-08 Guido Flohr <guido@freemint.de>:
+
+	* stdio/vsprintf.c: Removed linker warning (otherwise gcc 
+	  won't build).
+	* include/signal.h: Take __PMT instead of __P for typedef
+	  (reported by Frank Naumann <fnaumann@freemint.de>).
+	* include/sys/socket.h: Added __BEGIN_DECLS and __END_DECLS
+	  (reported by Frank Naumann <fnaumann@freemint.de>).
+	* mintlib/main.c: Don't rely on __mode.__device member in FILE.
+	* include/features.h.in: Always include <sys/cdefs.h>.  Lie
+	  and fake being the GNU library 2.1.x.
+	* include/libc-symbols.h: Moved to ...
+	* mintlib/libc-symbols.h: ... here.  Thus, the file doesn't get
+	  installed and the macros are not accessible any more.
+	* include/stab.h, include/stab.def: Removed (already in mintbin).
+	  
+2000-04-04 Guido Flohr <guido@freemint.de>:
+
+	* include/values.h: New.
+	* include/inttypes.h: Added missing declarations/definitions for 
+	  imaxdiv_t, imaxabs, imaxdiv, strtoimax, strtoumax.
+	* mintlib/llabs.c: New.
+	* mintlib/lldiv.c: Added weak_alias imaxdiv for lldiv.
+	* string/strtoimax.c, string/strtoumax.c: New.
+	* include/argz.h, string/argz-addsep.c, string/arz-append.c,
+	  string/argz-count.c, string/argz-create.c, string/argz-ctsep.c,
+	  string/argz-delete.c, string/argz-extract.c, string/argz-insert.c,
+	  string/argz-next.c, string/argz-replace.c, string/argz-stringify: 
+	  New.
+	* mintlib/test-ctype1.c: Removed check for EOF == -1 because
+	  buggy preprocessors barf out on this.
+	* mintlib/ctype.c, include/ctype.h: iscntrl(255) is now 1 as
+	  it should be.
+	* include/errno.h: Allow to get only error_t.
+	* include/compiler.h, include/stdio.h: Always define __THROW.
+	
+2000-04-01 Guido Flohr <guido@freemint.de>:
+
+	* configvars: Bumped version number to 0.55.
+	* mintlib/do_stat.c, mintlib/quickstat.c, unix/fstat.c:
+	  Don't change st_blocks.
+	  
+2000-03-31 Guido Flohr <guido@freemint.de>:
+
+	* include/bits/select.h: Replaced by GNU libc version.
+	* unix/test-fdset.c: New test for fd_set macros.
+	* unix/test-select.c: Include <test-skeleton.c> to avoid hanging
+	  on errors.
+	* stdio/vsprintf: Added linker warning.
+
+2000-03-30 Guido Flohr <guido@freemint.de>:
+
+	* stdio/stdio_init.c: Use __do_fstat instead of __fstat because
+	  that was why __do_fstat was written for ...
+	* mintlib/do_stat.c, mintlib/quickstat.c: Really fix the
+	  kernel bugs in st_blocks.
+	* include/poll.h, include/sys/poll.h, include/bits/poll.h,
+	  unix/poll.c: New files.
+	* include/bits/types.h: Change with fdset_t.  It is no longer
+	  an unsigned long int.  Only use the macros from <sys/select.h>
+	  to evaluate or manipulate the fdset_t data type.  You have been
+	  warned!
+	* unix/select.c: Rewritten.  Now calls poll() to give the caller
+	  the theoratical chance to poll more than 32 file descriptors.
+	  
+2000-03-29 Guido Flohr <guido@freemint.de>:
+
+	* crypt/test-md5_2.c: Updated from GNU libc 2.1.3.
+	* buildrules, stdio/stdio_init.c: Don't get the optimal bufsize
+	  by means of fstat().  It works too unreliable.
+	* signal/sigemptyset.c, signal/sigfillset.c: Typo fix and
+	  minor optimization.
+	* signal/test-sigset.c: New.
+	* include/netdb.h: Removed superfluous __BEGIN_DECLS (reported
+	  by Frank Naumann <fnaumann@freemint.de>.
+	* unix/fstat.c: Rewritten and eliminated bugs.
+	* mintlib/do_stat.c, mintlib/quickstat.c: Fix kernel bugs in st_blocks.
+	
+2000-03-28 Guido Flohr <guido@freemint.de>:
+
+	* time/tz.c: Convert unix-style filenames to GEMDOS-style
+	  if necessary.
+	* include/mint/errno.h: Fixed typo with EACCES (reported
+	  by Frank Naumann <fnaumann@freemint.de>).
+	* unix/vfork.S: Still unsure, but have re-included Joerg's
+	  patch.  See BUGS.
+	  
+2000-03-25 Guido Flohr <guido@freemint.de>:
+
+	* include/bits/local_lim.h: Removed __LONG_MAX__ definition for
+	  mshort.
+	* crypt/md5.c, crypt/md5.h, crypt/md5-crypt.c: Updated from GNU 
+	  libc 2.1.3.
+	* mintlib/ident.c: Also include information about compiler flags.
+	* include/bits/types.h: Changed __pid_t from __int16_t to
+	  int.
+	  
+2000-03-25 Guido Flohr <guido@freemint.de>:
+
+	* stdio/lockfile.c: Include a header so that weak_alias is
+	  defined.
+	* stdio/stdio_init.c: Added protos for __isatty and __fstat.
+	* gmp/mpn2dbl.c, gmp/mpn2flt.c, stdlib/strtod.c: Fixed for mshort.
+	* signal/sigemptyset.c, signal/sigfillset.c: Include <string.h>.
+	* login/utmpname.c: Include <bits/libc-lock.h>.
+	* mintlib/do_stat.c, mintlib/quickstat.c: Also copy st_blksize
+	  in Fxattr emulation for stat().
+	* buildrules: Compile stdio/stdio_init.c with -D_STATBUF_ST_BLKSIZE.
+	* mintlib/isatty.c: Weak alias.
+	  
+2000-03-23 Guido Flohr <guido@freemint.de>:
+
+	* unix/siggetmask.c: Removed (already in signal).
+	* mintlib/_normdf.S, mintlib/frexp.S, mintlib/ldexp.S,
+	  mintlib/modf.S: Renamed internal assembler routine norm_df 
+	  to ___norm_df.
+	* mintlib/signal.c: Added weak alias __signal needed by
+	  syscall().
+	* unix/sigprocmask: Renamed function to __sigprocmask and
+	  made sigprocmask a weak alias instead.
+	* include/features.h.in: Define macro __USE_EXTERN_INLNES.
+	  ATTENTION: This means that you have to compile the MiNTLib
+	  at least with optimization level -O and that you need
+	  at least gcc 2.7.2!
+	* stdio/vsnprintf.c: Fixed bug inherited from GNU libc.  The
+	  function never returned -1 even if the provided buffer wasn't
+	  big enough.
+	* stdio/test-printf.expect: Don't expect the snprintf bug
+	  and expect the correct floating point constants.
+	* posix/TESTS, posix/test-run.c: Updated from GNU libc 2.1.3.
+	* posix/testcases.h: Regenerated.
+	* include/libc-lock.h: Moved to ...
+	* include/bits/libc-lock.h: ... here.
+	* crypt/crypt_util.c, login/getutent_r.c, login/getutid_r.c,
+	  shadow/fgetspent.c, shadow/lckpwdf.c, string/strsignal.c :
+	  Include <bits/libc-lock.h> instead of <libc-lock.h>.
+	* stdio/fputc.c, stdio/printf_fp.c, stdio/printf_fphex.c,
+	  stdlib/strtod.c, stdlib/fpioconst.c, stdlib/fpioconst.h,
+	  stdlib/strtol.c, stdio/vfprintf.c, stdio/vfscanf.c: 
+	  Updated from GNU libc 2.1.3.
+	* stdio/gmp-mparam.h: Removed (duplicate, already in stdlib).
+	* stdio/psignal.c: Use _sys_siglist instead of sys_siglist.
+	* stdio/stdio_init.c: Use Posix version instead of generic
+	  version from GNU libc.
+	
+2000-03-22 Guido Flohr <guido@freemint.de>:
+
+	* configvars: Bumped version number to 0.54.99e.
+	* include/stdlib.h: Added prototype for lldiv() and typedef
+	  for lldiv_t.
+	* mintlib/lldiv.c: New.
+	* include/bits/types.h, include/sys/types.h: Various modifications,
+	  mainly cleaned up.
+	* include/sys/select.h: New.
+	* include/bits/sigset.h, include/bits/select.h: New.
+	* include/signal.h: Made closer to GNU libc.
+	* include/sys/time.h: #include <sys/select.h>.
+	* include/termios.h: Added prototype for cfsetspeed.
+	* signal/sigandset.c, signal/siggetmask.c, signal/sigisempty.c,
+	  signal/sigorset.c, signal/sighold.c, signal/sigrelse.c,
+	  signal/sysv_signal.c, signal/sigignore.c, signal/sigset.c,
+	  signal/sigwait.c: New.
+	* include/signal.h, unix/sigreturn.c: sigreturn now takes
+	  an (unused dummy) argument.
+	* mintlib/pselect.c: New.
+	* unix/signal.c: Use __sighandler_t, renamed the main function
+	  to __bsd_signal and made signal, bsd_signal and ssignal weak
+	  aliases for that.
+	* include/time.h, include/utime.h, include/malloc.h,
+	  include/stdlib.h, include/unistd.h, include/grp.h,
+	  include/pwd.h, include/compiler.h, include/mintbind.h,
+	  include/getopt.h: Cleaned up.
+	* include/memory.h: Only #include <malloc.h>.
+	* include/bits/posix_opt.h, include/sys/sysmacros.h: New.
+	* include/ctype.h, mintlib/ctype.c, mintlib/test-ctype.c,
+	  mintlib/test-ctype1.expect: iscntrl(EOF) now returns
+	  false (I still think this is wrong).
+	* mintlib/ctype.c: Make isblank a weak alias to keep namespace
+	  clean.
+	* include/termios.h: Added C++ stuff, include <ttydefaults.h>,
+	  removed definition for _POSIX_VDISABLE.
+	* mintlib/thread.c: Modified for new <signal.h>.
+	* misc/syslog.c: Call time and ctime with time_t not long args.
+	* posix/regex.c, include/regex.h: Updated from GNU libc 2.1.3.
+	* pwdgrp/putwent.c: Compiler warnings.
+	* gcclib/BINFILES, gcclib/EXTRAFILES, gcclib/Makefile,
+	  gcclib/MISCFILES, gcclib/SRCFILES, gcclib/_adddf3.S,
+	  gcclib/_addsf3.S, gcclib/_cmpdfs.S, gcclib/_cmpsf2.S,
+	  gcclib/_divdf3.S, gcclib/_divsf3.S, gcclib/_difsi3.S,
+	  gcclib/_eqdf2.S, gcclib/_eqsf2.S, gcclib/_divsi3.S, gcclib/_eqdf2.S,
+	  gcclib/_eqsf2.S, gcclib/_extendsfdf2.S, gcclib/_finite.s,
+	  gcclib/_fixdfsi.S, gcclib/_fixsfsi.S, gcclib/_fixunsdfsi.S,
+	  gcclib/_floatsidf2.S, gcclib/_floatsisf.S, gcclib/_gedf2.S,
+	  gcclib/_gesf2.S, gcclib/_gtdf2.S, gcclib/_gtsf2.S,
+	  gcclib/_infinitysf.S, gcclib/_isnan.S,
+	  gcclib/_ledf2.S, gcclib/_lesf2.S, gcclib/_ltdf2.S, gcclib/_ltsf2.S,
+	  gcclib/_modsi3.S, gcclib/_muldf3.S, gcclib/_mulsf3.S,
+	  gcclib/_mulsi3.S, gcclib/_negdf2.S, gcclib/_negsf2.S,
+	  gcclib/_normsf.S, gcclib/_subdf3.S,
+	  gcclib/_subsf3.S, gcclib/_truncdfsf2.S, gcclib/_udivsi3.S,
+	  gcclib/_umodsi3.S, gcclib/_umulsi3.S: Removed.
+	* gcclib/_normdf.S, gcclib/_infinitydf.S: Moved to subdirectory
+	  mintlib (sigh!) because these symbols are also referenced
+	  by libm.a.
+	* signal/initsig.c, signal/sigaddset.c, signal/sigdelset.c,
+	  signal/sigemptyset.c, signal/sigfillset.c: Rewritten.
+	* unix/sigsuspend.c: Made sigsuspend a weak alias.
+	* unix/test-stat.c: New test.  Check if our struct stat matches
+	  with the kernel definition in size.
+	* unix/kill.c, unix/read.c, unix/sigaction.c, unix/sigpause.c,
+	  unix/write.c: Modified for new <signal.h>.
+	* unix/mkfifo.c, unix/settimeofday.c: Use time_t* instead of long*.
+	* unix/select.c: Modified for new <sys/select.h>.
+	* unix/sigpause.c: Stolen from GNU libc.
+	* unix/sigpending.c, unix/sigprocmask.c, unix/sigsuspend.c: 
+	  Rewritten.
+	* include/sys/statfs.h: Include <bits/types.h> instead of
+	  defining own version of fsid_t.
+	* unix/utime.c: Don't #include <compiler.h> but do #include
+	  <utime.h>.
+	  
+2000-03-21 Guido Flohr <guido@freemint.de>:
+
+	* include/_float.h, include/_stdarg.h, include/_varargs.h,
+	  include/_stddef.h: Renamed to ...
+	* include/_float_h, include/_stdarg_h, include/_varargs_h,
+	  include/_stddef.h: ... this so they won't get installed.
+
+2000-03-19 Guido Flohr <guido@freemint.de>:
+
+	* mintlib/do_stat.c, mintlib/quickstat.c: Fixed typo (Guido's
+	  fault).
+	* posix/glob.c, socket/accept.c, socket/bind.c, socket/connect.c,
+	  socket/getpeername.c, socket/getsockname.c, socket/getsockopt.c,
+	  socket/recvfrom.c, socket/recvmsg.c, socket/setsockopt.c:
+	  Use size_t instead of _SIZE_T.
+	* time/tzstruct.h: #undef TZNAME_MAX so that we don't have to
+	  work with the arbitrary length of 3.
+	* include/arpa/nameser.h: Use safe __BYTE_ORDER instead of
+	  BYTE_ORDER.
+
+2000-03-19 Guido Flohr <guido@freemint.de>:
+
+	* include/mintbind.h: Renamed Fstat to Fstat64.
+	* misc/syslog.c: Removed CRs, removed declaration for _sys_errlist.
+	* mintlib/div.c: Make ldiv a strong alias for div when not
+	  compiling mshort.
+	* include/arpa/nameser.h: Make sure correct byte order is defined
+	  when compiling for mc68020 or higher (noticed by
+	  Frank Naumann <fnaumann@freemint.de>).
+	* include/math.h: `exception' is reserved in C++ (noticed by
+	  Frank Naumann <fnaumann@freemint.de>).
+	* include/stdlib.h: Changed prototype for calloc().
+	* include/limits.h: Replaced with version from GNU libc 2.1.3.
+	* include/bits/posix1_lim.h, include/bits/posix2_lim.h,
+	  include/bits/xopen_lim.h: New, from GNU libc 2.1.3.
+	* include/bits/local_lim.h: New.
+	* include/stdio_lim.h: Moved ...
+	* include/bits/stdio_lim.h: ... here.
+	* include/compiler.h: Use __gnuc_va_list.
+	* include/stdarg.h, include/stddef.h, include/varargs.h,
+	  include/float.h: Moved to ...
+	* include/_stdarg.h, include/_stddef.h, include/_varargs.h,
+	  include/_float.h: ... here.
+	* include/clean-include: Added stdarg.h, stddef.h, varargs.h
+	  and float.h to list of stale headers.
+	* include/compiler.h: Reverted PID_T to int.
+	* mintlib/lib.h, stdio/fscanf.c, stdio/sscanf.c, stdio/snprintf.c:
+	  Use __gnuc_va_list.
+	* include/pwd.h, include/sys/socket.h: Replace _SIZE_T with
+	  size_t.
+
+2000-03-19 Frank Naumann <fnaumann@freemint.de>:
+
+	* AUTHORS: Updated Frank Naumann's mail address.
+	* mintlib/div.c: Rewritten, without assembler because gcc is
+	  smart enough to produce the same from C.
+	* mintlib/ldiv.c: Removed.
+	* mintlib/do_stat.c, mintlib/quickstat.c: Use Fstat64 instead of
+	  Fstat, some optimizations.
+	* unix/fstat.c: Make have_Fstat a static automatic variable.
+	* stdio/test-glue.c: Stripped CR.
+
+2000-03-18 Guido Flohr <guido@freemint.de>:
+
+	* mintlib/getumask.c: New file.
+	* mintlib/ftime.c: Include "time/tzstruct.h".
+	* stdio/_itoa.h: Moved ...
+	* mintlib/_itoa.h: ... here.
+	* gmp/gmp.h, gmp/gmp-impl.h, gmp/gmp-mparam.h: Moved ...
+	* stdlib/gmp.h, stdlib/gmp-impl.h, stdlib/gmp-mparam.h: ... here.
+	* unix/settimeofday.c: Include "time/tzstruct.h".
+	* mintlib/assert-perr.c, mintlib/assert.c: Include <_itoa.h>
+	  instead of <stdio/_itoa.h>.
+	* include/stdio.h: Added declarations for _sys_nerr and _sys_errlist.
+	* include/errno.h: Removed declarations for sys_nerr and sys_errlist.
+	  Replaced macro AssemB with __ASSEMBLER__.
+	* stdiio/test-iioformat.c, stdiio/test-iioscanf.c,
+	  stdiio/test-iiowc-printf.c: New tests.
+	* stdio/test-popen.c, stdio/test-xbug.c: Replaced call to
+	  findfile() with _buffindfile().
+	* unix/test-open.c: New test.
+	* mintlib/div.c: Tsk, tsk, the symbol _div was never defined.  We
+	  make the file empty now for non mshort and ...
+	* mintlib/ldiv.c: ... define ldiv as a strong alias for div when
+	  not compiled mshort.
+	* tz/test-dummy.c: New, only to satisfy make.
+
+2000-03-17 Guido Flohr <guido@freemint.de>:
+
+	* startup/crt0.s: Removed pseudo-references to most ident strings.
+	* common/bcmp.c: Moved ...
+	* string/bcmp.c: ... here.
+	* common/popen.c, common/defmode.c: Moved ...
+	* stdio/popen.c, common/defmode.c: ... here.
+	* tests/test-ffs.c: Moved ...
+	* string/test-ffs.c: ... here.
+	* common/findfile.c, common/flonum.h, common/gnuaux.c,
+	  common/gthr.h, common/iw.c, common/ic.c, common/gbl-ctors.h,
+	  common/eh-common.h, common/frwbin.c, common/getbuf.c, common/ip.c,
+	  common/il.c, common/nlist.c, include/nlist.h, common/tconfig.h,
+	  common/fopenp.c, common/machmode.h, common/textio.c: Removed.
+	* common/div.S: Removed because ...
+	* common/div_safe.c: ... renamed to div.c since div.S didn't work
+	  (reported by Frank Naumann <fnaumann@freemint.de>).
+	* include/support.h: Removed proto for findfile().
+	* common/cfgetisp.c, common/cfgetosp.c, common/cfsetisp.c,
+	  common/cfsetosp.c, common/cfsetspeed.c, common/tcattr.c,
+	  common/tcbreak.c, common/tcdrain.c, common/tcflow.c,
+	  common/tcflush.c, common/tcpgrp.c: Moved ...
+	* termios/cfgetisp.c, termios/cfgetosp.c, termios/cfsetisp.c,
+	  termios/cfsetosp.c, termios/cfsetspeed.c, termios/tcattr.c,
+	  termios/tcbreak.c, termios/tcdrain.c, termios/tcflow.c,
+	  termios/tcflush.c, termios/tcpgrp.c: ... here.
+	* common/bsd_getpgrp.c, common/bsd_setpgrp.c, common/execl.c,
+	  common/execle.c, common/execlp.c, common/execv.c,
+	  common/execvp.c, common/fnmatch.c, common/getopt.c,
+	  common/getopt1.c, common/getopt_init.c, common/getopt_old.c,
+	  common/glob.c, common/regex.c, common/remove.c, common/sleep.c,
+	  common/system.c, common/wordexp.c:
+	  Moved to ...
+	* posix/bsd_getpgrp.c, posix/bsd_setpgrp.c, posix/execl.c,
+	  posix/execle.c, posix/execlp.c, posix/execv.c,
+	  posix/execvp.c, posix/fnmatch.c, posix/getopt.c, posix/getopt1.c,
+	  posix/getopt_init.c, posix/getopt_old.c, posix/glob.c, posix/regex.c,
+	  posix/remove.c, posix/sleep.c, posix/system.c, posix/wordexp.c:
+	  ... here.
+	* tests/PTESTS, tests/PTESTS2C.sed, tests/TESTS, tests/TESTS2C.sed,
+	  tests/test-fnmatch.c, tests/test-getopt.args, tests/test-getopt.c,
+	  tests/test-glob.c, tests/test-glob.sh, tests/test-run.c,
+	  tests/test-runp.c, tests/test-wordexp.c, tests/test-wordexp.sh,
+	  testcases.h: Moved to ...
+	* posix/PTESTS, posix/PTESTS2C.sed, posix/TESTS, posix/TESTS2C.sed,
+	  posix/test-fnmatch.c, posix/test-getopt.args, posix/test-getopt.c,
+	  posix/test-glob.c, posix/test-glob.sh, posix/test-run.c,
+	  posix/test-runp.c, posix/test-wordexp.c, posix/test-wordexp.sh,
+	  testcases.h: ... here.
+	* common/access.c, common/alarm.c, common/chdir.c, common/chmod.c,
+	  common/chown.c, common/chroot.c, common/close.c, common/closedir.c,
+	  common/creat.c, common/dup.c, common/dup2.c, common/execve.c,
+	  common/fchmod.c, common/fchown.c, common/fcntl.c, common/flock.c,
+	  common/fork.c, common/fstat.c, common/fsync.c, common/ftruncate.c,
+	  common/getdomainname.c, common/getdtabl.c, common/getegid.c,
+	  common/geteuid.c, common/getgid.c, common/getgroups.c,
+	  common/gethostid.c, common/gethostname.c, common/getitimer.c,
+	  common/getpagesize.c, common/getpgrp.c, common/getpid.c,
+	  common/getppid.c, common/getpriority.c, common/getrlimit.c,
+	  common/getrusage.c, common/gettimeofday.c, common/getuid.c,
+	  common/gtty.c, common/ioctl.c, common/kill.c, common/killpg.c,
+	  common/lseek.c, common/lstat.c, common/mkdir.c,
+	  common/mkfifo.c, common/mknod.c, common/nice.c, common/open.c,
+	  common/opendir.c, common/pause.c, common/pipe.c, common/read.c,
+	  common/readdir.c, common/readlink.c, common/reboot.c,
+	  common/rename.c, common/rmdir.c, common/sbrk.c, common/select.c,
+	  common/setegid.c, common/seteuid.c, common/setgid.c,
+	  common/setgroups.c, common/setitimer.c, common/setpgid.c,
+	  common/setpgrp.c, common/setpriority.c, common/setregid.c,
+	  common/setreuid.c, common/setrlimit.c, common/setsid.c,
+	  common/settimeofday.c, common/setuid.c, common/sigaction.c,
+	  common/sigblock.c, common/siggetmask.c, common/signal.c,
+	  common/sigpause.c, common/sigpending.c, common/sigprocmask.c,
+	  common/sigreturn.c, common/sigsetmask.c, common/sigsuspend.c,
+	  common/sigvec.c, common/stat.c, common/statfs.c, common/stime.c,
+	  common/stty.c, common/symlink.c, common/sync.c, common/sysinfo.c,
+	  common/time.c, common/times.c, common/truncate.c, common/umask.c,
+	  common/uname.c, common/unlink.c, common/utime.c, common/utimes.c,
+	  common/vfork.S, common/wait.c, common/wait3.c, common/wait4.c,
+	  common/waitpid.c, common/write.c: Moved to ...
+	* unix/access.c, unix/alarm.c, unix/chdir.c, unix/chmod.c,
+	  unix/chown.c, unix/chroot.c, unix/close.c, unix/closedir.c,
+	  unix/creat.c, unix/dup.c, unix/dup2.c, unix/execve.c,
+	  unix/fchmod.c, unix/fchown.c, unix/fcntl.c, unix/flock.c,
+	  unix/fork.c, unix/fstat.c, unix/fsync.c, unix/ftruncate.c,
+	  unix/getdomainname.c, unix/getdtabl.c, unix/getegid.c,
+	  unix/geteuid.c, unix/getgid.c, unix/getgroups.c,
+	  unix/gethostid.c, unix/gethostname.c, unix/getitimer.c,
+	  unix/getpagesize.c, unix/getpgrp.c, unix/getpid.c,
+	  unix/getppid.c, unix/getpriority.c, unix/getrlimit.c,
+	  unix/getrusage.c, unix/gettimeofday.c, unix/getuid.c,
+	  unix/gtty.c, unix/ioctl.c, unix/kill.c, unix/killpg.c,
+	  unix/lseek.c, unix/lstat.c, unix/mkdir.c,
+	  unix/mkfifo.c, unix/mknod.c, unix/nice.c, unix/open.c,
+	  unix/opendir.c, unix/pause.c, unix/pipe.c, unix/read.c,
+	  unix/readdir.c, unix/readlink.c, unix/reboot.c,
+	  unix/rename.c, unix/rmdir.c, unix/sbrk.c, unix/select.c,
+	  unix/setegid.c, unix/seteuid.c, unix/setgid.c,
+	  unix/setgroups.c, unix/setitimer.c, unix/setpgid.c,
+	  unix/setpgrp.c, unix/setpriority.c, unix/setregid.c,
+	  unix/setreuid.c, unix/setrlimit.c, unix/setsid.c,
+	  unix/settimeofday.c, unix/setuid.c, unix/sigaction.c,
+	  unix/sigblock.c, unix/siggetmask.c, unix/signal.c,
+	  unix/sigpause.c, unix/sigpending.c, unix/sigprocmask.c,
+	  unix/sigreturn.c, unix/sigsetmask.c, unix/sigsuspend.c,
+	  unix/sigvec.c, unix/stat.c, unix/statfs.c, unix/stime.c,
+	  unix/stty.c, unix/symlink.c, unix/sync.c, unix/sysinfo.c,
+	  unix/time.c, unix/times.c, unix/truncate.c, unix/umask.c,
+	  unix/uname.c, unix/unlink.c, unix/utime.c, unix/utimes.c,
+	  unix/vfork.S, unix/wait.c, unix/wait3.c, unix/wait4.c,
+	  unix/waitpid.c, unix/write.c: ... here.
+	* tests/test-opendir.c, tests/test-time.c, tests/test-utime.c,
+	  tests/test-vfork.c: Moved to ...
+	* unix/test-opendir.c, unix/test-time.c, unix/test-utime.c,
+	  unix/test-vfork.c: ... here.
+	* common/getutent.c, common/getutent_r.c, common/getutid.c,
+	  common/getutid_r.c, common/getutline.c, common/getutline_r.c,
+	  common/login.c, common/login_tty.c, common/logout.c,
+	  common/logwtmp.c, common/oldutmp.c, common/oldwtmp.c,
+	  common/pty.c, common/updwtmp.c, common/utmp-private.h,
+	  common/utmp_file.c, common/utmpname.c: Moved to ...
+	* login/getutent.c, login/getutent_r.c, login/getutid.c,
+	  login/getutid_r.c, login/getutline.c, login/getutline_r.c,
+	  login/login.c, login/login_tty.c, login/logout.c,
+	  login/logwtmp.c, login/oldutmp.c, login/oldwtmp.c,
+	  login/pty.c, login/updwtmp.c, login/utmp-private.h,
+	  login/utmp_file.c, login/utmpname.c: Moved to ...
+	* tests/test-utmp.c: Moved to ...
+	* login/test-utmp.c: ... here.
+	* common/fgetpwent.c, common/fgetpwent_r.c, common/getpw.c,
+	  common/getpwent.c, common/getpwent_r.c, common/getpwnam.c,
+	  common/getpwnam_r.c, common/getpwuid.c, common/getpwuid_r.c,
+	  common/grp.c, common/initgroups.c, common/putpwent.c: Moved
+	  to ...
+	* pwdgrp/fgetpwent.c, pwdgrp/fgetpwent_r.c, pwdgrp/getpw.c,
+	  pwdgrp/getpwent.c, pwdgrp/getpwent_r.c, pwdgrp/getpwnam.c,
+	  pwdgrp/getpwnam_r.c, pwdgrp/getpwuid.c, pwdgrp/getpwuid_r.c,
+	  pwdgrp/grp.c, pwdgrp/initgroups.c, pwdgrp/putpwent.c: ... here.
+	* tests/test-grp.c: Moved ...
+	* pwdgrp/test-grp.c: ... here.
+	* common/ctime.c, common/difftime.c, common/gmtime.c,
+	  common/localtime.c, common/mktime.c, common/new_york.h,
+	  common/strftime.c, common/tz.c, common/tzfile.h,
+	  common/tzstruct.h: Moved ...
+	* time/ctime.c, time/difftime.c, time/gmtime.c, time/localtime.c,
+	  time/mktime.c, time/new_york.h, time/strftime.c, time/tz.c,
+	  time/tzfile.h, time/tzstruct.h: ... here.
+	* tests/test-clock.c, tests/test-posixtz.c: Moved ...
+	* time/test-clock.c, time/test-posixtz.c: ... here.
+	* time/test-time.c, time/test-time.args: New.
+	* common/daemon.c, common/diraccess.c, common/dirname.c,
+	  common/err.c, common/error.c, common/getpass.c,
+	  common/getusershell.c, common/hsearch.c, common/hsearch_r.c,
+	  common/insremque.c, common/lsearch.c, common/mkstemp.c,
+	  common/mktemp.c, common/obstack.c, common/syslog.c, common/tsearch.c:
+	  Moved ...
+	* misc/daemon.c, misc/diraccess.c, misc/dirname.c, misc/err.c,
+	  misc/error.c, misc/getpass.c, misc/getusershell.c, misc/hsearch.c,
+	  misc/hsearch_r.c, misc/insremque.c, misc/lsearch.c, misc/mkstemp.c,
+	  misc/mktemp.c, misc/obstack.c, misc/syslog.c, misc/tsearch.c:
+	  ... here.
+	* tests/test-dirname.c, tests/test-fdset.c, tests/test-tsearch.c:
+	  Moved ...
+	* misc/test-dirname.c, misc/test-fdset.c, misc/test-tsearch.c:
+	  ... here.
+	* common/initsig.c, common/sigaddset.c, common/sigdelset.c,
+	  common/sigemptyset.c, common/sigfillset.c, common/sigismember.c,
+	  common/siglist.c, common/signames.c: Moved ...
+	* signal/initsig.c, signal/sigaddset.c, signal/sigdelset.c,
+	  signal/sigemptyset.c, signal/sigfillset.c, signal/sigismember.c,
+	  signal/siglist.c, signal/signames.c: ... here.
+	* tests/test-signal.c: Moved ...
+	* signal/test-signal.c: ... here.
+	* common/_mon.S, common/abort.c, common/alglobal.c, common/alloca.S,
+	  common/alphasor.c, common/assert-perr.c, common/assert.c,
+	  common/buffindf.c, common/calloc.c, common/console.c,
+	  common/crtinit.c, common/ctermid.c, common/ctype.c,
+	  common/cuserid.c, common/div.c, common/do_lock.c,
+	  common/do_stat.c, common/dostime.c, common/enoent.c,
+	  common/frexp.S, common/ftime.c, common/ftw.c,
+	  common/getcookie.c, common/getcwd.c, common/getenv.c,
+	  common/getloadavg.c, common/getlogin.c, common/getopt_old.c,
+	  common/getumask.c, common/getwd.c, common/globals.c,
+	  common/gmon.c, common/heapbase.c, common/ident.c,
+	  common/iflink.c, common/ig.c, common/inistack.c,
+	  common/inode.c, common/isatty.c, common/isctty.c,
+	  common/labs.c, common/ldexp.S, common/ldiv.c,
+	  common/libc_exit.S, common/libc_fatal.c, common/linea.c,
+	  common/lockf.c, common/ltoa.c, common/main.c,
+	  common/malloc.c, common/modf.S, common/osbind.S,
+	  common/putenv.c, common/quickstat.c, common/raise.c,
+	  common/realloc.c, common/regexp.c, common/regsup.c,
+	  common/rewinddi.c, common/rtent.c, common/s_isinf.c,
+	  common/s_isinff.c, common/s_isinfl.c, common/s_isnan.c,
+	  common/s_isnanf.c, common/s_isnanl.c, common/scandir.c,
+	  common/seekdir.c, common/setenv.c, common/setjmp.S,
+	  common/setlocale.c, common/setstack.S, common/spawn.c,
+	  common/spawnve.c, common/spawnvp.c, common/stksiz.c,
+	  common/syscall.c, common/sysconf.c, common/sysvar.c,
+	  common/tell.c, common/telldir.c, common/textio.c,
+	  common/thread.c, common/toxxx.c, common/ttyname.c,
+	  common/ttyname_r.c, common/uidgid.c, common/unixtime.c,
+	  common/unx2dos.c, common/wcmb.c, common/wcscat.c,
+	  common/wcscmp.c, common/wcscpy.c, common/wcslen.c,
+	  common/wnull.c: Moved to ...
+	* mintlib/_mon.S, mintlib/abort.c, mintlib/alglobal.c,
+	  mintlib/alloca.S, mintlib/alphasor.c, mintlib/assert-perr.c,
+	  mintlib/assert.c, mintlib/buffindf.c, mintlib/calloc.c,
+	  mintlib/console.c, mintlib/crtinit.c, mintlib/ctermid.c,
+	  mintlib/ctype.c, mintlib/cuserid.c, mintlib/div.c, mintlib/do_lock.c,
+	  mintlib/do_stat.c, mintlib/dostime.c, mintlib/enoent.c,
+	  mintlib/frexp.S, mintlib/ftime.c, mintlib/ftw.c,
+	  mintlib/getcookie.c, mintlib/getcwd.c, mintlib/getenv.c,
+	  mintlib/getloadavg.c, mintlib/getlogin.c, mintlib/getopt_old.c,
+	  mintlib/getumask.c, mintlib/getwd.c, mintlib/globals.c,
+	  mintlib/gmon.c, mintlib/heapbase.c, mintlib/ident.c,
+	  mintlib/iflink.c, mintlib/ig.c, mintlib/inistack.c,
+	  mintlib/inode.c, mintlib/isatty.c, mintlib/isctty.c,
+	  mintlib/labs.c, mintlib/ldexp.S, mintlib/ldiv.c,
+	  mintlib/libc_exit.S, mintlib/libc_fatal.c, mintlib/linea.c,
+	  mintlib/lockf.c, mintlib/ltoa.c, mintlib/main.c,
+	  mintlib/malloc.c, mintlib/modf.S, mintlib/osbind.S,
+	  mintlib/putenv.c, mintlib/quickstat.c, mintlib/raise.c,
+	  mintlib/realloc.c, mintlib/regexp.c, mintlib/regsup.c,
+	  mintlib/rewinddi.c, mintlib/rtent.c, mintlib/s_isinf.c,
+	  mintlib/s_isinff.c, mintlib/s_isinfl.c, mintlib/s_isnan.c,
+	  mintlib/s_isnanf.c, mintlib/s_isnanl.c, mintlib/scandir.c,
+	  mintlib/seekdir.c, mintlib/setenv.c, mintlib/setjmp.S,
+	  mintlib/setlocale.c, mintlib/setstack.S, mintlib/spawn.c,
+	  mintlib/spawnve.c, mintlib/spawnvp.c, mintlib/stksiz.c,
+	  mintlib/syscall.c, mintlib/sysconf.c, mintlib/sysvar.c,
+	  mintlib/tell.c, mintlib/telldir.c, mintlib/textio.c,
+	  mintlib/thread.c, mintlib/toxxx.c, mintlib/ttyname.c,
+	  mintlib/ttyname_r.c, mintlib/uidgid.c, mintlib/unixtime.c,
+	  mintlib/unx2dos.c, mintlib/wcmb.c, mintlib/wcscat.c,
+	  mintlib/wcscmp.c, mintlib/wcscpy.c, mintlib/wcslen.c,
+	  mintlib/wnull.c: Moved to ...
+	* unix/open.c: Take care that __quickstat returns -1 on
+	  failure on sets errno whereas the former call to Fxattr
+	  returned -errno (reported by Frank Naumann
+	  <fnaumann@freemint.de>).
+	* include/linker.h, include/linker.h.in: New files.
+	* mintlib/libc-symbols.h: Moved ...
+	* include/libc-symbols.h: ... here.
+	* include/compiler.h: Include <linker.h> and include
+	  <libc-symbols.h> also outside of libc.
+	* include/libc-symbols.h: Use gcc attributes for weak and
+	  strong aliases if possible.
+
+2000-03-15 Guido Flohr <guido@freemint.de>:
+
+	* common/open.c: Check the return value from __quickstat.  That
+	  is the "/pipe/log: Is a directory" bug of syslogd.
+	* stdlib/test-canon2: Remove the dangling symlinks left over.
+
+2000-03-13 Guido Flohr <guido@freemint.de>:
+
+	* startup/crt0.SP, common/alloca.SP, common/bcopy.SP, common/bzero.SP,
+	  common/div.SP, common/ldexp.SP, common/libc_exit.SP, common/memset.SP,
+	  common/modf.SP, common/osbind.SP, common/setjmp.SP,
+	  common/setstack.SP, common/temp.SP, common/vfork.SP, common/_mon.SP,
+	  common/frexp.SP, gcclib/_truncdfsf2.SP, gcclib/_fixdfsi.SP,
+	  gcclib/_cmpsf2.SP, gcclib/_divdf3.SP, gcclib/_divsf3.SP,
+	  gcclib/_muldf3.SP, gcclib/_divsi3.SP, gcclib/_eqsf2.SP,
+	  gcclib/_extendsfdf2.SP, gcclib/_gedf2.SP, gcclib/_fixsfsi.SP,
+	  gcclib/_fixunsdfsi.SP, gcclib/_floatsisf.SP, gcclib/_floatsidf.SP,
+	  gcclib/_gesf2.SP, gcclib/_gtdf2.SP, gcclib/_gtsf2.SP,
+	  gcclib/_infinitydf.SP, gcclib/_lesf2.SP, gcclib/_ltdf2.SP,
+	  gcclib/_ltsf2.SP, gcclib/_modsi3.SP, gcclib/_mulsf3.SP,
+	  gcclib/_mulsi3.SP, gcclib/_negsf2.SP, gcclib/_infinitysf.SP,
+	  gcclib/_adddf3.SP, gcclib/_normsf.SP, gcclib/_subdf3.SP,
+	  gcclib/_umodsi3.SP, gcclib/_normdf.SP, gcclib/_addsf3.SP,
+	  gcclib/_subsf3.SP, gcclib/_cmpdf2.SP, gcclib/_eqdf2.SP,
+	  gcclib/_negdf2.SP, gcclib/_ledf2.SP, gcclib/_udivsi3.SP,
+	  gcclib/_umulsi3.SP: Moved from here to ...
+	* startup/crt0.S, common/alloca.S, common/bcopy.S, common/bzero.S,
+	  common/div.S, common/ldexp.S, common/libc_exit.S, common/memset.S,
+	  common/modf.S, common/osbind.S, common/setjmp.S, common/setstack.S,
+	  common/temp.S, common/vfork.S, common/_mon.S, common/frexp.S,
+	  gcclib/_truncdfsf2.S, gcclib/_fixdfsi.S, gcclib/_cmpsf2.S,
+	  gcclib/_divdf3.S, gcclib/_divsf3.S, gcclib/_muldf3.S,
+	  gcclib/_divsi3.S, gcclib/_eqsf2.S, gcclib/_extendsfdf2.S,
+	  gcclib/_gedf2.S, gcclib/_fixsfsi.S, gcclib/_fixunsdfsi.S,
+	  gcclib/_floatsisf.S, gcclib/_floatsidf.S, gcclib/_gesf2.S,
+	  gcclib/_gtdf2.S, gcclib/_gtsf2.S, gcclib/_infinitydf.S,
+	  gcclib/_lesf2.S, gcclib/_ltdf2.S, gcclib/_ltsf2.S, gcclib/_modsi3.S,
+	  gcclib/_mulsf3.S, gcclib/_mulsi3.S, gcclib/_negsf2.S,
+	  gcclib/_infinitysf.S, gcclib/_adddf3.S, gcclib/_normsf.S,
+	  gcclib/_subdf3.S, gcclib/_umodsi3.S, gcclib/_normdf.S,
+	  gcclib/_addsf3.S, gcclib/_subsf3.S, gcclib/_cmpdf2.S,
+	  gcclib/_eqdf2.S, gcclib/_negdf2.S, gcclib/_ledf2.S,
+	  gcclib/_udivsi3.S, gcclib/_umulsi3.S: ... to here.
+	* buildrules: The CFLAG "-x assembler-with-cpp" is not needed
+	  any longer.
+	* common/bcopy.S, common/bzero.S, common/memset.S: Moved from
+	  here ...
+	* string/bcopy.S, string/bzero.S, string/memset.S: ... to here.
+	* common/vfork.S: Reverted back to old version (suggested by
+	  Andreas Schwab <schwab@suse.de>).
+	* README.bin, include/rtent.h, include/mint/iflink.h,
+	  include/libgen.h, socket/writev.c, socket/readv.c, common/rtent.c,
+	  common/setstack.S, common/cfsetspeed.c, common/00README: Stripped
+	  CR from files (requested by Frank Naumann
+	  <fnaumann@freemint.de>).
+
+2000-03-12 Guido Flohr <guido@freemint.de>:
+
+	* crypt/crypt_util.c, stdio/test-scanf11.c: Modified for -mshort.
+	* include/netdb.h, include/resolv.h, include/rtent.h,
+	  include/arpa/inet.h, include/arpa/nameser.h, include/net/bpf.h,
+	  include/netinet/in_systm.h: Added __BEGIN_DECLS and __END_DECLS
+	  to allow C++ compiling (Reported by Frank Naumann
+	  <fnaumann@freemint.de>).
+	* include/if_ppp.h: Corrected comment for PPPIOCGFLAGS and
+	  PPPIOCSFLAGS (reported by ??? - please complain. ;-) ).
+	* common/libc_exit.SP: Fixed for -mshort.
+
+2000-03-11 Guido Flohr <guido@freemint.de>:
+
+	* stdlib/strtod.c: Avoid integer overflow in expression for
+	  mshort lib.
+	* stdiio/BINFILES, stdiio/MISCFILES, stdiio/Makefile, stdiio/SRCFILES,
+	  stdiio/ivfprintf.c, stdiio/ivfscanf.c: New source files for
+	  libiio.
+	* buildrules: Now builds libiio (formatted output with integer
+	  only).
+	* stdio/vfprintf, stdio/vfscanf: Code cleanup and provide possibility
+	  for formatted input/output without float stuff.
+	* rules, libinstall: Install libraries suitable for gcc 2.95
+	  multilib features.  For backwards compatibility also create
+	  soft links.
+
+2000-03-10 Guido Flohr <guido@freemint.de>:
+
+	* common/BINFILES, common/EXTRAFILES, common/MISCFILES,
+	  common/Makefile, common/SRCFILES, common/_addsubd.SP,
+	  common/_addsubs.SP, common/_cmpdf2.SP, common/_cmpsf2.SP,
+	  common/_divdf3.SP, common/_divmods.s, common/_divsf3.SP,
+	  common/_eqdf2.SP, common/_eqsf2.SP, common/_extends.SP,
+	  common/_fixdfsi.SP, common/_fixsfsi.SP, common/_fltsi.SP,
+	  common/_fltsisf.SP, common/_fxunsd.SP, common/_gedf2.SP,
+	  common/_gesf2.SP, common/_gtdf2.SP, common/_gtsf2.SP,
+	  common/_isnan.s, common/_ledf2.SP, common/_lesf2.SP,
+	  common/_ltdf2.SP, common/_ltsf2.SP, common/_muldf3.SP,
+	  common/_mulsf3.SP, common/_mulsi3.s, common/_negdf2.s,
+	  common/_negsf2.s, common/_normdf.SP, common/_normsf.SP,
+	  common/_truncdf.SP, common/_udivmod.s, common/_umulsi3.s:
+	  Removed, resp. move to ...
+	* gcclib/BINFILES, gcclib/EXTRAFILES, gcclib/MISCFILES,
+	  gcclib/Makefile, gcclib/SRCFILES, gcclib/_adddf3.SP,
+	  gcclib/_addsf3.SP, gcclib/_cmpdf2.SP, gcclib/_cmpsf2.SP,
+	  gcclib/_divdf3.SP, gcclib/_divsf3.SP, gcclib/_divsi3.SP,
+	  gcclib/_eqdf2.SP, gcclib/_eqsf2.SP, gcclib/_extendsfdf2.SP,
+	  gcclib/_finite.s, gcclib/_fixdfsi.SP, gcclib/_fixsfsi.SP,
+	  gcclib/_fixunsdfsi.SP, gcclib/_floatsidf.SP, gcclib/_floatsisf.SP,
+	  gcclib/_gedf2.SP, gcclib/_gesf2.SP, gcclib/_gtdf2.SP,
+	  gcclib/_gtsf2.SP, gcclib/_infinitydf.SP, gcclib/_infinitysf.SP,
+	  gcclib/_isnan.s, gcclib/_ledf2.SP, gcclib/_lesf2.SP,
+	  gcclib/_ltdf2.SP, gcclib/_ltsf2.SP, gcclib/_modsi3.SP,
+	  gcclib/_muldf3.SP, gcclib/_mulsf3.SP, gcclib/_mulsi3.SP,
+	  gcclib/_negdf2.SP, gcclib/_negsf2.SP, gcclib/_normdf.SP,
+	  gcclib/_normsf.SP, gcclib/_subdf3.SP, gcclib/_subsf3.SP,
+	  gcclib/_truncdfsf2.SP, gcclib/_udivsi3.SP, gcclib/_umodsi3.SP,
+	  gcclib/_umulsi3.SP: New files (mostly moved from "common"
+	  here and some of the renamed/split up).  All this stuff
+	  actually belongs to libgcc and moving it to a diferent
+	  subdirectory will facilitate the final removal when
+	  the symbols are all defined in libgcc.a.  All names that
+	  may conflict with libgcc.a were weakened.  Files that defined
+	  multiple symbols were split up.
+
+2000-03-09 Guido Flohr <guido@freemint.de>
+
+	* common/chroot.c: Use __set_errno.
+
+2000-03-08 Guido Flohr <guido@freemint.de>
+
+	* stdio/doprnt.c, include/stdio.h: New (old) function _doprnt
+	  provided for compatibility.
+	* common/tz.c: Use Fopen instead of open to avoid circular
+	  calling.
+	* common/quickstat.c: New file.  Contains internal function
+	  __quickstat that does a stat without time checking.
+	* common/access.c, common/buffindf.c, common/mkdir.c, common/open.c,
+	  common/rmdir.c, common/unlink.c, common/glob.c: Use __quickstat()
+	  instead of stat ().
+	* tests/opendir.args: Subdirectory "src" is now "common".
+	* stdlib/exit.c:  Oops, ___fclose_all_files finished too early
+	  and eventually missed a open streams.
+
+2000-03-08 Guido Flohr <guido@freemint.de>
+
+	* include/string.h: Disable all inline stuff.  No effect.
+	* common/open.c, common/enoent.c: Use stat() instead of Fxattr.
+	* common/rmdir.c: Check first if argument is really a directory.
+	* buildrules: Compile crypt stuff with -O3 -fexpensive-optimizations.
+	  Expected effect was 250 %.  The real effect is zero. :-(
+	* stdio/vfprintf.c: Handle %C as a bad format conversion string
+	  instead of crashing.
+	* stdio/vfscanf.c: Fix a bug inherited from the GNU libc.  If we
+	  expect to read a hex char and see only "0x" either read only
+	  the 0 (in case of %i) or return with a conversion error
+	  (in case of %x).
+	* stdio/test-scanf6.c: Added a few tests that reveal the above
+	  mentioned bug.
+
+2000-03-07 Guido Flohr <guido@freemint.de>
+
+	* README.crypt, README.tests: New.
+	* do_test: Also echo the "cmp" command if TEST_VERBOSE.
+	* stdio/test-popen.c: Look for "cat" in $PATH and not only
+	  as "/bin/cat".
+	* stdio/test-tmpfile.c: Write 100 temporary files instead of one.
+	* stdio/test-tmpfile.sh: New.  Search through temporary directories
+	  for orphaned temporary files.
+	* stdio/tmpnam.c: Ooops, don't return buffer from stack.
+	* stdio/test-scanf11.c: Make the test result depend on the define
+	  NO_BUG_IN_ISO_C_CORRIGENDUM_1.
+	* stdio/test-scanf6.c: Exit with 1 and don't abort for that
+	  little error.
+
+2000-03-07 Mandin Patrice <pmandin@caramail.com>
+
+	* include/falcon.h: Fixed problems with Vsetscreen.
+
+2000-03-07 Guido Flohr <guido@freemint.de>
+
+	A new ChangeLog starts here with 0.54.99 pumped out a minute
+	ago.  Between today and the last ChangeLog entry there have
+	been so many changes that I lost all my spirit to update
+	this file.  If you try to make a patch from 0.54.1b to
+	0.54.99 you will see that the patch gets bigger than the new
+	archive and you probably understand.
+
+	Older ChangeLog entries can be found in ChangeLog.0
