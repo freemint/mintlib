@@ -14,6 +14,30 @@ __BEGIN_DECLS
 
 /* see osbind.h for __extension__ and AND_MEMORY */
 
+#define trap_1_wllw(n, a, b, c)						\
+__extension__								\
+({									\
+	register long retvalue __asm__("d0");				\
+	long _a = (long)(a);						\
+	long  _b = (long) (b);						\
+	short  _c = (short) (c);					\
+	    								\
+	__asm__ volatile						\
+	("\
+		movw    %4,sp@-; \
+		movl    %3,sp@-; \
+		movl    %2,sp@-; \
+		movw    %1,sp@-; \
+		trap    #1;	\
+		lea	sp@(10),sp " \
+	: "=r"(retvalue)			/* outputs */		\
+	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
+	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	  AND_MEMORY							\
+	);								\
+	retvalue;							\
+})
+
 #define trap_1_wwlw(n, a, b, c)						\
 __extension__								\
 ({									\
