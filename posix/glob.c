@@ -189,7 +189,7 @@ extern void bcopy ();
 # define mempcpy(Dest, Src, Len) __mempcpy (Dest, Src, Len)
 #endif
 
-#ifndef	__GNU_LIBRARY__
+#if !defined(__GNU_LIBRARY__) && !defined(__MINT__)
 # ifdef	__GNUC__
 __inline
 # endif

@@ -24,7 +24,7 @@ pid_t
 __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
 {
   static short have_Pwaitpid = 1;
-  long retval;
+  long retval = 0; /* make gcc happy */
   long lusage[8];  /* For current MiNT versions 2 longs should 
                     * be enough.  The MiNTLib has 8 longs.
                     * Don't know why but better leave it as

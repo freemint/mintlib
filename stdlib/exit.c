@@ -9,6 +9,7 @@
 */
 
 #include <stdio.h>
+#include <unistd.h>
 
 /* Functions registered by user for calling at exit.  */
 typedef void (*ExitFn) __PROTO ((void));

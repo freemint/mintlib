@@ -420,7 +420,7 @@ emit_union (const definition * def)
 	  free (object);
 	  f_print (fout, "\t\tbreak;\n");
 	}
-#ifdef __GNU_LIBRARY__
+#if defined (__GNU_LIBRARY__) || defined (__MINT__)
       else
 	{
 	  f_print (fout, "\tdefault:\n");

@@ -62,7 +62,7 @@ static char **last_environ;
 int
 setenv (const char* name, const char* value, int replace)
 {
-  register char **ep;
+  register char **ep = NULL;
   register size_t size;
   const size_t namelen = strlen (name);
   const size_t vallen = strlen (value) + 1;

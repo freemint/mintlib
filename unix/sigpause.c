@@ -45,14 +45,14 @@ __sigpause (sig_or_mask, is_sig)
       if (__sigemptyset (&set) < 0)
 	return -1;
 
-      if (sizeof (sig_or_mask) == sizeof (set))
-	*(int *) &set = sig_or_mask;
-      else if (sizeof (unsigned long int) == sizeof (set))
-	*(unsigned long int *) &set = (unsigned long int) sig_or_mask;
-      else
+#ifdef __MINT__
+	set = (unsigned long int) sig_or_mask;
+#else
+	/* generic version */
 	for (sig = 1; sig < NSIG; ++sig)
 	  if ((sig_or_mask & sigmask (sig)) && __sigaddset (&set, sig) < 0)
 	    return -1;
+#endif
     }
 
   return __sigsuspend (&set);

@@ -410,7 +410,7 @@
 #define C_Spol 0x53706F6CL     /* Flexible Printer Spooler */
 #define C_SPRG 0x53505247L     /* STARTER.ACC */
 #define C_SSND 0x53534E44L     /* Petra */
-#define C_ST-C 0x53542D43L     /* Cache Program */
+#define C_ST_C 0x53542D43L     /* Cache Program */
 #define C_ST17 0x53543137L     /* ST-68017 */
 #define C_STAT 0x53544154L     /* StaTOS */
 #define C_STEW 0x53544557L     /* Stewart */
