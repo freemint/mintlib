@@ -61,13 +61,13 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   struct protoent protobuf;
   size_t prtbuflen;
   char *prttmpbuf;
+  int herr;
 #endif
   struct sockaddr_in sin;
   struct sockaddr_un sun;
   int sock;
   struct timeval tv;
   CLIENT *client;
-  int herr;
 
   if (strcmp (proto, "unix") == 0)
     {

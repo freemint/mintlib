@@ -190,8 +190,6 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   cu->cu_xdrpos = XDR_GETPOS (&(cu->cu_outxdrs));
   if (*sockp < 0)
     {
-      int dontblock = 1;
-
       *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
       if (*sockp < 0)
 	{
@@ -203,13 +201,16 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       /* the sockets rpc controls are non-blocking */
 #ifdef __MINT__
-/* XXX FIONBIO */
+      /* XXX FIONBIO */
       {
-        long fl = fcntl (*sockp, F_GETFL, 0);
-        fcntl (*sockp, F_SETFL, fl | O_NDELAY);
+        long fl = __fcntl (*sockp, F_GETFL, 0);
+        __fcntl (*sockp, F_SETFL, fl | O_NDELAY);
       }
 #else
-      (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+      {
+        int dontblock = 1;
+        (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+      }
 #endif
 #ifdef IP_RECVERR
       {
