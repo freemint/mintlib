@@ -71,6 +71,7 @@ extern int inet_pton (int __af, __const char *__restrict __cp,
 extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
 				char *__restrict __buf, size_t __len)
      __THROW;
+#endif
 
 
 /* The following functions are not part of XNS 5.2.  */
@@ -79,6 +80,7 @@ extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
    into binary data and store the result in the structure INP.  */
 extern in_addr_t inet_aton (__const char *__cp, struct in_addr *__inp) __THROW;
 
+#if 0
 /* Format a network number NET into presentation format and place result
    in buffer starting at BUF with length of LEN bytes.  */
 extern char *inet_neta (in_addr_t __net, char *__buf, size_t __len) __THROW;
