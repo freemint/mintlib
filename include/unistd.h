@@ -415,6 +415,12 @@ __EXTERN int ftruncate __PROTO ((int fd, __off_t __length));
 __EXTERN int    getdtablesize __PROTO ((void));
 #endif
 
+/* Swab pairs bytes in the first N bytes of the area pointed to by
+   FROM and copy the result to TO.  The value of TO must not be in the
+   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
+   is without partner.  */
+__EXTERN void swab __PROTO ((const char* __from, char* __to, ssize_t));
+
 __EXTERN int	__bsd_getpgrp __PROTO((int));
 __EXTERN int	__bsd_setpgrp __PROTO((int, int));
 
