@@ -1,31 +1,32 @@
-/*  s_isnan.c -- MiNTLib.
-    Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+/* @(#)s_isnan.c 5.1 93/09/24 */
+/*
+ * ====================================================
+ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ *
+ * Developed at SunPro, a Sun Microsystems, Inc. business.
+ * Permission to use, copy, modify, and distribute this
+ * software is freely granted, provided that this notice
+ * is preserved.
+ * ====================================================
+ */
 
-    This file is part of the MiNTLib project, and may only be used
-    modified and distributed under the terms of the MiNTLib project
-    license, COPYMINT.  By continuing to use, modify, or distribute
-    this file you indicate that you have read the license and
-    understand and accept it fully.
-*/
+/*
+ * isnan(x) returns 1 is x is nan, else 0;
+ * no branching!
+ */
 
-/* FIXME: Please check if this is correct!  */
-
-#include <math.h>
-#include <ieee754.h>
-
-#undef __isnan
-#undef isnan
+#include "math.h"
+#include "math_private.h"
 
 int
-__isnan (value)
-     double value;
+__isnan (double x)
 {
-  union ieee754_double u;
-  
-  u.d = value;
-  
-  return ((u.ieee.exponent & 0x7ff) == 0x7ff && 
-          ((u.ieee.mantissa0 & 0xfffff) != 0 || u.ieee.mantissa1 != 0));
+	int32_t hx,lx;
+	EXTRACT_WORDS(hx,lx,x);
+	hx &= 0x7fffffff;
+	hx |= (u_int32_t)(lx|(-lx))>>31;
+	hx = 0x7ff00000 - hx;
+	return (int)((u_int32_t)(hx))>>31;
 }
 weak_alias (__isnan, isnan)
 #ifdef NO_LONG_DOUBLE

@@ -51,8 +51,6 @@
 
 #ifdef __MINT__
 # define __long_double_t long double
-__EXTERN int __isnan __PROTO ((double));
-__EXTERN int __isinf __PROTO ((double));
 #endif
 
 #ifndef NDEBUG

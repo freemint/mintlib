@@ -1,34 +1,24 @@
-/*  s_isinff.c -- MiNTLib.
-    Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+/*
+ * Written by J.T. Conklin <jtc@netbsd.org>.
+ * Public domain.
+ */
 
-    This file is part of the MiNTLib project, and may only be used
-    modified and distributed under the terms of the MiNTLib project
-    license, COPYMINT.  By continuing to use, modify, or distribute
-    this file you indicate that you have read the license and
-    understand and accept it fully.
-*/
+/*
+ * isinff(x) returns 1 if x is inf, -1 if x is -inf, else 0;
+ * no branching!
+ */
 
-/* FIXME: Please check if this is correct!  */
-
-#include <math.h>
-#include <ieee754.h>
-
-#undef __isinff
-#undef isinff
+#include "math.h"
+#include "math_private.h"
 
 int
-__isinff (value)
-     float value;
+__isinff (float x)
 {
-  union ieee754_float u;
-  
-  u.f = value;
-  
-  if ((u.ieee.exponent & 0xff) == 0xff && 
-      (u.ieee.mantissa & 0x7fffff) == 0)
-    return u.ieee.negative ? -1 : 1;
-  
-  return 0;
+	int32_t ix,t;
+	GET_FLOAT_WORD(ix,x);
+	t = ix & 0x7fffffff;
+	t ^= 0x7f800000;
+	t |= -t;
+	return ~(t >> 31) & (ix >> 30);
 }
-
 weak_alias (__isinff, isinff)

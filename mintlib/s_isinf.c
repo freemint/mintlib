@@ -1,37 +1,28 @@
-/*  s_isinf.c -- MiNTLib.
-    Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+/*
+ * Written by J.T. Conklin <jtc@netbsd.org>.
+ * Changed to return -1 for -Inf by Ulrich Drepper <drepper@cygnus.com>.
+ * Public domain.
+ */
 
-    This file is part of the MiNTLib project, and may only be used
-    modified and distributed under the terms of the MiNTLib project
-    license, COPYMINT.  By continuing to use, modify, or distribute
-    this file you indicate that you have read the license and
-    understand and accept it fully.
-*/
+/*
+ * isinf(x) returns 1 is x is inf, -1 if x is -inf, else 0;
+ * no branching!
+ */
 
-/* FIXME: Please check if this is correct!  */
-
-#include <math.h>
-#include <ieee754.h>
-
-#undef __isinf
-#undef isinf
+#include "math.h"
+#include "math_private.h"
 
 int
-__isinf (value)
-      double value;
+__isinf (double x)
 {
-  union ieee754_double u;
-  
-  u.d = value;
-  
-  if ((u.ieee.exponent & 0x7ff) == 0x7ff && 
-      (u.ieee.mantissa0 & 0xfffff) == 0 && u.ieee.mantissa1 == 0)
-    return u.ieee.negative ? -1 : 1;
-  
-  return 0;
+	int32_t hx,lx;
+	EXTRACT_WORDS(hx,lx,x);
+	lx |= (hx & 0x7fffffff) ^ 0x7ff00000;
+	lx |= -lx;
+	return ~(lx >> 31) & (hx >> 30);
 }
 weak_alias (__isinf, isinf)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isinf, __isinfl)
-weak_alias (__isinfl, isinfl)
+weak_alias (__isinf, isinfl)
 #endif

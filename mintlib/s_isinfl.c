@@ -1,34 +1,24 @@
-/*  s_isinfl.c -- MiNTLib.
-    Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+/*
+ * Written by J.T. Conklin <jtc@netbsd.org>.
+ * Change for long double by Jakub Jelinek <jj@ultra.linux.cz>
+ * Public domain.
+ */
 
-    This file is part of the MiNTLib project, and may only be used
-    modified and distributed under the terms of the MiNTLib project
-    license, COPYMINT.  By continuing to use, modify, or distribute
-    this file you indicate that you have read the license and
-    understand and accept it fully.
-*/
+/*
+ * isinfl(x) returns 1 if x is inf, -1 if x is -inf, else 0;
+ * no branching!
+ */
 
-/* FIXME: Please check if this is correct!  */
-
-#include <math.h>
-#include <ieee754.h>
-
-#undef __isinfl
-#undef isinfl
+#include "math.h"
+#include "math_private.h"
 
 int
-__isinfl (value)
-     long double value;
+__isinfl (long double x)
 {
-  union ieee854_long_double u;
-  
-  u.d = value;
-  
-  if ((u.ieee.exponent & 0x7fff) == 0x7fff && 
-      (u.ieee.mantissa0 & 0x7fffffff) == 0 && u.ieee.mantissa1 == 0)
-    return u.ieee.negative ? -1 : 1;
-  
-  return 0;
+	int64_t hx,lx;
+	GET_LDOUBLE_WORDS64(hx,lx,x);
+	lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
+	lx |= -lx;
+	return ~(lx >> 63) & (hx >> 62);
 }
-
 weak_alias (__isinfl, isinfl)
