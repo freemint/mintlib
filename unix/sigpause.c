@@ -30,7 +30,6 @@ __sigpause (sig_or_mask, is_sig)
      int is_sig;
 {
   sigset_t set;
-  int sig;
 
   if (is_sig != 0)
     {
@@ -46,12 +45,15 @@ __sigpause (sig_or_mask, is_sig)
 	return -1;
 
 #ifdef __MINT__
-	set = (unsigned long int) sig_or_mask;
+      set = (unsigned long int) sig_or_mask;
 #else
+      {
+	int sig;
 	/* generic version */
 	for (sig = 1; sig < NSIG; ++sig)
 	  if ((sig_or_mask & sigmask (sig)) && __sigaddset (&set, sig) < 0)
 	    return -1;
+      }
 #endif
     }
 

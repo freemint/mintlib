@@ -13,11 +13,11 @@ void linea0()
         register short (**__xfuncs) (void) __asm__ ("a2");              \
                                                                         
         __asm__ volatile                                                
-        ("
+        (" \
         .word   0xA000"                                         \
         : "=g"(__xaline), "=g"(__xfonts), "=g"(__xfuncs)  /* outputs */ \
         :                                                 /* inputs  */ 
-        : "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */ 
+        : __CLOBBER_RETURN("a0") __CLOBBER_RETURN("a1") __CLOBBER_RETURN("a2") "d0", "d1", "d2"       /* clobbered regs */ 
         );                                                              
         __aline = __xaline;                                             \
         __fonts = __xfonts;                                             \
@@ -29,7 +29,7 @@ void linea1()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA001" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -42,11 +42,11 @@ int linea2()
 	register long retvalue __asm__("d0");
 
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA002"
 	: "=r"(retvalue)				  /* outputs */	
 	: 						  /* inputs  */	
-	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	
 	);								
 	return (int) retvalue;
 }
@@ -55,7 +55,7 @@ void linea3()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA003" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -67,7 +67,7 @@ void linea4()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA004" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -79,7 +79,7 @@ void linea5()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA005" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -91,7 +91,7 @@ void linea6()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA006" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -103,10 +103,10 @@ void linea7(BBPB *P)
 {									
 	    								
 	__asm__ volatile						
-	("
-		movml	d2/a2/a6, sp@-;
- 		movl	%0,a6;  
-		.word   0xA007;
+	(" \
+		movml	d2/a2/a6, sp@-; \
+ 		movl	%0,a6;  \
+		.word   0xA007; \
 		movml	sp@+, d2/a2/a6"
 	: 						  /* outputs */	
 	: "r"(P)					  /* inputs  */	
@@ -118,7 +118,7 @@ void linea8()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA008" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -130,7 +130,7 @@ void linea9()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA009" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -142,7 +142,7 @@ void lineaa()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA00A" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -154,7 +154,7 @@ void lineab()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA00B" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -166,8 +166,8 @@ void lineac(void *P)
 {									
 	    								
 	__asm__ volatile						
-	("
- 		movl	%0,a2;  
+	(" \
+ 		movl	%0,a2;  \
 		.word   0xA00C" 
 	: 						  /* outputs */	
 	: "r"(P)					  /* inputs  */	
@@ -179,11 +179,11 @@ void linead(int x, int y,  SFORM * sd, void *ss)
 {									
 	    								
 	__asm__ volatile						
-	("
- 		movw	%0,d0;  
- 		movw	%1,d1;  
- 		movl	%2,a0;  
- 		movl	%3,a2;  
+	(" \
+ 		movw	%0,d0;  \
+ 		movw	%1,d1;  \
+ 		movl	%2,a0;  \
+ 		movl	%3,a2;  \
 		.word   0xA00D" 
 	: 						  /* outputs */	
 	: "r"((short)x), "r"((short)y), "r"(sd), "r"(ss)  /* inputs  */	
@@ -195,7 +195,7 @@ void lineae()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA00E" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	
@@ -207,7 +207,7 @@ void lineaf()
 {									
 	    								
 	__asm__ volatile						
-	("
+	(" \
 		.word   0xA00F" 
 	: 						  /* outputs */	
 	: 						  /* inputs  */	

@@ -27,9 +27,7 @@
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-sprintf (s, format)
-     char *s;
-     const char *format;
+sprintf (char *s, const char *format, ...)
 {
   va_list arg;
   int done;

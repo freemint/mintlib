@@ -222,9 +222,9 @@ options too.\n\
   -t, --timezone=TIMEZONE, --tz=TIMEZONE\n\
                          set timezone to TIMEZONE (instead of reading\n\
                          the environment)\n\
-  -n, --no-timezone, --no-tz
+  -n, --no-timezone, --no-tz\n\
                          remove an eventually existing setting for the\n\
-                         variable TZ from the environment
+                         variable TZ from the environment\n\
   -u, --utc, --gmt       set kernel clock mode to UTC mode\n\
   -V, --version          display version information and exit\n\
   -v, --verbose          display verbose information (default)\n\

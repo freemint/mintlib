@@ -143,7 +143,7 @@ __extension__								\
 		addqw   #2,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -163,7 +163,7 @@ __extension__								\
 		addqw   #4,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -183,7 +183,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -205,7 +205,7 @@ __extension__								\
 		addqw   #8,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -229,7 +229,7 @@ __extension__								\
 		lea	sp@(12),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -253,7 +253,7 @@ __extension__								\
 		lea	sp@(10),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -279,7 +279,7 @@ __extension__								\
 		lea	sp@(12),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -300,7 +300,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -322,7 +322,7 @@ __extension__								\
 		lea	sp@(10),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -348,7 +348,7 @@ __extension__								\
 		lea	sp@(16),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -373,7 +373,7 @@ __extension__								\
 		lea	sp@(14),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -392,7 +392,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -410,7 +410,7 @@ __extension__								\
 		addqw   #2,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -430,7 +430,7 @@ __extension__								\
 		addqw   #4,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -452,7 +452,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -481,7 +481,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -502,7 +502,7 @@ __extension__								\
 		addqw   #8,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -524,7 +524,7 @@ __extension__								\
 		addqw   #8,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)              /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -548,7 +548,7 @@ __extension__								\
 		lea	sp@(12),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -568,7 +568,7 @@ __extension__								\
 		addqw   #4,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -586,7 +586,7 @@ __extension__								\
 		addqw   #2,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -610,7 +610,7 @@ __extension__								\
 		lea	sp@(12),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)       /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -630,7 +630,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -652,7 +652,7 @@ __extension__								\
 		addqw   #6,sp "						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -685,7 +685,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b),					\
 	  "r"(_c), "r"(_d), "r"(_e), "r"(_f), "r"(_g) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -719,7 +719,7 @@ __extension__								\
 	: "=r"(retvalue)			   /* outputs */	\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d), "r"(_e), "r"(_f), "r"(_g), "r"(_h) /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -761,7 +761,7 @@ __extension__								\
 		lea	sp@(26),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: 					/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -792,7 +792,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "g"(_a),						\
 	  "g"(_b), "g"(_c), "g"(_d), "g"(_e), "g"(_f)	/* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -815,7 +815,7 @@ __extension__								\
 		lea	sp@(14),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -842,7 +842,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)    /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -868,7 +868,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)        /* inputs  */	\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -891,7 +891,7 @@ __extension__								\
 		lea	sp@(10),sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)	/* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -918,7 +918,7 @@ __extension__								\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)    /* inputs  */		\
-	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
 	);								\
 	retvalue;							\
 })

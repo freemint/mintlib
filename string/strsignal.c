@@ -34,7 +34,7 @@
 
 /* Defined in siglist.c.  */
 extern const char *const _sys_siglist[];
-#if __libc_setspecific (foo, bar) != -1
+#if !__libc_setspecific (foo, bar) == -1
 static __libc_key_t key;
 #endif
 
@@ -46,7 +46,7 @@ static char *static_buf;
 
 /* Destructor for the thread-specific data.  */
 static void init (void);
-#if __libc_key_create (foo, bar) != -1
+#if !__libc_key_create (foo, bar) == -1
 static void free_key_mem (void *mem);
 #endif
 static char *getbuffer (void);
@@ -102,13 +102,13 @@ init (void)
 }
 
 
-#if __libc_key_create(foo, bar) != -1
+#if !__libc_key_create(foo, bar) == -1
 /* Free the thread specific data, this is done if a thread terminates.  */
 static void
 free_key_mem (void *mem)
 {
   free (mem);
-#if __libc_setspecific (key, NULL) != -1
+#if !__libc_setspecific (key, NULL) == -1
   __libc_setspecific (key, NULL);
 #endif
 }
@@ -134,7 +134,7 @@ getbuffer (void)
 	  if (result == NULL)
 	    /* No more memory available.  We use the static buffer.  */
 	    result = local_buf;
-#if __libc_setspecific (key, result) != -1
+#if !__libc_setspecific (key, result) == -1
 	  else
 	    __libc_setspecific (key, result);
 #endif

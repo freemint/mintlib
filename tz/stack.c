@@ -11,3 +11,4 @@
 /* The sole purpose of this file is to provide a sufficient stack to
    zic and zdump.  */
 long _stksize = 64 * 1024;
+

@@ -29,9 +29,7 @@ __EXTERN int __vsscanf __PROTO((const char*, const char*, __gnuc_va_list));
 /* Read formatted input from S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-sscanf (s, format)
-     const char *s;
-     const char *format;
+sscanf (const char *s, const char *format, ...)
 {
   va_list arg;
   int done;

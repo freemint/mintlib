@@ -56,6 +56,12 @@
 # define __GNUC_INLINE__
 #endif
 
+#if ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 3))
+# define __CLOBBER_RETURN(a) 
+#else
+# define __CLOBBER_RETURN(a) a,
+#endif
+
 #endif /* __GNUC__ */
 
 /* some default declarations */
