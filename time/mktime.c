@@ -415,3 +415,6 @@ mktime (struct tm * const tmp)
   tmp->tm_isdst = -1;
   return __time1 (tmp, __localsub, 0L);
 }
+#ifdef weak_alias
+weak_alias (mktime, timelocal)
+#endif

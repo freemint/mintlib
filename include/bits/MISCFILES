@@ -38,5 +38,6 @@ MISCFILES = MISCFILES \
 	stdio_lim.h \
 	string.h \
 	string2.h \
+	time.h \
 	types.h \
 	xopen_lim.h

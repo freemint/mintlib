@@ -25,6 +25,7 @@
 
 #include "tzstruct.h"
 
+
 struct tm __tmbuf;
 
 void
@@ -76,18 +77,21 @@ __localsub (const time_t *timep, const long offset, struct tm * const tmp)
   tmp->TM_ZONE = &sp->chars[ttisp->tt_abbrind];
 }
 
+
+struct tm *
+__localtime_r (const time_t * const timep, struct tm *tm)
+{
+  tzset();
+  __localsub(timep, 0L, tm);
+  return tm;
+}
+weak_alias (__localtime_r, localtime_r)
+
+
 struct tm *
 localtime (const time_t * const timep)
 {
-  tzset ();
-  __localsub (timep, 0L, &__tmbuf);
+  tzset();
+  __localsub(timep, 0L, &__tmbuf);
   return &__tmbuf;
-}
-
-struct tm *
-localtime_r (const time_t * const timep, struct tm *tm)
-{
-  tzset ();
-  __localsub (timep, 0L, tm);
-  return tm;
 }

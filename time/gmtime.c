@@ -16,22 +16,12 @@
 #include <stdlib.h>
 #include "tzstruct.h"
 
+
 static char wildabbr[] = "WILDABBR";
 
-struct tm* gmtime (const time_t* timep)
-{
-  __gmtsub (timep, 0L, &__tmbuf);
-  return &__tmbuf;
-}
-
-struct tm* gmtime_r (const time_t* timep, struct tm* tm)
-{
-  __gmtsub (timep, 0L, tm);
-  return tm;
-}
-
 /* __gmtsub is to gmtime as __localsub is to localtime.  */
-void __gmtsub (const time_t* timep, long offset, struct tm* tmp)
+void
+__gmtsub (const time_t *timep, long offset, struct tm *tmp)
 {
   if (!__gmt_is_set) 
     {
@@ -58,4 +48,21 @@ void __gmtsub (const time_t* timep, long offset, struct tm* tmp)
        else    
          tmp->TM_ZONE = __gmtptr->chars;
      }
+}
+
+
+struct tm *
+__gmtime_r (const time_t* timep, struct tm* tm)
+{
+  __gmtsub (timep, 0L, tm);
+  return tm;
+}
+weak_alias (__gmtime_r, gmtime_r)
+
+
+struct tm *
+gmtime (const time_t* timep)
+{
+  __gmtsub (timep, 0L, &__tmbuf);
+  return &__tmbuf;
 }

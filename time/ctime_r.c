@@ -1,5 +1,7 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Return in BUF representation of time T in form of asctime
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,18 +18,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#undef	__OPTIMIZE__	/* Avoid inline `ctime' function.  */
 #include <time.h>
 
-#undef	ctime
-
-
-/* Return a string as returned by asctime which
-   is the representation of *T in that form.  */
+/* Return a string as returned by asctime which is the representation
+   of *T in that form.  Reentrant version.  */
 char *
-ctime (const time_t *t)
+ctime_r (const time_t *t, char *buf)
 {
-  /* The C Standard says ctime (t) is equivalent to asctime (localtime (t)).
-     In particular, ctime and asctime must yield the same pointer.  */
-  return asctime (localtime (t));
+  struct tm tm;
+  return __asctime_r (__localtime_r (t, &tm), buf);
 }

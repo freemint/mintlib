@@ -29,7 +29,7 @@ all-here:
 dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
-TESTS = clock time posixtz
+TESTS = clock getdate mktime posixtz strptime time
 include $(top_srcdir)/checkrules
 
 check-local: 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#undef	__OPTIMIZE__	/* Avoid inline `ctime' function.  */
 #include <time.h>
 
-#undef	ctime
-
-
-/* Return a string as returned by asctime which
-   is the representation of *T in that form.  */
-char *
-ctime (const time_t *t)
+time_t
+timegm (tmp)
+     struct tm *const tmp;
 {
-  /* The C Standard says ctime (t) is equivalent to asctime (localtime (t)).
-     In particular, ctime and asctime must yield the same pointer.  */
-  return asctime (localtime (t));
+  static time_t gmtime_offset;
+  tmp->tm_isdst = 0;
+  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
 }

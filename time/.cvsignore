@@ -3,5 +3,8 @@
 *~
 lib*.a
 test-clock
+test-getdate
+test-mktime
 test-posixtz
+test-strptime
 test-time

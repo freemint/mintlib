@@ -8,46 +8,45 @@
     understand and accept it fully.
 */
 
-#ifndef	_SYS_TIME_H
-#if !defined(__need_timeval)
-# define	_SYS_TIME_H 1
+#ifndef _SYS_TIME_H
+# define _SYS_TIME_H 1
 
 #ifndef _FEATURES_H
 # include <features.h>
 #endif
 
-#ifndef _TIME_H
-# include <time.h>
-#endif
+__BEGIN_DECLS
+
+#include <bits/types.h>
+#define __need_time_t
+#include <time.h>
+#define __need_timeval
+#include <bits/time.h>
+
 #ifndef _SYS_SELECT_H
 # include <sys/select.h>
 #endif
 
-__BEGIN_DECLS
+#ifndef __suseconds_t_defined
+typedef __suseconds_t suseconds_t;
+# define __suseconds_t_defined
+#endif
 
+
+#ifdef __USE_GNU
 /* Macros for converting between `struct timeval' and `struct timespec'.  */
-#define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \
+# define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \
         (ts)->tv_sec = (tv)->tv_sec;                                    \
         (ts)->tv_nsec = (tv)->tv_usec * 1000;                           \
 }
-#define TIMESPEC_TO_TIMEVAL(tv, ts) {                                   \
+# define TIMESPEC_TO_TIMEVAL(tv, ts) {                                   \
         (tv)->tv_sec = (ts)->tv_sec;                                    \
         (tv)->tv_usec = (ts)->tv_nsec / 1000;                           \
 }
-
-#endif /* not __need_timeval */
-
-#ifndef _STRUCT_TIMEVAL
-# define _STRUCT_TIMEVAL 1
-/* Struct representing a calendar time.  */
-struct timeval {
-  long int tv_sec;  /* Seconds since epoch (equiv. to time_t).  */
-  long int tv_usec; /* Fractional second value in microseconds.  */
-};
 #endif
 
-#if !defined(__need_timeval) || defined(_SYS_TIME_H)
 
+#ifdef __USE_BSD
 /* Structure crudely representing a timezone.
    This is obsolete and should never be used.  */
 struct timezone
@@ -56,22 +55,40 @@ struct timezone
     int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
   };
 
+typedef struct timezone *__restrict __timezone_ptr_t;
+#else
+typedef void *__restrict __timezone_ptr_t;
+#endif
+
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
-__EXTERN int gettimeofday __PROTO ((struct timeval *__tv,
-			      struct timezone *__tz));
-__EXTERN int __gettimeofday __PROTO ((struct timeval *__tv,
-			      struct timezone *__tz));
+extern int gettimeofday (struct timeval *__tv,
+			 struct timezone *__tz) __THROW;
+extern int __gettimeofday (struct timeval *__tv,
+			   struct timezone *__tz) __THROW;
 
+#ifdef __USE_BSD
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
-__EXTERN int settimeofday __PROTO ((const struct timeval *__tv,
-			      const struct timezone *__tz));
-__EXTERN int __settimeofday __PROTO ((const struct timeval *__tv,
-			      const struct timezone *__tz));
+extern int settimeofday (const struct timeval *__tv,
+			      const struct timezone *__tz) __THROW;
+extern int __settimeofday (const struct timeval *__tv,
+			      const struct timezone *__tz) __THROW;
+
+#ifndef __MINT__
+/* XXX not yet supported */
+/* Adjust the current time of day by the amount in DELTA.
+   If OLDDELTA is not NULL, it is filled in with the amount
+   of time adjustment remaining to be done from the last `adjtime' call.
+   This call is restricted to the super-user.  */
+extern int adjtime (__const struct timeval *__delta,
+		    struct timeval *__olddelta) __THROW;
+#endif /* __MINT__ */
+#endif
+
 
 /* Values for the first argument to `getitimer' and `setitimer'.  */
 enum __itimer_which
@@ -98,32 +115,42 @@ struct itimerval
     struct timeval it_value;
   };
 
+#if defined __USE_GNU && !defined __cplusplus
+/* Use the nicer parameter type only in GNU mode and not for C++ since the
+   strict C++ rules prevent the automatic promotion.  */
+typedef enum __itimer_which __itimer_which_t;
+#else
+typedef int __itimer_which_t;
+#endif
+
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-__EXTERN int getitimer __PROTO ((enum __itimer_which __which,
-			   struct itimerval *__value));
+extern int getitimer (__itimer_which_t __which,
+		      struct itimerval *__value) __THROW;
 
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
-__EXTERN int setitimer __PROTO ((enum __itimer_which __which,
-			   const struct itimerval *__new,
-			   struct itimerval *__old));
+extern int setitimer (__itimer_which_t __which,
+		      __const struct itimerval *__restrict __new,
+		      struct itimerval *__restrict __old) __THROW;
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-__EXTERN int utimes __PROTO ((const char *__file, struct timeval __tvp[2]));
+extern int utimes (__const char *__file, __const struct timeval __tvp[2])
+     __THROW;
 
 
+#ifdef __USE_BSD
 /* Convenience macros for operations on timevals.
    NOTE: `timercmp' does not work for >= or <=.  */
-#define	timerisset(tvp)		((tvp)->tv_sec || (tvp)->tv_usec)
-#define	timerclear(tvp)		((tvp)->tv_sec = (tvp)->tv_usec = 0)
-#define	timercmp(a, b, CMP) 						      \
+# define timerisset(tvp)	((tvp)->tv_sec || (tvp)->tv_usec)
+# define timerclear(tvp)	((tvp)->tv_sec = (tvp)->tv_usec = 0)
+# define timercmp(a, b, CMP) 						      \
   (((a)->tv_sec == (b)->tv_sec) ? 					      \
    ((a)->tv_usec CMP (b)->tv_usec) : 					      \
    ((a)->tv_sec CMP (b)->tv_sec))
-#define	timeradd(a, b, result)						      \
+# define timeradd(a, b, result)						      \
   do {									      \
     (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;			      \
     (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;			      \
@@ -133,7 +160,7 @@ __EXTERN int utimes __PROTO ((const char *__file, struct timeval __tvp[2]));
 	(result)->tv_usec -= 1000000;					      \
       }									      \
   } while (0)
-#define	timersub(a, b, result)						      \
+# define timersub(a, b, result)						      \
   do {									      \
     (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;			      \
     (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;			      \
@@ -142,11 +169,8 @@ __EXTERN int utimes __PROTO ((const char *__file, struct timeval __tvp[2]));
       (result)->tv_usec += 1000000;					      \
     }									      \
   } while (0)
+#endif	/* BSD */
 
 __END_DECLS
 
-#endif /* not __need_timeval */
-
-#undef __need_timeval
-
-#endif /* SYS_TIME_H */
+#endif /* sys/time.h */

@@ -2,8 +2,8 @@
 
 #include <time.h>
 
-double difftime(t2, t1)
-time_t t2, t1;
+double
+difftime(time_t t2, time_t t1)
 {
-	return (double) (t2 - t1);
+	return (double)(t2 - t1);
 }

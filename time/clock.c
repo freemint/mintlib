@@ -2,13 +2,13 @@
    per second (under TOS, 200 per second) */
 /* written by ERS */
 
-#include <sysvars.h>
 #include <time.h>
+#include <mint/sysvars.h>
 
 extern clock_t _starttime; /* in main.c */
 
 clock_t
-_clock()
+_clock(void)
 {
 	return (get_sysvar(_hz_200) - _starttime);
 }
