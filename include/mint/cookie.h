@@ -387,9 +387,10 @@
 #define C_zCAC 0x7A434143L		/* 680x0 Cache Control CPX */
 #define C_zDCF 0x7A444346L		/* DCF-Time receiver */
 #define C__FSC 0xE4465343L		/* FSC : Falcon Screen */
-#define C_hade 0x68616465		/* hade: Hades */
+#define C_hade 0x68616465L		/* hade: Hades */
+#define C_CT60 0x43543630L		/* CT60 present */
 
-#define C_MACCEL 0x00AA006EL	/* MACCELL */
+#define C_MACCEL 0x00AA006EL		/* MACCELL */
 
 /* Return values of Getcookie() */
 #define C_FOUND		0
