@@ -16,6 +16,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
+
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -28,7 +30,6 @@ int
 posix_fallocate (int fd, __off_t offset, size_t len)
 {
   struct stat st;
-  struct statfs f;
   size_t step;
 
   /* `off_t is a signed type.  Therefore we can determine whether
@@ -47,13 +48,8 @@ posix_fallocate (int fd, __off_t offset, size_t len)
   if (! S_ISREG (st.st_mode))
     return ENODEV;
 
-  /* We have to know the block size of the filesystem to get at least some
-     sort of performance.  */
-  if (__fstatfs (fd, &f) != 0)
-    return errno;
-
   /* Align OFFSET to block size and adjust LEN.  */
-  step = (offset + f.f_bsize - 1) % ~f.f_bsize;
+  step = (offset + st.st_blksize - 1) % ~st.st_blksize;
   offset += step;
 
   /* Write something to every block.  */
