@@ -4,7 +4,22 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = bsd_getpgrp.c bsd_setpgrp.c execl.c execle.c execlp.c execv.c \
-execvp.c fnmatch.c getopt.c getopt1.c getopt_init.c glob.c regex.c remove.c \
-sleep.c system.c wordexp.c
-
+SRCFILES = \
+	bsd_getpgrp.c \
+	bsd_setpgrp.c \
+	execl.c \
+	execle.c \
+	execlp.c \
+	execv.c \
+	execvp.c \
+	fnmatch.c \
+	getopt.c \
+	getopt1.c \
+	getopt_init.c \
+	glob.c \
+	regex.c \
+	remove.c \
+	sleep.c \
+	sysconf.c \
+	system.c \
+	wordexp.c

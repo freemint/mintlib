@@ -16,7 +16,7 @@
 #define UNLIMITED	(0x7fffffffL)
 
 long
-sysconf(int var)
+__sysconf (int var)
 {
 	long r;
 
@@ -45,3 +45,4 @@ sysconf(int var)
 		return -1;
 	}
 }
+weak_alias (__sysconf, sysconf)
