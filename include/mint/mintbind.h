@@ -526,7 +526,8 @@ __extension__								\
 		trap_1_wll(0x155, (long)(tvp), (long)(tzp))
 #define Tsettimeofday(tvp, tzp) \
 		trap_1_wll(0x156, (long)(tvp), (long)(tzp))
-/* 0x157 */
+#define Tadjtime(delta, olddelta) \
+		trap_1_wll(0x157, (long)(delta), (long)(olddelta))
 #define Pgetpriority(which, who) \
 		trap_1_www(0x158, (short)(which), (short)(who))
 #define Psetpriority(which, who, prio) \

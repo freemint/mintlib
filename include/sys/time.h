@@ -78,15 +78,14 @@ extern int settimeofday (const struct timeval *__tv,
 extern int __settimeofday (const struct timeval *__tv,
 			      const struct timezone *__tz) __THROW;
 
-#ifndef __MINT__
-/* XXX not yet supported */
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `adjtime' call.
    This call is restricted to the super-user.  */
 extern int adjtime (__const struct timeval *__delta,
 		    struct timeval *__olddelta) __THROW;
-#endif /* __MINT__ */
+extern int __adjtime (__const struct timeval *__delta,
+		    struct timeval *__olddelta) __THROW;
 #endif
 
 
