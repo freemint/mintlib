@@ -4,7 +4,19 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = cfgetisp.c cfgetosp.c cfsetisp.c cfsetosp.c cfsetspeed.c \
-tcdrain.c tcflow.c tcflush.c tcgetattr.c tcgetpgrp.c tcsendbreak.c \
-tcsetattr.c tcsetpgrp.c
-
+SRCFILES = \
+	cfgetisp.c \
+	cfgetosp.c \
+	cfmakeraw.c \
+	cfsetisp.c \
+	cfsetosp.c \
+	cfsetspeed.c \
+	tcdrain.c \
+	tcflow.c \
+	tcflush.c \
+	tcgetattr.c \
+	tcgetpgrp.c \
+	tcgetsid.c \
+	tcsendbreak.c \
+	tcsetattr.c \
+	tcsetpgrp.c
