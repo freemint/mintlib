@@ -1,61 +1,37 @@
-/*
- * getpagesize() for MiNT
- * written by Eric R. Smith and placed in the public
- * domain
- */
+/*  getpagesize.c -- MiNTLib.
+    Copyright (C) 2001 Frank Naumann <fnaumnn@freemint.de>
 
-#include <string.h>
-#include <unistd.h>
-#include <mint/mintbind.h>
+    This file is part of the MiNTLib project, and may only be used
+    modified and distributed under the terms of the MiNTLib project
+    license, COPYMINT.  By continuing to use, modify, or distribute
+    this file you indicate that you have read the license and
+    understand and accept it fully.
+*/
 
-#include "lib.h"
+/* $Id$ */
+
+#include <stdlib.h>
+#include <mint/sysctl.h>
+
 
 #define DEF_PAGESIZE 8192	/* default page size for TOS */
 
-
-/*
- * memstats: get information about memory usage, and put it into
- * the 4 long words pointed to by "meminfo" as follows:
- * 	meminfo[0]	number of free pages
- *	meminfo[1]	total number of pages being managed
- *	meminfo[2]	page size
- *	meminfo[3]	reserved, always 1
- * works only under MiNT
- */
-
-static void
-memstats (long *meminfo)
-{
-	int olddrv;
-	char oldpath[128];
-
-	olddrv = Dgetdrv();	/* save current drive */
-	Dsetdrv('U'-'A');	/* change to drive U: */
-	Dgetpath(oldpath, 0);	/* save current path for drive U: */
-	if (oldpath[0] == 0)
-		strcpy(oldpath, "\\");
-	Dsetpath("U:\\PROC");	/* change to the PROC directory */
-				/* note that Dfree() on drive U: is sensitive
-				 * to the path, so we must do this!
-				 */
-
-	Dfree((_DISKINFO*)meminfo, 0); /* get memory statistics */
-
-	Dsetpath(oldpath);	/* restore old path for drive U: */
-	Dsetdrv(olddrv);	/* restore old drive */
-}
+int
+__sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
+          const void *new, unsigned long newlen);
 
 int
 __getpagesize (void)
 {
-	long meminfo[4];
+	int call[2] = { CTL_HW, HW_PAGESIZE };
+	int val;
+	unsigned long valsize = sizeof (val);
+	int ret;
 
-	if (__mint < 9)
-		return DEF_PAGESIZE;
+	ret = __sysctl (call, 2, &val, &valsize, NULL, 0);
+	if (ret == 0)
+		return val;
 
-	/* get the page size by looking at U:\PROC */
-	memstats (meminfo);
-
-	return (int) ((meminfo[2] > DEF_PAGESIZE) ? meminfo[2] : DEF_PAGESIZE);
+	return DEF_PAGESIZE;
 }
 weak_alias (__getpagesize, getpagesize)
