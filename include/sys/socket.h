@@ -95,10 +95,10 @@ __EXTERN int	getpeername	__PROTO((int, struct sockaddr *, size_t *));
 __EXTERN int	send		__PROTO((int, const void *, ssize_t, int));
 __EXTERN int	recv		__PROTO((int, void *, ssize_t, int));
 __EXTERN int	sendto		__PROTO((int, const void *, ssize_t, int,
-					const struct sockaddr *, int));
+					const struct sockaddr *, size_t));
 
 __EXTERN int	recvfrom	__PROTO((int, void *, ssize_t, int,
-					struct sockaddr *, int *));
+					struct sockaddr *, size_t *));
 
 __EXTERN int	sendmsg		__PROTO((int, const struct msghdr *, int));
 __EXTERN int	recvmsg		__PROTO((int, struct msghdr *, int));
