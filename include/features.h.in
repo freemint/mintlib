@@ -219,7 +219,9 @@
 #endif
 
 #if defined _FILE_OFFSET_BITS && _FILE_OFFSET_BITS == 64
+# ifndef __MINT__ /* not yet */
 # define __USE_FILE_OFFSET64
+# endif
 #endif
 
 #if defined _BSD_SOURCE || defined _SVID_SOURCE
