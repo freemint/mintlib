@@ -79,7 +79,7 @@ int _exit_dummy_decl;
 
 #define STDIN_MODE	{ 1, 0, 0, 1, 0, 0, 0 }
 #define STDOUT_MODE	{ 0, 1, 0, 1, 1, 0, 1 }
-#define STDERR_MODE	{ 1, 1, 0, 1, 0, 0, 0 }
+#define STDERR_MODE	{ 0, 1, 0, 1, 0, 0, 0 }
 
 #define STD_STREAM(NAME, FD, STREAM_MODE, CHAIN) \
 	static FILE __##NAME = { \
