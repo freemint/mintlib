@@ -67,16 +67,16 @@ struct stat {
 #endif
 
 #ifndef _NO_UNIX_SOCKETS
-# define S_ISSOCK		((m & S_IFMT) == S_IFSOCK)
+# define S_ISSOCK(m)		(((m) & S_IFMT) == S_IFSOCK)
 #endif
-#define S_ISCHR(m)		((m & S_IFMT) == S_IFCHR)
-#define S_ISDIR(m)		((m & S_IFMT) == S_IFDIR)
-#define S_ISBLK(m)		((m & S_IFMT) == S_IFBLK)
-#define S_ISREG(m)		((m & S_IFMT) == S_IFREG)
-#define S_ISFIFO(m)		((m & S_IFMT) == S_IFIFO)
-#define S_ISMEM(m)		((m & S_IFMT) == S_IMEM)
+#define S_ISCHR(m)		(((m) & S_IFMT) == S_IFCHR)
+#define S_ISDIR(m)		(((m) & S_IFMT) == S_IFDIR)
+#define S_ISBLK(m)		(((m) & S_IFMT) == S_IFBLK)
+#define S_ISREG(m)		(((m) & S_IFMT) == S_IFREG)
+#define S_ISFIFO(m)		(((m) & S_IFMT) == S_IFIFO)
+#define S_ISMEM(m)		(((m) & S_IFMT) == S_IMEM)
 #ifdef __USE_BSD
-#define S_ISLNK(m)		((m & S_IFMT) == S_IFLNK)
+#define S_ISLNK(m)		(((m) & S_IFMT) == S_IFLNK)
 #endif
 
 #define S_IRWXU			0700
