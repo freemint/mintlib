@@ -116,7 +116,6 @@ __ioctl (int fd, int cmd, void *arg)
 					__set_errno (EBADF);
 					return -1;
 				}
-				(void) Fclose(fd);
 				r = Fclose(-1);
 				if (r >= 0)
 					return 0;
