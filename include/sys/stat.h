@@ -65,6 +65,7 @@ __BEGIN_DECLS
 #if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 /* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
 # define S_ISVTX	__S_ISVTX
+# define S_ISTXT	__S_ISVTX
 #endif
 
 #define	S_IRUSR	__S_IREAD	/* Read by owner.  */
@@ -95,7 +96,7 @@ __BEGIN_DECLS
 #ifdef	__USE_BSD
 /* Macros for common mode bit masks.  */
 #define	ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO) /* 0777 */
-#define	ALLPERMS (S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)/* 07777 */
+#define	ALLPERMS (S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO)/* 07777 */
 #define	DEFFILEMODE (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)/* 0666 */
 
 #define S_BLKSIZE		512	/* Block size for `st_blocks'.  */
