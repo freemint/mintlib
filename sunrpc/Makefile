@@ -27,7 +27,11 @@ nfs_prot.x rquota.x sm_inter.x klm_prot.x nlm_prot.x rstat.x spray.x
 rpcsvc_hdrs = $(rpcsvc:.x=.h)
 rpcsvc_funcs = $(addprefix x, $(rpcsvc:.x=.c))
 
+ifndef CROSS
 all-here: rpcgen rpcinfo $(rpcsvc_hdrs:.h=.stmp) $(rpcsvc_funcs:.c=.stmp)
+else
+all-here: rpcgen rpcinfo
+endif
 
 dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
@@ -58,6 +62,7 @@ uninstall: uninstall-rpcsvc-programs uninstall-rpcsvc-headers
 
 # Not suitable for cross-compiling.
 ifndef CROSS
+
 rpcgen-cmd = $(srcdir)/rpcgen `$(CC) -print-file-name=cpp | \
 			       sed -e "s,/cpp$$,," \
 			           -e "s,^cpp$$,," \
@@ -80,7 +85,7 @@ x%.stmp: %.x rpcgen
 	$(rpcgen-cmd) -c $< -o $(@:stmp=T)
 	$(MOVEIFCHANGE) $(@:stmp=T) $(@:stmp=c)
 	touch $@
-	
+
 install-rpcsvc-programs: rpcgen rpcinfo
 	$(mkinstalldirs) $(bindir)
 	$(INSTALL) -m 755 rpcgen $(bindir)
