@@ -135,7 +135,7 @@ OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(SUNRPCOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
 LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
-  $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SUNRPCOBJS) $(SYSVIPCOBJS) \
+  $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSVIPCOBJS) \
   $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
 
 # All modules that reference vfprintf or vfscanf should be listed here.
@@ -233,9 +233,9 @@ $(libiio): $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
 	$(AR) cru $@ $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
 	$(RANLIB) $@
 
-$(libsocket): $(SOCKETOBJS)
+$(libsocket): $(SOCKETOBJS) $(SUNRPCOBJS)
 	rm -f $@
-	$(AR) cru $@ $(SOCKETOBJS)
+	$(AR) cru $@ $(SOCKETOBJS) $(SUNRPCOBJS)
 	$(RANLIB) $@
 
 $(top_srcdir)/include/linker.h: $(top_srcdir)/include/linker.h.in \

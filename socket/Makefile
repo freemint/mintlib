@@ -19,7 +19,7 @@ include $(top_srcdir)/bindist
 # Make install-libs work.
 LIBS = 
 
-MANS = accept.3 bind.3 connect.3 getpeername.3 getsockname.3 \
+MANS = accept.3 bind.3 connect.3 getpeername.3 getrpcent.3 getsockname.3 \
 getsockopt.3 listen.3 recv.3 recvfrom.3 recvmsg.3 resolver.5 send.3 sendmsg.3 \
 sendto.3 setsockopt.3 shutdown.3 socket.3 socketpair.3
 

@@ -100,8 +100,10 @@ main (int argc, char **argv)
   int function;
   u_short portnum;
 
+#ifndef __MINT__
   setlocale (LC_ALL, "");
   textdomain (_libc_intl_domainname);
+#endif
 
   function = NONE;
   portnum = 0;

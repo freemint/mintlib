@@ -22,8 +22,8 @@ ifdef TIMEZONE
 endif
 
 SUBDIRS = include startup conf crypt dirent gmp login mintlib misc posix \
-  pwdgrp shadow signal socket stdiio stdio stdlib string sunrpc sysvipc \
-  termios time unix lib tz
+  pwdgrp shadow signal socket stdiio stdio stdlib string sysvipc \
+  termios time unix lib sunrpc tz
 DIST_SUBDIRS = conf crypt dirent gmp include lib lib_g lib_p lib020 lib16 \
   lib16020 login mintlib misc posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string sunrpc sysvipc termios time tz unix

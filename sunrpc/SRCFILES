@@ -73,3 +73,6 @@ RPCGEN_SRCFILES = \
 	rpc_svcout.c \
 	rpc_tblout.c \
 	rpc_util.c
+
+RPCINFO_SRCFILES = \
+	rpcinfo.c

@@ -2,3 +2,5 @@
 *.o
 *~
 lib*.a
+rpcgen
+rpcinfo
