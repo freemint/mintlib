@@ -66,10 +66,10 @@ nice			int	int
 link			int	ptr ptr
 lseek			long	int long int
 execve			int	ptr ptr ptr
-getgid			int
+getgid			long
 rmdir			int	ptr
-getegid			int
-getuid			int
+getegid			long
+getuid			long
 pipe			int 	ptr
 getpid			int
 dup			int	int
@@ -79,7 +79,7 @@ geteuid			int
 setreuid		int	int int
 chdir			int	ptr
 access			int	ptr int
-getgroups		int	int short
+getgroups		int	int ptr
 chown			int	ptr short short
 select			int	int ptr ptr ptr
 getrusage		int	int ptr
@@ -96,6 +96,40 @@ stat			int	ptr ptr
 sync			int
 chmod			int	ptr short
 unlink			int	ptr
+chroot			int	ptr
+fchmod			int	int long
+fchown			int	int long long
+fpathconf		long	int int
+getdtabl		int
+gethostid		long
+getpagesize		int
+getpgrp			int
+mkfifo			int	ptr long
+mknod			int	ptr long long long
+pathconf		long	ptr int
+poll			int	ptr long long
+sbrk			ptr	long
+setegid			int	int
+seteuid			int	int
+setpgid			int	int int
+setpgrp			int
+sigprocmask		int	int ptr ptr
+sigsuspend		int	ptr
+sigvec			int	int ptr ptr
+stime			int	ptr
+sysinfo			int	int ptr long
+time			long	ptr
+uname			int	ptr
+utimes			int	ptr ptr
+vfork			int
+getdomainname		int	ptr int
+gethostname		int	ptr int
+setdomainname		int	ptr int
+sethostname		int	ptr int
+
+#reboot			int	int
+#ptrace			int	int int ptr int
+#sysctl			int	ptr long ptr ptr ptr long
 
 # Do not remove this next line!
 
