@@ -282,8 +282,8 @@ extern int __euidaccess (__const char *__name, int __type) __THROW;
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
-extern off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
-extern off_t __lseek (int __fd, __off_t __offset, int __whence) __THROW;
+extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
+extern __off_t __lseek (int __fd, __off_t __offset, int __whence) __THROW;
 
 /* Close the file descriptor FD.  */
 extern int close (int __fd) __THROW;
