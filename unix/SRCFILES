@@ -10,6 +10,7 @@ SRCFILES = \
 	chdir.c \
 	chmod.c \
 	chown.c \
+	lchown.c \
 	chroot.c \
 	close.c \
 	creat.c \

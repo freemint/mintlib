@@ -579,6 +579,8 @@ __extension__								\
 		trap_1_wllw (0x141, (long)(addr), (long)(size), (short)(mode))
 /* 0x17e */
 /* 0x17f */
+#define Fchown16(name, uid, gid, follow_links) \
+		trap_1_wlwww(0x180, (long)(name), (short)(uid), (short)(gid), (short)follow_links)
 
 __END_DECLS
 

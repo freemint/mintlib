@@ -26,6 +26,7 @@ SRCFILES = \
 	do_fstat.c \
 	do_lock.c \
 	do_stat.c \
+	do_chown16.c \
 	dostime.c \
 	enoent.c \
 	frexp.S \

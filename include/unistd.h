@@ -378,15 +378,12 @@ extern int __chown (__const char *__file, __uid_t __owner, __gid_t __group)
 extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
 extern int __fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
 
-
-#ifndef __MINT__
 /* Change owner and group of FILE, if it is a symbolic
    link the ownership of the symbolic link is changed.  */
 extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
      __THROW;
 extern int __lchown (__const char *__file, __uid_t __owner, __gid_t __group)
      __THROW;
-#endif
 
 #endif /* Use BSD || X/Open Unix.  */
 

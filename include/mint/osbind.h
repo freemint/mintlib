@@ -259,6 +259,31 @@ __extension__								\
 	retvalue;							\
 })
 
+#define trap_1_wlwww(n, a, b, c, d)					\
+__extension__								\
+({									\
+	register long retvalue __asm__("d0");				\
+	short _a = (short)(a);						\
+	short _b = (long)(b);						\
+	long  _c = (short) (c);						\
+	long  _d = (short) (d);						\
+	    								\
+	__asm__ volatile						\
+	("\
+		movw    %5,sp@-; \
+		movw    %4,sp@-; \
+		movw    %3,sp@-; \
+		movl    %2,sp@-; \
+		movw    %1,sp@-; \
+		trap    #1;	\
+		lea	sp@(12),sp "					\
+	: "=r"(retvalue)			/* outputs */		\
+	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
+	: "d0", "d1", "d2", "a0", "a1", "a2", "memory"			\
+	);								\
+	retvalue;							\
+})
+
 #define trap_1_www(n, a, b)						\
 __extension__								\
 ({									\

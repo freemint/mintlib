@@ -102,5 +102,6 @@ int __do_stat(const char *_path, struct stat *st, int lflag);
 int __do_fstat(int fd, struct stat *st, int exact);
 int __do_lock(int fd, int cmd, long size, int whence);
 
+int __do_chown16 (const char *_name, uid_t uid, gid_t gid, int follow_links);
 
 #endif /* _LIB_H */
