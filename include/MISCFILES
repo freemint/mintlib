@@ -41,7 +41,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	locale.h \
 	macros.h \
 	malloc.h \
-	math-68881.h \
 	math.h \
 	memory.h \
 	minimal.h \

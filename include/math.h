@@ -49,7 +49,7 @@ __BEGIN_DECLS
 #include <bits/huge_val.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
-#ifdef	 __USE_ISOC9X
+#ifdef	 __USE_ISOC99
 # include <bits/nan.h>
 #endif
 /* Get general and ISO C9X specific information.  */
@@ -140,7 +140,7 @@ extern const double _infinitydf;	/* in normdf.cpp */
 #endif
 
 #if _INLINE_MATH
-# include <math-68881.h>
+# include <bits/math-68881.h>
 #endif
 
 #define HUGE HUGE_VAL
