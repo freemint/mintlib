@@ -245,6 +245,8 @@ rootdir:
 	else
 		st->st_dev = Dgetdrv();
 
+	isdir = (d.dta_attribute & FA_DIR) != 0;
+
 	st->st_ino = __inode++;
 	st->st_flags = 0;
 	st->st_mode = 0644 | (isdir ? S_IFDIR | 0111 : S_IFREG);
