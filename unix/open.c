@@ -68,21 +68,25 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	long fcbuf;			/* a temporary buffer for Fcntl */
 	struct stat sb;
 	unsigned int pmode = 0;
-	char* filename = (char*) _filename;
+	char *filename = (char *) _filename;
 
-	if (filename == NULL) {
+	if (!_filename) {
 		__set_errno (EFAULT);
 	    	return -1;
-	}	
-	if (iomode & O_CREAT) {
-	    	pmode = va_arg (argp, unsigned int);
 	}
-
-
+	
+	if (*_filename == '\0') {
+		__set_errno (ENOENT);
+		return -1;
+	}
+	
 	if (!__libc_unix_names) {
 	    	filename = filenamebuf;
 	    	_unx2dos(_filename, filename, sizeof (filenamebuf));
 	}
+
+	if (iomode & O_CREAT)
+	    	pmode = va_arg (argp, unsigned int);
 
 	/* use the umask() setting to get the right permissions */
 	if (__current_umask == -1) {
@@ -126,7 +130,7 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	    		return -1;
 		}
 		
-		if((iomode & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL)) {
+		if ((iomode & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL)) {
 			__set_errno (EEXIST);
 			/* return __SMALLEST_VALID_HANDLE - 1; */
 			return -1;

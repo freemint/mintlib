@@ -34,22 +34,25 @@ extern ino_t __inode;
 int
 __quickstat (const char *_path, struct stat *st, int lflag)
 {
-	long r;
-	int nval;
-	char *path = (char *) _path;
 	char tmpbuf[PATH_MAX];
+	char *path = (char *) _path;
+	int nval;
+	long r;
 
 	if (!_path) {
 		__set_errno (EFAULT);
 		return -1;
 	}
 
+	if (*_path == '\0') {
+		__set_errno (ENOENT);
+		return -1;
+	}
+
 	if (__libc_unix_names) 
 		nval = 0;
 	else {
-	    	/*
-	     	 * _unx2dos returns 1 for device names (like /dev/con)
-	     	 */
+	    	/* _unx2dos returns 1 for device names (like /dev/con) */
 	     	path = tmpbuf;
   	    	nval = _unx2dos(_path, path, sizeof (tmpbuf));
 	}
@@ -63,7 +66,6 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 			__set_errno (-r);
 			return -1;
 		}
-
 		return 0;
 	}
 

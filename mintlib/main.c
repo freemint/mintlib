@@ -47,18 +47,17 @@ extern long _pfumode;
 extern long _fpuctrl;
 #endif
 
+extern __io_mode __default_mode__; /* in defmode.c or defined by user */
+extern short _app; /* tells if we're an application or acc */
+
 void __libc_main __PROTO((long, char **, char **));
 
 void
-__libc_main (_argc, _argv, _envp)
-	long _argc;
-	char **_argv, **_envp;
+__libc_main (long _argc, char **_argv, char **_envp)
 {
 	register int i;
 	char *s, *pconv;
 	long l;
-	extern __io_mode __default_mode__;	/* in defmode.c or defined by user */
-	extern short _app;	/* tells if we're an application or acc */
 
 	char *p, *tmp;
 	size_t len, cnt;
@@ -76,14 +75,15 @@ __libc_main (_argc, _argv, _envp)
 	__has_no_ssystem = Ssystem (-1, NULL, NULL);
 	_starttime = get_sysvar (_hz_200);
 	_childtime = 0;
-/*
- * check for MiNT
- */
+
+	/*
+	 * check for MiNT
+	 */
  	if (Getcookie (C_MiNT, &l) == C_FOUND)
  		__mint = (int) l;
  	else
  		__mint = 0;
- 		
+
 	if (_app)
 		_pdomain = Pdomain(1);	/* set MiNT domain */
 
@@ -97,26 +97,27 @@ __libc_main (_argc, _argv, _envp)
 		__libc_fatal ("this program requires an fpu!");
 #endif
 
-/* Check if we are suid or guid.  We simply use the bare operating
-   system calls because we only check for differences.  If it fails
-   once it will always fail.  */
+	/* Check if we are suid or guid.  We simply use the bare operating
+	 * system calls because we only check for differences.  If it fails
+	 * once it will always fail.
+	 */
    	if ((Pgeteuid () == Pgetuid ()) && (Pgetegid () == Pgetgid ()))
 	     	__libc_enable_secure = 0;
      
-/*
- * initialize UNIXMODE stuff. Note that this library supports only
- * a few of the UNIXMODE variables, namely "b" (binary mode default)
- * and "r<c>" (default root directory).
- */
+	/* initialize UNIXMODE stuff. Note that this library supports only
+	 * a few of the UNIXMODE variables, namely "b" (binary mode default)
+	 * and "r<c>" (default root directory).
+	 */
 #if 1
  	if (__libc_enable_secure) {
- 	  /* Don't do any TOS nonsense in secure mode.  */
- 	  __default_mode__.__binary = 1;
- 	  /* _rootdir = 'u'; */
+		/* Don't do any TOS nonsense in secure mode.  */
+		__default_mode__.__binary = 1;
+		/* _rootdir = 'u'; */
 	} else
 #endif
 	/* For UNIXMODE we currently have to live with the security
-	   hole imposed by getenv().  */
+	 * hole imposed by getenv().
+	 */
 	if ((s = getenv("UNIXMODE")) != 0) {
 		while (*s) {
 			if (*s == 'b')
@@ -135,36 +136,32 @@ __libc_main (_argc, _argv, _envp)
 	else if (_rootdir < 'a' || _rootdir > 'z')
 		_rootdir = 0;
 
-/*
- * if we're running under MiNT, and the current drive is U:, then this
- * must be our preferred drive
- */
+	/* if we're running under MiNT, and the current drive is U:, then this
+	 * must be our preferred drive
+	 */
 	if (!_rootdir && __mint >= 9) {
 		if (Dgetdrv() == 'U'-'A')
 			_rootdir = 'u';
 	}
 
-/*
- * If running under some recent MiNT there is no reason to convert 
- * all filenames to redmond style with drive letter and backslashes.
- * I assume here that this is not necessary for MiNT >1.12.  Correct?
- * Can't we assume earlier versions?
- */
+	/* If running under some recent MiNT there is no reason to convert 
+	 * all filenames to redmond style with drive letter and backslashes.
+	 * I assume here that this is not necessary for MiNT >1.12.  Correct?
+	 * Can't we assume earlier versions?
+	 */
  	if (__mint > 0x10c && _rootdir && Dgetdrv() == _rootdir - 'a')
- 	  {
- 	     __libc_unix_names = 1;
- 	  }
- 	  
+		__libc_unix_names = 1;
+
 	/* clear isatty status for dumped programs */
 	for (i = 0; i < __NHANDLES; i++)
-	  __open_stat[i].status = FH_UNKNOWN;
+		__open_stat[i].status = FH_UNKNOWN;
 
-/* if stderr is not re-directed to a file, force 2 to console
- * (UNLESS we've been run from a shell we trust, i.e. one that supports
- *  the official ARGV scheme, in which case we leave stderr be).
- */
-	if(!*_argv[0] && isatty(2))
-	    (void)Fforce(2, -1);
+	/* if stderr is not re-directed to a file, force 2 to console
+	 * (UNLESS we've been run from a shell we trust, i.e. one that supports
+	 *  the official ARGV scheme, in which case we leave stderr be).
+	 */
+	if(!*_argv[0] && isatty (2))
+		(void) Fforce(2, -1);
 
 #if 0
 /* fna: see in globals.c the
@@ -207,8 +204,9 @@ __libc_main (_argc, _argv, _envp)
 
 #if 0
 	/* FIXME:  Handle streams for fd 3-5.  */
- 	for(i = 3; i < _NFILE; i++, f++) {
-	  f->_flag = 0;		/* clear flags, if this is a dumped program */
+ 	for (i = 3; i < _NFILE; i++, f++) {
+ 		/* clear flags, if this is a dumped program */
+		f->_flag = 0;
 	}
 #endif
 
@@ -223,7 +221,7 @@ __libc_main (_argc, _argv, _envp)
 	 */
 
 	for (i = 0; (pconv = _envp[i]) != 0; i++) {
-		if (! strncmp(pconv, "PCONVERT=", 9)) {
+		if (!strncmp(pconv, "PCONVERT=", 9)) {
 			pconv += 9;
 			break;
 		}
@@ -254,10 +252,8 @@ __libc_main (_argc, _argv, _envp)
 				  size = tmp - s + cnt * 5;
 				  _envp[i] = malloc(size);
 				  strncpy(_envp[i], s, len);
-				  _path_dos2unx(s + len, _envp[i] + len,
-						size - len);
-				  _envp[i] = realloc(_envp[i], 
-						        strlen(_envp[i]) + 1);
+				  _path_dos2unx(s + len, _envp[i] + len, size - len);
+				  _envp[i] = realloc(_envp[i], strlen(_envp[i]) + 1);
 				  break;		
 				}
 				
@@ -267,7 +263,7 @@ __libc_main (_argc, _argv, _envp)
 		}	
 		else	/* ! pconv */
 		{
-		/* PATH is always converted */
+			/* PATH is always converted */
 			if (s[0] == 'P' && s[1] == 'A' && s[2] == 'T' &&
 			    s[3] == 'H' && s[4] == '=')
 			{
@@ -285,8 +281,7 @@ __libc_main (_argc, _argv, _envp)
 			  _envp[i] = malloc(size);
 			  strncpy(_envp[i], s, 5);
 			  _path_dos2unx(s + 5, _envp[i] + 5, size - 5);
-			  _envp[i] = realloc(_envp[i], 
-			                              strlen(_envp[i]) + 1);
+			  _envp[i] = realloc(_envp[i], strlen(_envp[i]) + 1);
 			  break;
 			}
 		}

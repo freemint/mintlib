@@ -6,21 +6,24 @@
 #include <string.h>
 #include <stdlib.h>
 
-extern char** environ;
+extern char **environ;
 
 char *
-getenv(tag)
-	const char *tag;
+getenv (const char *tag)
 {
 	char **var;
 	char *name;
-	size_t len = strlen(tag);
+	size_t len;
 
-	if (!environ) return 0;
+	if (!environ)
+		return 0;
+
+	len = strlen (tag);
 
 	for (var = environ; (name = *var) != 0; var++) {
 		if (!strncmp(name, tag, len) && name[len] == '=')
 			return name+len+1;
 	}
+
 	return 0;
 }

@@ -47,13 +47,13 @@ Fstat (const char *path, struct stat *st, int lflag, int exact)
 
 			__bzero (st, sizeof (*st));
 
-			st->st_dev = (dev_t) xattr.st_dev;
-			st->st_ino = (ino_t) xattr.st_ino;
-			st->st_mode = (mode_t) xattr.st_mode;
-			st->st_nlink = (nlink_t) xattr.st_nlink;
-			st->st_uid = (uid_t) xattr.st_uid;
-			st->st_gid = (gid_t) xattr.st_gid;
-			st->st_rdev = (dev_t) xattr.st_rdev;
+			st->st_dev = (__dev_t) xattr.st_dev;
+			st->st_ino = (__ino_t) xattr.st_ino;
+			st->st_mode = (__mode_t) xattr.st_mode;
+			st->st_nlink = (__nlink_t) xattr.st_nlink;
+			st->st_uid = (__uid_t) xattr.st_uid;
+			st->st_gid = (__gid_t) xattr.st_gid;
+			st->st_rdev = (__dev_t) xattr.st_rdev;
 
 			if (exact) {
 				ptr = (unsigned short *) &xattr.st_mtime;
@@ -64,10 +64,10 @@ Fstat (const char *path, struct stat *st, int lflag, int exact)
 				st->st_ctime = __unixtime (ptr[0], ptr[1]);
 			}
 
-			st->st_size = (off_t) xattr.st_size;
+			st->st_size = (__off_t) xattr.st_size;
 			st->st_blocks = 
-				(off_t) (((off_t) xattr.st_blocks 
-					 * (off_t) xattr.st_blksize) >> 9);
+				(__off_t) (((__off_t) xattr.st_blocks 
+					 * (__off_t) xattr.st_blksize) >> 9);
 			st->st_blksize = xattr.st_blksize;
 			// st->st_flags = 0;
 			// st->st_gen = 0;
@@ -158,7 +158,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 	int	isdot = 0;
 	int	isdir = 0;
 
-	memset (st, 0, sizeof *st);
+	__bzero (st, sizeof (*st));
 
 	/* otherwise, check to see if we have a name like CON: or AUX: */
 	if (nval == 1) {

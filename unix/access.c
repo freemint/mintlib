@@ -14,37 +14,43 @@ int
 __access (const char *path, int mode)
 {
 	struct stat sb;
-	gid_t groups[NGROUPS_MAX];
-	int i, n;
 
 	if (__quickstat (path, &sb, 0) < 0)
-		return -1;	/* errno was set by stat() */
-	if (mode == F_OK)
-		return 0;	/* existence test succeeded */
+		/* errno was set by stat() */
+		return -1;
 
-	if (getuid() == 0) return 0; /* super user can access anything */
+	if (mode == F_OK)
+		/* existence test succeeded */
+		return 0;
+
+	if (getuid() == 0)
+		/* super user can access anything */
+		return 0;
 
 	/* somewhat crufty code -- relies on R_OK, etc. matching the bits in the
 	 * file mode, but what the heck, we can do this
 	 */
-	if (__mint < 9 || ( getuid() == sb.st_uid ) ) {
-		if ( ((sb.st_mode >> 6) & mode) == mode )
+	if (__mint < 9 || (getuid() == sb.st_uid)) {
+		if (((sb.st_mode >> 6) & mode) == mode)
 			return 0;
 		else
 			goto accdn;
 	}
 
-	if ( getgid() == sb.st_gid ) {
-		if ( ((sb.st_mode >> 3) & mode) == mode )
+	if (getgid() == sb.st_gid) {
+		if (((sb.st_mode >> 3) & mode) == mode)
 			return 0;
 		else
 			goto accdn;
 	}
 
-	if ( __mint >= 0x10b ) {
+	if (__mint >= 0x10b) {
+		gid_t groups[NGROUPS_MAX];
+		int i, n;
+
 		n = getgroups(NGROUPS_MAX, groups);
-		for ( i = 0; i < n; i++ ) {
-			if ( groups[i] == sb.st_gid ) {
+		for (i = 0; i < n; i++) {
+			if (groups[i] == sb.st_gid) {
 				if ( ((sb.st_mode >> 3) & mode) == mode )
 					return 0;
 				else
@@ -53,8 +59,9 @@ __access (const char *path, int mode)
 		}
 	}
 
-	if ( (sb.st_mode & mode) == mode)
+	if ((sb.st_mode & mode) == mode)
 		return 0;
+
 accdn:
 	__set_errno (EACCES);
 	return -1;

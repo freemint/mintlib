@@ -73,7 +73,7 @@ setvbuf (stream, buf, mode, size)
       stream->__bufsize = size;
       if (buf != NULL)
 	stream->__userbuf = 1;
-      else if ((buf = (char *) malloc (size)) == NULL)
+      else if ((buf = malloc (size)) == NULL)
 	return EOF;
       stream->__buffer = buf;
       break;

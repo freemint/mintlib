@@ -14,45 +14,54 @@
 struct __open_file __open_stat[__NHANDLES];
 
 int
-__isatty(fd)
-  int fd;
+__isatty (int fd)
 {
-  int rc, retval;
-  long oldloc;
-  int handle = __OPEN_INDEX(fd);
-  long dummy;
+	int handle = __OPEN_INDEX(fd);
+	int rc, retval;
+	long dummy;
 
-  if (handle < __NHANDLES)
-	if (__open_stat[handle].status != FH_UNKNOWN)
-		return(__open_stat[handle].status == FH_ISATTY);
-  
- /* save 1 or 2 system calls (isatty gets called on every open...) */
-	
-  retval = Fcntl(fd, &dummy, TIOCGPGRP);
-  if (retval == -ENOSYS) {
-    oldloc = Fseek(0L, fd, SEEK_CUR);	/* save current location */
-    if (Fseek(1L, fd, SEEK_CUR) != 0) {	/* try to seek ahead one byte */
-      /* got either a file position or an error (usually EBADARG indicating
-	 a range error from trying to seek past EOF), so it is not a tty */
-      rc = 0;
-      (void) Fseek(oldloc, fd, SEEK_SET);/* seek back to original location */
-    }
-    else  {
-      rc = 1;				/* yes, tty */
-    }
-  }
-  else {
-    rc = (retval == 0);
-  }
-  if (handle < __NHANDLES) {
-	if (rc) {
-		__open_stat[handle].status = FH_ISATTY;
-		__open_stat[handle].flags = CRMOD|ECHO;
+	if ((handle < __NHANDLES) && (__open_stat[handle].status != FH_UNKNOWN))
+		return (__open_stat[handle].status == FH_ISATTY);
+
+	/* save 1 or 2 system calls (isatty gets called on every open...) */
+
+	retval = Fcntl (fd, &dummy, TIOCGPGRP);
+	if (retval == -ENOSYS) {
+		long oldloc;
+
+		/* save current location */
+		oldloc = Fseek (0L, fd, SEEK_CUR);
+
+		/* try to seek ahead one byte */
+		if (Fseek (1L, fd, SEEK_CUR) != 0) {
+			/* got either a file position or an error (usually
+			 * EBADARG indicating a range error from trying to
+			 * seek past EOF), so it is not a tty
+			 */
+			rc = 0;
+			
+			/* seek back to original location */
+			(void) Fseek (oldloc, fd, SEEK_SET);
+		}
+		else  {
+			rc = 1; /* yes, tty */
+		}
 	}
 	else {
-		__open_stat[handle].status = FH_ISAFILE;
+		rc = (retval == 0);
 	}
-  }
-  return (rc);			/* return true, false, or error */
+
+	if (handle < __NHANDLES) {
+		if (rc) {
+			__open_stat[handle].status = FH_ISATTY;
+			__open_stat[handle].flags = CRMOD|ECHO;
+		}
+		else {
+			__open_stat[handle].status = FH_ISAFILE;
+		}
+	}
+
+	/* return true, false, or error */
+	return rc;
 }
 weak_alias (__isatty, isatty)
