@@ -16,8 +16,8 @@ subdir = lib_g
 
 qualifier = _g
 instdir =
-cflags = -g
-nocflags = -fomit-frame-pointer
+cflags = -O -g
+nocflags = -O2 -O3 -fomit-frame-pointer -fexpensive-optimizations
 
 default: all
 
