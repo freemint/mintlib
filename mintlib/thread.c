@@ -44,6 +44,13 @@ startup(register BASEPAGE *b)
 	_setstack(((char *)b) + SIZE);
 	func = (int (*)(long))b->p_dbase;
 	arg = b->p_dlen;
+
+	/* If this is a thread, it doesn't need
+	 * own copy of the environment, right?
+	 */
+	Mfree(b->p_env);
+	b->p_env = _base->p_env;
+
 #if 1
 	/* copy from parents basepage for debuggers... */
 	b->p_tbase = _base->p_tbase;
