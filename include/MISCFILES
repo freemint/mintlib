@@ -45,6 +45,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	memory.h \
 	minimal.h \
 	mintbind.h \
+	mntent.h \
 	netdb.h \
 	obstack.h \
 	osbind.h \

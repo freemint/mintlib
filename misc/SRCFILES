@@ -22,6 +22,8 @@ SRCFILES = \
 	lsearch.c \
 	mkstemp.c \
 	mktemp.c \
+	mntent.c \
+	mntent_r.c \
 	obstack.c \
 	qefgcvt.c \
 	qefgcvt_r.c \
