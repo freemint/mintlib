@@ -2,12 +2,14 @@
  *	BASEPAGE.H	Definition of the basepage structure
  */
 
-#ifndef _BASEP_H
-#define	_BASEP_H
+#ifndef _MINT_BASEPAGE_H
+#define	_MINT_BASEPAGE_H
 
-#ifdef __cplusplus
-extern "C" {
+#ifndef _COMPILER_H
+# include <compiler.h>
 #endif
+
+__BEGIN_DECLS
 
 typedef struct basep {
     char	*p_lowtpa;	/* pointer to self (bottom of TPA) */
@@ -22,24 +24,13 @@ typedef struct basep {
     struct basep *p_parent;	/* pointer to parent's basepage */
     char	*p_reserved;	/* reserved for future use */
     char	*p_env;		/* pointer to environment string */
-#if 0
-/* none of these are documented by Atari. If you try to use them under MiNT,
- * MiNT will laugh at you. So will I.
- */
-    char	devx[6];	/* real handles of the standard devices */
-    char	res2;		/* reserved */
-    char	defdrv;		/* default drv */
-#else
     char	p_junk[8];
-#endif
     long	p_undef[18];	/* scratch area... don't touch */
     char	p_cmdlin[128];	/* command line image */
 } BASEPAGE;
 
 extern	BASEPAGE	*_base;
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
-#endif /* _BASEP_H */
+#endif /* _MINT_BASEPAGE_H */

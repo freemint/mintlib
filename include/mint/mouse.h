@@ -1,9 +1,8 @@
-#ifndef _MOUSE_H
-#define _MOUSE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef _MINT_MOUSE_H
+#define _MINT_MOUSE_H
+
+__BEGIN_DECLS
 
 /* header file for mouse access */
 
@@ -17,8 +16,6 @@ struct mouse_buf {
 #define M_RIGHT_BUTTON	0x01
 #define M_MID_BUTTON	0x00	/* there is none! */
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
-#endif /* _MOUSE_H */
+#endif /* _MINT_MOUSE_H */

@@ -5,23 +5,13 @@
 #include <compiler.h>
 #endif
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #ifndef __USE_POSIX
-# ifdef __TURBOC__
-#  include <sys\resource.h>
-# else
-#  include <sys/resource.h>
-# endif
+# include <sys/resource.h>
 #endif /* __USE_POSIX */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 struct __wait {
 #ifndef __MSHORT__
@@ -110,8 +100,6 @@ __EXTERN pid_t __wait4 __PROTO((pid_t pid, __WP status, int options, struct rusa
 __EXTERN pid_t waitpid  __PROTO((pid_t pid, int* status, int options));
 __EXTERN pid_t __waitpid  __PROTO((pid_t pid, int* status, int options));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif

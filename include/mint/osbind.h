@@ -109,7 +109,7 @@
 #define _MINT_OSBIND_H	1
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
 #ifndef _FEATURES_H
@@ -117,7 +117,7 @@
 #endif
 
 #ifndef _OSTRUCT_H
-#include <mint/ostruct.h>
+# include <mint/ostruct.h>
 #endif
 
 __BEGIN_DECLS

@@ -1,13 +1,12 @@
-#ifndef _XBRA_H
-#define _XBRA_H
+
+#ifndef _MINT_XBRA_H
+#define _MINT_XBRA_H
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 typedef void	(*xptr) __PROTO((void));
 
@@ -44,7 +43,7 @@ typedef struct __xbra
 			   _JSR_OPCODE,    \
 			   (void (*) __PROTO((void))) fn \
 			}
-#ifdef __cplusplus
-}
-#endif
+
+__END_DECLS
+
 #endif /* _XBRA_H */

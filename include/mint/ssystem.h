@@ -7,11 +7,7 @@
 # define _ssystem_h
 
 #ifdef __KERNEL
-# ifdef __TURBOC__
-# include "include\mint.h"
-# else
 # include "include/mint.h"
-# endif
 #endif
 
 # define HAS_SSYSTEM
