@@ -1,4 +1,4 @@
-/* $Id */
+/* $Id$ */
 
 #include <errno.h>
 #include <string.h>
@@ -21,6 +21,9 @@ _enoent (const char *path)
 	long oldmask;
 	int dir_seen = 0;
 
+	if (!path)
+		return 0;
+
 	for (s = path; *s; s++)
 		/* nop */;
 
@@ -32,7 +35,7 @@ _enoent (const char *path)
 			long r;
 			int saved = *s;
 
-			dir_seen++;
+			dir_seen = 1;
 
 			*s = '\0';
 			r = Fstat (path, &st, 0, 0);
@@ -51,5 +54,5 @@ _enoent (const char *path)
 	}
 
 	(void) Psigsetmask (oldmask);
-	return dir_seen ? 1 : 0; /* should have been ENOENT */
+	return dir_seen; /* should have been ENOENT */
 }
