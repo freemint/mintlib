@@ -56,7 +56,7 @@ __quickstat (_path, statbuf, lflag)
 	     	 * _unx2dos returns 1 for device names (like /dev/con)
 	     	 */
 	     	path = tmpbuf;
-  	    	nval = _unx2dos(_path, path, PATH_MAX);
+  	    	nval = _unx2dos(_path, path, sizeof (tmpbuf));
 	}
 	  
 	/* First try Fstat.  Unfortunately we cannot cache reliably

@@ -72,7 +72,7 @@ _do_stat(_path, statbuf, lflag)
 	     	 * _unx2dos returns 1 for device names (like /dev/con)
 	     	 */
 	    	path = pathbuf;
-  	    	nval = _unx2dos(_path, path, PATH_MAX);
+  	    	nval = _unx2dos(_path, path, sizeof (pathbuf));
 	}
 	  
 	/* First try Fstat64.  Unfortunately we cannot cache reliably

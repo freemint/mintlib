@@ -29,7 +29,7 @@ __chmod(_path, mode)
 	if (!__libc_unix_names)
 	  {
 	    path = buf;
-	    (void)_unx2dos(_path, path, PATH_MAX);
+	    (void)_unx2dos(_path, path, sizeof (buf));
 	  }
 	  
 	r = (int)Fchmod(path, mode);
