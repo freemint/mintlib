@@ -135,7 +135,7 @@ __EXTERN int	dn_expand	__PROTO((u_char *__msg, u_char *__eomorig,
 				
 __EXTERN int	res_init 	__PROTO((void));
 
-__EXTERN int	res_mkquery 	__PROTO((int __op, __const char *__dname,
+__EXTERN int	res_mkquery 	__PROTO((int __opval, __const char *__dname,
 				int __class, int __type, char *__data,
 				int __datalen, struct rrec *__newrr,
 				char *__buf, int __buflen));
