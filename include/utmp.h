@@ -173,10 +173,10 @@ struct utmp {
 
 __BEGIN_DECLS
 
-__EXTERN void _write_utmp __PROTO((const char *line, const char *name,
-					const char *host, unsigned long time));
-__EXTERN void _write_wtmp __PROTO((const char *line, const char *name,
-					const char *host, unsigned long time));
+__EXTERN void _write_utmp __PROTO((const char *__line, const char *__name,
+					const char *__host, unsigned long __time));
+__EXTERN void _write_wtmp __PROTO((const char *__line, const char *__name,
+					const char *__host, unsigned long __time));
 __END_DECLS
 
 #endif /* !_OLD_UTMP_H */
