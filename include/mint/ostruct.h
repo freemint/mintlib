@@ -27,8 +27,8 @@ typedef struct {
 
 /* Structure returned by Fdatime() */
 typedef struct {
-  short time;
-  short date;
+  unsigned short time;
+  unsigned short date;
 } _DOSTIME;
 
 /* Structure used by Cconrs */
