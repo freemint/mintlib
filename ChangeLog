@@ -1,3 +1,21 @@
+2001-08-09 Thursday 18:35  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog
+
+	Official 0.57 release.
+	
+2001-08-09 Thursday 18:27  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog, ChangeLog.2:
+
+	Rotated.
+	
+2001-08-09 Thursday 18:19  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/mintbind.h:
+
+	Corrected Mvalidate/Maccess syscall bindings
+	
 2001-07-23 Monday 09:41  Frank Naumann <fnaumann@freemint.de>
 
 	* README, crypt/examples/Makefile, gmp/Makefile,
