@@ -84,7 +84,11 @@ __do_fstat (fd, st, gettime)
 		_DOSTIME timeptr;
 		short magic;
 
-		retval = Fdatime(&timeptr, fd, 0);
+		if (!__mint && isatty(fd))
+			retval = -EBADF;
+		else
+			retval = Fdatime(&timeptr, fd, 0);
+		
 		if (retval < 0) {			/* assume TTY */
 			st->st_mode = S_IFCHR | 0600;
 			st->st_flags = 0;
