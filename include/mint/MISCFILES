@@ -20,5 +20,7 @@ MISCFILES = MISCFILES \
 	screen.h \
 	slb.h \
 	ssystem.h \
+	sysbind.h \
 	sysctl.h \
+	trap.h \
 	xbra.h

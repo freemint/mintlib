@@ -59,6 +59,7 @@ stdiodir   := $(top_srcdir)/stdio
 stdlibdir  := $(top_srcdir)/stdlib
 stringdir  := $(top_srcdir)/string
 sunrpcdir  := $(top_srcdir)/sunrpc
+syscalldir := $(top_srcdir)/syscall
 sysvipcdir := $(top_srcdir)/sysvipc
 termiosdir := $(top_srcdir)/termios
 timedir    := $(top_srcdir)/time
@@ -66,7 +67,7 @@ unixdir    := $(top_srcdir)/unix
 srcdirs   := $(cryptdir) $(direntdir) $(gmpdir) $(logindir) $(mintlibdir) \
   $(miscdir) $(posixdir) $(pwdgrpdir) $(shadowdir) $(signaldir) $(socketdir) \
   $(stdiiodir) $(stdiodir) $(stdlibdir) $(stringdir) $(sunrpcdir) \
-  $(sysvipcdir) $(termiosdir) $(timedir) $(unixdir)
+  $(syscalldir) $(sysvipcdir) $(termiosdir) $(timedir) $(unixdir)
 
 CRYPTSRCS   := $(addprefix $(cryptdir)/,   $(CRYPTCFILES))
 DIRENTSRCS  := $(addprefix $(direntdir)/,  $(DIRENTCFILES))
@@ -85,6 +86,7 @@ STDIOSRCS   := $(addprefix $(stdiodir)/,   $(STDIOCFILES))
 STDLIBSRCS  := $(addprefix $(stdlibdir)/,  $(STDLIBCFILES))
 STRINGSRCS  := $(addprefix $(stringdir)/,  $(STRINGCFILES))
 SUNRPCSRCS  := $(addprefix $(sunrpcdir)/,  $(SUNRPCCFILES))
+SYSCALLSRCS := $(addprefix $(syscalldir)/, $(SYSCALLCFILES))
 SYSVIPCSRCS := $(addprefix $(sysvipcdir)/, $(SYSVIPCCFILES))
 TERMIOSSRCS := $(addprefix $(termiosdir)/, $(TERMIOSCFILES))
 TIMESRCS    := $(addprefix $(timedir)/,    $(TIMECFILES))
@@ -92,8 +94,8 @@ UNIXSRCS    := $(addprefix $(unixdir)/,    $(UNIXCFILES))
 SRCS := $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
   $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(RPCSVCSRCS) $(SHADOWSRCS) \
   $(SIGNALSRCS) $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) \
-  $(STRINGSRCS) $(SUNRPCSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) $(TIMESRCS) \
-  $(UNIXSRCS)
+  $(STRINGSRCS) $(SUNRPCSRCS) $(SYSCALLSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) \
+  $(TIMESRCS) $(UNIXSRCS)
 
 ifeq ($(libsize), _p)
 CFLAGS-_mon.S = -DPROFILING
@@ -141,6 +143,7 @@ STDIOOBJS   := $(addsuffix .o, $(basename $(notdir $(STDIOSRCS))))
 STDLIBOBJS  := $(addsuffix .o, $(basename $(notdir $(STDLIBSRCS))))
 STRINGOBJS  := $(addsuffix .o, $(basename $(notdir $(STRINGSRCS))))
 SUNRPCOBJS  := $(addsuffix .o, $(basename $(notdir $(SUNRPCSRCS))))
+SYSCALLOBJS := $(addsuffix .o, $(basename $(notdir $(SYSCALLSRCS))))
 SYSVIPCOBJS := $(addsuffix .o, $(basename $(notdir $(SYSVIPCSRCS))))
 TERMIOSOBJS := $(addsuffix .o, $(basename $(notdir $(TERMIOSSRCS))))
 TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
@@ -148,11 +151,11 @@ UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
 OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
   $(SIGNALOBJS) $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) \
-  $(STRINGOBJS) $(SUNRPCOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) $(TIMEOBJS) \
-  $(UNIXOBJS)
+  $(STRINGOBJS) $(SUNRPCOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) \
+  $(TIMEOBJS) $(UNIXOBJS)
 LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
-  $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSVIPCOBJS) \
+  $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) \
   $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
 
 # All modules that reference vfprintf or vfscanf should be listed here.
@@ -196,8 +199,8 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
   $(shadowdir)/SRCFILES $(signaldir)/SRCFILES $(socketdir)/SRCFILES \
   $(stdiiodir)/SRCFILES $(stdiodir)/SRCFILES $(stdlibdir)/SRCFILES \
   $(stringdir)/SRCFILES $(sunrpcdir)/SRCFILES $(sunrpcdir)/RPCSVCCFILES \
-  $(sysvipcdir)/SRCFILES $(termiosdir)/SRCFILES $(timedir)/SRCFILES \
-  $(unixdir)/SRCFILES
+  $(syscalldir)/SRCFILES $(sysvipcdir)/SRCFILES $(termiosdir)/SRCFILES \
+  $(timedir)/SRCFILES $(unixdir)/SRCFILES
 	rm -f $@
 	echo "# This file is a generated secondary file. Do not edit." >$@
 	sed -e 's,^SRCFILES *=,CRYPTCFILES =,g' $(cryptdir)/SRCFILES >>$@
@@ -217,6 +220,7 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
 	sed -e 's,^SRCFILES *=,STRINGCFILES =,g' $(stringdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SUNRPCCFILES =,g' $(sunrpcdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,RPCSVCCFILES =,g' $(sunrpcdir)/RPCSVCCFILES >> $@
+	sed -e 's,^SRCFILES *=,SYSCALLCFILES =,g' $(syscalldir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SYSVIPCCFILES =,g' $(sysvipcdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TERMIOSCFILES =,g' $(termiosdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TIMECFILES =,g' $(timedir)/SRCFILES >>$@
