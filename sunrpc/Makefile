@@ -107,14 +107,22 @@ uninstall-rpcsvc-programs:
 # End of cross section
 endif
 
+ifndef CROSS
 install-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
+else
+install-rpcsvc-headers:
+endif
 	$(mkinstalldirs) $(includedir)/rpcsvc
 	for header in $(rpcsvc_hdrs); do \
 	  $(INSTALL) -m 644 $$header $(includedir)/rpcsvc; \
 	  echo "$(INSTALL) -m 644 $$header $(includedir)/rpcsvc"; \
 	done; \
 
+ifndef CROSS
 uninstall-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
+else
+uninstall-rpcsvc-headers:
+endif
 	for header in $(rpcsvc_hdrs); do \
 	  rm -f $(includedir)/rpcsvc/$$header; \
 	  echo "rm -f $(includedir)/rpcsvc/$$header"; \
