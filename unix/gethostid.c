@@ -1,5 +1,6 @@
 /*  gethostid.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
+    Copyright (C) 2001 Colin C Tinker <colint@cvsf325.marconicomms.com>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,23 +9,29 @@
     understand and accept it fully.
 */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/param.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
+/* $Id */
+
+#include <netdb.h>             /* for INADDR_NONE & hostent */
+#include <netinet/in.h>        /* for gethostbyname         */
+#include <sys/utsname.h>       /* for uname                 */
+#include <stdlib.h>            /* for NULL                  */
 
 long int
 gethostid (void)
 {
-  struct hostent* hp;
-  static char hname[MAXHOSTNAMELEN];
+  /* temporary space for uname() response */
+  struct utsname uts_name;
 
-  if (gethostname (hname, sizeof (hname) < 0))
-    return INADDR_NONE;
-  if (!(hp = gethostbyname (hname)))
-    return INADDR_NONE;
-  return *(u_long *) hp->h_addr;
+  /* temporary space for host entry */
+  struct hostent* hp = NULL;
+
+  /* get caller's nodename */
+  if (uname(&uts_name) == 0)
+  {
+    /* convert nodename to IP address */
+    hp = gethostbyname(uts_name.nodename);
+  }
+
+  /* return IP address if there is one, else error */
+  return hp ? htonl(*(u_long *)hp->h_addr) : INADDR_NONE;
 }
