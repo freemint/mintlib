@@ -1,5 +1,6 @@
 # mintlib.spec.in -- MiNTLib.
 # Copyright (C) 2000, 2001 Guido Flohr <guido@freemint.de>
+# Copyright (C) 2001 Frank Naumann <fnaumann@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -18,19 +19,34 @@
 # cross platform (like gcc or binutils would) we abuse the cross-rpm
 # feature here and simply presume that you want to build a cross-lib
 # if not building on a MiNT machine.
-Name: mintlib
-Summary: Necessary files from the MiNTLib
-Group: Base
-Version: @VERSION@
-Release: 1
-Copyright: distributable
-Source: %{name}-%{version}.tar.gz
-Buildroot: /var/tmp/mintlib-root
-Prefix: %{_prefix}
-Packager: Guido Flohr <guido@freemint.de>
-Vendor: Sparemint
-Requires: pdksh gawk
-Summary(de): Unbedingt benötigte Dateien aus der MiNTLib
+
+Summary       : Necessary files from the MiNTLib
+Summary(de)   : Unbedingt benötigte Dateien aus der MiNTLib
+%ifarch m68kmint
+Name          : mintlib
+%else
+Name          : cross-mint-libc
+%endif
+Version       : @VERSION@
+Release       : 1
+Group         : Base
+Copyright     : distributable
+
+Packager      : Frank Naumann <fnaumann@freemint.de>
+Vendor        : Sparemint
+URL           : http//wh58-508.st.uni-magdeburg.de/sparemint/misc/code/mintlib/
+
+%ifarch m68kmint
+BuildRequires : pdksh gawk
+%endif
+
+Prefix        : %{_prefix}
+%ifarch m68kmint
+Docdir        : %{_prefix}/doc
+%endif
+Buildroot     : %{_tmppath}/%{name}-root
+
+Source: mintlib-%{version}.tar.gz
 
 %ifnarch m68kmint
 %define crossprefix /m68k-atari-mint
@@ -39,54 +55,60 @@ Summary(de): Unbedingt benötigte Dateien aus der MiNTLib
 %endif
 
 %package devel
-Summary: Headers and static libraries for developping MiNT applications.
-Summary(de): Header und statische Bibliotheken zur Entwicklung von MiNT-Software.
-Group: Development/Libraries/Libc
+Summary       : Headers and static libraries for developping MiNT applications.
+Summary(de)   : Header und statische Bibliotheken zur Entwicklung von MiNT-Software.
+Group         : Development/Libraries/Libc
+Requires      : %{name} >= %{PACKAGE_VERSION}
 %ifarch m68kmint
-# Actually this does not depend on the architecture but on the distribution.
-# Since there is no known distribution/archive except Sparemint the above 
-# condition makes sense.
-Requires: mintlib binutils gcc >= 2.95.2
-Obsoletes: mintnet-devel
-Obsoletes: mintlib-mshort
-Conflicts: bzip2 < 0.9.5d-2
-Conflicts: cflib < 11m-3
-Conflicts: cracklib < 2.7-3
-Conflicts: e2fsprogs-devel < 1.14-6
-Conflicts: flex < 2.5.4a-5
-Conflicts: freetype-devel < 1.2-5
-Conflicts: gdbm < 1.7.3-4
-Conflicts: gettext < 0.10.35-4
-Conflicts: libjpeg-devel < 6b-3
-Conflicts: libmikmod-devel < 3.1.6-5
-Conflicts: libpng < 1.0.1-4
-Conflicts: libtermcap-devel < 2.0.8-4
-Conflicts: libtiff-devel < 3.4-3
-Conflicts: mintdb < 1.85-5
-Conflicts: mintnet < 1.04-4
-Conflicts: ncurses-devel < 4.2-9
-Conflicts: newt-devel < 0.50-4
-Conflicts: pml < 2.03-3
-Conflicts: popt < 1.3-4
-Conflicts: readline-devel < 2.2.1-5
-#Conflicts: rpm-devel < 3.0.2-7  # Not possible right now.
-Conflicts: slang < 1.2.2-3
-#Conflicts: tetex < 1.0.6-2
-Conflicts: w3c-libwww-devel < 5.2.8-3
-Conflicts: zlib-devel < 1.1.3-5
+Requires      : binutils >= 2.9.1
+Requires      : gcc >= 2.95.2
+Obsoletes     : mintnet-devel
+#Conflicts    : mintlib-mshort
+Conflicts     : audiofile-devel < 0.1.9-3
+#Conflicts    : bind			not really useful
+#Conflicts    : binutils < 2.9.1-6	Overkill and not really used
+Conflicts     : bzip2 < 0.9.5d-2
+Conflicts     : cflib < 11m-3
+Conflicts     : cracklib < 2.7-3
+Conflicts     : e2fsprogs-devel < 1.14-6
+Conflicts     : flex < 2.5.4a-5
+Conflicts     : freetype-devel < 1.2-5
+#Conflicts    : gemlib < 38-3		not neccessary
+Conflicts     : gdbm < 1.7.3-4
+Conflicts     : gettext < 0.10.35-4
+Conflicts     : libjpeg-devel < 6b-3
+Conflicts     : libmikmod-devel < 3.1.6-5
+Conflicts     : libpng < 1.0.1-4
+Conflicts     : libtermcap-devel < 2.0.8-4
+Conflicts     : libtiff-devel < 3.4-3
+Conflicts     : libxml-devel < 1.7.3-3
+Conflicts     : mintbin < 0.3-3
+Conflicts     : mintdb < 1.85-5
+Conflicts     : mintnet < 1.04-4
+Conflicts     : ncurses-devel < 4.2-9
+Conflicts     : newt-devel < 0.50-4
+Conflicts     : pml < 2.03-3
+Conflicts     : popt < 1.3-4
+Conflicts     : readline-devel < 2.2.1-5
+#Conflicts    : rpm-devel < 3.0.2-8	not possible at the moment
+Conflicts     : slang < 1.2.2-3
+#Conflicts    : tcp_wrappers < 7.6-2	not really useful
+#Conflicts    : tetex < 1.0.6-2		Overkill and not really used
+Conflicts     : w3c-libwww-devel < 5.2.8-3
+Conflicts     : zlib-devel < 1.1.3-5
 %endif
 
 %package debug
-Summary: MiNTLib libs with debugging information
-Summary(de): MiNTLib-Bibliotheken mit Debug-Informationen.
-Group: Development/Libraries/Libc
-Requires: mintlib-devel
+Summary       : MiNTLib libs with debugging information
+Summary(de)   : MiNTLib-Bibliotheken mit Debug-Informationen.
+Group         : Development/Libraries/Libc
+Requires      : %{name}-devel >= %{PACKAGE_VERSION}
 
 %package profile
-Summary: MiNTLib libs with profiling information
-Summary(de): MiNTLib-Bibliotheken mit Profiling-Informationen.
-Group: Development/Libraries/Libc
-Requires: mintlib-devel
+Summary       : MiNTLib libs with profiling information
+Summary(de)   : MiNTLib-Bibliotheken mit Profiling-Informationen.
+Group         : Development/Libraries/Libc
+Requires      : %{name}-devel >= %{PACKAGE_VERSION}
 
 %ifarch m68kmint
 %description
@@ -341,6 +363,7 @@ Autoren:
     Ulrich Kuehn (kuehn@goedel.uni-muenster.de)
     Uwe Ohse (Uwe_Ohse@pb2.maus.de)
     Wolfgang Lux (LUX%DHDIBM1.BITNET@vm.gmd.de)
+
 %endif
 
 %description devel
@@ -384,48 +407,55 @@ die dem Profiler erlauben, die Ausführung von Programmen zu verfolgen.
 Dieses Paket wird nur zum Profilen der MiNTLib selber benötigt.  Es
 ist nicht notwendig, um andere Programme zu profilen.
 
+
 %prep
-%setup -q
+%setup -q -n mintlib-%{version}
+
 
 %build
 %ifarch m68kmint
 make prefix=%{_prefix} KSH=/bin/ksh
 %else
-make prefix=%{_prefix}%{crossprefix} KSH=/bin/ksh CROSS=yes \
+make prefix=%{_prefix}%{crossprefix} CROSS=yes \
 	toolprefix=m68k-atari-mint-
 %endif
 
+
 %install
-rm -rf $RPM_BUILD_ROOT
+[ "${RPM_BUILD_ROOT}" != "/" ] && rm -rf ${RPM_BUILD_ROOT}
+
 %ifarch m68kmint
-make install prefix=$RPM_BUILD_ROOT/%{_prefix}%{crossprefix} \
+make install prefix=${RPM_BUILD_ROOT}%{_prefix}%{crossprefix} \
            HEADER_CLEANUP=no \
-           TZTOPDIR=$RPM_BUILD_ROOT/usr%{crossprefix} \
-           bootsbindir=$RPM_BUILD_ROOT%{crossprefix}/sbin
+           TZTOPDIR=${RPM_BUILD_ROOT}%{_prefix}%{crossprefix} \
+           bootsbindir=${RPM_BUILD_ROOT}%{crossprefix}/sbin
 %else
-make install prefix=$RPM_BUILD_ROOT/%{_prefix}%{crossprefix} \
+make install prefix=${RPM_BUILD_ROOT}%{_prefix}%{crossprefix} \
            HEADER_CLEANUP=no \
-           TZTOPDIR=$RPM_BUILD_ROOT/usr%{crossprefix} \
-           bootsbindir=$RPM_BUILD_ROOT%{crossprefix}/sbin \
+           TZTOPDIR=${RPM_BUILD_ROOT}%{_prefix}%{crossprefix} \
+           bootsbindir=${RPM_BUILD_ROOT}%{crossprefix}/sbin \
            REDO=none CROSS=yes
 %endif
 
-%ifarch m68kmint           
-strip $RPM_BUILD_ROOT/usr%{crossprefix}/sbin/* \
-  $RPM_BUILD_ROOT%{crossprefix}/sbin/* || :
+strip ${RPM_BUILD_ROOT}/usr%{crossprefix}/sbin/* || :
+strip ${RPM_BUILD_ROOT}%{crossprefix}/sbin/* || :
 
-gzip -9nf $RPM_BUILD_ROOT/%{_prefix}%{crossprefix}/man/*/*
+gzip -9nf ${RPM_BUILD_ROOT}/%{_prefix}%{crossprefix}/share/man/*/* ||:
 
+%ifarch m68kmint
 # Remove localtime stuff, will be done in post-install section.
-ln -sf /etc/localtime $RPM_BUILD_ROOT/usr/share/zoneinfo/localtime
-ln -sf localtime $RPM_BUILD_ROOT/usr/share/zoneinfo/posixrules
-ln -sf localtime $RPM_BUILD_ROOT/usr/share/zoneinfo/posixtime
+ln -sf /etc/localtime ${RPM_BUILD_ROOT}%{_prefix}/share/zoneinfo/localtime
+ln -sf localtime ${RPM_BUILD_ROOT}%{_prefix}/share/zoneinfo/posixrules
+ln -sf localtime ${RPM_BUILD_ROOT}%{_prefix}/share/zoneinfo/posixtime
+%else
+ln -s include ${RPM_BUILD_ROOT}%{_prefix}%{crossprefix}/sys-include
 %endif
+
 
 %pre
 mkdir -p %{_prefix}%{crossprefix}/include/arpa 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/bits 2>/dev/null ||:
-mkdir -p %{_prefix}%{crossprefix}/include/mint 2>/dev/null ||:
+mkdir -p %{_prefix}%{crossprefix}/include/mint/arch 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/net 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/netinet 2>/dev/null ||:
 mkdir -p %{_prefix}%{crossprefix}/include/nfs 2>/dev/null ||:
@@ -496,8 +526,10 @@ test -f /usr/share/zoneinfo/$TIMEZONE || TIMEZONE=Factory
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 %endif  # not cross-lib rpm
 
+
 %clean
-rm -rf $RPM_BUILD_ROOT
+[ "${RPM_BUILD_ROOT}" != "/" ] && rm -rf ${RPM_BUILD_ROOT}
+
 
 %ifarch m68kmint
 %files
@@ -505,11 +537,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS BUGS COPYING COPYING.LIB COPYMINT ChangeLog* FAQ
 %doc HACKING HELP LICENSES NEWS NOTES README* TODO
 %doc tz/Arts.htm tz/README tz/README.1st tz/Theory tz/WWW.htm
-%{_prefix}%{crossprefix}/share/man/*/*
-/usr/share/zoneinfo
-/usr/sbin/*
 /sbin/tzinit
-/usr/bin/*
+%{_prefix}/bin/*
+%{_prefix}/sbin/*
+%{_prefix}/share/man/*/*
+%{_prefix}/share/zoneinfo
 %else # Cross-lib
 %files
 %defattr(-,root,root)
@@ -520,26 +552,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
-%{_prefix}%{crossprefix}/lib/*.o
-%{_prefix}%{crossprefix}/lib/libc.a
-%{_prefix}%{crossprefix}/lib/libiio.a
-%{_prefix}%{crossprefix}/lib/libsocket.a
-%{_prefix}%{crossprefix}/lib/librpcsvc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libc020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libiio.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libsocket.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libsocket020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
 %{_prefix}%{crossprefix}/include/COPYMINT
 %{_prefix}%{crossprefix}/include/COPYING.LIB
 %{_prefix}%{crossprefix}/include/*.h
-%{_prefix}%{crossprefix}/include/stab.def
 %{_prefix}%{crossprefix}/include/arpa/*.h
 %{_prefix}%{crossprefix}/include/bits/*.h
 %{_prefix}%{crossprefix}/include/mint/*.h
+%{_prefix}%{crossprefix}/include/mint/arch/*.h
 %{_prefix}%{crossprefix}/include/net/*.h
 %{_prefix}%{crossprefix}/include/netinet/*.h
 %{_prefix}%{crossprefix}/include/nfs/*.h
@@ -547,39 +566,77 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}%{crossprefix}/include/rpc/*.h
 %{_prefix}%{crossprefix}/include/rpcsvc/*.h
 %{_prefix}%{crossprefix}/include/sys/*.h
+%{_prefix}%{crossprefix}/lib/*.o
+%{_prefix}%{crossprefix}/lib/libc.a
+%{_prefix}%{crossprefix}/lib/libiio.a
+%{_prefix}%{crossprefix}/lib/librpcsvc.a
+%{_prefix}%{crossprefix}/lib/libsocket.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libc.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libc020.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libiio.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
+%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
+%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libsocket.a
+%{_prefix}%{crossprefix}/lib/m68020-60/libsocket020.a
 
 %files debug
 %defattr(-,root,root)
 %{_prefix}%{crossprefix}/lib/libc_g.a
 %{_prefix}%{crossprefix}/lib/libiio_g.a
-%{_prefix}%{crossprefix}/lib/libsocket_g.a
 %{_prefix}%{crossprefix}/lib/librpcsvc_g.a
+%{_prefix}%{crossprefix}/lib/libsocket_g.a
 
 %files profile
 %defattr(-,root,root)
 %{_prefix}%{crossprefix}/lib/libc_p.a
 %{_prefix}%{crossprefix}/lib/libiio_p.a
-%{_prefix}%{crossprefix}/lib/libsocket_p.a
 %{_prefix}%{crossprefix}/lib/librpcsvc_p.a
+%{_prefix}%{crossprefix}/lib/libsocket_p.a
+
 
 %changelog
-* Fri Apr 13 2001 Guido Flohr <guido@freemint.de>
-- Removed mshort packages.
-- Install librpc.a, rpcgen, and rpcinfo.  FIXME: rpcgen should
-  actually go into devel package.
+* Thu Aug 09 2001 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.57 stable release
 
-* Tue Apr 10 2001 Guido Flohr <guido@freemint.de>
-- Added rpc stuff.
+* Fri Mar 09 2001 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.56.1 stable release
 
-* Sat May 7 2000 Guido Flohr <guido@freemint.de>
-- Fixed for cross-rpm (thanks to Frank Naumann <fnaumann@freemint.de>).
+* Fri Dec 08 2000 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.56 stable release
 
-* Sat Apr 8 2000 Guido Flohr <guido@freemint.de>
-- Removed stab.h and stab.def from include directory (already in mintbin).
-- Added names of authors/maintainers.
+* Thu Jul 18 2000 Frank Naumann <fnaumann@freemint.de>
+- replaced mfp based profiler support with system independant itimer method
+  (stolen from glibc)
+- fixed setitimer function
+- fixed dsetkey binding
 
-* Sat Apr 1 2000 Guido Flohr <guido@freemint.de>
+* Thu Jun 07 2000 Frank Naumann <fnaumann@freemint.de>
+- added Slbopen/Slbclose systemcall bindings to mintbind.h
+- added some small patches for <sys/stat.h>
+- temporary fix for setsid() <-> ioctl(TIOCNOTTY) non working interaction
+
+* Thu May 12 2000 Frank Naumann <fnaumann@freemint.de>
+- corrected a typo that result in undefined references at linktime
+
+* Thu May 10 2000 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.55.3
+
+* Thu Apr 28 2000 Frank Naumann <fnaumann@freemint.de>
+- added small <sys/stat.h> patch: S_IFSOCK and S_ISSOCK definitions missing
+
+* Thu Apr 18 2000 Frank Naumann <fnaumann@freemint.de>
+- changed base type of time_t to long
+- added stat -> Fxattr(nblocks) correction
+
+* Sat Apr 14 2000 Guido Flohr <guido@freemint.de>
 - Modified for 0.55
 - Moved mshort libs into separate package to simplify removal.
 - Crude support for a cross-lib rpm, try out if it works.
-- removed mbaserel libs which are not supported any longer.
+
+* Thu Mar 29 2000 Frank Naumann <fnaumann@freemint.de>
+- lot of changes for the final 0.55 version, added all Conflicts
+
+* Mon Feb 28 2000 Frank Naumann <fnaumann@freemint.de>
+- changes related to gcc 2.95.2, removed libgcc2 stuff
+- removed mbaserel libs
