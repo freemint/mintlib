@@ -1,3 +1,5 @@
+# $Id$
+#
 # This file is being included into all Makefiles and into the
 # installation script "libinstall".  Please make sure that it can
 # serve both as input to "make" and a Bourne shell.
@@ -19,10 +21,6 @@ WITH_DEBUG_LIB=yes
 # it can fork (even for hello.c).  It may be a memory problem
 # that only occurs here, it may be a bug.
 WITH_PROFILE_LIB=yes
-
-# Comment this out if you don't want to build libraries with short
-# (i. e. 16 bit) integers.
-WITH_SHORT_INTS=yes
 
 # This variable is used for various others.  Change its value if 
 # need be.  When cross-compiling you will usually want to set this

@@ -1,3 +1,5 @@
+# $Id$
+#
 # These are some standard rules common to all Makefiles that perform
 # tests.  If you change this file please read README.tests in the
 # toplevel directory first.
@@ -5,18 +7,13 @@
 include $(top_srcdir)/configvars
 
 # The variable "type" will be appended to "lib" when searching for
-# libraries.  Thus, to test the mshort library set type to 16,
-# to test the library with fpu code and >=m68020, set type to 16020.
-# If you change this you must run "make checkclean".
+# libraries.  Thus, to test the library with fpu code and >=m68020, 
+# set type to 16020.  If you change this you must run "make checkclean".
 type=
 
 # These are additional CFLAGS passed to the compiler and the linker.
 # For fpu/m68020 libs:
 #	cflags=-m68020-60 -m68881
-# For 16 bit integer libs:
-#	cflags=-mshort
-# For fpu/m68020 libs with 16 bit integers:
-#	cflags=-m68020-60 -m68881 -mshort
 # If you change this you must run "make checkclean".
 cflags=
 

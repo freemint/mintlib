@@ -1,6 +1,7 @@
-#!/bin/sh
+#! /bin/sh
 # libinstall - installation script for the MiNTLib (binary distributions).
-# Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>.
+# Copyright (C) 1999-2001 Guido Flohr <guido@freemint.de>.
+# $Id$
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -275,25 +276,13 @@ install_manpages ()
 install_libs ()
 {
   echo "Installing libraries."
-  $mkinstalldirs $libdir $libdir/m68020-60/mshort $libdir/mshort
-  for type in "" _p _g 020 16020 16; do
+  $mkinstalldirs $libdir 
+    for type in "" _p _g 020; do
     case x$type in
       x020) 
         libsuffix=020
         libinstdir=$libdir/m68020-60
         libheredir=lib020
-        type=
-        ;;
-      x16020) 
-        libsuffix=16020
-        libinstdir=$libdir/m68020-60/mshort
-        libheredir=lib16020
-        type=
-        ;;
-      x16) 
-        libsuffix=16 
-        libinstdir=$libdir/mshort
-        libheredir=lib16
         type=
         ;;
       x_p|x_g)

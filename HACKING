@@ -1,3 +1,5 @@
+# $Id$
+
 The Hacker's Guide to the MiNTLib
 =================================
 
@@ -322,17 +324,6 @@ to read".  Make it easier for other people to fix bugs in your code
 and write descriptive comments.
 
 Describe as many variables that you use as possible.
-
-Integer Sizes
--------------
-
-This library is intended to compile and run with 32 and 16 bit integers.
-Please keep that in mind.  If your code needs modifications for 16 bit
-integers you can surround it by "#ifdef __MSHORT__".  It is also a good
-idea to test your code both with 16 and 32 bit integers.
-
-It is usually not necessary to take any special measures for -mbaserel
-(unless you contribute assembler code).
 
 The "errno" variable
 --------------------
