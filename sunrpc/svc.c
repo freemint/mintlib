@@ -85,6 +85,11 @@ xprt_register (SVCXPRT *xprt)
       for (i = 0; i < svc_max_pollfd; ++i)
 	if (svc_pollfd[i].fd == -1)
 	  {
+#ifdef __MINT__
+/* XXX not supported yet, result in EINVAL */
+#undef POLLRDBAND
+#define POLLRDBAND 0
+#endif
 	    svc_pollfd[i].fd = sock;
 	    svc_pollfd[i].events = (POLLIN | POLLPRI |
 				    POLLRDNORM | POLLRDBAND);
