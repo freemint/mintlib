@@ -74,7 +74,36 @@ char* program_invocation_short_name = "unknown application";
 
 int _exit_dummy_decl;
 
-FILE* stdin = NULL;
-FILE* stdout = NULL;
-FILE* stderr = NULL;
-FILE* __stdio_head = NULL;
+
+/* stdio things */
+
+#define STDIN_MODE	{ 1, 0, 0, 1, 0, 0, 0 }
+#define STDOUT_MODE	{ 0, 1, 0, 1, 1, 0, 1 }
+#define STDERR_MODE	{ 1, 1, 0, 1, 0, 0, 0 }
+
+#define STD_STREAM(NAME, FD, STREAM_MODE, CHAIN) \
+	static FILE __##NAME = { \
+		_IOMAGIC, \
+		NULL, \
+		NULL, \
+		NULL, \
+		NULL, \
+		0, \
+		(void *) ((long) FD), \
+		STREAM_MODE, \
+		{ NULL, NULL, NULL, NULL, NULL }, \
+		{ NULL, NULL }, \
+		(fpos_t) -1, \
+		(fpos_t) -1, \
+		CHAIN, \
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }; \
+	FILE* NAME = &__##NAME;
+
+
+STD_STREAM(stdin, 0, STDIN_MODE, NULL);
+STD_STREAM(stdout, 1, STDOUT_MODE, &__stdin);
+STD_STREAM(stderr, 2, STDERR_MODE, &__stdout);
+
+
+FILE* __stdio_head = &__stderr;
+

@@ -184,6 +184,10 @@ __libc_main (_argc, _argv, _envp)
 	if(!*_argv[0] && isatty(2))
 	    (void)Fforce(2, -1);
 
+#if 0
+/* fna: see in globals.c the
+ *      new static initialization
+ */
 	stdin = fdopen (0, "r");
 	stdout = fdopen (1, "w");
 	stderr = fdopen (2, "r+");
@@ -198,7 +202,9 @@ __libc_main (_argc, _argv, _envp)
 		        "virtual memory exhausted\r\n");
 		_exit (1);
 	}
+#endif
 	
+	/* XXX guido, I'm not sure how to static initialize that */
 	setvbuf (stdin, NULL, _IOFBF, 0);
 	setvbuf (stdout, NULL, _IOLBF, 0);
 	setvbuf (stderr, NULL, _IONBF, 0);
