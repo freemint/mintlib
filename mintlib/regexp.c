@@ -224,8 +224,8 @@ char *exp;
 	RFAIL("regexp too big");
 
   /* Allocate space. */
-  r = (regexp *) malloc(sizeof(regexp) + (size_t) regsize);
-  if (r == (regexp *)NULL) RFAIL("out of space");
+  r = malloc(sizeof(regexp) + (size_t) regsize);
+  if (r == NULL) RFAIL("out of space");
 
   /* Second pass: emit code. */
   regparse = exp;

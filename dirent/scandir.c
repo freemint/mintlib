@@ -65,14 +65,14 @@ SCANDIR (dir, namelist, select, cmp)
 	      vsize = 10;
 	    else
 	      vsize *= 2;
-	    new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
+	    new = realloc (v, vsize * sizeof (*v));
 	    if (new == NULL)
 	      break;
 	    v = new;
 	  }
 
 	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	vnew = (DIRENT_TYPE *) malloc (dsize);
+	vnew = malloc (dsize);
 	if (vnew == NULL)
 	  break;
 

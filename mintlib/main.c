@@ -270,11 +270,11 @@ __libc_main (_argc, _argv, _envp)
 				    tmp++;
 				  }
 				  size = tmp - s + cnt * 5;
-				  _envp[i] = (char *) malloc(size);
+				  _envp[i] = malloc(size);
 				  strncpy(_envp[i], s, len);
 				  _path_dos2unx(s + len, _envp[i] + len,
 						size - len);
-				  _envp[i] = (char *) realloc(_envp[i], 
+				  _envp[i] = realloc(_envp[i], 
 						        strlen(_envp[i]) + 1);
 				  break;		
 				}
@@ -300,10 +300,10 @@ __libc_main (_argc, _argv, _envp)
 			    tmp++;
 			  }
 			  size = tmp - s + cnt * 5;
-			  _envp[i] = (char *) malloc(size);
+			  _envp[i] = malloc(size);
 			  strncpy(_envp[i], s, 5);
 			  _path_dos2unx(s + 5, _envp[i] + 5, size - 5);
-			  _envp[i] = (char *) realloc(_envp[i], 
+			  _envp[i] = realloc(_envp[i], 
 			                              strlen(_envp[i]) + 1);
 			  break;
 			}

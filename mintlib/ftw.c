@@ -65,7 +65,7 @@ ftw(directory, funcptr, depth)
 
     /* Get ready to hold the full paths. */
     i = strlen(directory);
-    fullpath = (char *) malloc( (size_t) (i + 1 + MAXNAMLEN + 1) );
+    fullpath = malloc( (size_t) (i + 1 + MAXNAMLEN + 1) );
     if (fullpath == NULL) {
 	closedir(dirp);
 	return -1;

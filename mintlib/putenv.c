@@ -54,10 +54,10 @@ putenv(strng)
 	del_env(strng);
 
 	if (!environ)
-		e = (char **) malloc(2*sizeof(char *));
+		e = malloc(2*sizeof(char *));
 	else {
 		while(environ[i]) i++ ;
-		e = (char **) malloc((i+2)*sizeof(char *));
+		e = malloc((i+2)*sizeof(char *));
 		if (!e) {
 			return -1;
 		}

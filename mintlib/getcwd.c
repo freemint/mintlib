@@ -29,7 +29,7 @@ char *buf; int size;
 	        if (size == 0)
 	          size = PATH_MAX;
 	          
-		if ((buf = (char *) malloc((size_t)size)) == 0)
+		if ((buf = malloc((size_t)size)) == 0)
 			return NULL;
 		buf_malloced = 1;
 	}
