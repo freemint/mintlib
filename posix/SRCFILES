@@ -20,6 +20,7 @@ SRCFILES = \
 	glob.c \
 	isfdtype.c \
 	isfdtype.c \
+	posix_fallocate.c \
 	pread.c \
 	pwrite.c \
 	raise.c \
