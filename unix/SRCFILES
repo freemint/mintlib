@@ -97,6 +97,7 @@ SRCFILES = \
 	stty.c \
 	symlink.c \
 	sync.c \
+	sysctl.c \
 	sysinfo.c \
 	time.c \
 	times.c \

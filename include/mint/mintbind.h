@@ -313,6 +313,38 @@ __extension__								\
 	retvalue;							\
 })
 
+#define trap_1_wllllll(n, a, b, c, d, e, f)				\
+__extension__								\
+({									\
+	register long retvalue __asm__("d0");				\
+	long _a = (long)(a);						\
+	long _b = (long)(b);						\
+	long _c = (long)(c);						\
+	long _d = (long)(d);						\
+	long _e = (long)(e);						\
+	long _f = (long)(f);						\
+	    								\
+	__asm__ volatile						\
+	(								\
+		"movl    %7,sp@-;"					\
+		"movl    %6,sp@-;"					\
+		"movl    %5,sp@-;"					\
+		"movl    %4,sp@-;"					\
+		"movl    %3,sp@-;"					\
+		"movl    %2,sp@-;"					\
+		"movw    %1,sp@-;"					\
+		"trap    #1;"						\
+		"lea     sp@(26),sp"					\
+	: "=r"(retvalue)			/* outputs */		\
+	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
+	  "r"(_d), "r"(_e), "r"(_f)		/* inputs  */		\
+	: "d0", "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	  AND_MEMORY							\
+	);								\
+									\
+	retvalue;							\
+})
+
 #else
 
 #ifdef __GNUC__
@@ -547,7 +579,8 @@ __extension__								\
 #define Freadv(fh, iovp, iovcnt) \
 		trap_1_wwll(0x15c,(short)(fh),(long)(iovp),(long)(iovcnt))
 /* 0x15d */
-/* 0x15e */
+#define Psysctl(name, namelen, old, oldlenp, new, newlen) \
+		trap_1_wllllll(0x15e,(long)(name),(long)(namelen),(long)(old),(long)(oldlenp),(long)(new),(long)(newlen))
 #define Pemulation(which, op, a1, a2, a3, a4, a5, a6, a7) \
 		trap_1_wwwlllllll(0x15f,(short)(which),(short)(op),(long)(a1),(long)(a2),(long)(a3),(long)(a4),(long)(a5),(long)(a6),(long)(a7))
 #define Fsocket(domain, type, protocol) \
