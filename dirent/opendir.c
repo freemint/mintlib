@@ -44,7 +44,7 @@ __opendir(uname)
 	
 	d = malloc(sizeof(DIR));
 	if (!d) {
-		errno = ENOMEM;
+		__set_errno (ENOMEM);
 		return d;
 	}
 
@@ -59,7 +59,7 @@ __opendir(uname)
 		if ( (r & 0xff000000L) == 0xff000000L ) {
 			if ((r == -ENOTDIR) && (_enoent(name)))
 				r = -ENOENT;
-			errno = (int) -r;
+			__set_errno (-r);
 			free(d);
 			return 0;
 		}
@@ -103,7 +103,7 @@ __opendir(uname)
 		d->status = _NMFILE;
 	} else {
 		free(d);
-		errno = (int) -r;
+		__set_errno (-r);
 		return 0;
 	}
 	d->buf.d_off = 0;

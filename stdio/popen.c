@@ -40,8 +40,8 @@ const char	*command, *type;
 	long r;
 
 	if (__mint == 0) {
-		errno = ENOSYS;
-		return (FILE *)0;
+		__set_errno (ENOSYS);
+		return NULL;
 	}
 
 	shell = getenv("SHELL");
@@ -63,8 +63,8 @@ const char	*command, *type;
 	if (r < 0 || (r = Fcntl (savefd, 1L, F_SETFD)) < 0 ||
 	    (r = Fpipe(pipfd)) < 0) {		/* can't create pipe?? */
 		free(p);
-		errno = (int) -r;
-		return (FILE *)0;
+		__set_errno (-r);
+		return NULL;
 	}
 
 	/* other side of the pipe should be closed in the child */

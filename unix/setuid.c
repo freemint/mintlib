@@ -25,7 +25,7 @@ __setuid(x)
  			have_setuid = 0;
 		}
 		else if (r < 0) {
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1; 
 		}
 		return 0;		

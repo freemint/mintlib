@@ -54,7 +54,7 @@ __bsd_signal(sig, func)
  * own signal dispatcher to switch these to 16 bit ints
  */
 	if (sig < 0 || sig >= NSIG) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return SIG_ERR;
 	}
 	oldfunc = _sig_handler[sig];
@@ -67,7 +67,7 @@ __bsd_signal(sig, func)
 		if (old == -ENOSYS)
 			have_psignal = 0;
 		else if (old < 0) {
-			errno = (int) -old;
+			__set_errno (-old);
 			return SIG_ERR;
 		}
 		else {
@@ -81,7 +81,7 @@ __bsd_signal(sig, func)
 	
 #ifndef __MSHORT__ 
 	if (sig < 0 || sig >= NSIG) {
-		errno = ERANGE;
+		__set_errno (ERANGE);
 		return SIG_ERR;
 	}
 	oldfunc = _sig_handler[sig];

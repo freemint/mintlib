@@ -28,7 +28,7 @@ int utimes (filename, tvp)
   struct utimbuf utimbuf;
   
   if (filename == NULL) {
-    errno = EFAULT;
+    __set_errno (EFAULT);
     return -1;
   }
   

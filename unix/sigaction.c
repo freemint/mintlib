@@ -35,7 +35,7 @@ __sigaction(sig, act, oact)
 		} kact, koact;
 
 		if (sig < 0 || sig >= __NSIG) {
-			errno = ERANGE;
+			__set_errno (ERANGE);
 			return -1;
 		}
 
@@ -62,7 +62,7 @@ __sigaction(sig, act, oact)
 				have_psigaction = 0; /* don't try again */
 				goto no_psigaction;
 			}
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1;
 		}
 		if (oact) {

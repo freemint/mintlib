@@ -19,7 +19,6 @@
 #include <unistd.h>
 #include "lib.h"
 
-extern int errno;
 
 int 
 __mkdir(_path, mode)
@@ -51,7 +50,7 @@ __mkdir(_path, mode)
 	if (errno != ENOENT) {		/* Return stat error, if other than */
 					/* File not found. */
 		if ((errno == ENOTDIR) && (_enoent(path)))
-			errno = ENOENT;
+			__set_errno (ENOENT);
 		return -1;
 	}
 

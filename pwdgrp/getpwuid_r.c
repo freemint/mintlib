@@ -36,7 +36,7 @@ int __getpwuid_r (uid_t uid, struct passwd* result_buf,
     }
   save_errno = errno;
   (void) fclose (pwfile);
-  errno = save_errno;
+  __set_errno (save_errno);
   return retval;
 }
 

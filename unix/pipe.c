@@ -18,7 +18,7 @@ __pipe(fd)
 
 	r = Fpipe(mint_handle);
 	if (r < 0) {
-		errno = (int) -r;
+		__set_errno (-r);
 		return -1;
 	}
 	fd[0] = mint_handle[0];

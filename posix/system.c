@@ -101,7 +101,7 @@ int system (line)
   if (sigaction (SIGQUIT, &sa, &quit) < 0) {
     save = errno;
     (void) sigaction (SIGINT, &intr, (struct sigaction *) NULL);
-    errno = save;
+    __set_errno (save);
     return -1;
   }
 
@@ -110,12 +110,12 @@ int system (line)
   save = errno;
   if (sigprocmask (SIG_BLOCK, &block, &omask) < 0) {
     if (errno == ENOSYS) {
-	    errno = save;
+            __set_errno (save);
     } else {
 	    save = errno;
 	    (void) sigaction (SIGINT, &intr, (struct sigaction *) NULL);
 	    (void) sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-	    errno = save;
+            __set_errno (save);
 	    return -1;
 	  }
   }
@@ -151,7 +151,7 @@ int system (line)
        sigaction (SIGQUIT, &quit, (struct sigaction *) NULL) |
        sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0) {
     if (errno == ENOSYS)
-	    errno = save;
+            __set_errno (save);
     else
 	    return -1;
   }
@@ -272,7 +272,7 @@ int system_hack (s)
 		return 1;
 	al = _parseargs(s);		/* get a list of args */
 	if (al == ARG_ERR) {		/* not enough memory */
-		errno = ENOMEM;
+		__set_errno (ENOMEM);
 		return -1;
 	}
 
@@ -285,7 +285,8 @@ int system_hack (s)
 	if ((argv = (char **) malloc((size_t)(argc * sizeof(char *))))
 		== NULL)
 	{
-		errno = ENOMEM; return -1;
+		__set_errno (ENOMEM);
+		return -1;
 	}
 	for (cur = al; cur; cur = cur->next) {
 		p = cur->string;

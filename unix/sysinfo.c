@@ -65,7 +65,7 @@ int sysinfo (command, buf, bufsize)
   
   /* Pathological cases first.  */
   if (buf == NULL && bufsize > 0) {
-    errno = EFAULT;
+    __set_errno (EFAULT);
     return -1;
   }
   
@@ -110,7 +110,7 @@ int sysinfo (command, buf, bufsize)
       retval = mint_set_clock_mode (buf, bufsize);
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       retval = -1;
   }
   return retval;
@@ -186,17 +186,17 @@ si_hostname (buf, bufsize)
 {
   int saved_errno = errno;
   
-  errno = 0;
+  __set_errno (0);
 
   if (gethostname (buf, bufsize) != 0) {
     if (errno == ENAMETOOLONG) {
-      errno = saved_errno;
+      __set_errno (saved_errno);
       return MAXHOSTNAMELEN;
     }
     return -1;
   }
   
-  errno = saved_errno;
+  __set_errno (saved_errno);
   return (strlen (buf) + 1);
 }
 
@@ -241,7 +241,7 @@ si_release (buf, bufsize)
        */
       /* Fall thru'.  */
     } else if (ver < 0) {
-      errno = -ver;
+      __set_errno (-ver);
       return -1;
     } else {
       main_rev = (ver & 0xff000000) >> 24;
@@ -528,18 +528,18 @@ mint_kernel_build_date (buf, bufsize)
   char* rbuf;
   
   if (no_build_date) {
-    errno = ENOSYS;
+    __set_errno (ENOSYS);
     return -1;
   }
   
   if (kernel_build_date == NULL) {
     long retval = Ssystem (4, 0, 0);
     if (retval == -ENOSYS) {
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       no_build_date = 1;
       return -1;
     } else if (retval < 0) {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     } else {
       unsigned char day, mon;
@@ -581,18 +581,18 @@ mint_kernel_build_time (buf, bufsize)
   long bufsize;
 {
   if (no_build_time) {
-    errno = ENOSYS;
+    __set_errno (ENOSYS);
     return -1;
   }
   
   if (kernel_build_time == NULL) {
     long retval = Ssystem (5, 0, 0);
     if (retval == -ENOSYS) {
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       no_build_time = 1;
       return -1;
     } else if (retval < 0) {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     } else {
       char* rbuf = (char*) &retval;
@@ -617,11 +617,11 @@ mint_get_clock_mode (buf, bufsize)
 
   lclock_mode = Ssystem (100, -1, 0);
   if (lclock_mode == -ENOSYS) {
-    errno = ENOSYS;
+    __set_errno (ENOSYS);
     no_build_time = 1;
     return -1;
   } else if (lclock_mode < 0) {
-    errno = EINVAL;
+    __set_errno (EINVAL);
     return -1;
   } else {
     if (lclock_mode == 0)
@@ -643,7 +643,7 @@ mint_set_clock_mode (buf, bufsize)
   long int retval;
   
   if (buf == NULL) {
-    errno = EFAULT;
+    __set_errno (EFAULT);
     return -1;
   }
   
@@ -652,10 +652,10 @@ mint_set_clock_mode (buf, bufsize)
     
   retval = Ssystem (100, lclock_mode, 0);
   if (retval == -ENOSYS) {
-    errno = ENOSYS;
+    __set_errno (ENOSYS);
     return -1;
   } else if (retval < 0) {
-    errno = -retval;
+    __set_errno (-retval);
     return -1;
   }
   

@@ -13,7 +13,7 @@ __fork()
 
 	r = (int)Pfork();
 	if (r < 0) {
-		errno = -r;
+		__set_errno (-r);
 		return -1;
 	}
 	return r;

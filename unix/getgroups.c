@@ -51,12 +51,12 @@ __getgroups(gsetlen, grpset)
      for a positive value.  How did this ever work?  */
   if (r != -ENOSYS) {
       if (r == -ERANGE) {
-        errno = EINVAL;  /* MiNT uses ERANGE but the library binding should
-                            use EINVAL.  */
+        /* MiNT uses ERANGE but the library binding should use EINVAL.  */
+	__set_errno (EINVAL);
         return -1;
       } else if (r < 0)
 	{
-	  errno = -r;
+	  __set_errno (-r);
 	  return -1;
 	}
       return r;
@@ -67,7 +67,7 @@ __getgroups(gsetlen, grpset)
   
   if (gsetlen) {
     if (gsetlen < 0 || !grpset) {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
     *grpset++ = currgid;
@@ -90,7 +90,7 @@ __getgroups(gsetlen, grpset)
         ++numgroups;
         if (gsetlen) {
           if (numgroups > gsetlen) {
-            errno = EINVAL;
+	    __set_errno (EINVAL);
             return -1;
 	  }
           *grpset++ = gentry->gr_gid;

@@ -9,10 +9,9 @@
  *	fsync does the same as sync()
  */
 
+#include <errno.h>
 #include <mintbind.h>
 #include <support.h>
-
-extern int errno;
 
 /*
  * FUNCTION
@@ -29,7 +28,7 @@ __sync()
 	res = Sync();
 	if (res < 0)
 	{
-		errno = -res;
+		__set_errno (-res);
 		return -1;
 	}
 	return 0;

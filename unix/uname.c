@@ -22,7 +22,7 @@ int uname (info)
   struct utsname* info;
 {
   if (info == (struct utsname*) 0) {
-    errno = EFAULT;
+    __set_errno (EFAULT);
     return -1;
   }
   

@@ -29,14 +29,14 @@ int __fchmod (int fd, mode_t mode)
 #ifndef __MSHORT__
   if (fd > SHRT_MAX)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 #endif
   retval = Ffchmod (fd, mode);
   if (retval != 0)
     {
-      errno = -retval;
+      __set_errno (-retval);
       return -1;
     }
   return 0;

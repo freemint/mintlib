@@ -92,7 +92,7 @@ interpret_script(mode, path, _path, argv, envp)
 	/* path is already converted to dos */
 	if ((fd = (int)Fopen(path, 0)) < 0)
 	  {
-	    errno = -fd;
+	    __set_errno (-fd);
 	    return -1;
 	  }
 
@@ -100,7 +100,7 @@ interpret_script(mode, path, _path, argv, envp)
 	Fclose (fd);
 	if (r < 0)
 	  {
-	    errno = -(int) r;
+	    __set_errno (-r);
 	    return -1;
 	  }
 	buf[r] = 0;
@@ -150,7 +150,7 @@ interpret_script(mode, path, _path, argv, envp)
 		shell = _buffindfile (shell, getenv("PATH"), extensions, tmppath);
 		if (!shell)
 		  {
-		    errno = ENOENT;
+		    __set_errno (ENOENT);
 		    return -1;	/* file not found */
 		  }
 
@@ -160,7 +160,7 @@ interpret_script(mode, path, _path, argv, envp)
 
 		shellargv = (char **)Malloc((argcount + nargcount + 2) * sizeof(char *));
 		if (!shellargv) {
-		  errno = ENOMEM;
+		  __set_errno (ENOMEM);
 		  return -1;
 		}
 
@@ -183,7 +183,7 @@ interpret_script(mode, path, _path, argv, envp)
 	      }
 	  }
 
-	errno = ENOEXEC;
+	__set_errno (ENOEXEC);
 	return -1;
 }
 
@@ -215,7 +215,7 @@ char	*const *envp;
 #endif
 
 	if (mode != P_WAIT && mode != P_OVERLAY && mode != P_NOWAIT) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return -1;
 	}
 	 
@@ -253,7 +253,7 @@ char	*const *envp;
 
 try_again:
 	if ((env = (char *)Malloc((long)enlen)) == NULL) {
-		errno = ENOMEM;
+		__set_errno (ENOMEM);
 		return -1;
 	}
 	left = enlen;
@@ -499,7 +499,7 @@ need_more_core:
 			}
 		}
 #endif
-		errno = (int) -rval;
+		__set_errno (-rval);
 		rval = -1;
 	}
 	else if (mode == P_OVERLAY)

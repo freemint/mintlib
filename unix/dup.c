@@ -21,7 +21,7 @@ __dup(handle)
 		rv = (int)Fdup(handle);
 
 	if (rv < (__SMALLEST_VALID_HANDLE)) {
-		errno = -rv;
+		__set_errno (-rv);
 		rv = -1;
 	}
 	else

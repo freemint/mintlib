@@ -48,7 +48,7 @@ mkstemp (char* template)
   
   if (template == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
   
@@ -59,7 +59,7 @@ mkstemp (char* template)
       || template[len - 4] != 'X' || template[len - 3] != 'X' 
       || template[len - 2] != 'X' || template[len - 1] != 'X')
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       template[0] = -1;
       return -1;
     }
@@ -93,7 +93,7 @@ mkstemp (char* template)
               
               if (fd >= 0)
                 {
-                  errno = saved_errno;
+                  __set_errno (saved_errno);
                   return fd;
                 }
               else if (errno != EEXIST)
@@ -106,7 +106,7 @@ mkstemp (char* template)
     }
         
   /* So, what error number to set?  */
-  errno = ENMFILES;
+  __set_errno (ENMFILES);
   template[0] = '\0';
   return -1;
 }

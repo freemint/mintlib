@@ -42,7 +42,7 @@ main (void)
       return 1;
     }
 
-  errno = 0;
+  __set_errno (0);
   if (fputs ("fnord", f) == EOF)
     {
       perror ("fputs");

@@ -28,14 +28,14 @@ int __fchown (int fd, uid_t owner, gid_t group)
 #ifndef __MSHORT__
   if (fd > SHRT_MAX)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 #endif
   retval = Ffchown (fd, owner, group);
   if (retval != 0)
     {
-      errno = -retval;
+      __set_errno (-retval);
       return -1;
     }
   return 0;

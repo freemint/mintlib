@@ -19,7 +19,7 @@ getloadavg (loadavg, nelem)
   r = Suptime (&uptime, avenrun);
   if (r < 0)
     {
-      errno = (int) -r;
+      __set_errno (-r);
       return -1;
     }
 

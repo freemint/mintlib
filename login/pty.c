@@ -87,7 +87,7 @@ openpty(amaster, aslave, name, termp, winp)
 			if (stat (line, &st) == 0) continue;
 			if ((master = Fcreate (line,
 			    FA_SYSTEM|FA_HIDDEN)) < 0) {
-				errno = ENOENT;
+				__set_errno (ENOENT);
 				return -1;
 			} else {
 				(void) chown(line, getuid(), ttygid);
@@ -114,7 +114,7 @@ openpty(amaster, aslave, name, termp, winp)
 			}
 		}
 	}
-	errno = ENOENT;	/* out of ptys */
+	__set_errno (ENOENT);	/* out of ptys */
 	return (-1);
 }
 

@@ -35,7 +35,7 @@ __initgroups (user, group)
   r = Psetgroups (n, groups);
   if (r < 0)
     {
-      errno = -r;
+      __set_errno (-r);
       return -1;
     }
   return 0;

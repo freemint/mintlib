@@ -27,7 +27,7 @@ __setgid(x)
  			have_setgid = 0;
 		}
 		else if (r < 0) {
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1; 
 		}
 		return 0;		

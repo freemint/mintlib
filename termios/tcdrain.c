@@ -28,7 +28,7 @@ tcdrain(fd)
   {
     r = Fcntl((short) fd, &outq, TIOCOUTQ);
     if (r < 0) {
-      errno = (int) -r;
+      __set_errno (-r);
       return -1;
     }
   } while (outq != 0);

@@ -38,7 +38,7 @@ __ftruncate (fd, length)
 
     if (res < 0)
     {
-      errno = -res;
+      __set_errno (-res);
       return -1;
     }
   return 0;

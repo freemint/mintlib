@@ -1,6 +1,5 @@
 #include <support.h>
 #include <errno.h>
-extern int errno;
 
 #ifndef _COMPILER_H
 #include <compiler.h>
@@ -16,7 +15,7 @@ static char i64a(i)
   
   if ((i < 0) || (i > 63))
   {
-    errno = EBADARG;
+    __set_errno (EBADARG);
     return(0x7F);
   }
   retval += '.';
@@ -37,7 +36,7 @@ char *l64a(l)
 
   if (l < 0)
   {
-    errno = EBADARG;
+    __set_errno (EBADARG);
     return("");
   }
   if (l == 0)

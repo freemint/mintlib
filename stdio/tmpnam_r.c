@@ -16,7 +16,7 @@ char* tmpnam_r (buf)
 {
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
   return tmpnam (buf);

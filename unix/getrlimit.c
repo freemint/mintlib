@@ -34,13 +34,13 @@ __getrlimit(kind, rl)
 		mode = 3;
 		break;
 	default:
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return -1;
 	}
 	limit = Psetlimit(mode, -1L);
 		
 	if (limit < 0) {
-		errno = (int ) -limit;
+		__set_errno (-limit);
 		return -1;
 	}
 

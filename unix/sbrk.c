@@ -77,7 +77,7 @@ long n;
 	  _split_mem = 0;
 	  return _sbrk(n);
       }
-      errno = ENOMEM;
+      __set_errno (ENOMEM);
       rval = (void *)(-1L);
   }
   return rval;

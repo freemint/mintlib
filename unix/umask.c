@@ -49,7 +49,7 @@ int __umask (complmode)
   if (retval < 0 && retval != -ENOSYS)
     {
       __current_umask = old_umask;
-      errno = -retval;
+      __set_errno (-retval);
       return -1;
     }
   return old_umask;

@@ -65,6 +65,7 @@ __access(path, mode)
 	if ( (sb.st_mode & mode) == mode)
 		return 0;
 accdn:
-	errno = EACCES; return -1;
+	__set_errno (EACCES);
+	return -1;
 }
 weak_alias (__access, access)

@@ -40,7 +40,7 @@ syscall (int opcode, ...)
   
   if (opcode < 0 || opcode > MAX_SYS_OPCODE)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

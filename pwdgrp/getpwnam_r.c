@@ -37,7 +37,7 @@ int __getpwnam_r (const char* name, struct passwd* result_buf,
     }
   save_errno = errno;
   (void) fclose (pwfile);
-  errno = save_errno;
+  __set_errno (save_errno);
   return retval;
 }
 

@@ -58,7 +58,7 @@ main (int argc, char ** argv)
     {
       double d;
 
-      errno = 0;
+      __set_errno (0);
       d = strtod(lt->str, &ep);
       save_errno = errno;
       printf ("strtod (\"%s\") test %u",

@@ -155,7 +155,7 @@ int __exists (const char* pathname)
       		   that it doesn't exist when it does would violate the 
       		   interface of __stdio_gen_tempname.  */
       		int exists = errno != ENOENT;
-      		errno = saved_errno;
+		__set_errno (saved_errno);
       		return exists;
     	}  
 }

@@ -71,7 +71,7 @@ do_test (int argc, char *argv[])
 
   /* Call the function.  This is equivalent the using `realpath' but the
      function allocates the room for the result.  */
-  errno = 0;
+  __set_errno (0);
   canon = canonicalize_file_name (name1);
 
   retval = canon != NULL || errno != ELOOP;

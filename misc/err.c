@@ -37,7 +37,6 @@
 # define putc_unlocked putc
 # define fputs_unlocked fputs
 # define __progname program_invocation_name
-# define __set_errno(e) (errno = e)
 #endif
 
 extern char *__progname;

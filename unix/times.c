@@ -30,7 +30,7 @@ __times (buf)
   clock_t retval = clock ();
   
   if (!buf) {
-    errno = EFAULT;
+    __set_errno (EFAULT);
     return ((clock_t) -1);
   }
   

@@ -426,12 +426,12 @@ wait:
 	}
 	if (v_circuit == 0) {
 		if (gotsomewhere == 0) {
-			errno = ECONNREFUSED;	/* no nameservers found */
+			__set_errno (ECONNREFUSED); /* no nameservers found */
 		} else {
-			errno = ETIMEDOUT;	/* no answer obtained */
+			__set_errno (ETIMEDOUT); /* no answer obtained */
 		}
 	} else {
-		errno = terrno;
+		__set_errno (terrno);
 	}
 	return (-1);
 }

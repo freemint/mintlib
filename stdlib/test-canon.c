@@ -133,7 +133,7 @@ main (int argc, char ** argv)
   getcwd (cwd, sizeof(buf));
   cwd_len = strlen (cwd);
 
-  errno = 0;
+  __set_errno (0);
   if (realpath (NULL, buf) != NULL || errno != EINVAL)
     {
       printf ("%s: expected return value NULL and errno set to EINVAL"
@@ -141,7 +141,7 @@ main (int argc, char ** argv)
       ++errors;
     }
 
-  errno = 0;
+  __set_errno (0);
   if (realpath ("/", NULL) != NULL || errno != EINVAL)
     {
       printf ("%s: expected return value NULL and errno set to EINVAL"
@@ -149,7 +149,7 @@ main (int argc, char ** argv)
       ++errors;
     }
 
-  errno = 0;
+  __set_errno (0);
   if (realpath ("", buf) != NULL || errno != ENOENT)
     {
       printf ("%s: expected return value NULL and set errno to ENOENT"

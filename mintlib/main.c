@@ -82,7 +82,7 @@ __libc_main (_argc, _argv, _envp)
 	size_t len, cnt;
 	
 	_num_at_exit = 0;
-	errno = 0;
+	__set_errno (0);
 
 	__libc_enable_secure = 1;
 	__libc_unix_names = 0;

@@ -29,7 +29,7 @@ int __sgetspent_r (const char* stream, struct spwd* result_buf, char* buffer,
   
   if (stream == NULL || result == NULL || result_buf == NULL)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return -1;
     }
   else if (buffer == NULL)

@@ -27,7 +27,7 @@ int spawnvp(mode, name, argv) int mode; char *name; char **argv;
       char buffer[PATH_MAX];
       execname = _buffindfile(name, getenv("PATH"), extensions,buffer);
 	if (!execname) {
-		errno = ENOENT;
+		__set_errno (ENOENT);
 		return -1;		/* file not found */
 	}
 	return spawnve(mode, execname, argv, (char **)NULL);

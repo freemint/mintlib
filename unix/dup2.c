@@ -21,7 +21,7 @@ __dup2(handle1, handle2)
 		return (handle2);
 
 	if ((rv = (int)Fforce(handle2, handle1)) < 0)
-		errno = -rv;
+		__set_errno (-rv);
 	else {
 		if (__OPEN_INDEX(handle2) < __NHANDLES)
 			__open_stat[__OPEN_INDEX(handle2)] =

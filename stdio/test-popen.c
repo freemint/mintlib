@@ -127,7 +127,7 @@ main (void)
 
   remove ("/tmp/tstpopen.tmp");
 
-  errno = 0;
+  __set_errno (0);
   output = popen (catname, "m");
   if (output != NULL)
     {

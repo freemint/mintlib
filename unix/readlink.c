@@ -51,7 +51,7 @@ __readlink(unxname, buf, siz)
 		if ((r == -ENOTDIR) && _enoent(filename)) {
 			r = -ENOENT;
 		}
-		errno = (int) -r;
+		__set_errno (-r);
 		return -1;
 	}
 	linkto[PATH_MAX] = 0;
@@ -61,7 +61,7 @@ __readlink(unxname, buf, siz)
 	_dos2unx(linkto, filenamebuf, sizeof (filenamebuf));
 	l = strlen(filenamebuf);
 	if (l > siz) {
-		errno = ERANGE;
+		__set_errno (ERANGE);
 		return -1;
 	}
 	strncpy(buf, filenamebuf, siz);

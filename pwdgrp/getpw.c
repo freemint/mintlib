@@ -27,7 +27,7 @@ __getpw (uid_t uid, char* buf)
 
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

@@ -38,7 +38,7 @@ int __getspnam_r (const char* name, struct spwd* result_buf,
     }
   save_errno = errno;
   (void) fclose (spfile);
-  errno = save_errno;
+  __set_errno (save_errno);
   return retval;
 }
 

@@ -162,7 +162,7 @@ res_search(name, class, type, answer, anslen)
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1)
 		return (-1);
 
-	errno = 0;
+	__set_errno (0);
 	h_errno = HOST_NOT_FOUND;		/* default, if we never query */
 	for (cp = name, n = 0; *cp; cp++)
 		if (*cp == '.')

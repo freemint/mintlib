@@ -25,7 +25,7 @@ int stime (now)
   
   if (now == (const time_t*) 0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
     

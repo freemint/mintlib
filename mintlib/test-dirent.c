@@ -39,7 +39,7 @@ test (const char *name)
       return 1;
     }
 
-  errno = 0;
+  __set_errno (0);
   while ((entp = readdir (dirp)) != NULL)
 #ifndef __MINT__
     printf ("%s\tfile number %lu\n",

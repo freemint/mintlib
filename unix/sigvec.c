@@ -19,7 +19,7 @@ sigvec (sig, sv, osv)
 	
 	if (sv) {
 		if (sv->sv_flags & (SV_ONSTACK|SV_INTERRUPT|SV_RESETHAND)) {
-			errno = EINVAL;
+			__set_errno (EINVAL);
 			return -1;
 		}
 		sa.sa_handler = sv->sv_handler;
@@ -53,7 +53,7 @@ siginterrupt (sig, fail)
 {
 	if (fail)
 	  {
- 	    errno = EINVAL;
+	    __set_errno (EINVAL);
 	    return -1;
 	  }
 	return 0;

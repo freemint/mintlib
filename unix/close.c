@@ -17,7 +17,7 @@ __close(fd)
 
 	r = Fclose(fd);
 	if (r < 0) {
-		errno = -r;
+		__set_errno (-r);
 		return -1;
 	}
 	fd = __OPEN_INDEX(fd);

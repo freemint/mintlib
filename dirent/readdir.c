@@ -44,7 +44,7 @@ __readdir(d)
 	struct dirent *dd = &d->buf;
 
 	if (d == NULL) {
-		errno = EBADF;
+		__set_errno (EBADF);
 		return NULL;
 	}
 	
@@ -56,7 +56,7 @@ __readdir(d)
 		if (r == -ENMFILES)
 			return 0;
 		else if (r) {
-			errno = (int) -r;
+			__set_errno (-r);
 			return 0;
 		}
 		else {
@@ -89,7 +89,7 @@ __readdir(d)
 			d->status = _NMFILE;
 			return 0;
 		} else if (r) {
-			errno = (int)-r;
+			__set_errno (-r);
 			return 0;
 		}
 	}
@@ -108,7 +108,7 @@ int readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   if (result == NULL || *result == NULL || entry == NULL)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   *result = readdir (dirp);

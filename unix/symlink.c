@@ -50,7 +50,7 @@ __symlink(old, new)
 				r = -ENOENT;
 		} else if ((r == -EACCES) && (!Fxattr(1, path, &sb)))
 			r = -EEXIST;
-		errno = (int) -r;
+		__set_errno (-r);
 		return -1;
 	}
 	return (int) r;

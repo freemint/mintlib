@@ -17,7 +17,7 @@ sigfillset (set)
   	sigset_t *set;
 {
   	if (!set) {
-    		errno = EINVAL;
+		__set_errno (EINVAL);
     		return -1;
   	}
   	return __sigfillset (set);

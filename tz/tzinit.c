@@ -135,7 +135,7 @@ The options `-u' and `-l' are mutually exclusive."));
     }
   
   /* Check if Ssystem is available.  */
-  errno = -Ssystem (-1, 0, 0);
+  __set_errno (-Ssystem (-1, 0, 0));
   if (errno != 0)
     error (EXIT_FAILURE, errno, ("Ssystem kernel facility not available"));
   
@@ -181,10 +181,10 @@ The options `-u' and `-l' are mutually exclusive."));
         error (EXIT_FAILURE, errno, "settimeofday failed");
 
       /* Department of unclean tricks (setting errno).  */
-      errno = -(Ssystem (S_CLOCKUTC, clockmode, 0));
+      __set_errno (-Ssystem (S_CLOCKUTC, clockmode, 0));
       if (errno != 0)
         error (EXIT_FAILURE, errno, "can\'t set kernel clock mode");
-      errno = 0;      
+      __set_errno (0);
   }
   
   /* If nothing to do, display current settings.  */

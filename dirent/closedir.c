@@ -34,7 +34,7 @@ __closedir(dirp)
 	/* The GNU libc closedir returns gracefully if a NULL pointer is
 	   passed.  We follow here.  */
 	if (dirp == NULL) {
-		errno = EBADF;
+		__set_errno (EBADF);
 		return -1;
 	}
 	

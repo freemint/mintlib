@@ -41,7 +41,7 @@ __chmod(_path, mode)
 		return 0;
 #endif
 	if (r && (r != -ENOSYS)) {
-		errno = -r;
+		__set_errno (-r);
 		return -1;
 	}
 	else if (r != -ENOSYS)   /* call was successfull */
@@ -52,7 +52,7 @@ __chmod(_path, mode)
 	r = Fattrib(path, 0, 0);
 	if (r < 0)
 	  {
-	    errno = -r;
+	    __set_errno (-r);
 	    return -1;
 	  }
  	if (r & FA_CHANGED)
@@ -71,7 +71,7 @@ __chmod(_path, mode)
 /* GEMDOS doesn't allow chmod on a directory, so pretend it worked */
 		if (dosattrib & FA_DIR)
 		  return 0;
-		errno = -r;
+		__set_errno (-r);
 		return -1;
 	}
 	return 0;

@@ -65,7 +65,7 @@ __write (fd, buf, size)
 
 	r = Fwrite(fd, size, buf);
 	if (r < 0) {
-		errno = (int) -r;
+		__set_errno (-r);
 		return -1;
 	}
 	if (size && r == 0) {
@@ -73,19 +73,19 @@ __write (fd, buf, size)
 	    {
 	      if ((r = Fcntl (fd, &statbuf, FSTAT)) < 0)
 		{
-		  errno = (int) -r;
+		  __set_errno (-r);
 		  return -1;
 		}
 	      if (((mode_t) statbuf.st_mode & S_IFMT) == S_IFREG)
 		{
-		  errno = ENOSPC;
+		  __set_errno (ENOSPC);
 		  return -1;
 		}
 	    }
 	  else if (Fdatime (&timebuf, fd, 0) == 0
 		   && Fseek (0L, fd, SEEK_CUR) >= 0)
 	    {
-	      errno = ENOSPC;
+	      __set_errno (ENOSPC);
 	      return -1;
 	    }
 	}

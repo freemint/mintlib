@@ -39,7 +39,7 @@ test (const char *name)
       return 1;
     }
 
-  errno = 0;
+  __set_errno (0);
   while ((entp = readdir (dirp)) != NULL)
     printf ("%s\tfile number %lu\n",
 	    entp->d_name, (unsigned long int) entp->d_fileno);

@@ -17,7 +17,7 @@ sigdelset (set, signo)
   	int signo;
 {
 	if ((!set) || (signo >= __NSIG)) {
-    		errno = EINVAL;
+		__set_errno (EINVAL);
     		return -1;
   	}
   	return __sigdelset (set, signo);

@@ -106,7 +106,7 @@ main (int argc, char ** argv)
     {
       register long int l;
 
-      errno = 0;
+      __set_errno (0);
       l = strtol (lt->str, &ep, lt->base);
       save_errno = errno;
       printf ("strtol(\"%s\", , %d) test %u",
@@ -139,7 +139,7 @@ main (int argc, char ** argv)
     {
       register unsigned long int ul;
 
-      errno = 0;
+      __set_errno (0);
       ul = strtoul (lt->str, &ep, lt->base);
       save_errno = errno;
       printf ("strtoul(\"%s\", , %d) test %u",

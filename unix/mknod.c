@@ -81,11 +81,11 @@ mknod(path, mode, dev)
 					err = -ENOENT;
 			} else if ((err == -EACCES) && (!Fxattr(1, _path, &sb)))
 				err = -EEXIST;
-			errno = (int) -err;
+			__set_errno (-err);
 			return -1;
 		}
 		return (int) err;
 	}	
-	errno = -err;
+	__set_errno (-err);
 	return -1;
 }

@@ -35,7 +35,7 @@ __gettimeofday (tp, tzp)
     if (retval == -ENOSYS) {
       have_Tgettimeofday = 0;
     } else if (retval < 0) {
-      errno = -retval;
+      __set_errno (-retval);
       return -1;
     } else {
       return 0;

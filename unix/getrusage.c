@@ -54,7 +54,7 @@ __getrusage(enum __rusage_who which, struct rusage *data)
 	r = Prusage(usage);
 
 	if (r < 0 && r != -ENOSYS) {
-		__set_errno ((int) -r);
+		__set_errno (-r);
 		return -1;
 	} else if (r == -ENOSYS) {
 		usage[0] = usage[2] = usage[4] = 0;

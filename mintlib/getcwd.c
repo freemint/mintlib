@@ -45,7 +45,7 @@ char *buf; int size;
 	if (r != 0 && r != -ENOSYS) {
 			if (buf_malloced)
 				free(buf);
-			errno = -r;
+			__set_errno (-r);
 			return NULL;
 	} else if (r == -ENOSYS) {
 		(void)Dgetpath(path, 0);

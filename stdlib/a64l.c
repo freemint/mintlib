@@ -75,7 +75,7 @@ static int a64i(c)
 
   if ((c < '.') || (c > 'z'))
   {
-    errno = EBADARG;
+    __set_errno (EBADARG);
     return(-1);
   }
   retval -= '.';
@@ -85,7 +85,7 @@ static int a64i(c)
     retval -= 'a' - 'Z' - 1;
   if (retval > 63)
   {
-    errno = EBADARG;
+    __set_errno (EBADARG);
     return(-1);
   }
   return(retval);
