@@ -62,6 +62,7 @@ __getdomainname(buf, len)
     
     return 0;
 }
+weak_alias (__getdomainname, getdomainname)
 
 /* Stubs function: setdomainname.  */
 int
