@@ -14,10 +14,6 @@
 /* note that the presence of _SYS_DIR_H causes dirent.h to
  * behave differently
  */
-#ifdef __TURBOC__
-# include <sys\dirent.h>
-#else
-# include <sys/dirent.h>
-#endif
+#include <sys/dirent.h>
 
 #endif

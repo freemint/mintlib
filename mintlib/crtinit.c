@@ -80,8 +80,8 @@
 #define STRICTLY_COMPATIBLE_WITH_STANDARD
 #endif
 
-#include <basepage.h>
-#include <osbind.h>
+#include <mint/basepage.h>
+#include <mint/osbind.h>
 #include <support.h>
 #include <string.h>
 #include "lib.h"

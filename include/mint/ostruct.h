@@ -1,13 +1,16 @@
-#ifndef _OSTRUCT_H
-#define _OSTRUCT_H
+
+#ifndef _MINT_OSTRUCT_H
+#define _MINT_OSTRUCT_H	1
 
 #ifndef _COMPILER_H
 #include <compiler.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
+
+__BEGIN_DECLS
 
 /*
  * General OS specific codes here
@@ -197,8 +200,7 @@ typedef struct
         void    *pb_mask;
 } _PBDEF;
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
-#endif /* _OSTRUCT_H */
+
+#endif /* _MINT_OSTRUCT_H */

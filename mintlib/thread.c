@@ -14,8 +14,8 @@
  */
 
 #include <compiler.h>
-#include <osbind.h>
-#include <basepage.h>
+#include <mint/osbind.h>
+#include <mint/basepage.h>
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>

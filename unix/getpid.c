@@ -1,7 +1,7 @@
 #include <osbind.h>
 #include <unistd.h>
-#include <basepage.h>
-#include <mintbind.h>
+#include <mint/basepage.h>
+#include <mint/mintbind.h>
 #include <errno.h>
 
 int

@@ -7,7 +7,7 @@
 #define _FALCON_H
 
 #ifndef _OSBIND_H
-#include <osbind.h>
+#include <mint/osbind.h>
 #endif
 
 #ifdef __LATTICE__
