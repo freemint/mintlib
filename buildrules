@@ -220,6 +220,8 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
 	sed -e 's,^SRCFILES *=,STRINGCFILES =,g' $(stringdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SUNRPCCFILES =,g' $(sunrpcdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,RPCSVCCFILES =,g' $(sunrpcdir)/RPCSVCCFILES >> $@
+	sed -e 's,^SRCFILES *=,RPCGENCFILES =,g' $(sunrpcdir)/RPCGENCFILES >> $@
+	sed -e 's,^SRCFILES *=,RPCINFOCFILES =,g' $(sunrpcdir)/RPCINFOCFILES >> $@
 	sed -e 's,^SRCFILES *=,SYSCALLCFILES =,g' $(syscalldir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SYSVIPCCFILES =,g' $(sysvipcdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TERMIOSCFILES =,g' $(termiosdir)/SRCFILES >>$@

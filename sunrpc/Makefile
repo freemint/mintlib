@@ -44,8 +44,8 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
-RPCGENOBJS = $(RPCGEN_SRCFILES:.c=.o)
-RPCINFOOBJS = $(RPCINFO_SRCFILES:.c=.o)
+RPCGENOBJS = $(RPCGENSRCFILES:.c=.o)
+RPCINFOOBJS = $(RPCINFOSRCFILES:.c=.o)
 
 MANS = bindresvport.3 getrpcport.3 rpc.3 rpc.5 rpcgen.1 rpcinfo.8 xdr.3 
 DOCS = 
@@ -95,7 +95,7 @@ install-rpcsvc-programs: rpcgen rpcinfo
 uninstall-rpcsvc-programs:
 	rm -f $(bindir)/rpcgen
 	rm -f $(sbindir)/rpcinfo
-	
+
 # End of non-cross section.
 else
 # Cross section
@@ -153,3 +153,4 @@ uninstall-man:
 	  rm -f $(mandir)/man$$section/$$manpage.gz; \
 	  rm -f $(mandir)/man$$section/$$manpage.Z; \
 	done
+

@@ -2,5 +2,7 @@
 # the files that should go only into source distributions.
 
 SRCFILES += BINFILES EXTRAFILES Makefile MISCFILES SRCFILES \
-check.c check.h generate.c generate.h list.c list.h main.c \
-pars.y scan.l
+check.c check.h generate.c generate.h list.c list.h main.c main.h \
+pars.y scan.l pars.h traps.c traps.h \
+syscalls.master
+

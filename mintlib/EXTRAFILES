@@ -8,11 +8,11 @@
 # handled in the Makefile.
 
 SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES SYSCALLS \
-_itoa.h atomicity.h atomicity-68020.h errbase.h gensys lib.h libc-symbols.h \
+_itoa.h math_private.h math_ldbl.h atomicity.h atomicity-68020.h errbase.h \
+gensys sysdep.h lib.h libc-symbols.h \
 machine-gmon.h memcopy.h profil-counter.h \
 syscalls.h syscalls.list test-assert-perr.c test-assert.c test-atexit.c \
 test-atexit.expect test-ctype.c test-ctype1.c test-ctype1.expect \
 test-dirent.args test-dirent.c test-mallocbug.c test-seekdir.c test-setjmp.c \
-test-setjmp1.c \
-\
-gmon.c.old
+test-setjmp1.c 
+

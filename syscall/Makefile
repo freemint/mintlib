@@ -42,9 +42,6 @@ CC = gcc
 CFLAGS = -Wall -O
 COMPILE = $(CC) $(CFLAGS)
 
-MANS =  
-DOCS = 
-
 syscalls.stmp: gen-syscall syscalls.master
 	./gen-syscall syscalls.master
 	touch $@
@@ -63,27 +60,6 @@ install: all-here
 uninstall:
 
 install-man:
-	sections=""; \
-	for manpage in $(MANS); do \
-	  sections="$$sections $(mandir)/man`echo $$manpage | sed 's,^.*\\.,,'`"; \
-	done; \
-	mandirs=`echo $$sections | sort | uniq`; \
-	for mandir in $$mandirs; do \
-	  $(mkinstalldirs) $$mandir; \
-	done; \
-	for manpage in $(MANS); do \
-	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
-	  $(INSTALL) -m 644 $$manpage $(mandir)/man$$section; \
-	  echo "$(INSTALL) -m 644 $$manpage $(mandir)/man$$section"; \
-	done; \
 
 uninstall-man:
-	@for manpage in $(MANS); do \
-	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
-	  echo "rm -f $(mandir)/man$$section/$$manpage"; \
-	  echo "rm -f $(mandir)/man$$section/$$manpage.gz"; \
-	  echo "rm -f $(mandir)/man$$section/$$manpage.Z"; \
-	  rm -f $(mandir)/man$$section/$$manpage; \
-	  rm -f $(mandir)/man$$section/$$manpage.gz; \
-	  rm -f $(mandir)/man$$section/$$manpage.Z; \
-	done
+

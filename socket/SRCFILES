@@ -54,5 +54,5 @@ SRCFILES = \
 	sncpy.c \
 	socket.c \
 	socketpair.c \
-	sockets_global.h \
+	sockets_global.c \
 	writev.c
