@@ -1,20 +1,5 @@
 # This file gets included by the Makefile in this directory to determine
 # the files that should go both into binary and source distributions.
 
-MISCFILES = MISCFILES \
-	\
-	bootparam.h \
-	bootparam_prot.x \
-	key_prot.x \
-	klm_prot.x \
-	mount.x \
-	nfs_prot.x \
-	nlm_prot.x \
-	rex.x \
-	rquota.x \
-	rstat.x \
-	rusers.x \
-	sm_inter.x \
-	spray.x \
-	yppasswd.x
+MISCFILES = MISCFILES bootparam.h 
 
