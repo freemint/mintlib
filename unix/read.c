@@ -1,4 +1,5 @@
 /*
+ * $Id$
  * _read: like read, but takes a long instead of an int. Written by
  * Eric R. Smith and placed in the public domain.
  */
@@ -7,13 +8,9 @@
 #include <osbind.h>
 #include <errno.h>
 
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\types.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/types.h>
-#endif
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <signal.h>
 #include <unistd.h>
@@ -121,45 +118,35 @@ __read (fd, buf, size)
 		   Note: A return value of 0, no matter if blocking or
 		   non-blocking read always signifies end of file.  */
 #ifdef EAGAIN
-		if (__mint) {
-			register int handle = __OPEN_INDEX(fd);
-			register int checkit = 1;
-			
-			if (handle < __NHANDLES) {
-				if (__open_stat[handle].check_eagain < 0) {
-					struct stat s;
-					int saved_errno = errno;
-					if (__do_fstat (fd, &s, 0) == 0) {
-						if (S_ISREG (s.st_mode)
-						    || S_ISDIR (s.st_mode)
-						    || S_ISLNK (s.st_mode))
-							__open_stat[handle].check_eagain = checkit = 0;
-						else
-							__open_stat[handle].check_eagain = 1;
-					}
-					__set_errno (saved_errno);
-				}
-				else
-					checkit = __open_stat[handle].check_eagain;
-			}
-			
-			if (checkit)
-				if ((Fcntl (fd, 0, F_GETFL)) & O_NONBLOCK)
-					if (Fcntl(fd, &waiting_bytes, FIONREAD) != 0)
-							waiting_bytes = 1;
+		if (__mint && (Fcntl (fd, 0, F_GETFL) & O_NONBLOCK)) {
+			if (Fcntl(fd, &waiting_bytes, FIONREAD) != 0)
+				waiting_bytes = 1;
 		}
 #endif
-		
+
 		r = Fread(fd, size, buf);
 		
 #ifdef EAGAIN
+		/* Some brain-damaged programs open regular files with
+		   O_NONBLOCK.  Our EAGAIN hack will lose on regular 
+		   files because we would never detect a correctly
+		   returned EOF (0).  We have to waste another system
+		   call for this single read() just to detect that
+		   condition.  */
 		if (__mint && r == 0 && waiting_bytes == 0) {
-			r = -EAGAIN;
+		        extern int __do_fstat __PROTO ((int __fd, 
+							struct stat* __st,
+							int __gettime));
+		        struct stat sb;
+
+			if (__do_fstat (fd, &sb, 0) == 0 &&
+			    S_ISREG (sb.st_mode))
+			        r = -EAGAIN;
 		}
-#endif
-		
+#ENDIF		
+
 		if (r < 0) {
-			__set_errno (-r);
+			__set_errno ((int) -r);
 			return -1;
 		}
 
