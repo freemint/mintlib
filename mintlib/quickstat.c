@@ -22,7 +22,6 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
-extern int __mint;
 extern char _rootdir;
 
 extern ino_t __inode;

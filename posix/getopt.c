@@ -21,7 +21,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
    
-   /* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>.  */
+   /* Adapted to MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
    Ditto for AIX 3.2 and <stdlib.h>.  */

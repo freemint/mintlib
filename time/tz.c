@@ -61,13 +61,8 @@ static void   __settzname __PROTO ((void));
 static time_t __transtime __PROTO ((time_t, long, const struct rule*, 
                                     long));
 
-#ifdef __TURBOC__
-static long __detzcode(const char* codep)
-#else
 static long
-__detzcode(codep)
-     const char* const codep;
-#endif
+__detzcode (const char * const codep)
 {
   register long result;
   register int  i;
@@ -117,7 +112,8 @@ __settzname (void)
     }
 }
 
-int __tzload (register const char* name, register struct state* sp)
+int
+__tzload (register const char *name, register struct state *sp)
 {
   register const char*  p;
   register int          i;
@@ -320,8 +316,7 @@ int __tzload (register const char* name, register struct state* sp)
    character.  */
 
 static const char *
-__getzname (strp)
-     register const char* strp;
+__getzname (register const char *strp)
 {
   register char c;
 
@@ -337,8 +332,8 @@ __getzname (strp)
    Otherwise, return a pointer to the first character not part of the number.
 */
 
-static const char * __getnum (register const char* strp, long* nump, 
-                              long min, long max)
+static const char *
+__getnum (register const char *strp, long *nump, long min, long max)
 {
   register char c;
   register int num;
@@ -369,7 +364,8 @@ static const char * __getnum (register const char* strp, long* nump,
    of seconds.
 */
 
-static const char *__getsecs(register const char* strp, long* secsp)
+static const char *
+__getsecs (register const char *strp, long *secsp)
 {
   long num;
 
@@ -409,14 +405,8 @@ static const char *__getsecs(register const char* strp, long* secsp)
    If any error occurs, return NULL.
    Otherwise, return a pointer to the first character not part of the time.  */
 
-#ifdef __TURBOC__
-static const char *__getoffset(register const char* strp, long* offsetp)
-#else
 static const char *
-__getoffset (strp, offsetp)
-     register const char* strp;
-     long* const offsetp;
-#endif
+__getoffset (register const char *strp, long * const offsetp)
 {
   register long neg = 0;
 
@@ -444,14 +434,8 @@ __getoffset (strp, offsetp)
    If a valid rule is not found, return NULL.
    Otherwise, return a pointer to the first character not part of the rule.  */
 
-#ifdef __TURBOC__
-static const char* __getrule(const char* strp, register struct rule* rulep)
-#else
-static const char*
-__getrule (strp, rulep)
-     const char* strp;
-     register struct rule* const rulep;
-#endif
+static const char *
+__getrule (const char *strp, register struct rule * const rulep)
 {
   if (*strp == 'J') 
     {
@@ -509,8 +493,9 @@ __getrule (strp, rulep)
    year, a rule, and the offset from UTC at the time that rule takes effect,
    calculate the Epoch-relative time that rule takes effect.  */
 
-static time_t __transtime(time_t janfirst, long year, 
-                          register const struct rule* rulep, long offset)
+static time_t
+__transtime (time_t janfirst, long year, 
+             register const struct rule *rulep, long offset)
 {
   register int  leapyear;
   register time_t value;
@@ -585,7 +570,8 @@ static time_t __transtime(time_t janfirst, long year,
 /* Given a POSIX section 8-style TZ string, fill in the rule tables as
    appropriate.  */
 
-int __tzparse (const char* name, register struct state* sp, long lastditch)
+int
+__tzparse (const char *name, register struct state *sp, long lastditch)
 {
   const char* stdname;
   const char* dstname = NULL;  /* Shut up compiler.  */

@@ -3,36 +3,23 @@ Public domain termios tc[get|set]attr() for the MiNT library
 10 October 1993 entropy@terminator.rs.itd.umich.edu -- first attempt
 */
 
-#include <mintbind.h>
 #include <errno.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\param.h>
-# include <sys\file.h>
-# include <sys\ioctl.h>
-# include <sys\types.h>
-# include <sys\termios.h>
-#else
-# include <sys/types.h>
-# include <sys/param.h>
-# include <sys/file.h>
-# include <sys/ioctl.h>
-# include <sys/types.h>
-# include <sys/termios.h>
-#endif
-
 #include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/file.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/termios.h>
+#include <mint/mintbind.h>
+
+#include "lib.h"
 
 #define VTIME_MS	100  /* count in .1 seconds */
 
-extern int __mint;
-
 int
-tcsetattr(fd, action, stp)
-  int fd;
-  int action;
-  const struct termios *stp;
+tcsetattr(int fd, int action, const struct termios *stp)
 {
   struct sgttyb sg;
   struct tchars t;

@@ -23,7 +23,6 @@ __mknod (const char *path, mode_t mode, dev_t dev)
 {
 	long err;
 	char pathbuf[PATH_MAX];
-	extern int __mint;
 	char* _path = (char*) path;
 	
 	if (S_ISDIR(mode)) {

@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib.h"
+
 /* In diraccess.c.  */
 __EXTERN const char* __get_tmpdir __PROTO ((const char*, int try_tmpdir));
-
-extern int __mint;
 
 static char tmpnam_buffer[L_tmpnam];
 

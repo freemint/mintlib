@@ -17,10 +17,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "lib.h"	/* for __open_stat */
+#include "lib.h"
 
-extern int __mint;	/* MiNT version */
-extern int __has_no_ssystem;
 int _ttydisc = NTTYDISC;
 int _ldisc = LLITOUT;
 

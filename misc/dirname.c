@@ -1,5 +1,5 @@
 /*  dirname.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -11,9 +11,9 @@
 #include <libgen.h>
 #include <string.h>
 
-#define my_tolower(c) ((c >= 'A' && c <= 'Z') ? c += ('a' - 'A') : c)
+#include "lib.h"
 
-extern int __mint;
+#define my_tolower(c) ((c >= 'A' && c <= 'Z') ? c += ('a' - 'A') : c)
 
 char*
 dirname (char *path)

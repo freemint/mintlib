@@ -1,45 +1,42 @@
-#include <support.h>
-#include <osbind.h>
-#include <mintbind.h>
-#ifdef __TURBOC__
-# include <mint/ssystem.h>
-#else
-# include <mint/ssystem.h>
-#endif
 
-extern int __has_no_ssystem;
+#include <support.h>
+#include <mint/mintbind.h>
+#include <mint/ssystem.h>
+
+#include "lib.h"
+
 
 long
-get_sysvar(var)
-	void *var;
+get_sysvar (void *var)
 {
-    long ret;
-    long save_ssp;
-
 	if(__has_no_ssystem) {
+		long save_ssp;
+		long ret;
+
     		save_ssp = (long) Super((void *) 0L);
-    	/* note: dont remove volatile, otherwise gcc will reorder these
-       	statements and we get bombs */
+
+		/* note: dont remove volatile, otherwise gcc will reorder these
+		 * statements and we get bombs */
     		ret = *((volatile long *)var);
+
     		(void)Super((void *) save_ssp);
+
     		return ret;
 	}
 	else
-		return Ssystem(S_GETLVAL, var, NULL);
+		return Ssystem (S_GETLVAL, var, NULL);
 }
 
 void
-set_sysvar_to_long(var, val)
-	void *var;
-	long val;
+set_sysvar_to_long (void *var, long val)
 {
-    long save_ssp;
-
 	if(__has_no_ssystem) {
+		long save_ssp;
+
     		save_ssp = (long) Super((void *) 0L);
     		*((volatile long *)var) = val;
     		(void)Super((void *) save_ssp);
 	}
 	else
-		(void)Ssystem(S_SETLVAL, var, val); /* note: root only! */
+		(void) Ssystem (S_SETLVAL, var, val); /* note: root only! */
 }

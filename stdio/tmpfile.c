@@ -3,13 +3,13 @@
    Written by Eric R. Smith and placed in the public domain.
 */
 
-/* Made reentrant by Guido Flohr <gufl0000@stud.uni-sb.de>.  */
+/* Made reentrant by Guido Flohr <guido@freemint.de>.  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern int __mint;
+#include "lib.h"
 
 static void delete_tmpfiles __PROTO((void));
 

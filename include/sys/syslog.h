@@ -33,7 +33,7 @@
  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93
  */
 
-/* Modified for MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>,
+/* Modified for MiNTLib by Guido Flohr <guido@freemint.de>,
    18 Sep 1999.  */
 
 #ifndef _SYS_SYSLOG_H

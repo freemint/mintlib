@@ -10,6 +10,7 @@
 #include <sys/stat.h>	/* For struct stat.  */
 
 extern int __mint;
+extern int __has_no_ssystem;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
 

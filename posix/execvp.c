@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib.h"
+
 static char const *const extensions[] =
 { 
   "",
@@ -29,8 +31,6 @@ static char const *const extensions[] =
   NULL
 };
 static char const *const mint_ext[] = { "", NULL };
-
-extern int __mint;
 
 int
 execvp (const char *file, char *const *argv)

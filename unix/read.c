@@ -50,7 +50,6 @@ __read (int fd, void *buf, size_t size)
 {
 	char *foo;
 	long r;
-	extern int __mint;
 	int indx;
 	int flags;
 #ifdef EIO

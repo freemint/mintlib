@@ -1,21 +1,14 @@
+
+#include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-#include <osbind.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\param.h>
-#else
-# include <sys/types.h>
-# include <sys/param.h>
-#endif
-
 #include <support.h>
-#include <limits.h>
+#include <mint/osbind.h>
+#include <sys/types.h>
+#include <sys/param.h>
 #include "lib.h"
 
-extern int __mint;
 extern char _rootdir;	/* in main.c: user's preferred root directory */
 
 int _unixmode;		/* not used right now */

@@ -1,5 +1,5 @@
 /*  getpriority.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the FreeType project
@@ -8,24 +8,18 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\resource.h>
-#else
-# include <sys/resource.h>
-#endif
-
-#include <mintbind.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/resource.h>
+#include <mint/mintbind.h>
 
 static int initialized = 0;
 static int have_Pgetpriority = 1;
 static int have_Prenice = 1;
 static int have_Pnice = 1;
 
-int __getpriority (class, id)
-  enum __priority_which class;
-  int id;
+int
+__getpriority (enum __priority_which class, int id)
 {
   if (class != PRIO_PROCESS && class != PRIO_PGRP && class != PRIO_USER)
     {
@@ -105,5 +99,4 @@ int __getpriority (class, id)
   /* For TOS all processes have the same priority.  */
   return 0;
 }
-
 weak_alias (__getpriority, getpriority)

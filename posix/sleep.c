@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <mint/mintbind.h>
 
+#include "lib.h"
+
 /* _clock() has a rez of CLOCKS_PER_SEC ticks/sec */
 clock_t _clock (void);
 
@@ -40,7 +42,6 @@ sleep (unsigned int n)
 	long old_sigmask;
 	unsigned long alarm_sec;
 	long remain;
-	extern int __mint;
 
 	if (__mint) {
 		if (n == 0)

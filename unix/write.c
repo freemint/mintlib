@@ -29,7 +29,6 @@ __write (int fd, const void *buf, size_t size)
 	unsigned char c, *foo;
 	unsigned flags;
 	long r;
-	extern int __mint;
 	struct xattr statbuf;
 	_DOSTIME timebuf;
 

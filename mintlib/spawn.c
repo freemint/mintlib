@@ -55,7 +55,6 @@
 #define TOS_ARGS 126
 
 extern char **environ;
-extern int __mint;
 
 /* comment this out, if you don't want script execution */
 #define HASH_BANG

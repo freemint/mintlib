@@ -10,8 +10,6 @@
 
 #include "lib.h"
 
-extern int __mint;
-
 int
 __access (const char *path, int mode)
 {

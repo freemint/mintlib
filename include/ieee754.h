@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>.  */
+/* Adapted to MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 #ifndef _IEEE754_H
 

@@ -6,24 +6,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <support.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\stat.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-#endif
-
-#include <mintbind.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 int
-_isctty(fd)
-  int fd;
+_isctty(int fd)
 {
   struct xattr st, tt;
-  extern int __mint;
 
   if (!(isatty(fd)) || !(isatty(-1)))
     return 0;

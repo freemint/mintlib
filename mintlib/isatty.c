@@ -1,18 +1,14 @@
 /* from the original GCC TOS library by jrd */
 /* this algorithm is due to Allan Pratt @ Atari.  Thanks Allan! */
 
+#include <errno.h>
 #include <fcntl.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-#else
-# include <sys/ioctl.h>
-#endif
-
 #include <stdio.h>
 #include <unistd.h>
-#include <mintbind.h>
-#include <errno.h>
+
+#include <sys/ioctl.h>
+#include <mint/mintbind.h>
+
 #include "lib.h"
 
 struct __open_file __open_stat[__NHANDLES];

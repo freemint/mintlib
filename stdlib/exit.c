@@ -1,5 +1,5 @@
 /*  exit.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -15,19 +15,15 @@ typedef void (*ExitFn) __PROTO ((void));
 __EXTERN ExitFn *_at_exit;
 extern int _num_at_exit;	/* Number of functions registered - 1.  */
 
-#if __GNUC__ > 1
-/* In libgcc.a.  */
-__EXTERN void __do_global_dtors __PROTO ((void));
-#endif
-
+#ifdef OLD_CLOSE
 void
-___fclose_all_files ()
+___fclose_all_files (void)
 {
-  register FILE* stream = __stdio_head;
+  register FILE *stream;
   
   stream = __stdio_head;
-  while (stream) {
-    
+  while (stream)
+  {  
     if (__validfp (stream)
         && stream != stdin 
         && stream != stdout 
@@ -40,29 +36,20 @@ ___fclose_all_files ()
   fflush (stderr);  
 }
 weak_alias (___fclose_all_files, _fclose_all_files)
+#endif
 
-__EXITING __exit (status)
-  int status;
+__EXITING
+__exit (int status)
 {
   register int i;
-#if 0
-  /* If you care about non freed memory you should also call __hdestroy.  */
-  __EXTERN void __hdestroy __PROTO ((void));
-#endif
 
   for(i = _num_at_exit - 1; i >= 0; --i)
     (*_at_exit[i]) ();
 
-  /* Now registered via atexit() in __do_global_ctors in libgcc.a.  */
-#if 0
-# if __GNUC__ > 1
-  __do_global_dtors ();
-# endif
-#endif
-
+#ifdef OLD_CLOSE
   ___fclose_all_files ();
-#if 0
-  __hdestroy ();
+#else
+  __fcloseall ();
 #endif
   _exit (status);
 }

@@ -1,5 +1,5 @@
 /*  mkstemp.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -13,13 +13,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <osbind.h> /* For Random ().  */
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include <mint/osbind.h> /* For Random ().  */
+#include <sys/types.h>
 
 __EXTERN int __diraccess __PROTO ((const char* dir));
 extern const char __tmp_letters[62];

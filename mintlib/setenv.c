@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Rehacked by Guido Flohr <gufl0000@stud.uni-sb.de> for MiNTLib.  */
+/* Rehacked by Guido Flohr <guido@freemint.de> for MiNTLib.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>

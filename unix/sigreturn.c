@@ -1,5 +1,5 @@
 /*  sigreturn.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -9,12 +9,11 @@
 */
 
 #include <signal.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
 
 void
 __sigreturn (struct sigcontext* __unused)
 {
-  Psigreturn ();
+	Psigreturn ();
 }
-
 weak_alias (__sigreturn, sigreturn)

@@ -1,5 +1,5 @@
 # assert/Makefile -- MiNTLib.
-# Copyright (C) 2000 Guido Flohr <gufl0000@stud.uni-sb.de>
+# Copyright (C) 2000 Guido Flohr <guido@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project

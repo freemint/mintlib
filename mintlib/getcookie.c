@@ -15,16 +15,12 @@
  * 
  */
 
-#include <mintbind.h>
-#ifdef __TURBOC__
-# include <mint/ssystem.h>
-#else
-# include <mint/ssystem.h>
-#endif
 #include <errno.h> 
 #include <sysvars.h>
+#include <mint/mintbind.h>
+#include <mint/ssystem.h>
 
-extern int __has_no_ssystem;
+#include "lib.h"
 
 int
 Getcookie (long cookie, long *p_value)
@@ -51,6 +47,7 @@ Getcookie (long cookie, long *p_value)
 		}
 		if (p_value)
 			*p_value = 0;
+
 		return EERROR;
 	}
 	else
@@ -80,8 +77,10 @@ Getcookie (long cookie, long *p_value)
 		}
 		else
 			r = 0;
+
 		if (p_value)
 			*p_value = v;
+
 		return r;
 	}
 }

@@ -6,21 +6,26 @@
 
 #include <string.h>
 
-char *strrev(string)
-	char *string;
-	{
-	register char *p = string, *q, c;
+char *
+strrev (char *string)
+{
+	register char *p = string;
+	register char *q;
 
-	if(*(q = p))		/* non-empty string? */
-		{
-		while(*++q)
+	if (*(q = p)) /* non-empty string? */
+	{
+		while (*++q)
 			;
-		while(--q > p)
-			{
+
+		while (--q > p)
+		{
+			register char c;
+
 			c = *q;
 			*q = *p;
 			*p++ = c;
-			}
 		}
-	return(string);
 	}
+
+	return string;
+}

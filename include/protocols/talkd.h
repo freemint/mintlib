@@ -33,7 +33,7 @@
  *	@(#)talkd.h	8.1 (Berkeley) 6/2/93
  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>,
+/* Adapted to MiNTLib by Guido Flohr <guido@freemint.de>,
    12 Sep. 1999.  */
    
 #ifndef _TALKD_H_

@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <osbind.h>
-#include <mintbind.h>
 #include <memory.h>
 #include <time.h>
 #include <fcntl.h>
@@ -17,23 +15,16 @@
 #include <alloca.h>
 #include <errno.h>
 
-#ifdef __TURBOC__
-# include <mint\ssystem.h>
-# include <sys\cookie.h>
-# include <sys\param.h>
-#else
-# include <mint/ssystem.h>
-# include <sys/cookie.h>
-# include <sys/param.h>
-#endif
+#include <mint/mintbind.h>
+#include <mint/ssystem.h>
+#include <sys/cookie.h>
+#include <sys/param.h>
 
 #include "lib.h"
 
 /* NOTE: This file must not contain ANY global symbol but _main itself.
    Otherwise the user cannot provide her own version of _main if 
    weak symbols are not available.  */
-extern int __mint;      /* 0 for TOS, MiNT version number in BCD format 
-		           otherwise.  */
 extern int _pdomain;    /* Error code of Pdomain call */
 extern char _rootdir;	/* User's preferred root directory */
 
@@ -44,15 +35,6 @@ extern clock_t _childtime;	/* Time consumed so far by our children.  */
 typedef void (*ExitFn) __PROTO ((void));
 __EXTERN ExitFn *_at_exit;
 extern int _num_at_exit;	/* Number of functions registered - 1.  */
-
-/* Set to 1 if secure mode is advised.  */
-extern int __libc_enable_secure;
-
-/* Set to 1 if we don't have to convert filenames to Redmond style.  */
-extern int __libc_unix_names;
-
-/* Set to 0 if Ssystem is not available.  */
-extern int __has_no_ssystem;
 
 /* Supplied by the user */
 __EXTERN int main __PROTO((int, char **, char **));

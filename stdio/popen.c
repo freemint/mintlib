@@ -2,20 +2,17 @@
  * Written by Eric R. Smith, based on the TOS version by Kai-Uwe Bloem.
  */
 
-#include	<stdio.h>
-#include	<stdlib.h>
-#include	<process.h>
-#include	<fcntl.h>
-#include	<string.h>
-#include	<errno.h>
-#include	<unistd.h>
-#ifdef __TURBOC__
-#include <sys\types.h>
-#else
-#include <sys/types.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <process.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
 #include <wait.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
+#include <sys/types.h>
+#include "lib.h"
 
 struct _pipe {
 	int	pid;		/* process id of child			*/
@@ -23,10 +20,10 @@ struct _pipe {
 	struct _pipe	*pnext;	/* next pipe in the list.		*/
 };
 
-static struct _pipe	*__pipes = NULL;	/* head of pipe list	*/
+static struct _pipe *__pipes = NULL;	/* head of pipe list	*/
 
-FILE *popen(command, type)
-const char	*command, *type;
+FILE *
+popen (const char *command, const char *type)
 {
 	struct _pipe *p;	/* the new pipe's list entry	*/
 	short pipfd[2];		/* pipe file handles */
@@ -36,7 +33,6 @@ const char	*command, *type;
 
 	char const *shell;
 	FILE *pipefile = 0;
-	extern int __mint;
 	long r;
 
 	if (__mint == 0) {

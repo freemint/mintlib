@@ -13,20 +13,16 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <osbind.h>
+#include <mint/osbind.h>
+#include <sys/types.h>
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include "lib.h"
 
 /* In diraccess.c.  */
 __EXTERN const char* __get_tmpdir __PROTO ((const char*, int try_tmpdir));
 __EXTERN int __exists __PROTO ((const char* pathname));
 
 extern const char __tmp_letters[62];
-extern int __mint;
 
 char*
 tempnam (const char* dir, const char* prefix)

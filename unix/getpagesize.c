@@ -4,16 +4,14 @@
  * domain
  */
 
-#include <unistd.h>
-#include <osbind.h>
 #include <string.h>
-#include <mintbind.h>
+#include <unistd.h>
+#include <mint/mintbind.h>
+
+#include "lib.h"
 
 #define DEF_PAGESIZE 8192	/* default page size for TOS */
 
-extern int __mint;
-
-static void memstats __PROTO((long *));
 
 /*
  * memstats: get information about memory usage, and put it into
@@ -26,8 +24,7 @@ static void memstats __PROTO((long *));
  */
 
 static void
-memstats(meminfo)
-	long *meminfo;
+memstats (long *meminfo)
 {
 	int olddrv;
 	char oldpath[128];
@@ -49,15 +46,16 @@ memstats(meminfo)
 }
 
 int
-__getpagesize(void)
+__getpagesize (void)
 {
 	long meminfo[4];
 
 	if (__mint < 9)
 		return DEF_PAGESIZE;
 
-/* get the page size by looking at U:\PROC */
-	memstats(meminfo);
+	/* get the page size by looking at U:\PROC */
+	memstats (meminfo);
+
 	return (int) ((meminfo[2] > DEF_PAGESIZE) ? meminfo[2] : DEF_PAGESIZE);
 }
 weak_alias (__getpagesize, getpagesize)

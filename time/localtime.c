@@ -1,5 +1,5 @@
 /*  localtime.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -27,16 +27,8 @@
 
 struct tm __tmbuf;
 
-/*ARGSUSED*/
-#ifdef __TURBOC__
-void __localsub (const time_t* timep, long offset, struct tm* tmp)
-#else
 void
-__localsub (timep, offset, tmp)
-     const time_t* const timep;
-     const long offset;
-     struct tm* const tmp;
-#endif
+__localsub (const time_t *timep, const long offset, struct tm * const tmp)
 {
   register struct state* sp;
   register const struct ttinfo* ttisp;
@@ -84,27 +76,16 @@ __localsub (timep, offset, tmp)
   tmp->TM_ZONE = &sp->chars[ttisp->tt_abbrind];
 }
 
-#ifdef __TURBOC__
-struct tm* localtime(const time_t* timep)
-#else
-struct tm*
-localtime (timep)
-const time_t* const timep;
-#endif
+struct tm *
+localtime (const time_t * const timep)
 {
   tzset ();
   __localsub (timep, 0L, &__tmbuf);
   return &__tmbuf;
 }
 
-#ifdef __TURBOC__
-struct tm* localtime_r (const time_t *timep, struct tm* tm)
-#else
-struct tm*
-localtime_r (timep, tm)
-const time_t* const timep;
-struct tm* tm;
-#endif
+struct tm *
+localtime_r (const time_t * const timep, struct tm *tm)
 {
   tzset ();
   __localsub (timep, 0L, tm);

@@ -1,5 +1,5 @@
 /*  tzinit.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -22,7 +22,7 @@
 #include <getopt.h>
 #include <error.h>
 
-#include <mintbind.h>
+#include <mint/mintbind.h>
 #include <mint/ssystem.h>
 
 static int verbose = 1;
@@ -249,7 +249,7 @@ void show_version ()
         __MINTLIB_MAJOR__, __MINTLIB_MINOR__, __MINTLIB_REVISION__);
   
   printf ("\
-Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>\n\
+Copyright (C) 1999 Guido Flohr <guido@freemint.de>\n\
 This program is free software, see the sources for copying conditions.\n\
 There is no warranty, not even for merchantibility or fitness for a\n\
 particular purpose.\n");

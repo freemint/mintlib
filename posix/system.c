@@ -1,5 +1,5 @@
 /*  system.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -14,17 +14,6 @@
     
     Somebody should check if the POSIX branch works under MagiC.  */
 
-#ifdef __TURBOC__
-# include <sys\wait.h>
-# include <sys\types.h>
-# include <sys\file.h>
-#else
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/file.h>
-#endif
-
-#include <osbind.h>
 #include <process.h>
 #include <limits.h>
 #include <string.h>
@@ -34,6 +23,11 @@
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
+
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/file.h>
+#include <mint/osbind.h>
 
 #include "lib.h"
 

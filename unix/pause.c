@@ -7,8 +7,6 @@
 
 #include "lib.h"
 
-extern int __mint;
-
 int
 __pause (void)
 {

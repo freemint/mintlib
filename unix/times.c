@@ -13,7 +13,8 @@
 #include <sys/times.h>
 #include <mint/mintbind.h>
 
-extern int __mint;
+#include "lib.h"
+
 extern long _childtime;
 
 clock_t 

@@ -1,5 +1,5 @@
 /*  pwd.h -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -104,8 +104,6 @@ __EXTERN int fgetpwent_r __PROTO ((FILE* __stream, struct passwd* __resultbuf,
 			     struct passwd** __result));
 # endif
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _PWD_H */

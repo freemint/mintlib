@@ -16,8 +16,9 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 
+#include "lib.h"
+
 extern long __waitval, __waittime;
-extern int __mint;
 
 pid_t
 __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)

@@ -17,12 +17,12 @@ extern long _sigmask;			/* in signal.c */
 /* which signals are pending? */
 extern long _sigpending;
 
-static short _have_pkill = 1;
-extern int __mint;
 
 int
 __kill (int pid, int sig)
 {
+	static short _have_pkill = 1;
+
 	long r = 0;
 	sighandler_t hndle;
 
