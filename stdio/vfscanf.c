@@ -475,8 +475,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    flags |= SHORT;
 	  break;
-#ifndef ONLY_INTEGER_IO
 	case 'l':
+#ifndef ONLY_INTEGER_IO
 	  if (*f == 'l')
 	    {
 	      /* A double `l' is equivalent to an `L'.  */
@@ -484,9 +484,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      flags |= LONGDBL;
 	    }
 	  else
+#endif /* not ONLY_INTEGER_IO */
 	    /* ints are long ints.  */
 	    flags |= LONG;
 	  break;
+#ifndef ONLY_INTEGER_IO
 	case 'q':
 	case 'L':
 	  /* doubles are long doubles, and ints are long long ints.  */
