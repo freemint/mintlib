@@ -1,5 +1,6 @@
 # sunrpc/Makefile -- MiNTLib.
 # Copyright (C) 2001 Guido Flohr <guido@freemint.de>
+# $Id$
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -46,6 +47,13 @@ rpcgen: $(RPCGENOBJS) $(CRT0) $(libs)
 rpcinfo: $(RPCINFOOBJS) $(CRT0) $(libs)
 	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(RPCINFOOBJS) -o $@ $(LIBS)
 
+ifndef CROSS
+install: all-here
+	$(mkinstalldirs) $(bindir)
+	$(INSTALL) -m 755 rpcgen $(bindir)
+	$(mkinstalldirs) $(sbindir)
+	$(INSTALL) -m 755 rpcinfo $(sbindir)
+endif
 
 install-man:
 	sections=""; \
