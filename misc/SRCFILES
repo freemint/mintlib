@@ -4,6 +4,21 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = daemon.c diraccess.c dirname.c err.c error.c getpass.c \
-getusershell.c hsearch.c hsearch_r.c insremque.c lsearch.c mkstemp.c \
-mktemp.c obstack.c syslog.c tsearch.c
+SRCFILES = \
+	daemon.c \
+	diraccess.c \
+	dirname.c \
+	err.c \
+	error.c \
+	getpass.c \
+	getusershell.c \
+	hsearch.c \
+	hsearch_r.c \
+	insremque.c \
+	lsearch.c \
+	mkstemp.c \
+	mktemp.c \
+	obstack.c \
+	sa_len.c \
+	syslog.c \
+	tsearch.c

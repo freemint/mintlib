@@ -17,6 +17,7 @@ SRCFILES = \
 	getopt1.c \
 	getopt_init.c \
 	glob.c \
+	isfdtype.c \
 	regex.c \
 	remove.c \
 	sleep.c \
