@@ -23,7 +23,7 @@
 #include "lib.h"
 
 /* In case you still haven't got the prototype in stdlib.h where
-   it belongs.  */ 
+   it belongs.  */
 extern int putenv (const char* string);
 
 /* Helper functions.  */
@@ -52,13 +52,13 @@ int
 __sysinfo (enum __sysinfo_command command, char *buf, long bufsize)
 {
   int retval = -1;
-  
+
   /* Pathological cases first.  */
   if (buf == NULL && bufsize > 0) {
     __set_errno (EFAULT);
     return -1;
   }
-  
+
   switch (command) {
     case SI_SYSNAME:
       retval = si_sysname (buf, bufsize);
@@ -115,10 +115,10 @@ fast_strncpy (to, from, bytes)
   long bytes;
 {
   long count = 0;
-  
+
   if (bytes <= 0)
     return;
-    
+
   while (*from && ++count < bytes)
     *to++ = *from++;
   *to = '\0';
@@ -128,7 +128,7 @@ fast_strncpy (to, from, bytes)
  * SI_SYSNAME
  * FIXME: Should we look up information about MagiC too?
  */
- 
+
 static char* osname = NULL;  /* Cached result.  */
 static int osname_len = 0;   /* Cached result.  */
 
@@ -150,7 +150,7 @@ si_sysname (buf, bufsize)
     int index = OS_TOS;
     /* This is non-standard.  But it may be helpful.  */
     osname = getenv ("SYSTEMNAME");
-    
+
     if (osname == NULL) {
       if (__mint > 0x0000010cL)
         index = OS_FREEMINT;
@@ -160,7 +160,7 @@ si_sysname (buf, bufsize)
     }
     osname_len = strlen (osname) + 1;
   }
-  
+
   fast_strncpy (buf, osname, bufsize);
   return osname_len;
 }
@@ -176,7 +176,7 @@ si_hostname (buf, bufsize)
   long bufsize;
 {
   int saved_errno = errno;
-  
+
   __set_errno (0);
 
   if (gethostname (buf, bufsize) != 0) {
@@ -186,7 +186,7 @@ si_hostname (buf, bufsize)
     }
     return -1;
   }
-  
+
   __set_errno (saved_errno);
   return (strlen (buf) + 1);
 }
@@ -225,9 +225,9 @@ si_release (buf, bufsize)
     char betatag[2] = "";
     int gotcha = 0;
     unsigned long ver = Ssystem (2, 0, 0);
-    
+
     if (ver == -ENOSYS) {
-      /* This is actually a bug in Ssystem () because the return code 
+      /* This is actually a bug in Ssystem () because the return code
        * of -32 would also describe version 255.255.255<greak alpha>.
        */
       /* Fall thru'.  */
@@ -244,13 +244,13 @@ si_release (buf, bufsize)
       }
       gotcha = 1;
     }
-    
+
     if (!gotcha && __mint) {
       main_rev = (__mint & 0xff00) >> 8;
       sub_rev = __mint & 0xff;
     } else if (!gotcha) {
       unsigned long ver = Sversion ();
-      
+
       /* OK, this is actually bogus for GEMDOS because SUB_REV is
        * really the main revision and PATCH_LEVEL is really the
        * sub revision but it works and the user won't see our
@@ -265,7 +265,7 @@ si_release (buf, bufsize)
       sprintf (osrelease_buf, "%lu.%lu%s", main_rev, sub_rev, betatag);
     osrelease = osrelease_buf;
     osrelease_len = strlen (osrelease) + 1;
-    mintversion = (main_rev << 24) | (sub_rev << 16) 
+    mintversion = (main_rev << 24) | (sub_rev << 16)
         | (patch_level << 8) | betatag[0];
   }
 
@@ -291,23 +291,36 @@ si_version (buf, bufsize)
   static long osversion_len;
   static long tosversion;
 
-  if (osversion == NULL) {
-    void* save_stk = (void*) Super (NULL);
-    long* sysbase = *((long int**) 0x000004f2);
-    char hi, lo;
-    
-    tosversion = *sysbase;
-    hi = (tosversion & 0xff00) >> 8;
-    lo = (tosversion & 0xff);
-    
-    (void) Super ((void*) save_stk);
-    sprintf (osversion_buf, "%d.%d", (int) hi, (int) lo);
-    osversion = osversion_buf;
-    osversion_len = strlen (osversion) + 1;
-  }
-  
-  fast_strncpy (buf, osversion, bufsize);
-  return osversion_len;
+
+	if (osversion == NULL)
+	{
+		void* save_stk;
+		long* sysbase;
+		char hi, lo;
+
+		if (Ssystem(-1, NULL, NULL))
+		{
+			save_stk = (void *) Super (NULL);
+			sysbase = *((long int**) 0x000004f2);
+			tosversion = *sysbase;
+			(void) Super ((void*) save_stk);
+		}
+		else
+		{
+			tosversion = Ssystem(3, 0, NULL);
+		}
+
+		hi = (tosversion & 0xff00) >> 8;
+		lo = (tosversion & 0xff);
+
+		sprintf (osversion_buf, "%d.%d", (int) hi, (int) lo);
+		osversion = osversion_buf;
+		osversion_len = strlen (osversion) + 1;
+	}
+
+	fast_strncpy (buf, osversion, bufsize);
+
+	return osversion_len;
 }
 
 /* SI_ARCHITECTURE */
@@ -334,7 +347,7 @@ static char* architectures[] = {
 };
 
 static char* isalist = NULL;
-static char isalist_buf[] = 
+static char isalist_buf[] =
     "mc68060 mc68040 mc68030 mc68020 mc68010 mc68000";
 long isalist_len;
 
@@ -358,7 +371,7 @@ si_architecture (buf, bufsize)
       cpu = _CPU_20;
     else if (value >= 10)
       cpu = _CPU_10;
-    
+
     architecture = architectures[cpu];
     architecture_len = sizeof ("mc68xxx");
     isalist = &isalist_buf[cpu * sizeof ("mc68xxx")];
@@ -430,7 +443,7 @@ si_platform (buf, bufsize)
   if (platform == NULL) {
     long _mch = 0;  /* = AtariST */
     long hi, lo;
-    
+
     /* If we find the Hades cookie ignore the rest.  */
     if (Getcookie (C_hade, &_mch) == 0) {
       platform = platforms[_PLATFORM_HADES];
@@ -467,11 +480,11 @@ si_platform (buf, bufsize)
           break;
       }
     }
-      
+
     platform_len = strlen (platform) + 1;
-    hw_provider_len = strlen (hw_provider) + 1;    
+    hw_provider_len = strlen (hw_provider) + 1;
   }
-  
+
   fast_strncpy (buf, platform, bufsize);
   return platform_len;
 }
@@ -517,12 +530,12 @@ mint_kernel_build_date (buf, bufsize)
   long bufsize;
 {
   char* rbuf;
-  
+
   if (no_build_date) {
     __set_errno (ENOSYS);
     return -1;
   }
-  
+
   if (kernel_build_date == NULL) {
     long retval = Ssystem (4, 0, 0);
     if (retval == -ENOSYS) {
@@ -536,24 +549,24 @@ mint_kernel_build_date (buf, bufsize)
       unsigned char day, mon;
       unsigned short* year;
       rbuf = (char*) &retval;
-      
+
       kernel_build_date = kernel_build_date_buf;
       day = (unsigned char) rbuf[0];
       mon = (unsigned char) rbuf[1];
       year = (unsigned short*) &rbuf[2];
-      
+
       /* Bug in 1.14.7.  */
       if (mon < 1)
         mon = 1;
       else if (mon > 12)
         mon = 12;
       sprintf (kernel_build_date, "%.02u %s %.04u",
-          (unsigned) day, 
-          abbrev_month_names[mon - 1], 
-          (unsigned) *year);          
+          (unsigned) day,
+          abbrev_month_names[mon - 1],
+          (unsigned) *year);
     }
   }
-  
+
   fast_strncpy (buf, kernel_build_date, bufsize);
   return kernel_build_date_len;
 }
@@ -575,7 +588,7 @@ mint_kernel_build_time (buf, bufsize)
     __set_errno (ENOSYS);
     return -1;
   }
-  
+
   if (kernel_build_time == NULL) {
     long retval = Ssystem (5, 0, 0);
     if (retval == -ENOSYS) {
@@ -592,7 +605,7 @@ mint_kernel_build_time (buf, bufsize)
           (unsigned) rbuf[1], (unsigned) rbuf[2], (unsigned) rbuf[3]);
     }
   }
-  
+
   fast_strncpy (buf, kernel_build_time, bufsize);
   return kernel_build_time_len;
 }
@@ -632,15 +645,15 @@ mint_set_clock_mode (buf, bufsize)
 {
   long int lclock_mode = 1;
   long int retval;
-  
+
   if (buf == NULL) {
     __set_errno (EFAULT);
     return -1;
   }
-  
+
   if (strncmp (buf, "UTC", 3) == 0 || strncmp (buf, "GMT", 3) == 0)
     lclock_mode = 0;
-    
+
   retval = Ssystem (100, lclock_mode, 0);
   if (retval == -ENOSYS) {
     __set_errno (ENOSYS);
@@ -649,6 +662,6 @@ mint_set_clock_mode (buf, bufsize)
     __set_errno (-retval);
     return -1;
   }
-  
+
   return 0;
 }
