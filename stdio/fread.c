@@ -91,7 +91,7 @@ fread (p, size, nmemb, stream)
       if (stream->__io_funcs.__read != NULL)
 	while (to_read > 0)
 	  {
-	    register int count;
+	    register ssize_t count;
 	    count = (*stream->__io_funcs.__read) (stream->__cookie,
 						  ptr, to_read);
 	    if (count > 0)

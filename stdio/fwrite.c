@@ -81,7 +81,7 @@ fwrite (ptr, size, nmemb, stream)
     /* This is an unbuffered stream using the standard output
        buffer-flushing function, so we just do a straight write.  */
     {
-      int count = (stream->__io_funcs.__write == NULL ? to_write :
+      ssize_t count = (stream->__io_funcs.__write == NULL ? to_write :
 		   (*stream->__io_funcs.__write) (stream->__cookie,
 						  (const char *) p,
 						  to_write));
