@@ -77,16 +77,23 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
   const long int fd = (long int) cookie;
 #endif
 
-#if 0
-/* old implementation */
-
+#if 1
+  if (n == 1)
+    {
+      /* short cut for reading 1 byte.  */
+      /* unbuffered -> no conversion at all.  */
+      return __read (fd, buf, 1);
+    }
+  else
+    {
   int save = errno;
   ssize_t nread = 0;
   char* bufptr = buf;
 
+  n--;
   while (nread < n) 
     {
-      ssize_t read_bytes = __read (fd, bufptr, (int) (n - nread));
+      ssize_t read_bytes = __read (fd, bufptr, (int)(n - nread));
       ssize_t i;
       ssize_t skipped = 0;
 
@@ -100,24 +107,55 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
       else if (read_bytes == 0)
         break;
       
-      /* Now squeeze '\r' characters out of our buffer.  */
+      /* Now squeeze \r\n characters into \n.  */
+      read_bytes--;
       for (i = 0; i < read_bytes; i++)
         {
           if (bufptr[i] == '\r')
             {
-              skipped++;
-              continue;
+              if (bufptr[i+1] == '\n')
+                {
+                  skipped++;
+                  continue;
+                }
             }
           bufptr[i - skipped] = bufptr[i];
         }
-      
       read_bytes -= skipped;
       bufptr += read_bytes;
       nread += read_bytes;
+      
+      /* handle last character */
+      if (bufptr[skipped] == '\r')
+        {
+          /* last character is a CR */
+          i = __read (fd, bufptr+skipped+1, 1);
+          if (i == 1)
+            {
+              if (bufptr[skipped+1] != '\n')
+                {
+                  bufptr[0] = bufptr[skipped];
+                  bufptr[1] = bufptr[skipped+1];
+                  
+                  bufptr += 1;
+                  nread += 1;
+                }
+              else
+                  bufptr[0] = '\n';
+            }
+          else
+            bufptr[0] = bufptr[skipped];
+        }
+      else
+          bufptr[0] = bufptr[skipped];
+      
+      bufptr++;
+      nread++;
     }
     
     __set_errno (save);
     return nread;
+      }
 #else
 /* new implementation from jens */
 
