@@ -23,7 +23,7 @@ execlp (const char *name, ...)
 	int r;
 
 	va_start (args, name);
-	r = __execve (name, (char **) args, NULL);
+	r = __execvp (name, (char **) args);
 	va_end (args);
 
 	return r;
