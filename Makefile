@@ -21,8 +21,9 @@ ifdef TIMEZONE
   POSIXRULES = $(TIMEZONE)
 endif
 
-SUBDIRS = include startup lib conf crypt gmp login mintlib misc posix \
-  pwdgrp shadow signal socket stdiio stdio stdlib string termios time tz unix
+SUBDIRS = include startup conf crypt gmp login mintlib misc posix \
+  pwdgrp shadow signal socket stdiio stdio stdlib string termios time unix \
+  lib tz
 DIST_SUBDIRS = conf crypt gmp include lib lib_g lib_p lib020 lib16 \
   lib16020 login mintlib misc posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string termios time tz unix
