@@ -43,8 +43,6 @@ Fstat (const char *path, struct stat *st, int lflag, int exact)
 
 		r = Fxattr (lflag, path, &xattr);
 		if (r == 0) {
-			unsigned short *ptr;
-
 			__bzero (st, sizeof (*st));
 
 			st->st_dev = (__dev_t) xattr.st_dev;
@@ -56,6 +54,8 @@ Fstat (const char *path, struct stat *st, int lflag, int exact)
 			st->st_rdev = (__dev_t) xattr.st_rdev;
 
 			if (exact) {
+				unsigned short *ptr;
+
 				ptr = (unsigned short *) &xattr.st_mtime;
 				st->st_mtime = __unixtime (ptr[0], ptr[1]);
 				ptr = (unsigned short *) &xattr.st_atime;
