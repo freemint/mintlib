@@ -57,6 +57,6 @@ struct	ether_arp {
 #define	arp_pln	ea_hdr.ar_pln
 #define	arp_op	ea_hdr.ar_op
 
-_END_DECLS
+__END_DECLS
 
 #endif
