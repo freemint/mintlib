@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,18 +61,34 @@ static char FCVT_BUFFER[MAXDIG];
 static char ECVT_BUFFER[MAXDIG];
 static char *FCVT_BUFPTR;
 
+/* Free all resources if necessary.  */
+static void
+free_mem (void)
+{
+  if (FCVT_BUFPTR != NULL)
+    free (FCVT_BUFPTR);
+}                  
+static void
+register_free_mem (void)
+{
+  atexit(free_mem);
+}
+
 char *
 APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
+  __libc_once_define (static, once);
+  __libc_once (once, register_free_mem);
+
   if (FCVT_BUFPTR == NULL)
     {
       if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
 					FCVT_BUFFER, MAXDIG) != -1)
 	return FCVT_BUFFER;
 
-      FCVT_BUFPTR = (char *) malloc (FCVT_MAXDIG);
+      FCVT_BUFPTR = malloc (FCVT_MAXDIG);
       if (FCVT_BUFPTR == NULL)
 	return FCVT_BUFFER;
     }
@@ -102,16 +120,3 @@ APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
   sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
-
-#ifndef __MINT__
-/* XXX */
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  if (FCVT_BUFPTR != NULL)
-    free (FCVT_BUFPTR);
-}                  
-
-text_set_element (__libc_subfreeres, free_mem);
-#endif
