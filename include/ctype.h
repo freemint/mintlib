@@ -52,8 +52,8 @@ __EXTERN int _tolower __PROTO ((int c));
 /* You will notice that 255 when passed to this macros will return
    the same value as 0.  This happens to be correct so we can
    cast to unsigned char.  */
-#define	isalnum(c)	(_ctype[(unsigned char)(c + 1)]&(_CTu|_CTl|_CTd))
-#define	isalpha(c)	(_ctype[(unsigned char)(c + 1)]&(_CTu|_CTl))
+#define	isalnum(c)	(_ctype[(unsigned char)((c) + 1)]&(_CTu|_CTl|_CTd))
+#define	isalpha(c)	(_ctype[(unsigned char)((c) + 1)]&(_CTu|_CTl))
 #if defined(__USE_SVID) || defined(__USE_MISC)
 #define	isascii(c)	!((c)&~0x7F)
 #define	toascii(c)	((c)&0x7F)
@@ -62,9 +62,9 @@ __EXTERN int _tolower __PROTO ((int c));
    (IMHO this is nonsense).  For non-GNU compilers there is now way to
    implement that safely.  */
 #ifndef __GNUC__
-# define	iscntrl(c)	((c == -1) ? 0 : \
+# define	iscntrl(c)	(((c) == -1) ? 0 : \
 	(unsigned char) (c) == 255 ? 1 : \
-	(_ctype[(unsigned char)(c + 1)]&_CTc))
+	(_ctype[(unsigned char)((c) + 1)]&_CTc))
 	
 #else /* GNU C */
 # define        iscntrl(c) \
@@ -74,17 +74,17 @@ __EXTERN int _tolower __PROTO ((int c));
      
 #endif /* GNU C */
 
-#define	isdigit(c)	(_ctype[(unsigned char)(c + 1)]&_CTd)
-#define	isgraph(c)	(_ctype[(unsigned char)(c + 1)]&_CTg)
-#define	islower(c)	(_ctype[(unsigned char)(c + 1)]&_CTl)
-#define isprint(c)      (_ctype[(unsigned char)(c + 1)]&_CTP)
-#define	ispunct(c)	(_ctype[(unsigned char)(c + 1)]&_CTp)
-#define	isspace(c)	(_ctype[(unsigned char)(c + 1)]&_CTs)
-#define	isupper(c)	(_ctype[(unsigned char)(c + 1)]&_CTu)
-#define	isxdigit(c)	(_ctype[(unsigned char)(c + 1)]&_CTx)
+#define	isdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_CTd)
+#define	isgraph(c)	(_ctype[(unsigned char)((c) + 1)]&_CTg)
+#define	islower(c)	(_ctype[(unsigned char)((c) + 1)]&_CTl)
+#define isprint(c)      (_ctype[(unsigned char)((c) + 1)]&_CTP)
+#define	ispunct(c)	(_ctype[(unsigned char)((c) + 1)]&_CTp)
+#define	isspace(c)	(_ctype[(unsigned char)((c) + 1)]&_CTs)
+#define	isupper(c)	(_ctype[(unsigned char)((c) + 1)]&_CTu)
+#define	isxdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_CTx)
 
 #ifdef __USE_GNU
-#define isblank(c)	(_ctype[(unsigned char)(c + 1)]&_CTb)
+#define isblank(c)	(_ctype[(unsigned char)((c) + 1)]&_CTb)
 #endif
 
 #ifdef __USE_SVID
