@@ -345,6 +345,8 @@ __extension__								\
 
 #endif /* __GNUC_INLINE__ */
 
+#define Srealloc(newsize)					\
+		trap_1_wl(0x15, (long)(newsize))
 #define Slbopen(name, path, min_ver, sl, fn)			\
 		trap_1_wlllll(0x16, (long)(name), (long)(path), (long)(min_ver), (long)(sl), (long)(fn))
 #define Slbclose(sl)						\
