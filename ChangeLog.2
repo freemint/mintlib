@@ -1,0 +1,968 @@
+2001-03-09 Friday 00:14  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.56.1 release.
+	
+2001-03-06 Tuesday 12:36  Frank Naumann <fnaumann@freemint.de>
+
+	* dirent/closedir.c, dirent/opendir.c, dirent/readdir.c,
+	dirent/test-list.c, login/pty.c, mintlib/getcwd.c,
+	mintlib/getloadavg.c, mintlib/main.c, mintlib/spawn.c,
+	mintlib/spawnvp.c, mintlib/syscall.c, mintlib/test-dirent.c,
+	misc/diraccess.c, misc/err.c, misc/mkstemp.c, misc/mktemp.c,
+	posix/system.c, pwdgrp/fgetpwent_r.c, pwdgrp/getpw.c,
+	pwdgrp/getpwnam_r.c, pwdgrp/getpwuid_r.c, pwdgrp/initgroups.c,
+	shadow/fgetspent_r.c, shadow/getspnam_r.c, shadow/sgetspent_r.c,
+	signal/sigdelset.c, signal/sigfillset.c, socket/rcmd.c,
+	socket/res_query.c, socket/res_send.c, stdio/popen.c,
+	stdio/test-errnobug.c, stdio/test-popen.c, stdio/tmpnam_r.c,
+	stdlib/a64l.c, stdlib/l64a.c, stdlib/strtol.c, stdlib/test-canon.c,
+	stdlib/test-canon2.c, stdlib/test-strtod.c, stdlib/test-strtol.c,
+	termios/tcdrain.c, tz/tzinit.c, unix/access.c, unix/chmod.c,
+	unix/close.c, unix/dup.c, unix/dup2.c, unix/fchmod.c,
+	unix/fchown.c, unix/fork.c, unix/ftruncate.c, unix/getgroups.c,
+	unix/getrlimit.c, unix/getrusage.c, unix/gettimeofday.c,
+	unix/mkdir.c, unix/mkfifo.c, unix/mknod.c, unix/pipe.c,
+	unix/readlink.c, unix/sbrk.c, unix/setgid.c, unix/setuid.c,
+	unix/sigaction.c, unix/signal.c, unix/sigvec.c, unix/stime.c,
+	unix/symlink.c, unix/sync.c, unix/sysinfo.c, unix/times.c,
+	unix/umask.c, unix/uname.c, unix/utimes.c, unix/write.c:
+
+	Replaced errno = xxx by the right __set_errno macro.
+	
+2001-03-06 Tuesday 12:33  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: mint/MISCFILES, mint/slb.h, netinet/ip.h,
+	netinet/ip_icmp.h:
+
+	New slb.h with the slb definitions. Minor header cleanup.
+	
+2001-02-15 Thursday 21:29  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: globals.c, main.c:
+
+	stdin/stdout/stderr are now statically initialized.
+	
+2001-02-15 Thursday 21:26  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/errno.h:
+
+	Corrected typo.
+	
+2001-02-08 Thursday 12:35  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/MISCFILES:
+
+	Added forgotten dirent.h entry.
+	
+2001-02-06 Tuesday 14:26  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* include/mint/mintbind.h:
+
+	Added Srealloc() binding.
+	
+2001-01-24 Wednesday 00:15  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/mintbind.h, socket/socketpair.c:
+
+	Updated new socket bindings, fixed mshort problem in socketpair.
+	
+2001-01-18 Thursday 02:17  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile, buildrules, include/dirent.h, include/string.h,
+	include/bits/dirent.h, include/sys/dir.h, include/sys/dirent.h,
+	dirent/.cvsignore, dirent/BINFILES, dirent/EXTRAFILES,
+	dirent/MISCFILES, dirent/Makefile, dirent/SRCFILES,
+	dirent/alphasort.c, dirent/closedir.c, dirent/opendir.c,
+	dirent/readdir.c, dirent/scandir.c, dirent/seekdir.c,
+	dirent/telldir.c, dirent/test-list.c, dirent/test-opendir.c,
+	dirent/test-seekdir.c, dirent/versionsort.c, mintlib/SRCFILES,
+	mintlib/alphasor.c, mintlib/scandir.c, mintlib/seekdir.c,
+	mintlib/telldir.c, unix/SRCFILES, unix/closedir.c, unix/opendir.c,
+	unix/readdir.c:
+
+	Seperated out dirent fucntions into extra dir. Added/Replaced some
+	utility function by the glibc version. Updated the header files.
+	
+2001-01-18 Thursday 02:14  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: wait.h, mint/basepage.h, mint/mouse.h, mint/osbind.h,
+	mint/xbra.h, sys/wait.h, mint/ssystem.h:
+
+	Cleanup.
+	
+2001-01-18 Thursday 02:05  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Activated TIOCNTTY kernel call. Let's hope it work now without
+	side effects.
+	
+2001-01-18 Thursday 02:04  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/tell.c:
+
+	Use __set_errno makro.
+	
+2001-01-18 Thursday 02:02  Frank Naumann <fnaumann@freemint.de>
+
+	* socket/: EXTRAFILES, MISCFILES, SRCFILES, accept.c, bind.c,
+	connect.c, getpeername.c, getsockname.c, getsockopt.c,
+	ident_sock.c, listen.c, mintsock.h, readv.c, recv.c, recvfrom.c,
+	recvmsg.c, send.c, sendmsg.c, sendto.c, setsockopt.c, shutdown.c,
+	sncpy.c, sncpy.h, socket.c, socketpair.c, sockets_global.c,
+	sockets_global.h, writev.c:
+
+	Added the new kernel bindings for the socket system calls. If there
+	run an older kernel the old interface is used.
+	
+2001-01-15 Monday 19:49  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/: getc.c, linewrap.c, putc.c:
+
+	Corrected #include <> to #include "" for local files.
+	
+2001-01-09 Tuesday 11:50  Frank Naumann <fnaumann@freemint.de>
+
+	* include/MISCFILES, include/basepage.h, include/falcon.h,
+	include/mintbind.h, include/mouse.h, include/osbind.h,
+	include/ostruct.h, include/xbra.h, include/mint/MISCFILES,
+	include/mint/basepage.h, include/mint/falcon.h,
+	include/mint/mintbind.h, include/mint/mouse.h,
+	include/mint/osbind.h, include/mint/ostruct.h, include/mint/xbra.h,
+	include/sys/dir.h, mintlib/crtinit.c, mintlib/globals.c,
+	mintlib/thread.c, unix/getpid.c, unix/getppid.c:
+
+	Started to restructure the kernel binding header files:
+	- moved basepage.h, falcon.h, mintbind.h, mouse.h, osbind.h,
+	  ostruct.h and xbra.h to the right mint/ subdir
+	- added small wrapper for mintbind.h and osbind.h
+	- fixed the mintlib src files to include the right headers
+	
+	Attention
+	---------
+	Programmers please fix your src to include mint/basepage.h,
+	mint/falcon.h and so on!
+	
+2001-01-08 Monday 15:40  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Fixed wrong emulation code; first the kernel is called.
+	
+2001-01-08 Monday 13:23  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/open.c, mintlib/lib.h, unix/read.c:
+
+	Updated the EAGAIN workaround in read.c:
+	- added a new member to __open_stat array of open fds to cache
+	  if the workaround is needed for that fd
+	- initialize this new member in open.c
+	- quickstat this fd in read.c and cache the result; the EAGAIN
+	  workaround is only be executed if it's not a regular file
+	
+2001-01-08 Monday 13:16  Frank Naumann <fnaumann@freemint.de>
+
+	* include/resolv.h:
+
+	Changed __op to __opval as __op seems to be conflict with the C++
+	namespace.
+	
+2001-01-08 Monday 13:15  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/socket.h:
+
+	Corrected prototype to size_t (but we better add socklen_t type in the
+	feature).
+	
+2001-01-08 Monday 13:12  Frank Naumann <fnaumann@freemint.de>
+
+	* lib_g/Makefile:
+
+	Corrected optimizations settings. At the moment the debug library must
+	be compiled at least with -O.
+	
+2001-01-08 Monday 09:22  Frank Naumann <fnaumann@freemint.de>
+
+	* buildrules:
+
+	Compile mintlib/crtinit.c always without profiling (startup).
+	
+2001-01-08 Monday 09:15  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/getpagesize.c:
+
+	Added weak_alias for getpagesize.
+	
+2000-12-24 Sunday 22:56  Odd Skancke <oskancke@online.no>
+
+	* unix/getdomainname.c:
+
+	Added a weak alias for getdomainname
+	
+2000-12-22 Friday 23:51  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mintbind.h:
+
+	Added some new syscall macros.
+	
+2000-12-22 Friday 23:49  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile, buildrules, include/bits/MISCFILES, include/bits/ipc.h,
+	include/bits/msq.h, include/bits/sem.h, include/bits/shm.h,
+	include/sys/MISCFILES, include/sys/ipc.h, include/sys/msg.h,
+	include/sys/sem.h, include/sys/shm.h, include/sys/types.h,
+	sysvipc/.cvsignore, sysvipc/BINFILES, sysvipc/EXTRAFILES,
+	sysvipc/MISCFILES, sysvipc/Makefile, sysvipc/SRCFILES,
+	sysvipc/ftok.c, sysvipc/msgctl.c, sysvipc/msgget.c,
+	sysvipc/msgrcv.c, sysvipc/msgsnd.c, sysvipc/semctl.c,
+	sysvipc/semget.c, sysvipc/semop.c, sysvipc/shmat.c,
+	sysvipc/shmctl.c, sysvipc/shmdt.c, sysvipc/shmget.c:
+
+	Added sysv ipc library bindings (syscall stubs and header files).
+	
+2000-12-15 Friday 14:11  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/select.c:
+
+	Two bugfixes:
+	* round timeout value up and not down
+	* FD_ZERO the fd sets also if retval = 0
+	
+2000-12-14 Thursday 01:38  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/: MISCFILES, arch/Makefile:
+
+	Updated to correctly install all newly added files.
+	
+2000-12-14 Thursday 01:36  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/: getdomainname.c, gethostname.c:
+
+	Added #include <errno.h> to correctly compile.
+	
+2000-12-13 Wednesday 19:11  Guido Flohr <guido@freemint.de>
+
+	* include/unistd.h:
+
+	Added prototype for setdomainname
+	
+2000-12-13 Wednesday 19:11  Guido Flohr <guido@freemint.de>
+
+	* unix/getdomainname.c:
+
+	* Finetuning
+	* Use weak aliases (non-standard!)
+	* Use __set_errno
+	* Removed CR from line ends.
+	* Added new stubs function setdomainname
+	
+2000-12-13 Wednesday 19:09  Guido Flohr <guido@freemint.de>
+
+	* unix/gethostname.c:
+
+	* Finetuning
+	* Use weak aliases (non-standard!)
+	* Use __set_errno
+	
+2000-12-08 Friday 17:25  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
+2000-12-08 Friday 17:05  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.56.
+	
+2000-12-08 Friday 13:20  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: features.h, .cvsignore:
+
+	Removed, autogenerated.
+	
+2000-12-08 Friday 13:11  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ptrace.c:
+
+	Removed exit(1) for ENOSYS. Is printing a warning recommended?
+	
+2000-12-08 Friday 13:10  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/errno.h, string/strerror.c:
+
+	Corrected EINTR error code to 128 (already used by the sockets).
+	
+2000-12-05 Tuesday 15:43  Frank Naumann <fnaumann@freemint.de>
+
+	* include/ctype.h:
+
+	Fixed missing braces in some macro definitions.
+	
+2000-12-05 Tuesday 15:43  Frank Naumann <fnaumann@freemint.de>
+
+	* include/netdb.h:
+
+	Corrected h_errno declaration to extern int (macro to errno is wrong).
+	
+2000-12-05 Tuesday 15:42  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Fixed wrong TZTOPDIR setting.
+	
+2000-11-30 Thursday 20:16  Frank Naumann <fnaumann@freemint.de>
+
+	* time/tz.c:
+
+	Replaced PATH_MAX by better sizeof(buf) statement.
+	Removed extern declaration of _unx2dos. Instead lib.h is included.
+	
+2000-11-30 Thursday 20:15  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/do_stat.c, mintlib/quickstat.c, unix/chmod.c:
+
+	Replaced PATH_MAX by better sizeof(buf) statement.
+	
+2000-11-30 Thursday 20:13  Frank Naumann <fnaumann@freemint.de>
+
+	* login/pty.c, mintlib/iflink.c:
+
+	Removed bad bug due to old extern declaration of _unx2dos/_dos2unx.
+	
+2000-11-27 Monday 15:20  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/wait4.c:
+
+	Only check Pwaitpid() code for FreeMiNT kernel < 1.16 (and non
+	FreeMiNT systems too).
+	
+2000-11-27 Monday 15:15  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: do_stat.c, quickstat.c:
+
+	Added ENOENT check to Fstat64 system call wrapper.
+	
+2000-11-27 Monday 15:14  Frank Naumann <fnaumann@freemint.de>
+
+	* time/tz.c:
+
+	Replaced library read/close by system calls.
+	
+2000-11-27 Monday 15:11  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mintbind.h, include/sys/ptrace.h, include/mint/Makefile,
+	include/mint/ptrace.h, include/mint/arch/.cvsignore,
+	include/mint/arch/BINFILES, include/mint/arch/EXTRAFILES,
+	include/mint/arch/MISCFILES, unix/SRCFILES, unix/ptrace.c,
+	include/mint/arch/Makefile, include/mint/arch/SRCFILES,
+	include/mint/arch/ptrace.h:
+
+	Added library bindings for the enw Ptrace() system call.
+	
+2000-11-27 Monday 14:55  Frank Naumann <fnaumann@freemint.de>
+
+	* crypt/.cvsignore, login/.cvsignore, mintlib/.cvsignore,
+	misc/.cvsignore, posix/.cvsignore, pwdgrp/.cvsignore,
+	signal/.cvsignore, socket/.cvsignore, stdiio/.cvsignore,
+	stdio/.cvsignore, stdlib/.cvsignore, string/.cvsignore,
+	time/.cvsignore, tz/.cvsignore, unix/.cvsignore:
+
+	Added test-* programs to the ignore list.
+	
+2000-11-21 Tuesday 03:00  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/sigaction.c:
+
+	Removed overhead Psigaction(-1).
+	
+2000-11-13 Monday 14:19  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars, include/netdb.h, include/termios.h,
+	include/sys/socket.h:
+
+	Minor bugfixes/enhancements.
+	
+2000-11-09 Thursday 13:42  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/sysd-stdio.c:
+
+	Added new text_read from Jens Heitman. Guido, recheck that please!
+	
+2000-11-09 Thursday 13:17  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/main.c:
+
+	Always enable binary mode if no UNIXMODE is set.
+	
+2000-11-09 Thursday 13:17  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/fstat.c:
+
+	Added workaround for TOS if fd is a tty.
+	[reported from Jens Heitmann]
+	
+2000-11-09 Thursday 13:14  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/fcntl.c:
+
+	Added fcntl(F_GETFL) emulation for TOS/MagiC. This was the famous
+	"out of virtual memory" failure under TOS/MagiC.
+	
+2000-11-09 Thursday 13:12  Frank Naumann <fnaumann@freemint.de>
+
+	* time/tz.c:
+
+	Fixed wrong Fopen() handling, now correct check of the return value.
+	[reported from Jens Heitmann]
+	
+2000-10-30 Monday 00:45  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: MISCFILES, signal.h, ucontext.h, bits/MISCFILES,
+	bits/sigaction.h, bits/sigcontext.h, bits/signum.h,
+	bits/sigstack.h, sys/MISCFILES, sys/ucontext.h:
+
+	Splitted off signal.h, added ucontext_t header files.
+	
+2000-10-27 Friday 12:36  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile:
+
+	Reordered SUBDIRS, first all src dirs are visited (to avoid race
+	conditions with generated source files).
+	
+2000-10-27 Friday 01:31  Guido Flohr <guido@freemint.de>
+
+	* .cvsignore:
+
+	Oops, ChangeLog should really be in cvs, even if auto-generated.
+	(Otherwise webcvs users can't see it).
+	
+2000-10-27 Friday 01:10  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
+2000-10-27 Friday 01:00  Guido Flohr <guido@freemint.de>
+
+	* .cvsignore:
+
+	ChangeLog is now generated by cvs2cl.
+	
+2000-10-27 Friday 00:54  Guido Flohr <guido@freemint.de>
+
+	* ChangeLog, ChangeLog.1:
+
+	Rotated ChangeLogs.  New files will be generated by cvs2cl
+	(see http://www.red-bean.com/~kfogel/cvs2cl.shtml).
+	
+2000-10-27 Friday 00:42  Guido Flohr <guido@freemint.de>
+
+	* unix/select.c:
+
+	Fixed typo (reported by Daniel Schaller <D.Schaller@freesurf.ch>).
+	
+2000-10-27 Friday 00:29  Guido Flohr <guido@freemint.de>
+
+	* mintlib/.cvsignore:
+
+	Added syscalls.h (generated).
+	
+2000-10-27 Friday 00:27  Guido Flohr <guido@freemint.de>
+
+	* mintlib/syscalls.h:
+
+	syscalls.h removed from CVS (is generated).
+	
+2000-10-27 Friday 00:22  Guido Flohr <guido@freemint.de>
+
+	* .cvsignore, 00PatchLevel:
+
+	00PatchLevel is a generated file, removed.
+	
+2000-10-26 Thursday 00:33  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/poll.c:
+
+	Fixed the poll emulation through select, XOPEN flags are missing.
+	
+2000-10-12 Thursday 22:46  Frank Naumann <fnaumann@freemint.de>
+
+	* .cvsignore, conf/.cvsignore, crypt/.cvsignore,
+	crypt/examples/.cvsignore, gmp/.cvsignore, include/.cvsignore,
+	include/arpa/.cvsignore, include/bits/.cvsignore,
+	include/mint/.cvsignore, include/net/.cvsignore,
+	include/netinet/.cvsignore, include/protocols/.cvsignore,
+	include/sys/.cvsignore, lib/.cvsignore, lib020/.cvsignore,
+	lib16/.cvsignore, lib16020/.cvsignore, lib_g/.cvsignore,
+	lib_p/.cvsignore, login/.cvsignore, mintlib/.cvsignore,
+	misc/.cvsignore, posix/.cvsignore, pwdgrp/.cvsignore,
+	shadow/.cvsignore, signal/.cvsignore, socket/.cvsignore,
+	startup/.cvsignore, stdiio/.cvsignore, stdio/.cvsignore,
+	stdlib/.cvsignore, string/.cvsignore, termios/.cvsignore,
+	time/.cvsignore, tz/.cvsignore, unix/.cvsignore:
+
+	Added .cvsignore files to prevent cvs to report generated stuff.
+	
+2000-10-12 Thursday 22:45  Frank Naumann <fnaumann@freemint.de>
+
+	* CFILES:
+
+	Removed from repository, it's auto generated.
+	
+2000-10-12 Thursday 11:34  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/stat.h:
+
+	Corrected stat macros.
+	
+2000-10-12 Thursday 11:34  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mintbind.h:
+
+	Added Slbopen/Slbclose system call bindings.
+	
+2000-10-12 Thursday 11:33  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/setitimer.c:
+
+	Corrected setitimer stub. microseconds <-> milliseconds calculations
+	for kernel binding are incorrect.
+	
+2000-10-12 Thursday 11:30  Frank Naumann <fnaumann@freemint.de>
+
+	* buildrules, include/sys/MISCFILES, include/sys/gmon.h,
+	include/sys/gmon_out.h, mintlib/EXTRAFILES, mintlib/SRCFILES,
+	mintlib/atomicity-68020.h, mintlib/atomicity.h, mintlib/gmon.c,
+	mintlib/libc_exit.S, mintlib/machine-gmon.h, mintlib/mcount.c,
+	mintlib/profil-counter.h, mintlib/profil-freq.c,
+	mintlib/profil-posix.c, mintlib/sysdep.h:
+
+	Replaced old profiler support by new posix profiler. Work now on
+	all clones.
+	
+2000-10-12 Thursday 11:23  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mintbind.h:
+
+	Corrected Dsetkey system call binding.
+	
+2000-10-12 Thursday 11:22  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/getpid.c:
+
+	STD-C Cleanup.
+	
+2000-10-12 Thursday 11:22  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	ioctl(TIOCNOTTY) patch against wrong kernel behaviour.
+	This have to be fixed in a more general way.
+	
+2000-10-12 Thursday 11:20  Frank Naumann <fnaumann@freemint.de>
+
+	* termios/: SRCFILES, tcattr.c, tcbreak.c, tcflow.c, tcflush.c,
+	tcgetattr.c, tcgetpgrp.c, tcpgrp.c, tcsendbreak.c, tcsetattr.c,
+	tcsetpgrp.c:
+
+	Added termios patch, splitted functions of in seperate modules.
+	
+2000-10-12 Thursday 10:56  Frank Naumann <fnaumann@freemint.de>
+
+	* 00PatchLevel, AUTHORS, BUGS, COPYING, COPYING.LIB, COPYMINT,
+	ChangeLog, ChangeLog.0, FAQ, HELP, INSTALL, LICENSES, NEWS, NOTES,
+	README, README-LGPL, README-alpha, README.1st, README.bin,
+	README.crypt, README.mshort, README.stdio, TODO, 00PatchLevel.in,
+	BINFILES, CFILES, EXTRAFILES, HACKING, MISCFILES, Makefile,
+	README-about-patches, configvars, install-sh, libinstall,
+	mkinstalldirs, move-if-change, README.test, SRCFILES, bindist,
+	buildrules, checklib, checkrules, config.h, do_test, mintlib.spec,
+	mintlib.spec.in, phony, rules, test-skeleton.c, conf/BINFILES,
+	conf/EXTRAFILES, conf/MISCFILES, conf/Makefile, conf/SRCFILES,
+	conf/portability.h, crypt/crypt-entry.c, crypt/crypt.c,
+	crypt/crypt_util.c, crypt/des_impl.c, crypt/BINFILES,
+	crypt/EXTRAFILES, crypt/MISCFILES, crypt/Makefile,
+	crypt/README.md5-crypt, crypt/README.ufc-crypt, crypt/SRCFILES,
+	crypt/crypt-private.h, crypt/des.h, crypt/md5-crypt.c, crypt/md5.c,
+	crypt/md5.h, crypt/patchlevel.h, crypt/test-cert.c,
+	crypt/test-cert.input, crypt/test-md5_1.c, crypt/md5speeds.c,
+	crypt/speeds.c, crypt/test-md5_2.c, crypt/test-ufc.args,
+	crypt/test-ufc.c, crypt/ufc-crypt.h, crypt/examples/BINFILES,
+	crypt/examples/EXTRAFILES, crypt/examples/MISCFILES,
+	crypt/examples/Makefile, crypt/examples/SRCFILES,
+	crypt/examples/genpass.c, crypt/examples/mygetpass.c,
+	crypt/examples/testpass.c, gmp/BINFILES, gmp/EXTRAFILES,
+	gmp/MISCFILES, gmp/Makefile, gmp/SRCFILES, gmp/dbl2mpn.c,
+	gmp/ldbl2mpn.c, gmp/mp_clz_tab.c, gmp/mpn-add_n.c,
+	gmp/mpn-addmul_1.c, gmp/mpn-cmp.c, gmp/mpn-divmod_1.c,
+	gmp/mpn-divrem.c, gmp/mpn-inlines.c, gmp/mpn-lshift.c,
+	gmp/mpn-mod_1.c, gmp/mpn-mul.c, gmp/mpn-mul_1.c, gmp/mpn-mul_n.c,
+	gmp/mpn-rshift.c, gmp/mpn-sub_n.c, gmp/mpn-submul_1.c,
+	gmp/mpn2dbl.c, gmp/mpn2flt.c, gmp/mpn2ldbl.c, gmp/support.c,
+	include/00README, include/COPYING, include/COPYMINT,
+	include/COPYING.LIB, include/MISCFILES, include/_float_h,
+	include/_stdarg_h, include/_stddef_h, include/_varargs_h,
+	include/alloca.h, include/argz.h, include/assert.h,
+	include/basepage.h, include/clean-include, include/compiler.h,
+	include/crypt.h, include/ctype.h, include/device.h,
+	include/dirent.h, include/endian.h, include/err.h, include/errno.h,
+	include/error.h, include/falcon.h, include/fcntl.h,
+	include/features.h, include/fnmatch.h, include/ftw.h,
+	include/getopt.h, include/glob.h, include/gnu-ar.h,
+	include/gnu-out.h, include/grp.h, include/huge_val.h,
+	include/ieee754.h, include/inttypes.h, include/iovec.h,
+	include/keycodes.h, include/lastlog.h, include/libgen.h,
+	include/limits.h, include/linea.h, include/linker.h,
+	include/locale.h, include/macros.h, include/malloc.h,
+	include/math-68881.h, include/math.h, include/memory.h,
+	include/minimal.h, include/mintbind.h, include/mouse.h,
+	include/nan.h, include/netdb.h, include/obstack.h,
+	include/osbind.h, include/ostruct.h, include/paths.h,
+	include/poll.h, include/printf.h, include/process.h, include/pty.h,
+	include/pwd.h, include/re_comp.h, include/regex.h,
+	include/regexp.h, include/resolv.h, include/resource.h,
+	include/rtent.h, include/screen.h, include/search.h,
+	include/setjmp.h, include/sgtty.h, include/shadow.h,
+	include/signal.h, include/sockios.h, include/socklib.h,
+	include/st-out.h, include/stdint.h, include/stdio.h,
+	include/stdlib.h, include/string.h, include/strings.h,
+	include/support.h, include/syscall.h, include/sysexits.h,
+	include/syslog.h, include/sysvars.h, include/tcfloat.h,
+	include/tchars.h, include/tcmath.h, include/termio.h,
+	include/termios.h, include/time.h, include/unistd.h,
+	include/utime.h, include/utmp.h, include/BINFILES,
+	include/EXTRAFILES, include/Makefile, include/SRCFILES,
+	include/features.h.in, include/linker.h.in, include/utmpbits.h,
+	include/values.h, include/vt52.h, include/wait.h, include/widget.h,
+	include/wordexp.h, include/xbra.h, include/arpa/BINFILES,
+	include/arpa/EXTRAFILES, include/arpa/MISCFILES,
+	include/arpa/Makefile, include/arpa/SRCFILES, include/arpa/ftp.h,
+	include/arpa/inet.h, include/arpa/nameser.h, include/arpa/telnet.h,
+	include/arpa/tftp.h, include/bits/MISCFILES,
+	include/bits/libc-lock.h, include/bits/local_lim.h,
+	include/bits/mint_stdio.h, include/bits/poll.h,
+	include/bits/BINFILES, include/bits/EXTRAFILES,
+	include/bits/Makefile, include/bits/SRCFILES,
+	include/bits/posix1_lim.h, include/bits/posix2_lim.h,
+	include/bits/posix_opt.h, include/bits/select.h,
+	include/bits/sigset.h, include/bits/stdio_lim.h,
+	include/bits/string.h, include/bits/string2.h,
+	include/bits/types.h, include/bits/xopen_lim.h,
+	include/mint/BINFILES, include/mint/EXTRAFILES,
+	include/mint/MISCFILES, include/mint/Makefile,
+	include/mint/SRCFILES, include/mint/dcntl.h, include/mint/errno.h,
+	include/mint/iflink.h, include/mint/random.h,
+	include/mint/ssystem.h, include/net/BINFILES,
+	include/net/EXTRAFILES, include/net/MISCFILES,
+	include/net/Makefile, include/net/SRCFILES, include/net/bpf.h,
+	include/net/if.h, include/net/if_arp.h, include/net/if_ppp.h,
+	include/net/if_sl.h, include/net/route.h, include/net/slcompress.h,
+	include/netinet/BINFILES, include/netinet/EXTRAFILES,
+	include/netinet/MISCFILES, include/netinet/Makefile,
+	include/netinet/SRCFILES, include/netinet/if_ether.h,
+	include/netinet/in.h, include/netinet/in_systm.h,
+	include/netinet/ip.h, include/netinet/ip_icmp.h,
+	include/netinet/ip_var.h, include/netinet/tcp.h,
+	include/netinet/tcpip.h, include/netinet/udp.h,
+	include/netinet/udp_var.h, include/protocols/BINFILES,
+	include/protocols/EXTRAFILES, include/protocols/MISCFILES,
+	include/protocols/Makefile, include/protocols/SRCFILES,
+	include/protocols/routed.h, include/protocols/rwhod.h,
+	include/protocols/talkd.h, include/protocols/timed.h,
+	include/sys/BINFILES, include/sys/EXTRAFILES,
+	include/sys/MISCFILES, include/sys/Makefile, include/sys/SRCFILES,
+	include/sys/cdefs.h, include/sys/cookie.h, include/sys/dir.h,
+	include/sys/dirent.h, include/sys/errno.h, include/sys/fcntl.h,
+	include/sys/file.h, include/sys/ioctl.h, include/sys/mount.h,
+	include/sys/param.h, include/sys/poll.h, include/sys/queue.h,
+	include/sys/reboot.h, include/sys/resource.h, include/sys/select.h,
+	include/sys/signal.h, include/sys/socket.h, include/sys/stat.h,
+	include/sys/statfs.h, include/sys/syscall.h, include/sys/syslog.h,
+	include/sys/sysmacros.h, include/sys/systeminfo.h,
+	include/sys/termios.h, include/sys/time.h, include/sys/timeb.h,
+	include/sys/times.h, include/sys/ttychars.h,
+	include/sys/ttydefaults.h, include/sys/types.h, include/sys/uio.h,
+	include/sys/un.h, include/sys/utsname.h, include/sys/varargs.h,
+	include/sys/vfs.h, include/sys/wait.h, lib/BINFILES,
+	lib/EXTRAFILES, lib/MISCFILES, lib/Makefile, lib/README,
+	lib/SRCFILES, lib_g/BINFILES, lib_g/EXTRAFILES, lib_g/MISCFILES,
+	lib_g/Makefile, lib_g/README, lib_g/SRCFILES, lib020/BINFILES,
+	lib020/EXTRAFILES, lib020/MISCFILES, lib020/Makefile,
+	lib020/README, lib020/SRCFILES, lib16/BINFILES, lib16/EXTRAFILES,
+	lib16/MISCFILES, lib16/Makefile, lib16/SRCFILES, lib16020/BINFILES,
+	lib16020/EXTRAFILES, lib16020/MISCFILES, lib16020/Makefile,
+	lib16020/README, lib16020/SRCFILES, lib_p/BINFILES,
+	lib_p/EXTRAFILES, lib_p/MISCFILES, lib_p/Makefile, lib_p/README,
+	lib_p/SRCFILES, login/getutent.c, login/getutent_r.c,
+	login/getutid.c, login/getutid_r.c, login/getutline.c,
+	login/getutline_r.c, login/login.c, login/login_tty.c,
+	login/logout.c, login/logwtmp.c, login/oldutmp.c, login/oldwtmp.c,
+	login/pty.c, login/updwtmp.c, login/BINFILES, login/EXTRAFILES,
+	login/MISCFILES, login/Makefile, login/SRCFILES, login/test-utmp.c,
+	login/utmp-private.h, login/utmp_file.c, login/utmpname.c,
+	mintlib/_infinitydf.S, mintlib/_mon.S, mintlib/_normdf.S,
+	mintlib/abort.c, mintlib/alglobal.c, mintlib/alphasor.c,
+	mintlib/assert-perr.c, mintlib/assert.c, mintlib/buffindf.c,
+	mintlib/calloc.c, mintlib/console.c, mintlib/crtinit.c,
+	mintlib/ctermid.c, mintlib/ctype.c, mintlib/cuserid.c,
+	mintlib/div.c, mintlib/do_lock.c, mintlib/do_stat.c,
+	mintlib/dostime.c, mintlib/enoent.c, mintlib/frexp.S,
+	mintlib/ftime.c, mintlib/ftw.c, mintlib/getcookie.c,
+	mintlib/getcwd.c, mintlib/getenv.c, mintlib/getloadavg.c,
+	mintlib/getlogin.c, mintlib/getopt_old.c, mintlib/getumask.c,
+	mintlib/getwd.c, mintlib/globals.c, mintlib/gmon.c,
+	mintlib/heapbase.c, mintlib/ident.c, mintlib/iflink.c,
+	mintlib/ig.c, mintlib/inistack.c, mintlib/inode.c,
+	mintlib/isatty.c, mintlib/isctty.c, mintlib/labs.c,
+	mintlib/ldexp.S, mintlib/libc_exit.S, mintlib/libc_fatal.c,
+	mintlib/linea.c, mintlib/llabs.c, mintlib/lldiv.c, mintlib/lockf.c,
+	mintlib/ltoa.c, mintlib/main.c, mintlib/malloc.c, mintlib/modf.S,
+	mintlib/osbind.S, mintlib/pselect.c, mintlib/putenv.c,
+	mintlib/quickstat.c, mintlib/raise.c, mintlib/realloc.c,
+	mintlib/regexp.c, mintlib/regsup.c, mintlib/rewinddi.c,
+	mintlib/rtent.c, mintlib/s_isinf.c, mintlib/s_isinff.c,
+	mintlib/s_isinfl.c, mintlib/s_isnan.c, mintlib/s_isnanf.c,
+	mintlib/s_isnanl.c, mintlib/scandir.c, mintlib/seekdir.c,
+	mintlib/setenv.c, mintlib/setjmp.S, mintlib/setlocale.c,
+	mintlib/setstack.S, mintlib/BINFILES, mintlib/EXTRAFILES,
+	mintlib/MISCFILES, mintlib/Makefile, mintlib/SRCFILES,
+	mintlib/SYSCALLS, mintlib/_itoa.h, mintlib/errbase.h,
+	mintlib/gensys, mintlib/lib.h, mintlib/libc-symbols.h,
+	mintlib/memcopy.h, mintlib/spawn.c, mintlib/spawnve.c,
+	mintlib/spawnvp.c, mintlib/stksiz.c, mintlib/syscall.c,
+	mintlib/syscalls.h, mintlib/syscalls.list, mintlib/sysconf.c,
+	mintlib/sysvar.c, mintlib/tell.c, mintlib/telldir.c,
+	mintlib/test-assert-perr.c, mintlib/test-assert.c,
+	mintlib/test-atexit.c, mintlib/test-atexit.expect,
+	mintlib/test-ctype.c, mintlib/test-ctype1.c, mintlib/thread.c,
+	mintlib/toxxx.c, mintlib/ttyname.c, mintlib/ttyname_r.c,
+	mintlib/uidgid.c, mintlib/unixtime.c, mintlib/unx2dos.c,
+	mintlib/wcmb.c, mintlib/wcscat.c, mintlib/wcscmp.c,
+	mintlib/wcscpy.c, mintlib/wcslen.c, mintlib/wnull.c,
+	mintlib/test-ctype1.expect, mintlib/test-dirent.args,
+	mintlib/test-dirent.c, mintlib/test-mallocbug.c,
+	mintlib/test-seekdir.c, mintlib/test-setjmp.c,
+	mintlib/test-setjmp1.c, misc/daemon.c, misc/diraccess.c,
+	misc/dirname.c, misc/err.c, misc/error.c, misc/getpass.c,
+	misc/getusershell.c, misc/hsearch.c, misc/hsearch_r.c,
+	misc/insremque.c, misc/lsearch.c, misc/mkstemp.c, misc/mktemp.c,
+	misc/BINFILES, misc/EXTRAFILES, misc/MISCFILES, misc/Makefile,
+	misc/SRCFILES, misc/obstack.c, misc/syslog.c, misc/test-dirname.c,
+	misc/test-fdset.c, misc/test-tsearch.c, misc/tsearch.c,
+	posix/bsd_getpgrp.c, posix/bsd_setpgrp.c, posix/execl.c,
+	posix/execle.c, posix/execlp.c, posix/execv.c, posix/execvp.c,
+	posix/fnmatch.c, posix/getopt.c, posix/getopt1.c,
+	posix/getopt_init.c, posix/glob.c, posix/regex.c, posix/remove.c,
+	posix/sleep.c, posix/system.c, posix/BINFILES, posix/EXTRAFILES,
+	posix/MISCFILES, posix/Makefile, posix/PTESTS, posix/PTESTS2C.sed,
+	posix/SRCFILES, posix/TESTS, posix/TESTS2C.sed, posix/ptestcases.h,
+	posix/test-fnmatch.c, posix/test-getopt.args, posix/test-getopt.c,
+	posix/test-glob.c, posix/test-glob.sh, posix/test-remove.c,
+	posix/test-run.c, posix/test-runp.c, posix/test-wordexp.c,
+	posix/test-wordexp.sh, posix/testcases.h, posix/wordexp.c,
+	pwdgrp/fgetpwent.c, pwdgrp/fgetpwent_r.c, pwdgrp/getpw.c,
+	pwdgrp/getpwent.c, pwdgrp/getpwent_r.c, pwdgrp/getpwnam.c,
+	pwdgrp/getpwnam_r.c, pwdgrp/getpwuid.c, pwdgrp/BINFILES,
+	pwdgrp/EXTRAFILES, pwdgrp/MISCFILES, pwdgrp/Makefile,
+	pwdgrp/SRCFILES, pwdgrp/getpwuid_r.c, pwdgrp/grp.c,
+	pwdgrp/initgroups.c, pwdgrp/putpwent.c, pwdgrp/test-grp.c,
+	shadow/BINFILES, shadow/EXTRAFILES, shadow/MISCFILES,
+	shadow/Makefile, shadow/SRCFILES, shadow/fgetspent.c,
+	shadow/fgetspent_r.c, shadow/getspent.c, shadow/getspent_r.c,
+	shadow/getspnam.c, shadow/getspnam_r.c, shadow/lckpwdf.c,
+	shadow/putspent.c, shadow/sgetspent.c, shadow/sgetspent_r.c,
+	signal/BINFILES, signal/EXTRAFILES, signal/MISCFILES,
+	signal/Makefile, signal/SRCFILES, signal/initsig.c,
+	signal/sigaddset.c, signal/sigandset.c, signal/sigdelset.c,
+	signal/sigemptyset.c, signal/sigfillset.c, signal/siggetmask.c,
+	signal/sighold.c, signal/sigignore.c, signal/sigisempty.c,
+	signal/sigismember.c, signal/siglist.c, signal/signames.c,
+	signal/sigorset.c, signal/sigrelse.c, signal/sigset.c,
+	signal/sigwait.c, signal/sysv_signal.c, signal/test-signal.c,
+	signal/test-sigset.c, socket/README, socket/accept.3,
+	socket/bind.3, socket/connect.3, socket/getpeername.3,
+	socket/getsockname.3, socket/getsockopt.3, socket/listen.3,
+	socket/recv.3, socket/recvfrom.3, socket/recvmsg.3,
+	socket/accept.c, socket/bind.c, socket/connect.c,
+	socket/gethostnamadr.c, socket/getnetbyaddr.c,
+	socket/getnetbyname.c, socket/getnetent.c, socket/getpeername.c,
+	socket/getproto.c, socket/getprotoent.c, socket/getprotoname.c,
+	socket/getservbyname.c, socket/getservbyport.c,
+	socket/getservent.c, socket/getsockname.c, socket/getsockopt.c,
+	socket/herror.c, socket/hton.c, socket/ident_sock.c,
+	socket/resolver.5, socket/send.3, socket/sendmsg.3,
+	socket/sendto.3, socket/setsockopt.3, socket/shutdown.3,
+	socket/socket.3, socket/socketpair.3, socket/inet_addr.c,
+	socket/inet_lnaof.c, socket/inet_makeaddr.c, socket/inet_netof.c,
+	socket/inet_network.c, socket/inet_ntoa.c, socket/listen.c,
+	socket/rcmd.c, socket/readv.c, socket/recv.c, socket/recvfrom.c,
+	socket/recvmsg.c, socket/res_comp.c, socket/res_debug.c,
+	socket/res_init.c, socket/res_mkquery.c, socket/BINFILES,
+	socket/EXTRAFILES, socket/MISCFILES, socket/Makefile,
+	socket/SRCFILES, socket/res_query.c, socket/res_send.c,
+	socket/send.c, socket/sendmsg.c, socket/sendto.c,
+	socket/sethostent.c, socket/setsockopt.c, socket/shutdown.c,
+	socket/sncpy.c, socket/socket.c, socket/socketpair.c,
+	socket/writev.c, socket/file.h, socket/mintsock.h,
+	socket/test-aton.c, socket/test-hton.c, socket/test-ntoa.c,
+	startup/BINFILES, startup/EXTRAFILES, startup/MISCFILES,
+	startup/Makefile, startup/README, startup/SRCFILES, startup/crt0.S,
+	stdiio/BINFILES, stdiio/EXTRAFILES, stdiio/MISCFILES,
+	stdiio/Makefile, stdiio/SRCFILES, stdiio/ivfprintf.c,
+	stdiio/ivfscanf.c, stdiio/test-iioformat.c, stdiio/test-iioscanf.c,
+	stdiio/test-iiowc-printf.c, stdio/_itoa.c, stdio/asprintf.c,
+	stdio/binmode.c, stdio/clearerr.c, stdio/defmode.c, stdio/doprnt.c,
+	stdio/dprintf.c, stdio/fclose.c, stdio/fcloseall.c, stdio/fdopen.c,
+	stdio/feof.c, stdio/ferror.c, stdio/fflush.c, stdio/fgetc.c,
+	stdio/fgetpos.c, stdio/fgets.c, stdio/fileno.c, stdio/fmemopen.c,
+	stdio/fopen.c, stdio/fopncook.c, stdio/fprintf.c, stdio/fputc.c,
+	stdio/fputs.c, stdio/fread.c, stdio/freopen.c, stdio/fscanf.c,
+	stdio/fseek.c, stdio/fsetpos.c, stdio/ftell.c, stdio/fungetc.c,
+	stdio/fwrite.c, stdio/getc.c, stdio/getchar.c, stdio/getdelim.c,
+	stdio/getline.c, stdio/gets.c, stdio/getw.c, stdio/glue.c,
+	stdio/internals.c, stdio/itoa-digits.c, stdio/linewrap.c,
+	stdio/lockfile.c, stdio/memstream.c, stdio/newstream.c,
+	stdio/obstream.c, stdio/perror.c, stdio/popen.c,
+	stdio/printf-prs.c, stdio/printf.c, stdio/printf_fp.c,
+	stdio/printf_fphex.c, stdio/printf_size.c, stdio/psignal.c,
+	stdio/putc.c, stdio/putchar.c, stdio/puts.c, stdio/putw.c,
+	stdio/reg-printf.c, stdio/rewind.c, stdio/scanf.c, stdio/setbuf.c,
+	stdio/setbuffer.c, stdio/setlinebuf.c, stdio/setvbuf.c,
+	stdio/snprintf.c, stdio/sprintf.c, stdio/sscanf.c,
+	stdio/stdio_init.c, stdio/sysd-stdio.c, stdio/tempnam.c,
+	stdio/tmpfile.c, stdio/tmpnam.c, stdio/tmpnam_r.c, stdio/ungetc.c,
+	stdio/BINFILES, stdio/EXTRAFILES, stdio/MISCFILES, stdio/Makefile,
+	stdio/SRCFILES, stdio/linewrap.h, stdio/printf-parse.h,
+	stdio/test-bug1.c, stdio/test-bug1.input, stdio/test-bug10.c,
+	stdio/test-bug11.c, stdio/test-bug12.c, stdio/test-bug2.c,
+	stdio/test-bug3.c, stdio/test-bug4.c, stdio/test-bug5.c,
+	stdio/test-bug6.c, stdio/test-bug6.input, stdio/test-bug7.c,
+	stdio/test-bug8.c, stdio/test-bug9.c, stdio/test-doprnt.c,
+	stdio/test-errnobug.c, stdio/test-ferror.c,
+	stdio/test-ferror.input, stdio/vasprintf.c, stdio/vdprintf.c,
+	stdio/vfprintf.c, stdio/vfscanf.c, stdio/vprintf.c, stdio/vscanf.c,
+	stdio/vsnprintf.c, stdio/vsprintf.c, stdio/vsscanf.c,
+	stdio/test-fformat.c, stdio/test-fileno.c, stdio/test-fseek.c,
+	stdio/test-fwrite.c, stdio/test-getln.c, stdio/test-getln.input,
+	stdio/test-glue.c, stdio/test-glue.expect, stdio/test-glue.input,
+	stdio/test-iformat.c, stdio/test-llformat.c, stdio/test-popen.c,
+	stdio/test-printf.c, stdio/test-printf.expect,
+	stdio/test-printfsz.c, stdio/test-rdwr.c, stdio/test-scanf.c,
+	stdio/test-scanf.input, stdio/test-scanf1.c, stdio/test-scanf10.c,
+	stdio/test-scanf11.c, stdio/test-scanf12.c,
+	stdio/test-scanf12.input, stdio/test-scanf2.c, stdio/test-scanf3.c,
+	stdio/test-scanf4.c, stdio/test-scanf5.c, stdio/test-scanf6.c,
+	stdio/test-scanf7.c, stdio/test-scanf8.c, stdio/test-scanf9.c,
+	stdio/test-stdiomisc.c, stdio/test-temp.c, stdio/test-tmpfile.c,
+	stdio/test-tmpfile.sh, stdio/test-tmpnam.c, stdio/test-ungetc.c,
+	stdio/test-wc-printf.c, stdio/test-xbug.c, stdlib/a64l.c,
+	stdlib/abs.c, stdlib/alloca.S, stdlib/atexit.c, stdlib/atof.c,
+	stdlib/atoi.c, stdlib/atol.c, stdlib/atoll.c, stdlib/bsearch.c,
+	stdlib/canonicalize.c, stdlib/drand48-iter.c, stdlib/drand48.c,
+	stdlib/drand48_r.c, stdlib/erand48.c, stdlib/erand48_r.c,
+	stdlib/exit.c, stdlib/fpioconst.c, stdlib/jrand48.c,
+	stdlib/jrand48_r.c, stdlib/l64a.c, stdlib/lcong48.c,
+	stdlib/lcong48_r.c, stdlib/lrand48.c, stdlib/lrand48_r.c,
+	stdlib/mrand48.c, stdlib/mrand48_r.c, stdlib/msort.c,
+	stdlib/nrand48.c, stdlib/nrand48_r.c, stdlib/qsort.c,
+	stdlib/rand.c, stdlib/random.c, stdlib/secure-getenv.c,
+	stdlib/seed48.c, stdlib/seed48_r.c, stdlib/srand48.c,
+	stdlib/srand48_r.c, stdlib/strtod.c, stdlib/strtof.c,
+	stdlib/BINFILES, stdlib/EXTRAFILES, stdlib/MISCFILES,
+	stdlib/Makefile, stdlib/SRCFILES, stdlib/dtest.c,
+	stdlib/fpioconst.h, stdlib/ftest.c, stdlib/gmp-impl.h,
+	stdlib/gmp-mparam.h, stdlib/gmp.h, stdlib/longlong.h,
+	stdlib/strtol.c, stdlib/strtold.c, stdlib/strtoll.c,
+	stdlib/strtoul.c, stdlib/strtoull.c, stdlib/test-canon.c,
+	stdlib/test-canon2.c, stdlib/test-cc.c, stdlib/test-div.c,
+	stdlib/test-div.input, stdlib/test-mb.c, stdlib/test-rand.c,
+	stdlib/test-sort.c, stdlib/test-strtod.c, stdlib/test-strtol.c,
+	stdlib/xpg_basename.c, string/EXTRAFILES, string/argz-addsep.c,
+	string/argz-append.c, string/argz-count.c, string/argz-create.c,
+	string/argz-ctsep.c, string/argz-delete.c, string/argz-extract.c,
+	string/argz-insert.c, string/argz-next.c, string/argz-replace.c,
+	string/argz-stringify.c, string/basename.c, string/bcmp.c,
+	string/bcopy.S, string/bzero.S, string/ffsl.c, string/ffsll.c,
+	string/ffss.c, string/memccpy.c, string/memchr.c, string/memcmp.c,
+	string/memfrob.c, string/mempcpy.c, string/memset.S,
+	string/rawmemchr.c, string/stpcpy.c, string/stpncpy.c,
+	string/strcasecmp.c, string/strcasestr.c, string/strcat.c,
+	string/strchr.c, string/strcmp.c, string/strcoll.c,
+	string/strcpy.c, string/strcspn.c, string/strdup.c,
+	string/strerror.c, string/strerror_r.c, string/strfry.c,
+	string/strlen.c, string/strlwr.c, string/strncasecmp.c,
+	string/strncat.c, string/strncmp.c, string/strncpy.c,
+	string/strndup.c, string/strnlen.c, string/strpbrk.c,
+	string/strrchr.c, string/strrev.c, string/strsep.c,
+	string/strsignal.c, string/strspn.c, string/strstr.c,
+	string/strtoimax.c, string/strtok.c, string/strtok_r.c,
+	string/strtoumax.c, string/strupr.c, string/strverscmp.c,
+	string/strxfrm.c, string/BINFILES, string/MISCFILES,
+	string/Makefile, string/SRCFILES, string/test-common.c,
+	string/test-copy.c, string/test-ffs.c, string/test-inlcall.c,
+	string/test-inline.c, string/test-noinline.c,
+	string/test-stratcliff.c, string/test-strlen.c, string/test-svc.c,
+	string/test-svc.expect, string/test-svc.input, termios/BINFILES,
+	termios/EXTRAFILES, termios/MISCFILES, termios/Makefile,
+	termios/SRCFILES, termios/cfgetisp.c, termios/cfgetosp.c,
+	termios/cfsetisp.c, termios/cfsetosp.c, termios/cfsetspeed.c,
+	termios/tcattr.c, termios/tcbreak.c, termios/tcdrain.c,
+	termios/tcflow.c, termios/tcflush.c, termios/tcpgrp.c,
+	time/BINFILES, time/EXTRAFILES, time/MISCFILES, time/Makefile,
+	time/clock.c, time/ctime.c, time/difftime.c, time/gmtime.c,
+	time/localtime.c, time/mktime.c, time/strftime.c, time/tz.c,
+	time/SRCFILES, time/new_york.h, time/test-clock.c,
+	time/test-posixtz.c, time/test-time.args, time/test-time.c,
+	time/tzfile.h, time/tzstruct.h, tz/Arts.htm, tz/README,
+	tz/README.1st, tz/Theory, tz/WWW.htm, tz/africa, tz/antarctica,
+	tz/asia, tz/australasia, tz/backward, tz/checktab.awk, tz/etcetera,
+	tz/europe, tz/factory, tz/iso3166.tab, tz/leapseconds,
+	tz/northamerica, tz/pacificnew, tz/solar87, tz/solar88, tz/solar89,
+	tz/southamerica, tz/systemv, tz/tzfile.5, tz/tzinit.8,
+	tz/tzselect.8, tz/tzselect.ksh, tz/BINFILES, tz/EXTRAFILES,
+	tz/MISCFILES, tz/Makefile, tz/SRCFILES, tz/ialloc.c, tz/private.h,
+	tz/scheck.c, tz/stack.c, tz/test-dummy.c, tz/tzinit.c, tz/usno1988,
+	tz/usno1989, tz/usno1989a, tz/usno1995, tz/usno1997,
+	tz/yearistype.sh, tz/zdump.8, tz/zdump.c, tz/zic.8, tz/zic.c,
+	tz/zone.tab, tz/zonelist, unix/access.c, unix/alarm.c,
+	unix/chdir.c, unix/chmod.c, unix/chown.c, unix/chroot.c,
+	unix/close.c, unix/closedir.c, unix/creat.c, unix/dup.c,
+	unix/dup2.c, unix/execve.c, unix/fchmod.c, unix/fchown.c,
+	unix/fcntl.c, unix/flock.c, unix/fork.c, unix/fstat.c,
+	unix/fsync.c, unix/ftruncate.c, unix/getdomainname.c,
+	unix/getdtabl.c, unix/getegid.c, unix/geteuid.c, unix/getgid.c,
+	unix/getgroups.c, unix/gethostid.c, unix/gethostname.c,
+	unix/getitimer.c, unix/getpagesize.c, unix/getpgrp.c,
+	unix/getpid.c, unix/getppid.c, unix/getpriority.c,
+	unix/getrlimit.c, unix/getrusage.c, unix/gettimeofday.c,
+	unix/getuid.c, unix/gtty.c, unix/ioctl.c, unix/kill.c,
+	unix/killpg.c, unix/link.c, unix/lseek.c, unix/lstat.c,
+	unix/mkdir.c, unix/mkfifo.c, unix/mknod.c, unix/nice.c,
+	unix/open.c, unix/BINFILES, unix/EXTRAFILES, unix/MISCFILES,
+	unix/Makefile, unix/SRCFILES, unix/opendir.c, unix/pause.c,
+	unix/pipe.c, unix/poll.c, unix/read.c, unix/readdir.c,
+	unix/readlink.c, unix/reboot.c, unix/rename.c, unix/rmdir.c,
+	unix/sbrk.c, unix/select.c, unix/setegid.c, unix/seteuid.c,
+	unix/setgid.c, unix/setgroups.c, unix/setitimer.c, unix/setpgid.c,
+	unix/setpgrp.c, unix/setpriority.c, unix/setregid.c,
+	unix/setreuid.c, unix/setrlimit.c, unix/setsid.c,
+	unix/settimeofday.c, unix/setuid.c, unix/sigaction.c,
+	unix/sigblock.c, unix/signal.c, unix/sigpause.c, unix/sigpending.c,
+	unix/sigprocmask.c, unix/sigreturn.c, unix/sigsetmask.c,
+	unix/sigsuspend.c, unix/sigvec.c, unix/stat.c, unix/statfs.c,
+	unix/stime.c, unix/stty.c, unix/symlink.c, unix/sync.c,
+	unix/sysinfo.c, unix/test-fdset.c, unix/test-open.c,
+	unix/test-opendir.c, unix/test-select.c, unix/test-stat.c,
+	unix/test-time.c, unix/test-utime.c, unix/test-vfork.c,
+	unix/time.c, unix/times.c, unix/truncate.c, unix/umask.c,
+	unix/uname.c, unix/unlink.c, unix/utime.c, unix/utimes.c,
+	unix/vfork.S, unix/wait.c, unix/wait3.c, unix/wait4.c,
+	unix/waitpid.c, unix/write.c:
+
+	Initial revision
+	
