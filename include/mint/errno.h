@@ -388,7 +388,7 @@ __BEGIN_DECLS
 #define EBREAK		__KERNEL_NEG(68)		/* Aborted by user.  */
 
 /* This looks like a joke but it isn't.  Who has introduced that
-   in the kernel?  */
+   in the kernel?  - fna: comes from MagiC */
 #define EXCPT		__KERNEL_NEG(69)		/* Terminated with bombs.  */
 
 /* An attempt to execute a file that is currently open for writing, or
