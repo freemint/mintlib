@@ -17,10 +17,9 @@ long tell (int desc)
   long retval;
     
   retval = Fseek (0L, desc, SEEK_CUR);
-  if(retval < 0)
-    {
-      errno = (int) -retval;
-      return -1L;
-    }
+  if (retval < 0) {
+    __set_errno (-retval);
+    return -1L;
+  }
   return retval;
 }
