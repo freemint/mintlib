@@ -1,3 +1,277 @@
+2001-03-09 Friday 00:14  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.56.1 release.
+	
+2001-03-06 Tuesday 12:36  Frank Naumann <fnaumann@freemint.de>
+
+	* dirent/closedir.c, dirent/opendir.c, dirent/readdir.c,
+	dirent/test-list.c, login/pty.c, mintlib/getcwd.c,
+	mintlib/getloadavg.c, mintlib/main.c, mintlib/spawn.c,
+	mintlib/spawnvp.c, mintlib/syscall.c, mintlib/test-dirent.c,
+	misc/diraccess.c, misc/err.c, misc/mkstemp.c, misc/mktemp.c,
+	posix/system.c, pwdgrp/fgetpwent_r.c, pwdgrp/getpw.c,
+	pwdgrp/getpwnam_r.c, pwdgrp/getpwuid_r.c, pwdgrp/initgroups.c,
+	shadow/fgetspent_r.c, shadow/getspnam_r.c, shadow/sgetspent_r.c,
+	signal/sigdelset.c, signal/sigfillset.c, socket/rcmd.c,
+	socket/res_query.c, socket/res_send.c, stdio/popen.c,
+	stdio/test-errnobug.c, stdio/test-popen.c, stdio/tmpnam_r.c,
+	stdlib/a64l.c, stdlib/l64a.c, stdlib/strtol.c, stdlib/test-canon.c,
+	stdlib/test-canon2.c, stdlib/test-strtod.c, stdlib/test-strtol.c,
+	termios/tcdrain.c, tz/tzinit.c, unix/access.c, unix/chmod.c,
+	unix/close.c, unix/dup.c, unix/dup2.c, unix/fchmod.c,
+	unix/fchown.c, unix/fork.c, unix/ftruncate.c, unix/getgroups.c,
+	unix/getrlimit.c, unix/getrusage.c, unix/gettimeofday.c,
+	unix/mkdir.c, unix/mkfifo.c, unix/mknod.c, unix/pipe.c,
+	unix/readlink.c, unix/sbrk.c, unix/setgid.c, unix/setuid.c,
+	unix/sigaction.c, unix/signal.c, unix/sigvec.c, unix/stime.c,
+	unix/symlink.c, unix/sync.c, unix/sysinfo.c, unix/times.c,
+	unix/umask.c, unix/uname.c, unix/utimes.c, unix/write.c:
+
+	Replaced errno = xxx by the right __set_errno macro.
+	
+2001-03-06 Tuesday 12:33  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: mint/MISCFILES, mint/slb.h, netinet/ip.h,
+	netinet/ip_icmp.h:
+
+	New slb.h with the slb definitions. Minor header cleanup.
+	
+2001-02-15 Thursday 21:29  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: globals.c, main.c:
+
+	stdin/stdout/stderr are now statically initialized.
+	
+2001-02-15 Thursday 21:26  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/errno.h:
+
+	Corrected typo.
+	
+2001-02-08 Thursday 12:35  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/MISCFILES:
+
+	Added forgotten dirent.h entry.
+	
+2001-02-06 Tuesday 14:26  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* include/mint/mintbind.h:
+
+	Added Srealloc() binding.
+	
+2001-01-24 Wednesday 00:15  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/mintbind.h, socket/socketpair.c:
+
+	Updated new socket bindings, fixed mshort problem in socketpair.
+	
+2001-01-18 Thursday 02:17  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile, buildrules, include/dirent.h, include/string.h,
+	include/bits/dirent.h, include/sys/dir.h, include/sys/dirent.h,
+	dirent/.cvsignore, dirent/BINFILES, dirent/EXTRAFILES,
+	dirent/MISCFILES, dirent/Makefile, dirent/SRCFILES,
+	dirent/alphasort.c, dirent/closedir.c, dirent/opendir.c,
+	dirent/readdir.c, dirent/scandir.c, dirent/seekdir.c,
+	dirent/telldir.c, dirent/test-list.c, dirent/test-opendir.c,
+	dirent/test-seekdir.c, dirent/versionsort.c, mintlib/SRCFILES,
+	mintlib/alphasor.c, mintlib/scandir.c, mintlib/seekdir.c,
+	mintlib/telldir.c, unix/SRCFILES, unix/closedir.c, unix/opendir.c,
+	unix/readdir.c:
+
+	Seperated out dirent fucntions into extra dir. Added/Replaced some
+	utility function by the glibc version. Updated the header files.
+	
+2001-01-18 Thursday 02:14  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: wait.h, mint/basepage.h, mint/mouse.h, mint/osbind.h,
+	mint/xbra.h, sys/wait.h, mint/ssystem.h:
+
+	Cleanup.
+	
+2001-01-18 Thursday 02:05  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Activated TIOCNTTY kernel call. Let's hope it work now without
+	side effects.
+	
+2001-01-18 Thursday 02:04  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/tell.c:
+
+	Use __set_errno makro.
+	
+2001-01-18 Thursday 02:02  Frank Naumann <fnaumann@freemint.de>
+
+	* socket/: EXTRAFILES, MISCFILES, SRCFILES, accept.c, bind.c,
+	connect.c, getpeername.c, getsockname.c, getsockopt.c,
+	ident_sock.c, listen.c, mintsock.h, readv.c, recv.c, recvfrom.c,
+	recvmsg.c, send.c, sendmsg.c, sendto.c, setsockopt.c, shutdown.c,
+	sncpy.c, sncpy.h, socket.c, socketpair.c, sockets_global.c,
+	sockets_global.h, writev.c:
+
+	Added the new kernel bindings for the socket system calls. If there
+	run an older kernel the old interface is used.
+	
+2001-01-15 Monday 19:49  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/: getc.c, linewrap.c, putc.c:
+
+	Corrected #include <> to #include "" for local files.
+	
+2001-01-09 Tuesday 11:50  Frank Naumann <fnaumann@freemint.de>
+
+	* include/MISCFILES, include/basepage.h, include/falcon.h,
+	include/mintbind.h, include/mouse.h, include/osbind.h,
+	include/ostruct.h, include/xbra.h, include/mint/MISCFILES,
+	include/mint/basepage.h, include/mint/falcon.h,
+	include/mint/mintbind.h, include/mint/mouse.h,
+	include/mint/osbind.h, include/mint/ostruct.h, include/mint/xbra.h,
+	include/sys/dir.h, mintlib/crtinit.c, mintlib/globals.c,
+	mintlib/thread.c, unix/getpid.c, unix/getppid.c:
+
+	Started to restructure the kernel binding header files:
+	- moved basepage.h, falcon.h, mintbind.h, mouse.h, osbind.h,
+	  ostruct.h and xbra.h to the right mint/ subdir
+	- added small wrapper for mintbind.h and osbind.h
+	- fixed the mintlib src files to include the right headers
+	
+	Attention
+	---------
+	Programmers please fix your src to include mint/basepage.h,
+	mint/falcon.h and so on!
+	
+2001-01-08 Monday 15:40  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Fixed wrong emulation code; first the kernel is called.
+	
+2001-01-08 Monday 13:23  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/open.c, mintlib/lib.h, unix/read.c:
+
+	Updated the EAGAIN workaround in read.c:
+	- added a new member to __open_stat array of open fds to cache
+	  if the workaround is needed for that fd
+	- initialize this new member in open.c
+	- quickstat this fd in read.c and cache the result; the EAGAIN
+	  workaround is only be executed if it's not a regular file
+	
+2001-01-08 Monday 13:16  Frank Naumann <fnaumann@freemint.de>
+
+	* include/resolv.h:
+
+	Changed __op to __opval as __op seems to be conflict with the C++
+	namespace.
+	
+2001-01-08 Monday 13:15  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/socket.h:
+
+	Corrected prototype to size_t (but we better add socklen_t type in the
+	feature).
+	
+2001-01-08 Monday 13:12  Frank Naumann <fnaumann@freemint.de>
+
+	* lib_g/Makefile:
+
+	Corrected optimizations settings. At the moment the debug library must
+	be compiled at least with -O.
+	
+2001-01-08 Monday 09:22  Frank Naumann <fnaumann@freemint.de>
+
+	* buildrules:
+
+	Compile mintlib/crtinit.c always without profiling (startup).
+	
+2001-01-08 Monday 09:15  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/getpagesize.c:
+
+	Added weak_alias for getpagesize.
+	
+2000-12-24 Sunday 22:56  Odd Skancke <oskancke@online.no>
+
+	* unix/getdomainname.c:
+
+	Added a weak alias for getdomainname
+	
+2000-12-22 Friday 23:51  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mintbind.h:
+
+	Added some new syscall macros.
+	
+2000-12-22 Friday 23:49  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile, buildrules, include/bits/MISCFILES, include/bits/ipc.h,
+	include/bits/msq.h, include/bits/sem.h, include/bits/shm.h,
+	include/sys/MISCFILES, include/sys/ipc.h, include/sys/msg.h,
+	include/sys/sem.h, include/sys/shm.h, include/sys/types.h,
+	sysvipc/.cvsignore, sysvipc/BINFILES, sysvipc/EXTRAFILES,
+	sysvipc/MISCFILES, sysvipc/Makefile, sysvipc/SRCFILES,
+	sysvipc/ftok.c, sysvipc/msgctl.c, sysvipc/msgget.c,
+	sysvipc/msgrcv.c, sysvipc/msgsnd.c, sysvipc/semctl.c,
+	sysvipc/semget.c, sysvipc/semop.c, sysvipc/shmat.c,
+	sysvipc/shmctl.c, sysvipc/shmdt.c, sysvipc/shmget.c:
+
+	Added sysv ipc library bindings (syscall stubs and header files).
+	
+2000-12-15 Friday 14:11  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/select.c:
+
+	Two bugfixes:
+	* round timeout value up and not down
+	* FD_ZERO the fd sets also if retval = 0
+	
+2000-12-14 Thursday 01:38  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/: MISCFILES, arch/Makefile:
+
+	Updated to correctly install all newly added files.
+	
+2000-12-14 Thursday 01:36  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/: getdomainname.c, gethostname.c:
+
+	Added #include <errno.h> to correctly compile.
+	
+2000-12-13 Wednesday 19:11  Guido Flohr <guido@freemint.de>
+
+	* include/unistd.h:
+
+	Added prototype for setdomainname
+	
+2000-12-13 Wednesday 19:11  Guido Flohr <guido@freemint.de>
+
+	* unix/getdomainname.c:
+
+	* Finetuning
+	* Use weak aliases (non-standard!)
+	* Use __set_errno
+	* Removed CR from line ends.
+	* Added new stubs function setdomainname
+	
+2000-12-13 Wednesday 19:09  Guido Flohr <guido@freemint.de>
+
+	* unix/gethostname.c:
+
+	* Finetuning
+	* Use weak aliases (non-standard!)
+	* Use __set_errno
+	
+2000-12-08 Friday 17:25  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
 2000-12-08 Friday 17:05  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars:
