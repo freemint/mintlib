@@ -2,58 +2,54 @@
  *	socket() emulation for MiNT-Net, (w) '93, kay roemer.
  */
 
-#include "socklib.h"
-#ifdef KERNEL
-#include "kerbind.h"
-#else
-#include <osbind.h>
-#include <mintbind.h>
-#endif
-#include "file.h"
-#include "sys/socket.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <socklib.h>
+
+#include <mint/mintbind.h>
+#include <sys/socket.h>
+
 #include "mintsock.h"
+#include "sockets_global.h"
 
-#define SOCKDEV		"u:\\dev\\socket"
-
-#ifndef KERNEL
-extern int errno;
-#endif
 
 int
-socket (domain, type, proto)
-	int domain, type, proto;
+socket (int domain, int type, int proto)
 {
-	struct socket_cmd cmd;
-	int sockfd, r;
-
-#ifdef KERNEL
-	sockfd = f_open (SOCKDEV, O_RDWR|O_GLOBAL);
-	if (sockfd < 0) return sockfd;
-#else
-	sockfd = Fopen (SOCKDEV, O_RDWR);
-	if (sockfd < 0) {
-		errno = -sockfd;
-		return -1;
+	if (__libc_newsockets) {
+		long r = Fsocket (domain, type, proto);
+		if (r != -ENOSYS) {
+			if (r < 0) {
+				__set_errno (-r);
+				return -1;
+			}
+			return r;
+		} else
+			__libc_newsockets = 0;
 	}
-#endif
-	cmd.cmd =	SOCKET_CMD;
-	cmd.domain =	domain;
-	cmd.type =	type;
-	cmd.protocol =	proto;
-
-#ifdef KERNEL
-	r = f_cntl (sockfd, (long)&cmd, SOCKETCALL);
-	if (r < 0) {
-		f_close (sockfd);
-		return r;
+	
+	{
+		struct socket_cmd cmd;
+		int sockfd, r;
+		
+		sockfd = Fopen (SOCKDEV, O_RDWR);
+		if (sockfd < 0) {
+			__set_errno (-sockfd);
+			return -1;
+		}
+		
+		cmd.cmd		= SOCKET_CMD;
+		cmd.domain	= domain;
+		cmd.type	= type;
+		cmd.protocol	= proto;
+		
+		r = Fcntl (sockfd, (long) &cmd, SOCKETCALL);
+		if (r < 0) {
+			__set_errno (-r);
+			Fclose (sockfd);
+			return -1;
+		}
+		
+		return sockfd;
 	}
-#else
-	r = Fcntl (sockfd, (long)&cmd, SOCKETCALL);
-	if (r < 0) {
-		errno = -r;
-		Fclose (sockfd);
-		return -1;
-	}
-#endif
-	return sockfd;
 }

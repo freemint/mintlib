@@ -4,12 +4,10 @@
  *	one '\0'.
  */ 
 
-#include <stdio.h>	/* for size_t */
+#include "sncpy.h"
  
 int
-_sncpy (dst, src, len)
-	char *src, *dst;
-	size_t len;
+_sncpy (char *dst, const char *src, size_t len)
 {
 	int count = len;
 

@@ -8,6 +8,11 @@
 #ifndef _MINTSOCK_H
 #define _MINTSOCK_H
 
+
+#define SOCKDEV "u:\\dev\\socket"
+#define UN_OFFSET ((short)((struct sockaddr_un *)0)->sun_path)
+
+
 /* perform a socket system call, via ioctl() */
 #define SOCKETCALL	(('S' << 8) | 100)
 
@@ -152,5 +157,6 @@ struct recvmsg_cmd {
 	void	*msg;
 	short	flags;
 };
+
 
 #endif /* _MINTSOCK_H */

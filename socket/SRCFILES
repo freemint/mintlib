@@ -4,11 +4,51 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = accept.c bind.c connect.c gethostnamadr.c getnetbyaddr.c \
-getnetbyname.c getnetent.c getpeername.c getproto.c getprotoent.c \
-getprotoname.c getservbyname.c getservbyport.c getservent.c getsockname.c \
-getsockopt.c herror.c hton.c ident_sock.c inet_addr.c inet_lnaof.c \
-inet_makeaddr.c inet_netof.c inet_network.c inet_ntoa.c listen.c \
-rcmd.c recv.c recvfrom.c recvmsg.c readv.c res_comp.c res_debug.c res_init.c \
-res_mkquery.c res_query.c res_send.c send.c sendmsg.c sendto.c sethostent.c \
-setsockopt.c shutdown.c sncpy.c socket.c socketpair.c writev.c
+SRCFILES = \
+	accept.c \
+	bind.c \
+	connect.c \
+	gethostnamadr.c \
+	getnetbyaddr.c \
+	getnetbyname.c \
+	getnetent.c \
+	getpeername.c \
+	getproto.c \
+	getprotoent.c \
+	getprotoname.c \
+	getservbyname.c \
+	getservbyport.c \
+	getservent.c \
+	getsockname.c \
+	getsockopt.c \
+	herror.c \
+	hton.c \
+	ident_sock.c \
+	inet_addr.c \
+	inet_lnaof.c \
+	inet_makeaddr.c \
+	inet_netof.c \
+	inet_network.c \
+	inet_ntoa.c \
+	listen.c \
+	rcmd.c recv.c \
+	recvfrom.c \
+	recvmsg.c \
+	readv.c \
+	res_comp.c \
+	res_debug.c \
+	res_init.c \
+	res_mkquery.c \
+	res_query.c \
+	res_send.c \
+	send.c \
+	sendmsg.c \
+	sendto.c \
+	sethostent.c \
+	setsockopt.c \
+	shutdown.c \
+	sncpy.c \
+	socket.c \
+	socketpair.c \
+	sockets_global.h \
+	writev.c

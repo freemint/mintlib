@@ -2,37 +2,43 @@
  *	shutdown() emulation for MiNT-Net, (w) '93, kay roemer.
  */
 
-#include "socklib.h"
-#ifdef KERNEL
-#include "kerbind.h"
-#else
-#include <mintbind.h>
-#endif
-#include "sys/socket.h"
-#include "mintsock.h"
+#include <errno.h>
+#include <socklib.h>
 
-#ifndef KERNEL
-extern int errno;
-#endif
+#include <mint/mintbind.h>
+#include <sys/socket.h>
+
+#include "mintsock.h"
+#include "sockets_global.h"
+
 
 int
-shutdown (fd, how)
-	int fd, how;
+shutdown (int fd, int how)
 {
-	struct shutdown_cmd cmd;
-	int r;
-	
-	cmd.cmd = SHUTDOWN_CMD;
-	cmd.how = how;
-
-#ifndef KERNEL
-	r = Fcntl (fd, (long)&cmd, SOCKETCALL);
-	if (r < 0) {
-		errno = -r;
-		return -1;
+	if (__libc_newsockets) {
+		long r = Fshutdown (fd, how);
+		if (r != -ENOSYS) {
+			if (r < 0) {
+				__set_errno (-r);
+				return -1;
+			}
+			return 0;
+		} else
+			__libc_newsockets = 0;
 	}
-	return 0;
-#else
-	return f_cntl (fd, (long)&cmd, SOCKETCALL);
-#endif
+	
+	{
+		struct shutdown_cmd cmd;
+		long r;
+		
+		cmd.cmd = SHUTDOWN_CMD;
+		cmd.how = how;
+		
+		r = Fcntl (fd, (long) &cmd, SOCKETCALL);
+		if (r < 0) {
+			__set_errno (-r);
+			return -1;
+		}
+		return 0;
+	}
 }
