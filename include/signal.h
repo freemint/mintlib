@@ -38,59 +38,7 @@ typedef __sigset_t sigset_t;
 #ifdef _SIGNAL_H
 
 #include <bits/types.h>
-
-#define	__NSIG		32		/* number of signals recognized */
-
-#define	SIGNULL		0		/* not really a signal */
-#define SIGHUP		1		/* hangup signal */
-#define SIGINT		2		/* sent by ^C */
-#define SIGQUIT		3		/* quit signal */
-#define SIGILL		4		/* illegal instruction */
-#define SIGTRAP		5		/* trace trap */
-#define SIGABRT		6		/* abort signal */
-# define SIGIOT SIGABRT
-#define SIGPRIV		7		/* privilege violation */
-# define SIGEMT SIGPRIV
-#define SIGFPE		8		/* divide by zero */
-#define SIGKILL		9		/* cannot be ignored */
-#define SIGBUS		10		/* bus error */
-#define SIGSEGV		11		/* illegal memory reference */
-#define SIGSYS		12		/* bad system call */
-#define SIGPIPE		13		/* broken pipe */
-#define SIGALRM		14		/* alarm clock */
-#define SIGTERM		15		/* software termination signal */
-
-#define SIGURG		16		/* urgent condition on I/O channel */
-#define SIGSTOP		17		/* stop signal not from terminal */
-#define SIGTSTP		18		/* stop signal from terminal */
-#define SIGCONT		19		/* continue stopped process */
-#define SIGCHLD		20		/* child stopped or exited */
-#define SIGTTIN		21		/* read by background process */
-#define SIGTTOU		22		/* write by background process */
-#define SIGIO		23		/* I/O possible on a descriptor */
-# define SIGPOLL SIGIO
-#define SIGXCPU		24		/* CPU time exhausted */
-#define SIGXFSZ		25		/* file size limited exceeded */
-#define SIGVTALRM	26		/* virtual timer alarm */
-#define SIGPROF		27		/* profiling timer expired */
-#define SIGWINCH	28		/* window size changed */
-#define SIGUSR1		29		/* user signal 1 */
-#define SIGUSR2		30		/* user signal 2 */
-#define SIGPWR		31		/* power failure restart (System V) */
-
-#ifndef BADSIG
-#define BADSIG		SIG_ERR
-#endif
-
-#define       SIG_DFL	((__sighandler_t)0L)
-#define       SIG_IGN	((__sighandler_t)1L)
-#define       SIG_ERR	((__sighandler_t)-1L)
-
-#ifdef __USE_MISC
-# define SignalBad	SIG_ERR
-# define SignalDefault	SIG_DFL
-# define SignalIgnore	SIG_IGN
-#endif
+#include <bits/signum.h>
 
 #ifdef __USE_XOPEN
 # ifndef pid_t
@@ -238,19 +186,9 @@ __EXTERN int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
 			  __const sigset_t *__right));
 # endif /* GNU */
 
-/* values for "how" parameter to sigprocmask() */
-#define SIG_BLOCK	0
-#define SIG_UNBLOCK	1
-#define SIG_SETMASK	2
-
-#define SA_NOCLDSTOP   1       /* don't send SIGCHLD when they stop */
-
-struct sigaction {
-	__sighandler_t 	sa_handler;	/* Pointer to signal handler.  */
-	__sigset_t	sa_mask;	/* Additional signals masked during
-					   delivery.  */
-	int		sa_flags;	/* Signal specific flags.  */
-};
+/* Get the system-specific definitions of `struct sigaction'
+   and the `SA_*' and `SIG_*'. constants.  */
+# include <bits/sigaction.h>
 
 __EXTERN int	sigprocmask __P((int how, const sigset_t *set,
 				 sigset_t *oset));
@@ -306,25 +244,55 @@ struct sigvec {
 #define SV_INTERRUPT 0x8000 /* Do not restart system calls.  */ 
 #define SV_RESETHAND 0x8000 /* Reset handler to SIG_DFL on receipt.  */
 
+#if 0
 /* If VEC is non-NULL, set the handler for SIG to the `sv_handler'
    member of VEC.  The signals in `sv_mask' will be blocked while the
    handler runs.
    If the SV_RESETHAND bit is set in `sv_flags', the handler for SIG
    will be reset to SIG_DFL before `sv_handler' is entered.  If OVEC
    is non-NULL, it is fille in with the old information for SIG.  */
+extern int sigvec (int __sig, __const struct sigvec *__vec,
+		   struct sigvec *__ovec) __THROW;
+#endif
 #endif
 
-/* State of this thread when the signal was taken.  */
-struct sigcontext {
-    int sc_onstack;
-    __sigset_t sc_mask;
 
-    /* Registers and such.  */
-};
+/* Get machine-dependent `struct sigcontext' and signal subcodes.  */
+# include <bits/sigcontext.h>
 
+/* Restore the state saved in SCP.  */
 __EXTERN void	sigreturn __P ((struct sigcontext* __unused));
 
 #endif /*  use BSD.  */
+
+
+#if defined (__USE_BSD) || defined (__USE_XOPEN_EXTENDED)
+
+/* If INTERRUPT is nonzero, make signal SIG interrupt system calls
+   (causing them to fail with EINTR); if INTERRUPT is zero, make system
+   calls be restarted after signal SIG.  */
+__EXTERN int siginterrupt __P ((int __sig, int __interrupt));
+
+# include <bits/sigstack.h>
+# ifdef __USE_XOPEN
+#  include <ucontext.h>
+# endif
+
+#if 0
+/* FIXME: sigstack and sigaltstack would be quite useful!  */
+
+/* Run signals handlers on the stack specified by SS (if not NULL).
+   If OSS is not NULL, it is filled in with the old signal stack status.
+   This interface is obsolete and on many platform not implemented.  */
+extern int sigstack (struct sigstack *__ss, struct sigstack *__oss) __THROW;
+
+/* Alternate signal handler stack interface.
+   This interface should always be preferred over `sigstack'.  */
+extern int sigaltstack (__const struct sigaltstack *__ss,
+			struct sigaltstack *__oss) __THROW;
+#endif
+
+#endif /* use BSD or X/Open Unix.  */
 
 #ifdef __USE_UNIX98
 /* Simplified interface for signal management.  */
@@ -342,12 +310,6 @@ extern int sigignore __P ((int __sig));
 extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
 
 #endif /* use Unix98 */
-
-#if defined (__USE_BSD) || defined (__USE_XOPEN_EXTENDED)
-__EXTERN int siginterrupt __P ((int __sig, int __interrupt));
-
-/* FIXME: sigstack and sigaltstack would be quite useful!  */
-#endif
 
 /* This is used by the library itself.  */
 extern const char* const __signal_names[__NSIG];

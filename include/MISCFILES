@@ -14,5 +14,5 @@ pty.h pwd.h re_comp.h regex.h regexp.h resource.h resolv.h rtent.h \
 screen.h search.h setjmp.h sgtty.h shadow.h signal.h sockios.h socklib.h \
 st-out.h stdint.h stdio.h stdlib.h string.h strings.h support.h \
 syscall.h sysexits.h syslog.h sysvars.h tcfloat.h tchars.h tcmath.h \
-termio.h termios.h time.h unistd.h utime.h utmp.h utmpbits.h \
+termio.h termios.h time.h ucontext.h unistd.h utime.h utmp.h utmpbits.h \
 values.h vt52.h wait.h widget.h wordexp.h xbra.h

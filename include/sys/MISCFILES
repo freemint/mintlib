@@ -6,5 +6,5 @@ cdefs.h cookie.h dir.h dirent.h errno.h fcntl.h file.h \
 gmon.h gmon_out.h ioctl.h \
 mount.h param.h poll.h queue.h reboot.h resource.h select.h signal.h socket.h \
 stat.h statfs.h syscall.h syslog.h sysmacros.h systeminfo.h termios.h time.h \
-timeb.h times.h ttychars.h ttydefaults.h types.h uio.h un.h utsname.h \
-varargs.h vfs.h wait.h
+timeb.h times.h ttychars.h ttydefaults.h types.h ucontext.h uio.h un.h \
+utsname.h varargs.h vfs.h wait.h
