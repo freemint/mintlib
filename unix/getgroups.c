@@ -34,9 +34,7 @@
 #endif
 
 int
-__getgroups(gsetlen, grpset)
-  int     gsetlen;
-  gid_t   *grpset;
+__getgroups (int gsetlen, gid_t *grpset)
 {
   struct group    *gentry;
   int             numgroups;

@@ -14,7 +14,7 @@ extern uid_t __uid;
 #include "lib.h"
 
 uid_t
-__getuid()
+__getuid (void)
 {
 	long r;
 	static short have_getuid = 1;

@@ -15,9 +15,7 @@
 #include <sys/types.h>
 
 int
-__gethostname(buf, len)
-	char *buf;
-	size_t len;
+__gethostname (char *buf, size_t len)
 {
     char *foo = 0;
     char xbuf[MAXHOSTNAMELEN + 1];

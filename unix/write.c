@@ -33,10 +33,7 @@ long
 #else
 int
 #endif
-__write (fd, buf, size)
-	int fd;
-	const void *buf;
-	size_t size;
+__write (int fd, const void *buf, size_t size)
 {
 	unsigned char c, *foo;
 	unsigned flags;

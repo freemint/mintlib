@@ -10,8 +10,7 @@
 #include "lib.h"
 
 int
-__pipe(fd)
-	int *fd;
+__pipe (int *fd)
 {
 	short mint_handle[2];
 	long r;

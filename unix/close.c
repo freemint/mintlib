@@ -10,8 +10,7 @@
 #include "lib.h"
 
 int
-__close(fd)
-	int fd;
+__close (int fd)
 {
 	int r;
 

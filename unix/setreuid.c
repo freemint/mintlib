@@ -10,8 +10,7 @@
 #include <errno.h>
 
 int
-__setreuid(ruid,euid)
-  int ruid, euid;
+__setreuid (int ruid, int euid)
 {
 	long r;
 	static short have_setreuid = 1;

@@ -16,7 +16,7 @@
 #define UNLIMITED	(0x7fffffffL)
 
 long
-pathconf(const char *_path, int var)
+__pathconf (const char *_path, int var)
 {
 	long r;
 	char pathbuf[PATH_MAX];
@@ -58,3 +58,4 @@ pathconf(const char *_path, int var)
 		return -1;
 	}
 }
+weak_alias (__pathconf, pathconf)

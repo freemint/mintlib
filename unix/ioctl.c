@@ -35,9 +35,8 @@ int _ldisc = LLITOUT;
 extern struct tchars __tchars;
 extern struct ltchars __ltchars;
 
-int __ioctl(fd, cmd, arg)
-	int fd, cmd;
-	void *arg;
+int
+__ioctl (int fd, int cmd, void *arg)
 {
 	long r;
 	int istty = isatty(fd);

@@ -11,8 +11,7 @@
 #include "lib.h"
 
 int
-__dup(handle)
-	int handle;
+__dup (int handle)
 {
 	register int rv;
 	long flags;

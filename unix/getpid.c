@@ -5,7 +5,7 @@
 #include <errno.h>
 
 int
-__getpid(void)
+__getpid (void)
 {
   	int r;
   	static short have_getpid = 1;

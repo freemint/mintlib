@@ -7,7 +7,7 @@
 #include "lib.h"
 
 int
-__fork()
+__fork (void)
 {
 	int r;
 

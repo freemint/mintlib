@@ -18,7 +18,7 @@
 #define UNLIMITED	(0x7fffffffL)
 
 long
-fpathconf(int fd, int var)
+__fpathconf (int fd, int var)
 {
 	switch(var) {
 	case _PC_PIPE_BUF: {
@@ -39,3 +39,4 @@ fpathconf(int fd, int var)
 		return -1;
 	}
 }
+weak_alias (__fpathconf, fpathconf)

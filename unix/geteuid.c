@@ -9,7 +9,7 @@
 #include <errno.h>
 
 uid_t
-__geteuid()
+__geteuid (void)
 {
 	long r;
   	static short have_geteuid = 1;

@@ -11,7 +11,7 @@
 #include "lib.h"
 
 gid_t
-__getegid()
+__getegid (void)
 {
 	long r;
   	static short have_getegid = 1;

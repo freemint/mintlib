@@ -10,10 +10,8 @@
 /*
  * emulate berzerkly lseek too
  */
-off_t __lseek(handle, offset, mode)
-int handle;
-off_t offset;
-int mode;
+off_t
+__lseek (int handle, off_t offset, int mode)
 {
     long current_pos;
     long expected_pos;

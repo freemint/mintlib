@@ -54,10 +54,7 @@ long
 #else
 int
 #endif
-__read (fd, buf, size)
-	int fd;
-	void *buf;
-	size_t size;
+__read (int fd, void *buf, size_t size)
 {
 	char *foo;
 	long r;
