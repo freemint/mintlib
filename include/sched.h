@@ -38,6 +38,9 @@
 
 __BEGIN_DECLS
 
+#if 0
+/* not yet implemented */
+
 /* Set scheduling parameters for a process.  */
 extern int sched_setparam (__pid_t __pid, __const struct sched_param *__param)
      __THROW;
@@ -63,6 +66,8 @@ extern int sched_get_priority_min (int __algorithm) __THROW;
 
 /* Get the SCHED_RR interval for the named process.  */
 extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
+
+#endif
 
 __END_DECLS
 
