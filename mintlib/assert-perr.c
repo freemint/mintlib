@@ -15,8 +15,8 @@
 #include <_itoa.h>
 #include <string.h>
 #include <mintbind.h>
+#include "lib.h"
 
-extern char *program_invocation_short_name;  /* In globals.c.  */
 #define assert_write(desc, buf, size) Fwrite (desc, size, buf)
 
 /* This function, when passed an error number, a filename, and a line

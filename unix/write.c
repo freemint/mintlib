@@ -17,7 +17,6 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
-extern sighandler_t _sig_handler[]; /* TOS fakes for signal handling */
 
 #ifdef __MSHORT__
 long

@@ -23,17 +23,13 @@
  * Instead, check the directory struct if there was an opendir call.
  */
 
-extern ino_t __inode;	/* in stat.c */
-
 /* a new value for DIR->status, to indicate that the file system is not
  * case sensitive.
  */
 #define _NO_CASE  8
 
-
 struct dirent*
-__readdir(d)
-	DIR *d;
+__readdir(DIR *d)
 {
 	struct dbuf {
 		long ino;

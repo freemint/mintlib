@@ -54,8 +54,6 @@
 
 #define TOS_ARGS 126
 
-extern char **environ;
-
 /* comment this out, if you don't want script execution */
 #define HASH_BANG
 

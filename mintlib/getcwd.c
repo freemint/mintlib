@@ -15,8 +15,6 @@ getcwd: returns current working directory. By ERS.
 This routine is in the public domain.
 ********************************************************************/
 
-extern char _rootdir;	/* in main.c: user's preferred root directory */
-
 /* we want to be on the safe side */
 #if PATH_MAX < 1024
 #undef PATH_MAX

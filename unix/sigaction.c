@@ -7,8 +7,6 @@
 
 #include "lib.h"
 
-/* vector of signal handlers (for TOS, or for MiNT with -mshort) */
-extern sighandler_t _sig_handler[__NSIG];
 
 #ifdef __MSHORT__
 typedef void __CDECL (*__KerSigfunc) __PROTO((long, long));

@@ -8,15 +8,6 @@
 
 #include "lib.h"
 
-/* vector of signal handlers (for TOS) */
-extern sighandler_t _sig_handler[];	/* in signal.c */
-
-/* vector giving which signals are currently blocked from delivery (for TOS) */
-extern long _sigmask;			/* in signal.c */
-
-/* which signals are pending? */
-extern long _sigpending;
-
 
 int
 __kill (int pid, int sig)

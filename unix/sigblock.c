@@ -1,10 +1,9 @@
 /* signal blocking stuff for MiNT */
 
-#include <signal.h>
 #include <errno.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
+#include "lib.h"
 
-extern long _sigmask;
 
 #ifdef __MSHORT__
 long

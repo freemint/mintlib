@@ -5,8 +5,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
-
-extern char **environ;
+#include "lib.h"
 
 char *
 getenv (const char *tag)

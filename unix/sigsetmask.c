@@ -1,19 +1,17 @@
 /* signal blocking stuff for MiNT */
 
-#include <signal.h>
 #include <errno.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
 
-extern long _sigpending, _sigmask;
+#include "lib.h"
 
-static void checksigs __PROTO((void));
 
 /* checksigs: for TOS: this checks to see if we just unmasked any
  * pending signals
  */
 
 static void
-checksigs()
+checksigs(void)
 {
 	register int sig;
 	register long send;

@@ -12,12 +12,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "lib.h"
 
 /* Abort with an error message.
    This function should write MESSAGE out in the most reliable way.
    It is called in situations like internal stdio lossage.  */
-
-extern char* program_invocation_name;
 
 void
 __libc_fatal (register const char* message)

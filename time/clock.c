@@ -5,7 +5,8 @@
 #include <time.h>
 #include <mint/sysvars.h>
 
-extern clock_t _starttime; /* in main.c */
+#include "lib.h"
+
 
 clock_t
 _clock(void)

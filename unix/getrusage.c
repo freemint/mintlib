@@ -10,17 +10,9 @@
 
 #include "lib.h"
 
-extern long _childtime;
-
-static void _ms2tval __PROTO((unsigned long, struct timeval *));
-#if 0
-static void _add_tval __PROTO((struct timeval *, struct timeval *));
-#endif
 
 static void
-_ms2tval(milliseconds, tval)
-	unsigned long milliseconds;
-	struct timeval *tval;
+_ms2tval(unsigned long milliseconds, struct timeval *tval)
 {
 	tval->tv_sec = milliseconds/1000;
 	tval->tv_usec = (milliseconds % 1000) * 1000;
@@ -28,8 +20,7 @@ _ms2tval(milliseconds, tval)
 
 #if 0
 static void
-_add_tval(orig, new)
-	struct timeval *orig, *new;
+_add_tval(struct timeval *orig, struct timeval *new)
 {
 	long t;
 

@@ -9,8 +9,6 @@
 #include <sys/param.h>
 #include "lib.h"
 
-extern char _rootdir;	/* in main.c: user's preferred root directory */
-
 /*
  * returns 0 for ordinary files, 1 for special files (like /dev/tty)
  */

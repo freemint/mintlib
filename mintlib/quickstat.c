@@ -22,9 +22,6 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
-extern char _rootdir;
-
-extern ino_t __inode;
 
 /* A quick stat version that gets everything but the timestamps.  This
    is often enough and saves a lot of performance.  

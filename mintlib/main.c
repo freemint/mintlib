@@ -25,22 +25,12 @@
 /* NOTE: This file must not contain ANY global symbol but _main itself.
    Otherwise the user cannot provide her own version of _main if 
    weak symbols are not available.  */
-extern int _pdomain;    /* Error code of Pdomain call */
-extern char _rootdir;	/* User's preferred root directory */
-
-extern clock_t _starttime;	/* 200 HZ tick when we started the program.  */
-extern clock_t _childtime;	/* Time consumed so far by our children.  */
-
-/* Functions registered by user for calling at exit.  */
-typedef void (*ExitFn) (void);
-extern ExitFn *_at_exit;
-extern int _num_at_exit;	/* Number of functions registered - 1.  */
 
 /* Supplied by the user */
 extern int main (int, char **, char **);
 
-extern __io_mode __default_mode__; /* in defmode.c or defined by user */
-extern short _app; /* tells if we're an application or acc */
+/* in defmode.c or defined by user */
+extern __io_mode __default_mode__;
 
 void __libc_main (long, char **, char **);
 
@@ -160,7 +150,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	stderr = fdopen (2, "r+");
 	
 	if (stdin == NULL || stdout == NULL || stderr == NULL) {
-		extern char* program_invocation_name;
 		Fwrite (2, strlen (program_invocation_name),
 		        program_invocation_name);
 		Fwrite (2, sizeof ": " - 1,

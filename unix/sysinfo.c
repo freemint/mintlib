@@ -22,9 +22,6 @@
 
 #include "lib.h"
 
-/* In case you still haven't got the prototype in stdlib.h where
-   it belongs.  */
-extern int putenv (const char* string);
 
 /* Helper functions.  */
 static void fast_strncpy (char* to, char* from, long bytes);

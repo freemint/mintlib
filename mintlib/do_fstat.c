@@ -69,8 +69,6 @@ __sys_fstat (short fd, struct stat *st, int exact)
 	return r;
 }
 
-extern ino_t __inode;
-
 /* 
  * fstat: if we're not running under MiNT, this is pretty bogus.
  * what we can really find is:

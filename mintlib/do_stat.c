@@ -95,9 +95,6 @@ __sys_stat (const char *path, struct stat *st, int lflag, int exact)
 	return r;
 }
 
-extern char _rootdir;
-extern ino_t __inode;
-
 /* for backwards compatibilty: if nonzero, files are checked to see if
  * they have the TOS executable magic number in them
  */

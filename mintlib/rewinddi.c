@@ -19,7 +19,6 @@
 /* See the comment in opendir.c/readdir.c for the use (or better non-use)
  * of a status variable for the system call being implemented.
  */
-extern ino_t __inode;	/* in stat.c */
 
 void
 rewinddir(DIR *dirp)

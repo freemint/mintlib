@@ -4,18 +4,11 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-#include <support.h>
+#include "lib.h"
 
-extern char ** environ;
-
-static void del_env __PROTO((const char *strng));
 
 static void
-del_env(strng)
-	const char *strng;
+del_env(const char *strng)
 {
 	char **var;
 	char *name;
@@ -45,8 +38,7 @@ del_env(strng)
 }
 
 int
-putenv(strng)
-	const char *strng;
+putenv(const char *strng)
 {
 	int i = 0;
 	char **e;

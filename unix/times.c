@@ -15,7 +15,6 @@
 
 #include "lib.h"
 
-extern long _childtime;
 
 clock_t 
 __times (struct tms *buf)

@@ -8,14 +8,6 @@
 
 #include "lib.h"
 
-/* vector of signal handlers (for TOS, or for MiNT with -mshort) */
-extern __sighandler_t _sig_handler[NSIG];
-
-/* vector giving which signals are currently blocked from delivery (for TOS) */
-extern long _sigmask;
-
-/* vector giving an indication of which signals are currently pending (for TOS) */
-extern long _sigpending;
 
 #ifdef __MSHORT__
 /* trampoline code: for any caught signal, converts the 32 bit signal

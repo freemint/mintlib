@@ -26,9 +26,6 @@
 
 #define SIZE 4096L
 
-extern long _childtime;			/* in main.c */
-extern long _sigpending, _sigmask;	/* in signal.c */
-extern sighandler_t _sig_handler[NSIG];	/* ditto */
 
 /* this is used by wait() and wait3() to retrieve the child's exit code */
 long __waitval = -ENOENT;
@@ -51,7 +48,6 @@ startup(register BASEPAGE *b)
 	Mfree(b->p_env);
 	b->p_env = _base->p_env;
 
-#if 1
 	/* copy from parents basepage for debuggers... */
 	b->p_tbase = _base->p_tbase;
 	b->p_tlen = _base->p_tlen;
@@ -59,7 +55,7 @@ startup(register BASEPAGE *b)
 	b->p_dlen = _base->p_dlen;
 	b->p_bbase = _base->p_bbase;
 	b->p_blen = _base->p_blen;
-#endif
+
 	Pterm((*func)(arg));
 }
 

@@ -33,9 +33,11 @@
 #if _LIBC || HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+#if _LIBC
+# include "lib.h"
+#endif
 
 #define __environ environ
-extern char **environ;
 
 /* In the MiNTLib we must keep the namespace clean.  */
 #ifdef _LIBC

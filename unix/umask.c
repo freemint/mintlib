@@ -12,9 +12,8 @@
 
 #include <errno.h>
 #include <mint/mintbind.h>
-#include <sys/stat.h>
+#include "lib.h"
 
-extern mode_t __current_umask;  /* Sigh, in open.c.  */
 
 mode_t
 __umask (mode_t complmode)

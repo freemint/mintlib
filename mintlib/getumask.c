@@ -8,10 +8,9 @@
     understand and accept it fully.
 */
 
-#include <sys/stat.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
+#include "lib.h"
 
-extern mode_t __current_umask;
 
 mode_t
 __getumask (void)

@@ -15,7 +15,6 @@
    
 #include <stdio.h>
 #include <time.h>
-#include <mint/basepage.h>
 #include <assert.h>
 #include "lib.h"
 
@@ -29,7 +28,6 @@ clock_t _starttime;	/* 200 HZ tick when we started the program.  */
 clock_t _childtime;	/* Time consumed so far by our children.  */
 
 /* Functions registered by user for calling at exit.  */
-typedef void (*ExitFn) __PROTO ((void));
 ExitFn *_at_exit;
 int _num_at_exit;	/* Number of functions registered - 1.  */
 
@@ -44,9 +42,11 @@ int __has_no_ssystem;
 BASEPAGE *_base;
 char **environ;
 long __libc_argc = 1;
-char* __libc_argv[] = { "unknown application", NULL };
+static char *__libc_argv_default[] = { "unknown application", NULL };
+char **__libc_argv = __libc_argv_default;
 
-unsigned long _PgmSize;		/* total size of program area */
+/* total size of program area */
+unsigned long _PgmSize;
 
 /* Default sizeof stdio buffers.  */
 size_t __DEFAULT_BUFSIZ__ = 0;

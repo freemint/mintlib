@@ -24,10 +24,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <mint/osbind.h>
-
-extern void *_heapbase;
-extern long _stksize;
-extern short _split_mem;
+#include "lib.h"
 
 static void *
 HeapAlloc (unsigned long sz)

@@ -75,6 +75,7 @@
 #include <string.h>
 #include "lib.h"
 
+
 #define isspace(c) ((c) == ' '||(c) == '\t')
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
@@ -82,36 +83,6 @@
 					/* on top */
 #define MINKEEP (24L * 1024L)		/* keep at least this much mem */
 
-extern BASEPAGE *_base;
-extern char **environ;
-extern long __libc_argc;
-extern char **__libc_argv;
-
-/* size to be allocated for the stack */
-extern long _stksize;		/* picked up from user or from stksiz.c */
-
-/* set to heap base addr when _stksize < 0 || _initial_stack || When DA
- * note that we allow the user to provide a _heapbase of their own, since
- * that used to be necessary for acc's; but that is no longer needed
- * (or encouraged) since the acc startup code now Mallocs a heap
- * automatically
- */
-extern void *_heapbase;		/* picked up from user or from heapbase.c */
-
-/*
- * initial stack is used primarily by dumping application,
- * if it is, malloc is always from heap, and _stksize is init
- * from initial_stack (to preserve the value in the undumped run)
- */
-extern long _initial_stack;	/* picked up from user or from inistack.c */
-
-extern unsigned long _PgmSize;	/* total size of program area */
-
-/* are we an app? */
-extern short _app;
-
-/* are we on a split addr mem ST */
-extern short _split_mem;
 
 static long parseargs(BASEPAGE *);
 
@@ -119,9 +90,6 @@ static long parseargs(BASEPAGE *);
  * accessories start here:
  */
 static char *acc_argv[] = { "", NULL }; /* no name and no arguments */
-
-extern char *program_invocation_name;
-extern char *program_invocation_short_name;
 
 void
 _acc_main(void)

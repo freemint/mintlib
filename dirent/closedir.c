@@ -22,12 +22,8 @@
  * opendir/readdir under Metados applies also here.
  */
 
-extern ino_t __inode;	/* in stat.c */
-
-
 int
-__closedir(dirp)
-	DIR *dirp;
+__closedir(DIR *dirp)
 {
 	long r;
 

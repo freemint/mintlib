@@ -22,17 +22,13 @@
  * saying there is an opendir call. Check this every time.
  */
 
-extern ino_t __inode;	/* in stat.c */
-
 /* a new value for DIR->status, to indicate that the file system is not
  * case sensitive.
  */
 #define _NO_CASE  8
 
-
 DIR *
-__opendir(uname)
-	const char *uname;
+__opendir(const char *uname)
 {
 	DIR *d;
 	long r;
