@@ -74,9 +74,14 @@ svcauthsw[] =
   { _svcauth_null },		/* AUTH_NULL */
   { _svcauth_unix },		/* AUTH_UNIX */
   { _svcauth_short },		/* AUTH_SHORT */
+#ifndef __MINT__
   { _svcauth_des }		/* AUTH_DES */
 };
 #define	AUTH_MAX	3	/* HIGHEST AUTH NUMBER */
+#else
+};
+#define	AUTH_MAX	1	/* HIGHEST AUTH NUMBER */
+#endif
 
 
 /*

@@ -85,10 +85,11 @@ static const char *cmdname;
 
 #define SVR4_CPP "/usr/ccs/lib/cpp"
 #define SUNOS_CPP "/lib/cpp"
+#define NORMAL_CPP "/usr/bin/cpp"
 
 static const char *svcclosetime = "120";
 static int cppDefined = 0;	/* explicit path for C preprocessor */
-static const char *CPP = SUNOS_CPP;
+static const char *CPP = NORMAL_CPP;
 static char CPPFLAGS[] = "-C";
 static char *pathbuf;
 static int cpp_pid;
