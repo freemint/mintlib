@@ -44,7 +44,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 	if (!must_emulate) {
 		retval = Fpoll (fds, nfds, timeout);
 		if (retval < 0) {
-			if (retval == -ENOSYS) {
+			if (retval != -ENOSYS) {
 				__set_errno (-retval);
 				return -1;
 			} else
@@ -70,7 +70,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 			}
 
 #define LEGAL_FLAGS \
-	(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL)
+	(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | POLLRDNORM | POLLWRNORM)
 
 			if ((pfds[i].events | LEGAL_FLAGS) != LEGAL_FLAGS) {
 				/* Not supported.  */
