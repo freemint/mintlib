@@ -37,6 +37,13 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
+# override crosscompiler
+ifdef CROSS
+CC = gcc
+CFLAGS = -Wall -O
+COMPILE = $(CC) $(CFLAGS)
+endif
+
 MANS =  
 DOCS = 
 
@@ -45,7 +52,7 @@ syscalls.stmp: gen-syscall syscalls.master
 	touch $@
 
 gen-syscall: $(gen_objs)
-	gcc $(gen_objs) -o $@ -lfl
+	$(CC) $(gen_objs) -o $@ -lfl
 
 %.c: %.y
 	bison -d --output=$@ $<
