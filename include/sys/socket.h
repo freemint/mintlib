@@ -31,11 +31,14 @@
 /* Address families, same as above */
 #define AF_UNSPEC	PF_UNSPEC
 #define AF_UNIX		PF_UNIX
-#define	AF_LOCAL	PF_UNIX
 #define AF_INET		PF_INET
 #define	AF_APPLETALK	PF_APPLETALK
 #define AF_LINK		200
 #define AF_MAX		PF_MAX
+
+/* compatibility defines */
+#define	PF_LOCAL	PF_UNIX
+#define	AF_LOCAL	PF_UNIX
 
 /* Flags for send/recv */
 #define MSG_OOB		0x0001
