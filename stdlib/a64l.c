@@ -58,14 +58,7 @@ AUTHOR
 
 #include <support.h>
 #include <errno.h>
-extern int errno;
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-
-/* Local function prototypes */
-static int a64i __PROTO((char c));  /* base-64 char to int, -1 on error */
 
 /* base-64 char to int, -1 on error */
 static int a64i(c)

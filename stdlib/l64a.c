@@ -1,11 +1,7 @@
+
 #include <support.h>
 #include <errno.h>
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-
-static char i64a __PROTO((int i));  /* integer to base-64 char, 0x7F on error */
 
 /* integer to base-64 char, 0x7F on error */
 static char i64a(i)

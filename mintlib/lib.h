@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <stdio.h>	/* for FILE.   */
 #include <time.h>	/* for time_t.  */
+#include <support.h>
 #include <sys/stat.h>	/* For struct stat.  */
 
 extern int __mint;
@@ -14,37 +15,17 @@ extern int __has_no_ssystem;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
 
-int	_unx2dos (const char *, char *, size_t);
-int	_dos2unx (const char *, char *, size_t);
-int	_path_dos2unx (const char *, char *, size_t);
-int	_path_unx2dos (const char *, char *, size_t);
-
-int	_console_read_byte (int);
-void	_console_write_byte (int, int);
-
-time_t	__dostime (time_t);
-time_t	__unixtime (unsigned int, unsigned int);
-
-char *	_itoa (int, char *, int);
-char *	_ltoa (long, char *, int);
-char *	_ultoa (unsigned long, char *, int);
-
 int	_doprnt (int (*)(int, FILE *), FILE *, const char *, __gnuc_va_list);
 int	_scanf (FILE *, int (*)(FILE *), int (*)(int, FILE *), const char *, __gnuc_va_list);
 int	_enoent (const char *);
 
-long	get_sysvar (void *var);
-void	set_sysvar_to_long (void *var, long val);
-
-void	_main		(long, char **, char **);
-void	_init_signal	(void);
-void 	_monstartup	(void *lowpc, void *highpc);
-void	__mcleanup	(void);
-void	_moncontrol	(long);
-void	_setstack	(char *);
 void	_crtinit	(void);
+void	_main		(long, char **, char **);
 void	_acc_main	(void);
-void	__exit		(long status) __NORETURN;
+void	_init_signal	(void);
+void	_setstack	(char *);
+
+void	_monstartup	(void *lowpc, void *highpc);
 
 /* 5/5/92 sb -- definitions needed in malloc.c and realloc.c */
 struct mem_chunk 

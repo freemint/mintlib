@@ -11,8 +11,6 @@
 
 extern char _rootdir;	/* in main.c: user's preferred root directory */
 
-int _unixmode;		/* not used right now */
-
 /*
  * returns 0 for ordinary files, 1 for special files (like /dev/tty)
  */

@@ -15,13 +15,12 @@
 # include <features.h>
 #endif
 
+#include <support.h>
+
 /* Convert VALUE into ASCII in base BASE (2..36).
    Write backwards starting the character just before BUFLIM.
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
-
-char * _itoa (unsigned long long int value, char *buflim,
-	      unsigned int base, int upper_case);
 
 extern __inline char * __attribute__ ((unused))
 _itoa_word (unsigned long value, char *buflim,
