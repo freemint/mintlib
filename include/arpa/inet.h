@@ -66,7 +66,7 @@ extern int inet_pton (int __af, __const char *__restrict __cp,
    type AF in buffer starting at CP to presentation form and place
    result in buffer of length LEN astarting at BUF.  */
 extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
-				char *__restrict __buf, socklen_t __len)
+				char *__restrict __buf, size_t __len)
      __THROW;
 
 
