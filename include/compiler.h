@@ -83,11 +83,6 @@
 #  endif
 #endif
 
-#ifndef __BEGIN_DECLS
-# define __BEGIN_DECLS
-# define __END_DECLS
-#endif
-
 #ifdef __MSHORT__
 # define __SSIZE_TYPEDEF__ long
 # define __WINT_TYPEDEF__ unsigned long
