@@ -1,5 +1,6 @@
-#ifndef _U_TIME_H
-#define _U_TIME_H
+
+#ifndef _UTIME_H
+#define _UTIME_H
 
 #ifndef _FEATURES_H
 #include <features.h>
@@ -7,6 +8,8 @@
 
 #define __need_time_t
 #include <time.h>
+
+__BEGIN_DECLS
 
 struct utimbuf {			/* type for times() call */
 	time_t	actime;
@@ -16,4 +19,6 @@ struct utimbuf {			/* type for times() call */
 __EXTERN int utime __PROTO((const char *path, const struct utimbuf *times));
 __EXTERN int __utime __PROTO((const char *path, const struct utimbuf *times));
 
-#endif  /* _U_TIME_H */
+__END_DECLS
+
+#endif  /* _UTIME_H */
