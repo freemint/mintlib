@@ -20,12 +20,15 @@
 #define C__MCH 0x5F4D4348L		/* Machine Type */
 #define C__MET 0x5F4D4554L		/* MetaDOS */
 #define C__NET 0x5F4E4554L		/* GEMDOS Network Support */
+#define C__MIL 0x5F4D494CL		/* Milan computer */
 #define C__OOL 0x5F4F4F4CL		/* Pool Fix */
+#define C__PCI 0x5f504349L		/* PCIbios */
 #define C__PWR 0x5F505752L		/* Power Management unit */
 #define C__SLM 0x5F534C4DL		/* SLM Driver */
 #define C__SND 0x5F534E44L		/* Sound Hardware */
 #define C__SWI 0x5F535749L		/* Configuration Switches */
 #define C__T30 0x5F543330L		/* KAOS TOS */
+#define C__VDI 0x5F564449L		/* Milan VDI */
 #define C__VDO 0x5F56444FL		/* Video Type */
 #define C_AB40 0x41423430L		/* AfterBurner040 */
 #define C_AFnt 0x41466E74L		/* AES Font Loader */
@@ -68,6 +71,7 @@
 #define C_CLK1 0x434C4B31L		/* MEGA ST Clock Utility */
 #define C_CLOK 0x434C4F4BL		/* CLOK for GMT settings (?) */
 #define C_CM16 0x434D3136L		/* CyReL's M16 Versatile Installation Program */
+#define C_CNTS 0x434e5453L		/* CentScreen */
 #define C_COLO 0x434F4C4FL		/* Colos Mono-Colour Converter */
 #define C_CPSL 0x4350534CL		/* Caps Lock Display */
 #define C_CRIT 0x43524954L		/* Crypt-It */
@@ -123,6 +127,7 @@
 #define C_Gnva 0x476E7661L		/* Geneva Multi-tasking AES */
 #define C_GOff 0x474F6666L		/* Grow/Shrinkbox off */
 #define C_GSND 0x47534E44L		/* Gemsound */
+#define C_GSXB 0x47535842L		/* Generic sound Xbios */
 #define C_GSP1 0x47535031L		/* GEM Spooler */
 #define C_GULM 0x47554C4DL		/* Gulam Shell */
 #define C_HABO 0x4841424FL		/* Haboo Harddisk Cache */
@@ -278,6 +283,7 @@
 #define C_SBTE 0x53425445L		/* Terminal Program */
 #define C_SBTS 0x53425453L		/* Trap Spy */
 #define C_SCAH 0x53434148L		/* Speed Cache */
+#define C_SCPN 0x5343504EL		/* ScreenBlaster 3 */
 #define C_SCRN 0x5343524EL		/* Screen Scroll */
 #define C_SCRS 0x53435253L		/* Screen Blanker */
 #define C_SCRW 0x53435257L		/* Screen Watch */
@@ -307,6 +313,7 @@
 #define C_STAT 0x53544154L		/* StaTOS */
 #define C_ST_C 0x53542D43L		/* ST-C : Cache Program */
 #define C_STEW 0x53544557L		/* Stewart */
+#define C_STFA 0x53544641L		/* Sound treiber für atari */
 #define C_STiK 0x5354694BL		/* ST Internet Kit */
 #define C_STMS 0x53544D53L		/* ST Magazine Screendump */
 #define C_STRX 0x53545258L		/* SAT-Trax Antenna driver */
@@ -347,6 +354,7 @@
 #define C_USRS 0x55535253L		/* Romspeed */
 #define C_USPK 0x5553504BL		/* Hard Disk Auto Parker */
 #define C_UTRK 0x5554524BL		/* Ultimate Tracker */
+#define C_VDLY 0x56444c59L		/* Videlity */
 #define C_VECS 0x56454353L		/* Vecshow */
 #define C_VeiL 0x5665694CL		/* Turbo Veille */
 #define C_VFIX 0x56464958L		/* VDIFix */
@@ -380,6 +388,7 @@
 #define C_XMMU 0x584D4D55L		/* TK40's interface for PMMU setting */
 #define C_XMuz 0x584D757AL		/* Ultra Player */
 #define C_xNet 0x784E6574L		/* xNet-ST */
+#define C_XPCI 0x58504349L		/* Xbios functions for PCIbios */
 #define C_xRmt 0x78526D74L		/* XREMOTE */
 #define C_XSSI 0x58535349L		/* Extended Screen Saver Information */
 #define C_xUFC 0x78554643L		/* Extended Universal Font Selector Configuration Program */
