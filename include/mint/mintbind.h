@@ -1,13 +1,13 @@
 
 #ifndef _MINT_MINTBIND_H
-#define _MINT_MINTBIND_H	1
+#define _MINT_MINTBIND_H 1
 
 #ifndef _FEATURES_H
 # include <features.h>
 #endif
 
-#ifndef _OSBIND_H
-#include <mint/osbind.h>
+#ifndef _MINT_OSBIND_H
+# include <mint/osbind.h>
 #endif
 
 __BEGIN_DECLS

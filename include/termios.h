@@ -2,7 +2,7 @@
 #define _TERMIOS_H
 
 #ifndef _FEATURES_H
-#include <features.h>
+# include <features.h>
 #endif
 
 #if defined __USE_UNIX98 && !defined _BITS_TYPES_H

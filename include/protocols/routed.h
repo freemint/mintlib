@@ -33,8 +33,7 @@
  *	@(#)routed.h	8.1 (Berkeley) 6/2/93
  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>,
-   12 Sep. 1999.  */
+/* Adapted to MiNTLib by Guido Flohr <guiod@freemint.de>, 12 Sep. 1999.  */
    
 #ifndef _ROUTED_H_
 #define	_ROUTED_H_

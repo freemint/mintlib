@@ -1,11 +1,14 @@
+
 #ifndef _MALLOC_H
-#define _MALLOC_H
+#define _MALLOC_H 1
 
 #ifndef _FEATURES_H
-#include <features.h>
+# include <features.h>
 #endif
 
-#include <alloca.h>
+#ifndef _ALLOCA_H
+# include <alloca.h>
+#endif
 
 #define __need_size_t
 #include <stddef.h>
@@ -26,12 +29,6 @@ __EXTERN void *_calloc __P ((unsigned long n, unsigned long __size));
 __EXTERN void *sbrk __P ((size_t __size));
 __EXTERN void *lsbrk __P ((long __size));
 __EXTERN void *_sbrk __P ((long __size));
-
-#ifdef __SOZOBON__
-__EXTERN void *lmalloc __P ((long));
-__EXTERN void *lrealloc __P ((void *, long));
-__EXTERN void *lcalloc __P ((long, long));
-#endif
 
 __END_DECLS
   

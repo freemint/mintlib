@@ -3,8 +3,8 @@
  * distribution.  See the file Changes.MH for a detailed log of changes.
  */
 
-# ifndef _ssystem_h
-# define _ssystem_h
+# ifndef _MINT_SSYSTEM_H
+# define _MINT_SSYSTEM_H 1
 
 #ifdef __KERNEL
 # include "include/mint.h"
@@ -61,4 +61,4 @@ long _cdecl s_system (int mode, ulong arg1, ulong arg2);
 # endif
 
 
-# endif /* _ssystem_h */
+# endif /* _MINT_SSYSTEM_H */

@@ -21,7 +21,7 @@
 
 /* We are almost always included from features.h. */
 #ifndef _FEATURES_H
-#include <features.h>
+# include <features.h>
 #endif
 
 /* Some user header file might have defined this before.  */

@@ -15,19 +15,15 @@
 #define regdump __V8_regdump
 #define regexec __V8_regexec
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
+#ifndef _SYS_TYPES_H
 # include <sys/types.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #define CHARBITS 0377
 #define NSUBEXP  10
@@ -48,8 +44,6 @@ __EXTERN void regsub	__PROTO((regexp *_prog, char *_source, char *_dest));
 __EXTERN void regerror	__PROTO((char const *_message));
 __EXTERN void regdump __PROTO((regexp *r));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _REGEXP_H */

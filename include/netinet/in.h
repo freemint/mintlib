@@ -21,11 +21,16 @@
 #ifndef	_NETINET_IN_H
 #define	_NETINET_IN_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
 #include <limits.h>
 #include <stdint.h>
-
-#include <sys/types.h>
 #include <bits/socket.h>
 
 

@@ -16,19 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>
-   12 Sep 1999.  */
-#ifndef _UTMPBITS_H
+/* Adapted to MiNTLib by Guido Flohr <gudio@freemint.de>, 12 Sep 1999.  */
 
+#ifndef _UTMPBITS_H
 #define _UTMPBITS_H	1
 
 #ifndef _FEATURES_H
-#include <features.h>
+# include <features.h>
+#endif
+
+#ifndef _SYS_TIME_H
+# include <sys/time.h>
+#endif
+
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
 #endif
 
 #include <paths.h>
-#include <sys/time.h>
-#include <sys/types.h>
 
 
 #define EMPTY		0	/* for ut_type field */

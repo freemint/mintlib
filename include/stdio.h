@@ -23,10 +23,12 @@
  */
 
 #ifndef	_STDIO_H
-
 #if	!defined(__need_FILE)
 #define	_STDIO_H	1
-#include <features.h>
+
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 __BEGIN_DECLS
 

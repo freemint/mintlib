@@ -108,15 +108,11 @@
 #ifndef _MINT_OSBIND_H
 #define _MINT_OSBIND_H	1
 
-#ifndef _COMPILER_H
-# include <compiler.h>
-#endif
-
 #ifndef _FEATURES_H
 # include <features.h>
 #endif
 
-#ifndef _OSTRUCT_H
+#ifndef _MINT_OSTRUCT_H
 # include <mint/ostruct.h>
 #endif
 

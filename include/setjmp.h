@@ -1,13 +1,12 @@
+
 #ifndef _SETJMP_H
-#define _SETJMP_H
+#define _SETJMP_H 1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #ifdef __TURBOC__
 
@@ -52,8 +51,6 @@ __EXTERN void throw __PROTO((jmp_buf id, int rv));
 # endif
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _SETJMP_H */

@@ -21,20 +21,26 @@
 #ifndef _SYS_SHM_H
 #define _SYS_SHM_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #define __need_size_t
 #include <stddef.h>
 
 /* Get common definition of System V style IPC.  */
-#include <sys/ipc.h>
-
-/* Get system dependent definition of `struct shmid_ds' and more.  */
-#include <bits/shm.h>
+#ifndef _SYS_IPC_H
+# include <sys/ipc.h>
+#endif
 
 /* Define types required by the standard.  */
 #define __need_time_t
 #include <time.h>
+
+__BEGIN_DECLS
+
+/* Get system dependent definition of `struct shmid_ds' and more.  */
+#include <bits/shm.h>
 
 #ifdef __USE_XOPEN
 # ifndef pid_t
@@ -42,8 +48,6 @@ typedef __pid_t pid_t;
 #  define pid_t pid_t
 # endif
 #endif	/* X/Open */
-
-__BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())

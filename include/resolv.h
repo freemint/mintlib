@@ -40,11 +40,13 @@
 #ifndef _RESOLV_H_
 #define	_RESOLV_H_
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 /*
  * Resolver configuration file.

@@ -11,11 +11,19 @@
 #ifndef _NET_IF_H
 #define _NET_IF_H 1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
+#ifndef _SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+
+__BEGIN_DECLS
 
 /* Standard interface flags. */
 enum
@@ -202,5 +210,7 @@ struct sockaddr_hw {
 	unsigned short	shw_len;	/* address length */
 	unsigned char	shw_addr[8];	/* address */
 };
+
+__END_DECLS
 
 #endif /* _NET_IF_H */

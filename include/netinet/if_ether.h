@@ -1,11 +1,16 @@
-#ifndef _NET_IF_ETHER_H
-#define _NET_IF_ETHER_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef _NETINET_IF_ETHER_H
+#define _NETINET_IF_ETHER_H 1
+
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#include <net/if_arp.h>
+#ifndef _NET_IF_ARP_H
+# include <net/if_arp.h>
+#endif
+
+__BEGIN_DECLS
 
 /*
  * Structure of a 10Mb/s Ethernet header.
@@ -51,5 +56,7 @@ struct	ether_arp {
 #define	arp_hln	ea_hdr.ar_hln
 #define	arp_pln	ea_hdr.ar_pln
 #define	arp_op	ea_hdr.ar_op
+
+_END_DECLS
 
 #endif

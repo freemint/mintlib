@@ -24,7 +24,15 @@
 #ifndef _SYS_SELECT_H
 #define _SYS_SELECT_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+/* Get definition of timer specification structures.  */
+#define __need_timespec
+#include <time.h>
+
+__BEGIN_DECLS
 
 /* Get definition of needed basic types.  */
 #include <bits/types.h>
@@ -34,12 +42,6 @@
 
 /* Get __sigset_t.  */
 #include <bits/sigset.h>
-
-/* Get definition of timer specification structures.  */
-#define __need_timespec
-#include <time.h>
-
-__BEGIN_DECLS
 
 /* This declaration puts `struct timeval' in global scope even if
    <sys/time.h> has not been included to define it.  That way the

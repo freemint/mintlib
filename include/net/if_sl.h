@@ -1,5 +1,6 @@
-#ifndef _SLIP_H
-#define _SLIP_H
+
+#ifndef _NET_IF_SL_H
+#define _NET_IF_SL_H 1
 
 /*
  * Slip flags, settable via SIOCSLNKFLAGS

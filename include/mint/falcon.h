@@ -4,10 +4,10 @@
  */
 
 #ifndef _FALCON_H
-#define _FALCON_H
+#define _FALCON_H 1
 
-#ifndef _OSBIND_H
-#include <mint/osbind.h>
+#ifndef _MINT_OSBIND_H
+# include <mint/osbind.h>
 #endif
 
 #ifdef __LATTICE__

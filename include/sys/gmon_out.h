@@ -28,7 +28,9 @@
 #ifndef _SYS_GMON_OUT_H
 #define _SYS_GMON_OUT_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #define	GMON_MAGIC	"gmon"	/* magic cookie */
 #define GMON_VERSION	1	/* version number */

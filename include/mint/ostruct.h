@@ -2,10 +2,6 @@
 #ifndef _MINT_OSTRUCT_H
 #define _MINT_OSTRUCT_H	1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-
 #ifndef _FEATURES_H
 # include <features.h>
 #endif

@@ -40,11 +40,15 @@
 #ifndef _NETINET_TCP_H
 #define _NETINET_TCP_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
+__BEGIN_DECLS
 
 typedef	u_long	tcp_seq;
 /*
@@ -104,5 +108,7 @@ struct tcphdr {
 #define TCPS_LASTACK		8
 #define TCPS_CLOSING		9
 #define TCPS_TIMEWAIT		10
+
+__END_DECLS
 
 #endif /* _NETINET_TCP_H */

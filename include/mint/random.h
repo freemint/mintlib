@@ -10,7 +10,7 @@
  */
 
 #ifndef _MINT_RANDOM_H
-#define _MINT_RANDOM_H
+#define _MINT_RANDOM_H 1
 
 /* ioctl()'s for the random number generator.  They will hopefully not conflict. */
 

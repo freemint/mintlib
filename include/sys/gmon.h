@@ -36,9 +36,13 @@
 #ifndef	_SYS_GMON_H
 #define	_SYS_GMON_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 /*
  * See gmon_out.h for gmon.out format.

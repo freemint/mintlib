@@ -40,8 +40,8 @@
 #ifndef _NETDB_H_
 #define _NETDB_H_
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 #define	_PATH_HEQUIV	"/etc/hosts.equiv"

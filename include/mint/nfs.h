@@ -6,8 +6,8 @@
    the file.  Hope it is ok for MiNT.  */
 /* $Id$ */
 
-#ifndef _LINUX_NFS_H
-#define _LINUX_NFS_H
+#ifndef _MINT_NFS_H
+#define _MINT_NFS_H 1
 
 #ifndef __MINT__
 # include <linux/sunrpc/msg_prot.h>

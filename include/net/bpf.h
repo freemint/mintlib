@@ -45,10 +45,18 @@
  * 1995, Kay Roemer
  */
 
-#define NOEXTERNS
+#ifndef _NET_BPF_H
+#define _NET_NPF_H
 
-#include <sys/types.h>
-#include <sys/time.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
+#ifndef _SYS_TIME_H
+# include <sys/time.h>
+#endif
+
+__BEGIN_DECLS
 
 #ifndef BPF_MAJOR_VERSION
 
@@ -235,18 +243,12 @@ struct bpf_insn {
 #define BPF_STMT(code, k) { (u_short)(code), 0, 0, k }
 #define BPF_JUMP(code, k, jt, jf) { (u_short)(code), jt, jf, k }
 
-#ifndef NOEXTERNS
-
-__BEGIN_DECLS
-
 __EXTERN u_long bpf_filter __P ((struct bpf_insn *, u_char *, u_long, u_long));
 __EXTERN long   bpf_input __P ((struct netif *, BUF *));
 __EXTERN void   bpf_handler __P ((struct netif *));
 __EXTERN long   bpf_validate __P ((struct bpf_insn *, long));
 
 __END_DECLS
-
-#endif
 
 /*
  * Number of scratch memory words (for BPF_LD|BPF_MEM and BPF_ST).

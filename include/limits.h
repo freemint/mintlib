@@ -25,7 +25,9 @@
 #ifndef _LIBC_LIMITS_H_
 #define _LIBC_LIMITS_H_	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #ifdef	__USE_POSIX
 /* POSIX adds things to <limits.h>.  */

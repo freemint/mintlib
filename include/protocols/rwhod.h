@@ -33,13 +33,14 @@
  *	@(#)rwhod.h	8.1 (Berkeley) 6/2/93
  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>,
-   12 Sep. 1999.  */
+/* Adapted to MiNTLib by Guido Flohr <guiod@freemint.de>, 12 Sep. 1999.  */
    
 #ifndef _RWHOD_H_
 #define	_RWHOD_H_
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 /*
  * rwho protocol packet format.

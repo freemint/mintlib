@@ -9,7 +9,6 @@
 */
 
 #ifndef _SYS_TIMEB_H
-
 #define _SYS_TIMEB_H	1
 
 #ifndef _TIME_H

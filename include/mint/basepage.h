@@ -3,7 +3,7 @@
  */
 
 #ifndef _MINT_BASEPAGE_H
-#define	_MINT_BASEPAGE_H
+#define	_MINT_BASEPAGE_H 1
 
 #ifndef _COMPILER_H
 # include <compiler.h>

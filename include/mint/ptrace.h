@@ -31,8 +31,8 @@
  * 
  */
 
-# ifndef _mint_ptrace_h
-# define _mint_ptrace_h
+# ifndef _MINT_PTRACE_H
+# define _MINT_PTRACE_H 1
 
 
 # define PT_TRACE_ME	0	/* child declares it's being traced */
@@ -52,4 +52,4 @@
 # include "arch/ptrace.h"
 
 
-# endif /* _mint_ptrace_h */
+# endif /* mint/ptrace.h */

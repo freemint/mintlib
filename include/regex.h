@@ -33,10 +33,7 @@
 # include <features.h>
 #endif
 
-/* Allow the use in C++ code.  */
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 /* POSIX says that <sys/types.h> must be included (by the caller) before
    <regex.h>.  */
@@ -537,16 +534,6 @@ __EXTERN size_t regerror _RE_ARGS ((int __errcode, const regex_t *__preg,
 __EXTERN void regfree _RE_ARGS ((regex_t *__preg));
 
 
-#ifdef __cplusplus
-}
-#endif	/* C++ */
+__END_DECLS
 
 #endif /* regex.h */
-
-/*
-Local variables:
-make-backup-files: t
-version-control: t
-trim-versions-without-asking: nil
-End:
-*/

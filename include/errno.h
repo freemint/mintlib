@@ -15,14 +15,12 @@
 #if !defined _ERRNO_H
 # define _ERRNO_H 1         /* Allow multiple inclusion.  */
 
-#ifndef _COMPILER_H
-# include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 /* Share error codes with the kernel.  */
-#ifdef __TURBO_C__
-# include <mint\errno.h>
-#else
+#ifndef _MINT_ERRNO_H
 # include <mint/errno.h>
 #endif
 

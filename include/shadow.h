@@ -19,11 +19,15 @@
 /* Declaration of types and functions for shadow password suite.  */
 
 #ifndef _SHADOW_H
-
 #define _SHADOW_H	1
-#include <features.h>
 
-#include <paths.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+#ifndef _PATHS_H
+# include <paths.h>
+#endif
 
 #define	__need_FILE
 #include <stdio.h>

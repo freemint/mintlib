@@ -32,6 +32,12 @@
 #ifndef _ARPA_TFTP_H
 #define	_ARPA_TFTP_H 1
 
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
 /*
  * Trivial File Transfer Protocol (IEN-133)
  */
@@ -72,5 +78,7 @@ struct	tftphdr {
 #define	EBADID		5		/* unknown transfer ID */
 #define	EEXISTS		6		/* file already exists */
 #define	ENOUSER		7		/* no such user */
+
+__END_DECLS
 
 #endif /* arpa/tftp.h */

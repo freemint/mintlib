@@ -20,7 +20,9 @@
 #ifndef _ARGZ_H
 #define _ARGZ_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #define __need_error_t
 #include <errno.h>

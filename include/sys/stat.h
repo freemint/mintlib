@@ -1,21 +1,16 @@
+
 #ifndef _SYS_STAT_H
 #define _SYS_STAT_H 1
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
 #ifndef _SYS_TYPES_H
-# ifdef __TURBOC__
-#  include <sys\types.h>
-# else
-#  include <sys/types.h>
-# endif
+# include <sys/types.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 struct __st_mtim {
 	unsigned long tv_nsec;
@@ -148,8 +143,6 @@ extern int mknod __P ((__const char *__path,
 __EXTERN mode_t getumask __PROTO ((void));
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _STAT_H */

@@ -39,8 +39,8 @@
  *	- Initial distribution.
  */
 
-#ifndef _SLCOMPRESS_H
-#define _SLCOMPRESS_H
+#ifndef _NET_SLCOMPRESS_H
+#define _NET_SLCOMPRESS_H
 
 #define MAX_STATES	16	/* must be > 2 and < 256 */
 #define MAX_HDR		128	/* XXX 4bsd-ism: should really be 128 */

@@ -19,9 +19,17 @@
 #ifndef _ARPA_INET_H
 #define	_ARPA_INET_H	1
 
-#include <features.h>
-#include <sys/types.h>
-#include <netinet/in.h>		/* To define `struct in_addr'.  */
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
+#ifndef _NETINET_IN_H
+# include <netinet/in.h> /* for `struct in_addr'.  */
+#endif
 
 __BEGIN_DECLS
 

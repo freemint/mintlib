@@ -41,7 +41,11 @@
 #ifndef _NETINET_IP_ICMP_H
 #define _NETINET_IP_ICMP_H
 
-#include <netinet/in_systm.h>
+#ifndef _NETINET_IN_SYSTM_H
+# include <netinet/in_systm.h>
+#endif
+
+__BEGIN_DECLS
 
 /*
  * Structure of an icmp header.
@@ -136,5 +140,7 @@ struct icmp {
 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \
 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \
 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
+
+__END_DECLS
 
 #endif

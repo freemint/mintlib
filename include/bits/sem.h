@@ -23,7 +23,9 @@
 # error "Never include <bits/sem.h> directly; use <sys/sem.h> instead."
 #endif
 
-#include <sys/types.h>
+#ifndef _BITS_TYPES_H
+# include <bits/types.h>
+#endif
 
 /* Flags for `semop'.  */
 #define SEM_UNDO	0x1000		/* undo the operation on exit */

@@ -34,9 +34,14 @@
 #endif /* assert.h	*/
 
 #define	_ASSERT_H	1
-#include <features.h>
 
-#include <sys/cdefs.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+#ifndef _SYS_CDEFS_H
+# include <sys/cdefs.h>
+#endif
 
 /* void assert (int expression);
 

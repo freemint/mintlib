@@ -19,9 +19,11 @@
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 #ifndef	_PRINTF_H
-
 #define	_PRINTF_H	1
-#include <features.h>
+
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 __BEGIN_DECLS
 

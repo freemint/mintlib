@@ -22,7 +22,9 @@
 #error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <bits/types.h>
+#ifndef _BITS_TYPES_H
+# include <bits/types.h>
+#endif
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */

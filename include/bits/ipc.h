@@ -22,7 +22,9 @@
 # error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
 #endif
 
-#include <bits/types.h>
+#ifndef _BITS_TYPES_H
+# include <bits/types.h>
+#endif
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
 #define IPC_CREAT	01000		/* create key if key does not exist */

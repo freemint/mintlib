@@ -21,11 +21,15 @@
 #ifndef _SYS_IPC_H
 #define _SYS_IPC_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #if !defined __USE_SVID && !defined __USE_XOPEN && __GNUC__ >= 2
 # warning "Files using this header must be compiled with _SVID_SOURCE or _XOPEN_SOURCE"
 #endif
+
+__BEGIN_DECLS
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <bits/ipc.h>
@@ -49,8 +53,6 @@ typedef __mode_t mode_t;
 typedef __key_t key_t;
 # define key_t key_t
 #endif
-
-__BEGIN_DECLS
 
 /* Generates key for System V style IPC.  */
 extern key_t ftok (__const char *__pathname, int __proj_id) __THROW;

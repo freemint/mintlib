@@ -5,13 +5,11 @@
 #ifndef	_FCNTL_H
 #define	_FCNTL_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #define	O_RDONLY	0x00		/* read only */
 #define	O_WRONLY	0x01		/* write only */
@@ -117,8 +115,6 @@ __EXTERN int		lockf	__PROTO((int, int, long));
 # endif
 #endif /* __MINT__ */
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _FCNTL_H */

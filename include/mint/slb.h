@@ -17,8 +17,8 @@
  * 
  */
 
-# ifndef _slb_h
-# define _slb_h
+# ifndef _MINT_SLB_H
+# define _MINT_SLB_H 1
 
 
 typedef void *SLB_HANDLE;
@@ -32,4 +32,4 @@ typedef struct {
 long _slbopen (char *fname, char *path, long ver, void *hnd, void *exec);
 
 
-# endif
+# endif /* mint/slb.h */

@@ -22,7 +22,9 @@
 #ifndef	_SYS_SOCKET_H
 #define	_SYS_SOCKET_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #include <sys/uio.h>
 #define	__need_size_t

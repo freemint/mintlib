@@ -5,7 +5,9 @@
 #ifndef	_BITS_TYPES_H
 #define	_BITS_TYPES_H	1
 
-#include <features.h>
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
 
 #define __need_size_t
 #include <stddef.h>

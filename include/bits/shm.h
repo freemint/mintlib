@@ -22,7 +22,9 @@
 # error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-#include <bits/types.h>
+#ifndef _BITS_TYPES_H
+# include <bits/types.h>
+#endif
 
 /* Flags for `shmat'.  */
 #define SHM_RDONLY	010000		/* attach read-only else read-write */

@@ -5,6 +5,12 @@
 #ifndef _NET_IF_ARP_H
 #define _NET_IF_ARP_H
 
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
 struct	arphdr {
 	u_short	ar_hrd;		/* format of hardware address */
 #define ARPHRD_ETHER 	1	/* ethernet hardware address */
@@ -37,5 +43,7 @@ struct arpreq {
 #define ATF_PUBL	0x08		/* proxy entry */
 #define ATF_USETRAILERS	0x10		/* not implemented */
 #define ATF_NORARP	0x20		/* don't use for answering RARP req */
+
+__END_DECLS
 
 #endif

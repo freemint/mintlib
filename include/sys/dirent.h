@@ -7,17 +7,11 @@
 # include <features.h>
 #endif
 
-#ifndef _TYPES_H
-# include <sys/types.h>
-#endif
-
-#ifndef NAME_MAX
-# include <limits.h>
-#endif
-
 __BEGIN_DECLS
 
 #include <bits/types.h>
+
+#include <bits/dirent.h>
 
 /* This file defines `struct dirent'.
 
@@ -33,8 +27,6 @@ __BEGIN_DECLS
    It defines the macro `_DIRENT_HAVE_D_TYPE' iff there is a `d_type'
    member that gives the type of the file.
  */
-
-#include <bits/dirent.h>
 
 #if (defined __USE_BSD || defined __USE_MISC) && !defined d_fileno
 # define d_ino	d_fileno		 /* Backward compatibility.  */

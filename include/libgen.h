@@ -11,7 +11,9 @@
 #ifndef _LIBGEN_H
 # define _LIBGEN_H 1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 __BEGIN_DECLS
 

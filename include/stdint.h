@@ -25,7 +25,10 @@
 #ifndef _STDINT_H
 #define _STDINT_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
 #define __need_wchar_t
 #include <stddef.h>
 

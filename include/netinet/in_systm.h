@@ -20,8 +20,13 @@
 #ifndef _NETINET_IN_SYSTM_H
 #define _NETINET_IN_SYSTM_H 1
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+#ifndef	_SYS_CDEFS_H
+# include <sys/cdefs.h>
+#endif
+
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 __BEGIN_DECLS
 

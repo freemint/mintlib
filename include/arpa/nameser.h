@@ -36,9 +36,11 @@
 #ifndef _ARPA_NAMESER_H_
 #define	_ARPA_NAMESER_H_
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
+
+__BEGIN_DECLS
 
 /*
  * Define constants based on rfc883
@@ -191,8 +193,6 @@ typedef struct {
  * Defines for handling compressed domain names
  */
 #define INDIR_MASK	0xc0
-
-__BEGIN_DECLS
 
 /*
  * Structure for passing resource records around.

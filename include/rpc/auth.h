@@ -39,9 +39,12 @@
  */
 
 #ifndef _RPC_AUTH_H
+#define _RPC_AUTH_H 1
 
-#define _RPC_AUTH_H	1
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
 #include <rpc/xdr.h>
 
 __BEGIN_DECLS

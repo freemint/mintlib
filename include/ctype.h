@@ -5,8 +5,8 @@
 #ifndef _CTYPE_H
 #define _CTYPE_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 __BEGIN_DECLS

@@ -26,6 +26,8 @@
 # include <features.h>
 #endif
 
+__BEGIN_DECLS
+
 /* Get the platform dependent bits of `poll'.  */
 #include <bits/poll.h>
 
@@ -34,7 +36,6 @@
 # include <bits/types.h>
 #endif
 
-__BEGIN_DECLS
 
 /* Data structure describing a polling request.  */
 struct pollfd

@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef _PPP_H
-#define _PPP_H
+#ifndef _NET_IF_PPP_H
+#define _NET_IF_PPP_H
 
 #define	PPPIOCGFLAGS	(('p' << 8) | 100)	/* get config flags */
 #define PPPIOCSFLAGS	(('p' << 8) | 101)	/* set config flags */
@@ -41,4 +41,4 @@
 #define PPPPROTO_COMP_TCP 	0x002d	/* VJ compressed TCP */
 #define PPPPROTO_UNCOMP_TCP	0x002f	/* VJ uncompressed TCP */
 
-#endif /* _PPP_H */
+#endif /* _NET_IF_PPP_H */

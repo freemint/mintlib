@@ -33,6 +33,15 @@
  *	@(#)ip_var.h	7.7 (Berkeley) 6/28/90
  */
 
+#ifndef _NETINET_IP_VAR_H
+#define _NETINET_IP_VAR_H 1
+
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
 /*
  * Overlay for ip header used by other protocols (tcp, udp).
  */
@@ -57,3 +66,7 @@ struct ipoption {
 	struct	in_addr ipopt_dst;	/* first-hop dst if source routed */
 	char	ipopt_list[MAX_IPOPTLEN];	/* options proper */
 };
+
+__END_DECLS
+
+#endif /* _NETINET_IP_VAR_H */

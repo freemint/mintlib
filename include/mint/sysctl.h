@@ -48,8 +48,8 @@
  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93
  */
 
-# ifndef _mint_sysctl_h
-# define _mint_sysctl_h
+# ifndef _MINT_SYSCTL_H
+# define _MINT_SYSCTL_H 1
 
 
 /*
@@ -188,4 +188,4 @@ int sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
 # endif
 
 
-# endif /* _mint_sysctl_h */
+# endif /* _MINT_SYSCTL_H */

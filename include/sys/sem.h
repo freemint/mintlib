@@ -21,13 +21,19 @@
 #ifndef _SYS_SEM_H
 #define _SYS_SEM_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 #define __need_size_t
 #include <stddef.h>
 
 /* Get common definition of System V style IPC.  */
-#include <sys/ipc.h>
+#ifndef _SYS_IPC_H
+# include <sys/ipc.h>
+#endif
+
+__BEGIN_DECLS
 
 /* Get system dependent definition of `struct semid_ds' and more.  */
 #include <bits/sem.h>
@@ -42,9 +48,6 @@ struct sembuf
   short int sem_op;		/* semaphore operation */
   short int sem_flg;		/* operation flag */
 };
-
-
-__BEGIN_DECLS
 
 /* Semaphore control operation.  */
 extern int semctl (int __semid, int __semnum, int __cmd, ...) __THROW;

@@ -15,9 +15,7 @@
 # include <compiler.h>
 #endif
 
-#ifdef __TURBOC__
-# include <sys\param.h>
-#else
+#ifndef _SYS_PARAM_H
 # include <sys/param.h>
 #endif
 

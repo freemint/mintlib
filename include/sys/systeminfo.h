@@ -12,7 +12,7 @@
 #define	_SYS_SYSTEMINFO_H 1
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
 /* Possible values for the first argument of `sysinfo'.  */

@@ -23,7 +23,9 @@
 #ifndef	_VALUES_H
 #define	_VALUES_H	1
 
-#include <features.h>
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
 
 #include <limits.h>
 

@@ -17,11 +17,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _IOVEC_H
-
 #define _IOVEC_H	1
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
+__BEGIN_DECLS
 
 /* We should normally use the Linux kernel header file to define this
    type and macros but this calls for trouble because of the header
@@ -36,12 +38,13 @@
    this large value the readv/writev call will not fail because of this.  */
 #define UIO_MAXIOV	1024
 
-
 /* Structure for scatter/gather I/O.  */
 struct iovec
   {
     void *iov_base;	/* Pointer to data.  */
     size_t iov_len;	/* Length of data.  */
   };
+
+__END_DECLS
 
 #endif	/* iovec.h */

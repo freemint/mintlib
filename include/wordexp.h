@@ -20,7 +20,9 @@
 #ifndef	_WORDEXP_H
 #define	_WORDEXP_H	1
 
-#include <features.h>
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
 
 __BEGIN_DECLS
 

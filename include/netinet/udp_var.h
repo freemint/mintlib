@@ -33,6 +33,15 @@
  *	@(#)udp_var.h	7.7 (Berkeley) 6/28/90
  */
 
+#ifndef _NETINET_UDP_VAR_H
+#define _NETINET_UDP_VAR_H 1
+
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
 /*
  * UDP kernel structures and variables.
  */
@@ -54,3 +63,4 @@ struct	udpiphdr {
 
 #define	UDP_TTL		30	/* default time to live for UDP packets */
 
+#endif /* _NETINET_UDP_VAR_H */

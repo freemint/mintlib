@@ -8,11 +8,15 @@
 #ifndef _NET_ROUTE_H
 #define _NET_ROUTE_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#include <net/if.h>
+#ifndef _NET_IF_H
+# include <net/if.h>
+#endif
+
+__BEGIN_DECLS
 
 struct rtentry {
 	unsigned long	rt_hash;	/* hash key */
@@ -33,5 +37,7 @@ struct rtentry {
 	unsigned long	rt_use;		/* raw # packets forwarded */
 	struct ifnet	*rt_ifp;	/* interface to use */
 };
+
+__END_DECLS
 
 #endif /* _NET_ROUTE_H */

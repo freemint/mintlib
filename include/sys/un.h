@@ -20,13 +20,12 @@
 #define	_SYS_UN_H	1
 
 #include <sys/cdefs.h>
-
 #include <string.h>		/* For prototype of `strlen'.  */
+
+__BEGIN_DECLS
 
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>
-
-__BEGIN_DECLS
 
 /* Structure describing the address of an AF_LOCAL (aka AF_UNIX) socket.  */
 struct sockaddr_un

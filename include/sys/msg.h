@@ -21,10 +21,16 @@
 #ifndef _SYS_MSG_H
 #define _SYS_MSG_H
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 /* Get common definition of System V style IPC.  */
-#include <sys/ipc.h>
+#ifndef _SYS_IPC_H
+# include <sys/ipc.h>
+#endif
+
+__BEGIN_DECLS
 
 /* Get system dependent definition of `struct msqid_ds' and more.  */
 #include <bits/msq.h>
@@ -53,8 +59,6 @@ struct msgbuf
   };
 #endif
 
-
-__BEGIN_DECLS
 
 /* Message queue control operation.  */
 extern int msgctl (int __msqid, int __cmd, struct msqid_ds *__buf) __THROW;

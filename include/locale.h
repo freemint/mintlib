@@ -6,13 +6,11 @@
 #ifndef _LOCALE_H
 #define _LOCALE_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #define LC_ALL          0x003F
 #define LC_COLLATE      0x0001
@@ -52,8 +50,6 @@ __EXTERN char *		setlocale  __PROTO((int category, const char *locale));
 
 __EXTERN struct lconv *	localeconv __PROTO((void));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _LOCALE_H */

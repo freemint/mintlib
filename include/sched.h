@@ -20,7 +20,9 @@
 #ifndef	_SCHED_H
 #define	_SCHED_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 /* Get type definitions.  */
 #include <bits/types.h>

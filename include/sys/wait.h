@@ -2,10 +2,12 @@
 #define _WAIT_H
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
-#include <sys/types.h>
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 #ifndef __USE_POSIX
 # include <sys/resource.h>

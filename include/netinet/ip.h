@@ -36,7 +36,11 @@
 #ifndef _NETINET_IP_H
 #define _NETINET_IP_H
 
-#include <netinet/in_systm.h>
+#ifndef _NETINET_IN_SYSTM_H
+# include <netinet/in_systm.h>
+#endif
+
+__BEGIN_DECLS
 
 /*
  * Definitions for internet protocol version 4.
@@ -157,5 +161,7 @@ struct	ip_timestamp {
 #define	IPTTLDEC	1		/* subtracted when forwarding */
 
 #define	IP_MSS		576		/* default maximum segment size */
+
+__END_DECLS
 
 #endif /* _NETINET_IP_H */

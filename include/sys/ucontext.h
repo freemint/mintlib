@@ -23,7 +23,9 @@
 #ifndef _SYS_UCONTEXT_H
 #define _SYS_UCONTEXT_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 #include <signal.h>
 
 /* Type for general register.  */

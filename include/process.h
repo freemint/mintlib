@@ -4,12 +4,10 @@
 #define _PROCESS_H
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #define P_WAIT		0
 #define P_NOWAIT	1
@@ -23,8 +21,6 @@ __EXTERN int	spawnle	__PROTO((int, const char *, ...));
 __EXTERN int	spawnl	__PROTO((int, const char *, ...));
 __EXTERN int	spawnlp	__PROTO((int, const char *, ...));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _PROCESS_H */

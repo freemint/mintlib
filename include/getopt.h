@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Adapted to MiNTLib by Guido Flohr <gufl0000@stud.uni-sb.de>.  */
+/* Adapted to MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 #ifndef _GETOPT_H
 
@@ -33,9 +33,7 @@
 # include <features.h>
 #endif
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 /* For communication from `getopt' to the caller.
    When `getopt' finds an option that takes an argument,
@@ -106,9 +104,11 @@ struct option
 
 /* Names for the values of the `has_arg' field of `struct option'.  */
 
-# define	no_argument		0
+# define no_argument		0
 # define required_argument	1
 # define optional_argument	2
+#else
+struct option;
 #endif /* need getopt */
 
 #if defined (__STDC__) && __STDC__
@@ -141,8 +141,6 @@ extern int _getopt_internal ();
 # endif  /* need getopt */
 #endif /* __STDC__ */
 
-#ifdef	__cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _GETOPT_H */

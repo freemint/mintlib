@@ -3,14 +3,18 @@
 # error "Never use <bits/dirent.h> directly; include <dirent.h> instead."
 #endif
 
+#ifndef NAME_MAX
+# include <bits/posix1_lim.h>
+#endif
+
 #ifndef _LIB_NAME_MAX
 # define _LIB_NAME_MAX NAME_MAX
 #endif
 
 struct dirent {
-       long            d_ino;          /* garbage under TOS */
-       off_t           d_off;          /* position in directory  */
-       short           d_reclen;       /* for us, length of d_name */
+       __ino_t         d_fileno;       /* garbage under TOS */
+       __off_t         d_off;          /* position in directory  */
+       unsigned short  d_reclen;       /* for us, length of d_name */
        char            d_name[NAME_MAX+1];
 };
 
@@ -32,9 +36,8 @@ struct __dirstream {
 	long	handle;		/* Dreaddir handle */
 };
 
-#define d_fileno	d_ino	/* Backwards compatibility.  */
-
 #undef _DIRENT_HAVE_D_NAMLEN
-#undef _DIRENT_HAVE_D_RECLEN
-#undef _DIRENT_HAVE_D_OFF
 #undef _DIRENT_HAVE_D_TYPE
+
+#define _DIRENT_HAVE_D_RECLEN 1
+#define _DIRENT_HAVE_D_OFF 1

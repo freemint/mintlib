@@ -6,8 +6,8 @@
 #ifndef _SUPPORT_H
 #define _SUPPORT_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
 #include <time.h>	/* for time_t */

@@ -48,11 +48,12 @@
 # define _OLD_UTMP_H 1
 
 #ifndef _FEATURES_H
-#include <features.h>
+# include <features.h>
 #endif
 
-#include <sys/types.h>
-
+#ifndef _SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 __BEGIN_DECLS
 

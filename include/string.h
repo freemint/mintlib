@@ -5,7 +5,10 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
 #define __need_size_t
 #include <stddef.h>
 

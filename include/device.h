@@ -3,19 +3,15 @@
 #ifndef _DEVICE_H
 #define _DEVICE_H
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
+#ifndef _SYS_TYPES_H
 # include <sys/types.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 typedef long (*devfunc_t)();
 
@@ -46,8 +42,6 @@ __EXTERN struct _device *_dev_fd __PROTO((int fd));
 __EXTERN struct _device *_dev_dosname __PROTO((const char *dosnm));
 __EXTERN struct _device *_dev_unxname __PROTO((const char *unm));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _DEVICE_H */

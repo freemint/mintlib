@@ -23,7 +23,9 @@
 #ifndef _UCONTEXT_H
 #define _UCONTEXT_H	1
 
-#include <features.h>
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
 
 /* Get machine dependent definition of data structures.  */
 #include <sys/ucontext.h>

@@ -1,13 +1,12 @@
+
 #ifndef	_SYS_IOCTL_H
-#define _SYS_IOCTL_H
+#define _SYS_IOCTL_H 1
 
 #ifndef _COMPILER_H
-#include <compiler.h>
+# include <compiler.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #define TIOCGETP	(('T'<< 8) | 0)
 #define TIOCSETN	(('T'<< 8) | 1)
@@ -303,8 +302,6 @@ __EXTERN int ioctl	__PROTO((int, int, void *));
 __EXTERN int stty	__PROTO((int, struct sgttyb *));
 __EXTERN int gtty	__PROTO((int, struct sgttyb *));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif	/* _SYS_IOCTL_H */
