@@ -80,7 +80,7 @@ svcauthsw[] =
 #define	AUTH_MAX	3	/* HIGHEST AUTH NUMBER */
 #else
 };
-#define	AUTH_MAX	1	/* HIGHEST AUTH NUMBER */
+#define	AUTH_MAX	2	/* HIGHEST AUTH NUMBER */
 #endif
 
 
