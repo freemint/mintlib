@@ -8,19 +8,9 @@
 
 __BEGIN_DECLS
 
-#ifdef __TURBOC__
-
-#  ifdef __68881__
-typedef char jmp_buf[12 * 4 + 5 * 12];
-#  else
-typedef char *jmp_buf[12];
-#  endif
-
-#else /* __TURBOC__ */
 
 typedef long jmp_buf[14]; /* retaddr, 12 regs, sigmask */
 
-#endif /* __TURBOC__ */
 
 #ifndef __STRICT_ANSI__
 
@@ -44,12 +34,6 @@ __EXTERN int	setjmp	__PROTO((jmp_buf));
 __EXTERN void	longjmp	__PROTO((jmp_buf, int));
 #endif /* not __USE_BSD */
 
-#ifndef __MINT__
-# ifndef __cplusplus
-__EXTERN int catch __PROTO((jmp_buf id, int (*fn )(void )));
-__EXTERN void throw __PROTO((jmp_buf id, int rv));
-# endif
-#endif
 
 __END_DECLS
 

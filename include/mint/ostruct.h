@@ -39,10 +39,6 @@ typedef struct
         char    buffer[255];
 } _CCONLINE;
 
-#ifdef __TURBOC__
-#define LINE _CCONLINE
-#endif
-
 /* Structure used by Fgetdta(), Fsetdta(), Fsfirst(), Fsnext() */
 typedef struct _dta {
     char 	    dta_buf[21];	/* reserved */
