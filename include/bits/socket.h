@@ -226,7 +226,7 @@ enum
 #define SO_LINGER SO_LINGER
     SO_CHKSUM = 40,		/*  */
 #define SO_CHKSUM SO_CHKSUM
-    SO_DROPCONN = 41,		/*  */
+    SO_DROPCONN = 41		/*  */
 #define SO_DROPCONN SO_DROPCONN
   };
 
