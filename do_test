@@ -1,0 +1,78 @@
+#! /bin/bash
+# 
+# The korn shell will also be able to interpret this script.  The Andrew
+# shell ash won't because of the arithmetics used.
+#
+# do_test: Perform MiNTLib tests.
+#set -x
+
+trap 'rm -f /tmp/$$*' 1 2 3 15
+
+checks="$*"
+failed=0
+passed=0
+status=0
+
+if test "x$checks" = x; then
+  echo "No tests to perform."
+  exit 1
+fi
+
+perform_test () {
+	shortcheck=$1
+	check=test-$shortcheck
+	cmd=./$check
+	
+	test -f $check.sh && cmd="./$check.sh"
+	test -f $check.args && cmd="$cmd $(<$check.args)"
+	test -f $check.input && cmd="$cmd <$check.input"
+	test -f $check.expect && cmd="$cmd >|/tmp/$$.output" \
+		|| cmd="$cmd >/dev/null"
+
+	test "x$TEST_VERBOSE" != "x" && echo "$cmd"
+  	printf "Doing test $shortcheck ... "
+	
+	eval $cmd
+	status=$?
+
+	if test $status = 0; then	
+		if test -f $check.expect; then
+			test "x$TEST_VERBOSE" != x && echo \
+				"cmp /tmp/$$.output $check.expect >/dev/null"
+			cmp /tmp/$$.output $check.expect >/dev/null
+			status=$?
+		fi
+	fi
+	
+	rm -f /tmp/$$.output
+	return $status
+}
+
+for check in $checks; do
+  perform_test $check
+  
+  if test $? = 0; then
+    let passed=$(($passed + 1))
+    echo "PASS"
+  else
+    let failed=$(($failed + 1))
+    echo "FAIL"
+    status=1
+  fi
+done
+
+total=$(($failed + $passed))
+
+if test $failed = 0; then
+  echo "===== All $passed tests passed. ====="
+elif test $passed = 0; then
+  echo "*** All $failed tests failed. ***"
+elif test $failed = 1; then
+  echo "*** one tiny little test of $total failed. ***"
+else
+  echo "*** $failed tests of $total failed. ***"
+fi
+
+rm -f /tmp/$$*
+
+exit $status

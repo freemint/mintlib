@@ -1,0 +1,121 @@
+.TH TZINIT 8 "25 April 1999" "MiNTLib Tools"
+.SH NAME
+tzinit \- initialize kernel time keeping variables
+.SH SYNOPSIS
+.B tzinit
+[
+.B OPTIONS
+]
+.SH DESCRIPTION
+.B Tzinit
+sets or inquires the FreeMiNT kernel time-keeping variables.  Run with
+no options, 
+.B tzinit 
+will display the contents of all relevant kernel time keeping
+variables.  Given the appropriate options will make
+.B tzinit 
+change a subset of these variables.
+.PP
+.B Tzinit 
+will examine the environment to analyse the settings for the
+local timezone.  This will be done with the facilities provided by the
+standard programming library.  The MiNTLib and the GNU libc will do
+this by analysing the contents of the environment variable
+.I TZ
+(see
+.B environ(5)
+for details).  If this variable is not set (which is recommended)
+a system-wide default timezone will be read from the file
+.I /usr/etc/zoneinfo/localtime
+to find out the offset to Greenwich Mean Time for the local timezone.
+If set to an empty value, the time zone "GMT" (Greenwich Mean Time)
+is assumed.  If the contents of 
+.I TZ 
+starts with a colon the rest of the contents of the variable is interpreted
+as the name of a file to be examined for time zone settings instead of
+.I /usr/etc/zoneinfo/localtime.
+If none of the above applies the variable is parsed according to the 
+syntax described by POSIX.  If no rules for summertime (also known as
+Daylight Savings Time DST) were supplied a system-wide default file
+.I /usr/etc/zoneinfo/posixrules
+is examined. 
+.PP
+The program should be invoked in the startup-sequence of the FreeMiNT
+system, as early as possible because it may cause the kernel clock to
+make leaps which can lead to undesirable effects (this can actually
+only occur if you use
+.B tzinit
+to make your kernel clock tick in local time).  It is probably best
+to run
+.B tzinit
+from your
+.B mint.cnf(5)
+file.
+.SH OPTIONS
+.PP
+These options are available:
+.TP
+.B \-h, \-\-help
+Print a short usage summary and exit.
+.TP
+.B \-l, \-\-localtime
+At system startup the FreeMiNT kernel runs in
+.I UTC
+.I clockmode.
+That means that the time value supplied by the hardware clock facilities is
+interpreted as a time in Universal Time Coordinated (UTC).  Given 
+.B tzinit
+the option
+.I \-\-localtime
+will change the kernel's behavior so that hardware date and time is interpreted
+as a time value in local representation instead.  This facility is useful
+when running other old-fashioned operating systems beside FreeMiNT on the same
+machine which always interprete the hardware time as a local time.
+.TP
+.B \-s, \-\-silent, \-\-quiet
+This option disables all diagnostic output except error messages.
+.TP
+.B \-t TIMEZONE, \-\-timezone=TIMEZONE, \-\-tz=TIMEZONE
+By default the
+.B tzinit
+program will inquire the current settings for the local timezone by 
+examining the environment variable TZ.  This option lets you override
+the value given in the environment.  
+.TP
+.B \-n, \-\-no-timezone, \-\-no-tz
+Removes an existing definition for the variable TZ from the environment.
+This option may be useful in situations where you can't unset 
+environment variables (like when running from
+.I mint.cnf
+or the like).  Note that unsetting the TZ environment variable has not
+the same effect as setting it to the empty string (see above for details).
+.TP
+.I 
+.TP
+.B \-u, \-\-utc, \-\-gmt
+Set (or reset) the kernel clock mode to the default (hardware time is
+interpreted as Universal Time Coordinated UTC).
+.TP
+.B \-V, \-\-version
+Display a short version information and exit.
+.TP
+.B \-v, \-\-verbose
+Enable verbose diagnostic output (default).  The
+.B tzinit
+program will display the contents of all relevant kernel time-keeping
+variables.
+.SH FILES
+.PP
+.I /usr/share/zoneinfo/localtime
+.PP
+.I /usr/share/zoneinfo/posixrules
+.SH AUTHOR
+The 
+.B tzinit
+program was written by Guido Flohr <gufl0000@stud.uni-sb.de>.  It is part
+of the MiNTLib project and available under the COPYMINT license.
+.SH STANDARDS
+Pure anarchy, no standard knows this program.
+.SH "SEE ALSO"
+Tsettimeofday(2), Ssystem(2), tzset(3), tzsetwall(3), ctime(3), 
+environ(5), tzfile(5), zic(8), zdump(8)

@@ -1,0 +1,9 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go both into binary and source distributions.
+
+MISCFILES = MISCFILES \
+cdefs.h cookie.h dir.h dirent.h errno.h fcntl.h file.h ioctl.h \
+mount.h param.h poll.h queue.h reboot.h resource.h select.h signal.h socket.h \
+stat.h statfs.h syscall.h syslog.h sysmacros.h systeminfo.h termios.h time.h \
+timeb.h times.h ttychars.h ttydefaults.h types.h uio.h un.h utsname.h \
+varargs.h vfs.h wait.h

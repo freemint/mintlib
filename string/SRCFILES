@@ -1,0 +1,16 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = argz-addsep.c argz-append.c argz-count.c argz-create.c \
+argz-ctsep.c argz-delete.c argz-extract.c argz-insert.c argz-next.c \
+argz-replace.c argz-stringify.c basename.c bcmp.c bcopy.S bzero.S ffsl.c \
+ffsll.c ffss.c memccpy.c \
+memchr.c memcmp.c memfrob.c mempcpy.c memset.S rawmemchr.c stpcpy.c \
+stpncpy.c strcasecmp.c strcasestr.c strcat.c strchr.c strcmp.c strcoll.c \
+strcpy.c strcspn.c strdup.c strerror.c strerror_r.c strfry.c strlen.c \
+strlwr.c strncasecmp.c strncat.c strncmp.c strncpy.c strndup.c strnlen.c \
+strpbrk.c strrchr.c strrev.c strsep.c strsignal.c strspn.c strstr.c \
+strtoimax.c strtoumax.c strtok.c strtok_r.c strupr.c strverscmp.c strxfrm.c

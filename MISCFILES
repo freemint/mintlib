@@ -1,0 +1,7 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go both into binary and source distributions.
+
+MISCFILES = 00PatchLevel AUTHORS BUGS COPYMINT COPYING COPYING.LIB \
+ChangeLog ChangeLog.0 FAQ HELP INSTALL LICENSES NEWS NOTES README README-LGPL \
+README-alpha README.1st README.bin README.crypt README.mshort README.stdio \
+TODO configvars install-sh libinstall mkinstalldirs move-if-change

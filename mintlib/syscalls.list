@@ -1,0 +1,101 @@
+# The files include/syscall-list.h and src/syslist.h are generated from
+# this file.
+# It consists of lines starting with the name of the function, followed
+# by the return type and the argument type list.  Possible values for 
+# the type are
+#
+#	int	Either 32 bit or 16 bit (for -mshort)
+#	short	16 bit
+#	char	8 bit
+#	long	32 bit
+#       ptr     pointers (32 bit)
+#	...	for variadic functions
+#
+# In other words:  Only the length of the type counts, not the signedness.
+# Functions with no return value are marked as "void".
+# Please never delete lines, only append to it so that the library remains
+# binary compatible with older versions.
+
+# Function name       | Ret.  | Argument list
+write			long	int ptr long
+fstat			int	int ptr
+times			long 	ptr
+pause			int
+rename			int 	ptr ptr
+truncate		int 	ptr long
+waitpid			int 	int ptr int
+wait			int	ptr
+wait3			int	ptr int ptr
+wait4			int 	int ptr int ptr
+readdir			ptr	ptr
+fsync			int	int
+lstat			int	ptr ptr
+dup2			int	int int
+getppid			int
+close			int	int
+setgid			int	int
+statfs			int	ptr ptr
+sigaction		int 	int ptr ptr
+sigblock		int	long
+signal			ptr	int ptr
+sigpause		void
+sigpending		int	ptr
+sigreturn		void
+sigsetmask		int	long
+fork			int
+symlink			int	ptr ptr
+readlink		int	ptr ptr int
+ioctl			int	int int ptr
+stty			int	int ptr
+gtty			int	int ptr
+ftruncate		int	int long
+creat			int	ptr short
+fcntl			int	int int ...
+setsid			int
+setuid			int	int
+umask			int	int
+kill			int	int int
+killpg			int	int int
+gettimeofday		int	ptr ptr
+settimeofday		int	ptr ptr
+getitimer		int	int ptr
+setitimer		int	int ptr ptr
+getpriority		int	int int
+setpriority		int	int int int
+nice			int	int
+link			int	ptr ptr
+lseek			long	int long int
+execve			int	ptr ptr ptr
+getgid			int
+rmdir			int	ptr
+getegid			int
+getuid			int
+pipe			int 	ptr
+getpid			int
+dup			int	int
+setregid		int	int int
+alarm			int	int
+geteuid			int
+setreuid		int	int int
+chdir			int	ptr
+access			int	ptr int
+getgroups		int	int short
+chown			int	ptr short short
+select			int	int ptr ptr ptr
+getrusage		int	int ptr
+initgroups		int	ptr short
+setgroups		int	long ptr
+getrlimit		int	int ptr
+setrlimit		int	int ptr
+read			long	int ptr long
+open			int	ptr int ...
+flock			int	int int
+utime			int	ptr ptr
+mkdir			int	ptr int
+stat			int	ptr ptr
+sync			int
+chmod			int	ptr short
+unlink			int	ptr
+
+# Do not remove this next line!
+

@@ -1,0 +1,10 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES \
+test-common.c test-copy.c test-ffs.c test-inlcall.c test-inline.c \
+test-noinline.c test-stratcliff.c test-strlen.c test-svc.c test-svc.expect \
+test-svc.input

@@ -1,0 +1,8 @@
+# These are the phony targets common to all Makefiles.
+
+.PHONY: check check-local checkclean-recursive clean clean-recursive dist \
+bakclean bakclean-recursive bin-dist distdir bindistdir \
+default all all-here all-recursive install install-recursive \
+install-include install-lib install-man uninstall uninstall-recursive \
+uninstall-include uninstall-lib uninstall-man help zonenames
+

@@ -1,0 +1,5 @@
+This directory contains the libs for the M68020 or better and 
+math coprocessor from the MiNTLib suite.
+
+Please install them in $prefix/lib/m68020-60 where $prefix is either /usr
+or /usr/local.

@@ -1,0 +1,28 @@
+IMPORTANT!!!
+============
+
+The include directory has been restructured with version 0.50.1 (see NEWS).  
+Make sure that you delete the following files from all your system include
+directories:
+
+cookie.h, dcntl.h, dir.h, file.h, ioctl.h, ssystem.h, param.h, stat.h, 
+statfs.h, sys/restoresys, timeb.h, times.h, utsname.h.
+
+Not deleting these files will result in unpredictable results when
+compiling code with the new library.  If you install the library in
+a normal way, the installation routine will remove these stale headers
+for you.
+
+If you are using gcc you maybe have to manually remove the following files
+in case the installation routine fails to do so:
+
+	float.h
+	stdarg.h
+	stddef.h
+	varargs.h
+	
+In case you think you need these files: They have been renamed to
+_float_h, _stdarg_h, _stddef_h and _varargs_h and can be found in the
+subdirectory "include" of the MiNTLib distribution after you unpacked
+it.  They are not needed if you use a recent gcc version, because
+they belong to the compiler, not the libc.

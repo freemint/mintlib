@@ -1,0 +1,173 @@
+#! /usr/bin/perl
+#
+# checklib - do some consistency checkings for libraries and object files.
+# Copyright (C) 1999, 2000 by Guido Flohr <guido@freemint.de>.
+#
+# The effect of this script is about the same as an invocation of the
+# linker with "--whole-archive":
+#
+#	checklib [ FILE ... ]
+# 
+# The script throws together all FILES (stand-alone object files or
+# libraries), extracts all symbols via nm and then outputs a list of 
+# multiple definitions for a symbol and references  
+# that cannot be satisfied from FILES.
+#
+# You can specify two lists of regular expressions, one that should match
+# symbol names that are ok to remain undefined (for example the reference
+# to the main() function from your startup code) and another list that
+# defines symbols that are ok to be multiply defined (if your library
+# is a hack).  The MiNTLib uses the latter to for some dummy definitions
+# that allow to link against libc.a without crt0.o.
+#
+# Common symbols should be handled alright, weak symbols aren't (but that
+# shouldn't normally matter).
+
+# Name of a BSD compatible nm.
+# GNU binutils.
+$nm = "nm -B";
+# HP-UX
+# $nm = "nm -p";
+
+# Don't complain about undefined references to symbols that match this
+# list of perl REs.
+my @undefined_symbols = ( "_e(text|data)", # Linker.
+			  "main",           # Up to you.
+			  "__V8_regerror",  # Supplied by the user.
+			  
+			  # Defined by libgcc and referenced by libc.
+			  "___muldi3",
+			  "___lshrdi3",
+			  "___ashldi3",
+			  "___udivdi3",
+			  "___umoddi3",
+			  );
+
+# Don't complain about multiple definitions for symbols that match this
+# list of perl REs.
+my @duplicates = ();
+
+##################### Main program ###################
+# Exit status.
+$status = 0;
+
+if ($#ARGV == -1) {
+	print STDERR "Usage: $0 [ FILENAMES ]\n";
+	exit 1;
+}
+
+# Slurp in global symbols for each file.
+ARGUMENT: foreach $file (@ARGV) {
+	open (NM, "$nm $file |") or die "cannot exec nm: $!";
+	my $lineno = 0;
+	my $archive = "";
+	my $last_empty = false;
+	my $module = $file;
+	
+	LINE: while (<NM>) {
+		$lineno++;
+		
+		chomp;
+		
+		# Simple assumption: if first line is empty, we have
+		# a library archive, an object file otherwise.
+		if ($lineno == 1 && /^[:space:]*$/) {
+			$archive = $file;
+			$module = "???";
+			$last_empty = true;
+			next LINE;
+		}
+		
+		if ($archive ne "") {
+			if ($last_empty eq true) {
+				# HP-SUX nm lists like
+				#   /usr/lib/libc.a[foobar.o]:
+				# whereas GNU nm lists like
+				#   foobar.o:
+				# These regex' always win.
+				s/.*\[//;
+				s/]+:$//;
+				$module = $_;
+				$last_empty = false;
+				next LINE;
+			}
+			
+			if (/^\s*$/) {
+				$last_empty = true;
+				next LINE;
+			} else {
+				$last_empty = false;
+			}			 
+		}
+		
+		# If we get here we have a line listing a symbol.
+		# Cast away the address.
+		s/^\S*//;
+		my ($type, $name) = split;
+
+		# Ignore additional type characters.
+		$type = substr ($type, 0, 1);
+		# Ignore local symbols.
+		next LINE unless ($type =~ /^[A-Z]/);
+		
+		my $first_def = $symbols{$name}{"def"};
+
+		if ($type eq "U") {
+			# Add another reference if still undefined.
+			if ($first_def ne "y") {
+				$symbols{$name}{"refs"} 
+				    .= "$archive\[$module\]\n";
+			}
+			next LINE;
+		}
+		
+		# We simply assume that all uppercase letters that are
+		# not `U' can satisfy a reference.
+		if ($first_def eq "y") {
+			my $first_ref = $symbols{$name}{"refs"};
+			foreach my $omit (@duplicates) {
+				next LINE if ($name =~ /$omit/);
+			}
+		
+			# Handle common symbols.
+			next LINE if ($type eq "C");
+			
+			# This is to make sure that we notice if a common
+			# symbol has turned into a real definition.
+			if ($symbols{$name}{"type"} eq "C") {
+				$symbols{$name}{"type"} = $type;
+				next LINE;	# First time is still ok.
+			}
+			
+			print STDERR 
+			  "$archive\[$module\]: redefinition of symbol \`$name'\
+  first defined in $first_ref\n";
+  			next LINE;
+  			$status = 1;
+		}
+		
+		# This is a valid definition of the symbol.
+		$symbols{$name}{"def"} = "y";
+		$symbols{$name}{"type"} = $type;
+		$symbols{$name}{"refs"} = "$archive\[$module\]";
+	}
+	
+	unless (close NM) {
+		$status = 1;
+	}
+}
+
+SYMBOL: foreach my $symbol (keys %symbols) {
+	if ($symbols{$symbol}{"def"} ne "y") {
+		foreach my $omit (@undefined_symbols) {
+			next SYMBOL if ($symbol =~ /$omit/);
+		}
+		
+		$symbols{$symbol}{"refs"} 
+		    =~ s,\n,: unresolved reference to \`$symbol'\n,g;
+		print $symbols{$symbol}{"refs"};
+		$status = 1;
+	}
+}
+
+exit $status;

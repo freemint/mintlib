@@ -1,0 +1,68 @@
+The MiNTLib comes along with a self-contained distribution of the
+tz database which is widely used on Unix systems and replaces the
+complicated mechanism of the TZ environment variable with easy-to-maintain
+database files.
+
+Simply installing in this directory will set up almost everything
+correctly for you and you only have to read the README file if
+you are interested in the subject.
+
+One thing cannot be automated:  The Makefiles or installation scripts
+cannot guess the place where you live.  If you just install a dummy
+timezone "Factory" will be used for your system.  This will do no
+harm, programs compiled with the MiNTLib will even warn you about
+that.  If you want to change your default timezone after installation
+for example to "Europe/Paris" you can do this by typing
+
+	zic -l Europe/Paris
+
+You should also update the file containing the POSIX rules:
+
+	zic -p Europe/Paris
+
+If you want to be 100 % POSIX compatible you have to do a
+
+	zic -p America/New_York
+
+instead (because "America/New_York" is the default time zone according
+to POSIX).
+
+You will find a list of possible time zones in the file `zonelist'
+(if it is missing, type `make zonelist').
+
+To check that you have installed everything correctly you can use
+the program tzinit (supplied here).  Run it with no options and you
+should see the correct date and time, and also your timezone.
+
+If somehow you can't run "make install" (remember that you must run
+"make install" from the toplevel directory) to install the database
+you have difficulties.  You can try it by hand.  First you have
+to decide which database source files should be compiled.  Usually
+you should choose all of them, currently:
+
+africa antarctica asia australasia europe northamerica southamerica
+pacificnew etcetera factory backward systemv solar87 solar88 solar89
+
+Make sure that the file "yearistype" exists, if not, copy it from
+"yearistype.sh" and make it executable with "chmod +x yearistype".
+
+Next you have to decide where to install the database.  The library
+expects in in "/usr/share/zoneinfo" and you shouldn't change that
+path unless you really know why.
+
+Now install the database with the command:
+
+	./zic -d /usr/share/zoneinfo -y ./yearistype -L leapseconds [SRCFILES]
+
+Replacs "[SRCFILES]" with the list of source files you chose to
+install.  This will install a time zone database which will calculate
+correct results.  However, POSIX demands to calculate incorrect results
+because it says that leapseconds which occur from time to time 
+should be ignored.  If you want to follow this, you should give
+zic the option "-L /dev/null" instead of "-L leapseconds".  It is
+also possible to install the correct (or incorrect) database as
+a reserve into another directory.
+
+To set the default time zone for your system, do as described above,
+by issuing the commands "zic -l" and "zic -p" with the time zones
+for your location.

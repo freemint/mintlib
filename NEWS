@@ -1,0 +1,75 @@
+Version 0.55.3 - 07 May 2000
+
+* Fixed st_blocks in stat() and friends.
+
+* New and quicker qsort algorithm.
+
+* Changed time_t to long int instead of int.
+
+Version 0.55.2 - 10 April 2000
+
+* Added forgotten include/bits/mint_stdio.h.
+
+Version 0.55.1 - 09 April 2000
+
+* Minor bugfixes.
+
+* libc-symbols.h not installed any more.
+
+* Missing functions added: llabs, strtoimax, strtoumax.
+
+* argz functionality.
+
+Version 0.55 - 02 April 2000
+
+* Countless bugfixes.
+
+* This version of the MiNTLib requires gcc 2.95.2, older gcc versions
+  will not work, you can neither compile nor use the MiNTLib without
+  them.  See README.1st for details.
+  
+* Introduction of a new stdio model, mostly taken from the GNU libc.
+  The new stdio API is incompatible with previous releases.  See
+  README.stdio to check if you have to recompile your binaries
+  The new stdio model provides a lot of new features, see bits/mint_stdio.h
+  for details.
+
+* The data type long double has changed.  It now complies with 
+  IEEE854, which will require recompilation of libraries or object 
+  files that do long double arithmetics.  Accuracy problems with other 
+  floating  point types have been solved.
+  
+* The source tree has been completely restructured.
+
+* The MiNTLib now comes along with an exhaustive test suite.  Run
+  "make -k check" in the compiled source tree to see the results.
+  See README.tests for details.
+
+* UFC (ultra-fast crypt) and support for MD5-crypt.  The new crypt()
+  resp. fcrypt() routines outperform previous MiNTLib releases
+  by factor 5 here.
+
+* Incompatible change in select(): The function now internally calls
+  poll().  The data type fd_set has changed and now has a theoratical
+  limit of 1024 file descriptors.  Until the kernel gets changed you're
+  still stuck with 32 descriptors though.  However, object files or
+  libraries that reference select() have to get recompiled.
+
+* This is the last MiNTLib that builds 16 bit integer libraries by
+  default.  See README.mshort for details.
+
+  In previous (unofficial) releases:
+  
+* The former portlib and the socketlib from the MiNTNet package have 
+  been integrated into the MiNTLib.  
+
+* The format of struct stat in <sys/stat.h> has changed in an 
+  incompatible way -> recompile.
+
+* Shadow password and group database.
+
+* New management functions for utmp/wtmp.
+
+* The library is now installed in /usr instead of /usr/local by
+  default.
+

@@ -1,0 +1,49 @@
+o Rewrite ctermid.c and cuserid.c.
+
+o Missing reentrant functions (omitted for now because the corresponding
+  source files should be re-written from the scratch, should be split up
+  into distinct files for each function):
+
+    int fgetgrent_r (FILE* stream, struct group* result_buf,
+                     char* buffer, size_t buflen, struct group** result);
+    int getgrgid_r (gid_t gid, struct group* result_buf,
+                    char* buffer, size_t buflen, struct group** result);
+    int getgrnam_r (const char* name, struct group* result_buf,
+                    char* buffer, size_t buflen, struct group** result);
+    int getlogin_r (you know what);
+
+o Clean up all prototypes in the header files.  It is a bad idea to
+  prototype like that:
+  
+    int foobar (int max, int min);
+  
+  Either do
+  
+    int foobar (int, int);
+  
+  or
+  
+    int foobar (int __max, int __min);
+  
+  Otherwise the argument identifiers run the risk of being expanded as
+  eventually previously defined macros by the preprocessor.
+
+o Get rid of include/support.h.  Any ideas where to move the prototypes?
+
+o Problems with -mshort: Some I/O operations (notably read, write, fread
+  and fwrite) take size_t (i. e. unsigned long) arguments for the buffer
+  size and return int (i. e. short int with -mshort) as the result (bytes
+  read resp. written).  There is no clean way to fix that.  Currently,
+  for -mshort those prototypes have simply been changed so that they
+  return long.  Any better ideas?
+
+o exec* functions should be rewritten.  What about spawn?
+
+o Avoid conflicts between <mint/dcntl.h> and <sys/ioctl.h>.
+
+o Rewrite nlist.c to handle all binary formats.
+
+o Implement i18n/l10n stuff from GNU libc.
+
+o A lot of sysconf stuff still missing.
+  

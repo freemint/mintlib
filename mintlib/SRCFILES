@@ -1,0 +1,24 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+#
+# The support subdirectories (crlf, lattice, purec and sozobon) are
+# handled in the Makefile.
+
+SRCFILES = _infinitydf.S _mon.S _normdf.S abort.c alglobal.c \
+alphasor.c assert-perr.c assert.c buffindf.c calloc.c console.c crtinit.c \
+ctermid.c ctype.c cuserid.c \
+div.c do_lock.c do_stat.c dostime.c enoent.c frexp.S ftime.c ftw.c \
+getcookie.c getcwd.c getenv.c getloadavg.c getlogin.c getopt_old.c \
+getumask.c getwd.c globals.c gmon.c heapbase.c ident.c iflink.c ig.c \
+inistack.c inode.c isatty.c isctty.c labs.c ldexp.S libc_exit.S \
+libc_fatal.c linea.c llabs.c lldiv.c lockf.c ltoa.c main.c malloc.c modf.S \
+osbind.S pselect.c \
+putenv.c quickstat.c raise.c realloc.c regexp.c regsup.c rewinddi.c rtent.c \
+s_isinf.c s_isinff.c s_isinfl.c s_isnan.c s_isnanf.c s_isnanl.c scandir.c \
+seekdir.c setenv.c setjmp.S setlocale.c setstack.S spawn.c spawnve.c \
+spawnvp.c stksiz.c syscall.c sysconf.c sysvar.c tell.c telldir.c \
+thread.c toxxx.c ttyname.c ttyname_r.c uidgid.c unixtime.c unx2dos.c \
+wcmb.c wcscat.c wcscmp.c wcscpy.c wcslen.c wnull.c

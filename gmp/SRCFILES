@@ -1,0 +1,10 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = dbl2mpn.c ldbl2mpn.c mp_clz_tab.c mpn-add_n.c \
+mpn-addmul_1.c mpn-cmp.c mpn-divmod_1.c mpn-divrem.c mpn-inlines.c \
+mpn-lshift.c mpn-mod_1.c mpn-mul.c mpn-mul_1.c mpn-mul_n.c mpn-rshift.c \
+mpn-sub_n.c mpn-submul_1.c mpn2dbl.c mpn2flt.c mpn2ldbl.c

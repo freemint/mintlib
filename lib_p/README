@@ -1,0 +1,5 @@
+This directory contains the libs with profiling enabled and debugging symbols 
+for source level debugging from the MiNTLib suite.
+
+Please install them in $prefix/lib where $prefix is either /usr or 
+/usr/local.

@@ -1,0 +1,7 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go both into binary and source distributions.
+
+MISCFILES = MISCFILES \
+libc-lock.h local_lim.h mint_stdio.h poll.h posix1_lim.h posix2_lim.h \
+posix_opt.h select.h sigset.h stdio_lim.h string.h string2.h types.h \
+xopen_lim.h

@@ -1,0 +1,88 @@
+The MiNTLib now comes with a validation suite.  To perform the tests
+cd into the top-level directory and type "make -k check".  You should
+give the option "-k" (resp. "--keep-going") to "make" because some
+tests are known to fail.
+
+Most Makefiles in subdirectories also know about the target "check".
+If you want to run only the tests for stdio simply cd into subdirectory
+"stdio" and type "make check" there.
+
+By default only the results of the tests are presented on standard
+output.  Possible error messages printed to standard error also 
+appear in the output (and mess it up).  If you want to see what is
+really going on you have to set the environment variable "TEST_VERBOSE" 
+to a non-empty value.  This will print the commands that are actually executed.
+This allows you to run individual tests without the help of the Makefile
+(sometimes it is desirable to do only one test from a larger suite
+in a subdirectory).
+
+Note that all tests check the functionality of the standard library
+(i. e. 32 bit integers, no FPU code, plain m68000).  If you are mean
+enough to check the other libraries you should also be smart enough
+to change the file "checkrules".  This file is a Makefile fragment
+that gets included for tests.  In order to avoid inconsistent 
+compiles/links it is usually inevitable to run "make checkclean" whenever
+you edit "checkrules".  The makefile target "checkclean" removes
+all object files that are linked into the test programs plus the
+test programs themselves.
+
+To understand how the tests internally work you should follow an example.
+Suppose there is a new string function "strfoo()" which should be
+tested.  You write a little test program for it, name the source file
+"test-strfoo.c".  The name of the test will simply be "strfoo".  Now
+edit the Makefile in the subdirectory "string", look for a line starting 
+with "TESTS =" and add your test ("strfoo") to it.  Note that the name
+of the test (as displayed when running the suite) is "strfoo" whereas
+the corresponding files are all named "test-strfoo.*"; all filenames 
+beginning with the string "test-" should be considered special, they are
+used for the tests.
+
+Your program should exit with a zero exit code in case of success and
+non-zero in case of failure.  You can write as much stuff as you want
+to standard output but you should only write error messages to 
+standard error.
+
+If your program needs user input create another file "test-strfoo.input"
+and write whatever you program should receive as standard input into
+it.  If it should be started with options or arguments put it into
+another file "test-strfoo.args".  The contents of it will be put on
+the command line after "test-strfoo".
+
+If your program produces something important on standard output you 
+need another file "test-strfoo.expect".  If it exists the test suite
+will compare the output of your program with the file "test-strfoo.expect".
+In this case the test will fail either if the program itself exited with
+non-zero or if the program's output and "test-strfoo.expect" differ.
+
+If this is not enough you can also write a shell script "test-strfoo.sh".
+If this file exists, instead of running the program file "test-strfoo" the
+test suite will run the shell script.  Apart from that everything is the
+same, i. e. you can still use the files "test-strfoo.args", "test-strfoo.input",
+or "test-strfoo.expect".
+
+Even if you use arguments, input, expected output or a wrapper shell
+script you only have to add then name of your test to the variable
+"TESTS" in the Makefile.  But if you think your test is important
+you should also add the name of all needed files to the file
+"EXTRAFILES", so that they will be included in a distribution.  In
+fact the Makefile only calls the shell script "do_test" in the 
+top-level directory with the names of the tests (the leading "test-" 
+omitted) and the script is smart enough to figure out what you want
+based on the existing "test-strfoo.*" files it finds.
+
+When writing tests you may have a look at the source file "test-skeleton.c"
+in the top-level directory.  Several tests include this file via
+
+	#include "../test-skeleton.c"
+	
+so that they only have to define the bare test routine "do_test()".
+
+If you find a bug in the MiNTLib it is probably a good idea to think
+of some test case that will reveal the bug and send the test to me.
+If the bug cannot be fixed the failed test will remind of it, if
+it can be fixed it is assured that it will remain fixed in future
+versions.
+
+Saarbruecken/Germany, March 7, 2000
+
+Guido Flohr <guido@freemint.de>

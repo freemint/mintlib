@@ -1,0 +1,45 @@
+Beginning with the MiNTLib 0.54.99 the MiNTLib uses a new binary interface
+for stdio functions.  This is actually incompatible with the old interface
+because the definition of FILE in <stdio.h> differs significantly from
+former versions.
+
+Despite of this binary incompatibility you will seldom have to recompile
+old libraries or object files to get them to work with the new MiNTLib.
+Clean code never makes assumptions about the internal representation
+of FILE and since only pointers to FILE are used, things will still work.
+
+One exception from the above are the standard streams stdin, stdout and
+stderr, which were implemented as macros in <stdio.h>:
+
+	extern FILE _iob[];
+	#define stdin &_iob[0];
+	#define stdout &_iob[1];
+	#define stderr &_iob[2];
+
+Since the size of a FILE has changed from previous versions to current
+versions, all stdio on standard streams should not work.  However, the
+MiNTLib still defines the symbol "_iob" and glues these old streams
+to the new stdin, stdout and stderr (see stdio/glue.c).  Old 
+libraries/object files will not notice any difference on the standard
+streams and will keep on working.
+
+Unfortunately there were also two problematic macros in <stdio.h>
+which dragged assumptions about the internal representation of a
+FILE into all code.  The glue code can stil grok with compiled code
+that used the macros getc() and fileno(), as long as the arguments
+are one of the standard streams (stdin, stdout, stderr).  For all
+other streams this will not work any longer, and such files have
+to be recompiled.
+
+Other problematic macros that couldn't be emulated were
+
+	ferror (FILE* stream)
+	feof (FILE* stream)
+	clearerr (FILE* stream)
+	
+Code that uses these macros also has to be recompiled against the
+new headers.  Something like this won't happen again, since 
+ferror(), feof(), fileno(), and clearerr() are now functions as they
+ought to be.
+
+Guido Flohr <guido@freemint.de>

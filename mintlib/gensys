@@ -1,0 +1,462 @@
+#!/bin/sh
+# Generate various source files from SYSCALLS.
+
+AWK=${AWK:=awk}
+
+usage ()
+{
+  exec 1>&2
+  echo "Usage: $myname [OPTION] [SYSCALLSLIST] [NAME]"
+  echo "Generate C files for use for the MiNTLib syscall function."
+  echo "SYSCALLSLIST should be src/syscalls.list, OPTION one of"
+  echo "  -header              generate syscall-list.h"
+  echo "  -array               generate syscalls.h"
+  echo "  -syscalls            generate SYSCALLS"
+  echo "  -sysdefs             write definition files"
+  echo ""
+  echo "If OPTION is -sysdefs then NAME must be the name of the function"
+  echo "call for which to write the definition file."
+  exit 1;
+}
+
+warn_generated ()
+{
+  cat <<EOF
+/* This file is generated, DO NOT EDIT!!! All changes will get
+   overwritten.
+   Edit $srcfile in the MiNTLib distribution instead.  */
+
+EOF
+}
+
+make_header ()
+{
+  warn_generated
+  
+  # Extract the definitions from SYSCALLS.
+  awk ' BEGIN { count = 0; errors = 0; lineno = 0; }
+    {
+      lineno++
+      sub ("#.*", "")
+      if (NF < 1) 
+        {
+          next
+        }
+      
+      for (i = 2; i <= NF; i++)
+        {
+          if (($i != "int" && $i != "short" && $i != "long" \
+              && $i != "char" && $i != "ptr" && $i != "..." && $i != "void") \
+              || ($i == "void" && i != 2))
+              
+            {
+              printf "%s:%d:invalid type %s\n", FILENAME, lineno, $i | "cat 1>&2"
+              errors++
+            }
+        }
+        print "#define SYS_" $1 " " count
+        count++
+    }
+    END { if (errors != 0) exit 1; }
+  ' $srcfile || exit 1  
+}
+
+make_array ()
+{
+  warn_generated
+  
+  # Extract the definitions from SYSCALLS.
+  awk ' BEGIN { errors = 0; lineno = 0; array = ""; count = -1 }
+    {
+      lineno++
+      sub ("#.*", "")
+      if (NF < 1) 
+        {
+          next
+        }
+
+      proto = ""
+      structure = ""
+      need_stdarg = ""
+      count++
+      
+      if ($2 == "ptr")
+        {
+          rettype = "void*"
+        }
+      else
+        {
+          rettype = $2
+        }
+        
+      for (i = 2; i <= NF; i++)
+        {
+          if (($i != "int" && $i != "short" && $i != "long" \
+              && $i != "char" && $i != "..." && $i != "ptr" && $i != "void") \
+              || ($i == "void" && i != 2))
+            {
+              printf "%s:%d:invalid type %s\n", FILENAME, lineno, $i | "cat 1>&2"
+              errors++
+            }
+          else
+            {
+              if ($i == "int")
+                structure = structure "i"
+              else if ($i == "short")
+                structure = structure "s"
+              else if ($i == "long")
+                structure = structure "l"
+              else if ($i == "char")
+                structure = structure "c"
+              else if ($i == "ptr")
+                {
+                  structure = structure "p"
+                  if (i != 2) proto = proto "void*"
+                }
+              else if ($i == "void")
+                structure = structure "v"
+              else if ($i == "...")
+                {
+                  need_stdarg = "yes"
+                  if (i != NF)
+                    {
+                      printf "%s:%d:variadic arguments must be last", FILENAME, lineno, $i | "cat 1>&2"
+                      errors++
+                    }
+                  else
+                    structure = structure "v"
+                  proto = proto "va_list"
+                }
+              if (i != 2)
+                {
+                  if ($i != "..." && $i != "ptr") proto = proto $i
+                  if (i != NF) proto = proto ", "
+                }
+            }
+        }
+      if (NF == 2) proto = proto "void"
+      jumptable[structure] = "yep"
+      proto = proto "));"
+      
+      if (need_stdarg == "yes")
+        {
+          proto = "__EXTERN " rettype " __" $1 "_v __PROTO ((" proto
+          structure = "  { __" $1 "_v, _sys_" structure  " },\n"
+        }
+      else
+        {
+          proto = "__EXTERN " rettype " __" $1 " __PROTO ((" proto 
+          structure = "  { __" $1 ", _sys_" structure " },\n"
+        }
+      print proto
+      array = array structure
+    }
+    END { 
+      if (errors != 0) exit 1
+      
+      print
+      
+      for (f in jumptable)
+        {
+          print "static long _sys_" f " __PROTO ((int opcode, va_list args));"
+        }
+      print
+      print "static struct _dispatch funcs[] = \n{\n" array "};\n"
+      print "#define MAX_SYS_OPCODE " count "\n"      
+      for (f in jumptable)
+        {
+          has_va_args = "no"
+          
+          print "static"
+          print "long _sys_" f " (int opcode, va_list args)"
+          print "{"
+          for (j = 2; j <= length (f); j++)
+            {
+              types[j] = substr (f, j, 1);
+              if (types[j] == "i")
+                type = "int"
+              else if (types[j] == "l")
+                type = "long"
+              else if (types[j] == "s")
+                type = "short"
+              else if (types[j] == "p")
+                type = "void*"
+              else if (types[j] == "v")
+                has_va_args = "yes"
+               
+              print "  " type " a" j - 1 " = va_arg (args, " type ");"
+            }
+          printf "  "
+          if (substr (f, 0, 1) != "v")
+            printf "return (long) "
+          printf "((func) funcs[opcode].call) ("
+          for (k = 2; k < j; k++)
+            {
+              printf "a" k - 1
+              if (k != j - 1)
+                printf ", "
+            }
+          
+          if (has_va_args == "yes")
+            {
+              printf ", args"
+            }
+          print ");"
+          
+          if (substr (f, 0, 1) == "v")
+            printf "  return (long) 0;"
+          print "}"
+          print
+        }  
+      
+    }
+  ' $srcfile || exit 1  
+}
+
+make_syscalls ()
+{
+  # Extract the definitions from SYSCALLS.
+  awk ' BEGIN { errors = 0; lineno = 0; }
+    {
+      lineno++
+      sub ("#.*", "")
+      if (NF < 1) 
+        {
+          next
+        }
+      
+      for (i = 2; i <= NF; i++)
+        {
+          if (($i != "int" && $i != "short" && $i != "long" \
+              && $i != "char" && $i != "..." && $i != "ptr" && $i != "void") \
+              || ($i == "void" && i != 2)) 
+            {
+              printf "%s:%d:invalid type %s\n", FILENAME, lineno, $i | "cat 1>&2"
+              errors++
+            }
+        }
+        print $1 " "
+        count++
+    }
+    END { if (errors != 0) exit 1; print "\n" }
+  ' $srcfile || exit 1
+}
+
+make_sysdefs ()
+{
+  warn_generated
+  
+  cat <<EOF
+/* The argument list for this function is most probably wrong.  Just
+   don't care about that!  */
+
+EOF
+
+  # Extract the definitions from SYSCALLS.
+  awk ' BEGIN { call = "'$1'"; errors = 0; lineno = 0 }
+    {
+      lineno++
+      sub ("#.*", "")
+      if (NF < 1) 
+        {
+          next
+        }
+      else if ($1 != call)
+        {
+          next
+        }
+      
+      print "#include <compiler.h>\n"
+      need_stdargs = ""
+      argcount = 0
+      for (i = 2; i <= NF; i++)
+        {
+          if (($i != "int" && $i != "short" && $i != "long" \
+              && $i != "char" && $i != "..." && $i != "ptr" && $i != "void") \
+              || ($i == "void" && i != 2))
+            {
+              printf "%s:%d:invalid type %s\n", FILENAME, lineno, $i | "cat 1>&2"
+              errors++
+            }
+          if ($i == "...") need_stdargs = "yes"
+        }
+      # Now write the function.
+      print "#ifndef HAVE_WEAK_SYMBOLS\n"
+      if (need_stdargs == "yes")
+        {
+          print "#include <stdarg.h>\n"
+        }
+      if ($2 == "ptr")
+        rettype = "void*"
+      else
+        rettype = $2
+        
+      printf "__EXTERN %s __%s%s __PROTO ((", rettype, call, need_stdargs == "yes" ? "_v" : ""
+      if (NF == 1)
+        {
+          printf "void"
+        }
+      for (i = 3; i <= NF; i++)
+        {
+          if ($i == "...") 
+            {
+              printf "..."
+            }
+          else if ($i == "ptr")
+            {
+              printf "void* a%d", i - 2
+            }
+          else 
+            {
+              printf "%s a%d", $i, i - 2
+            }
+          if (i != NF) 
+            {
+              printf ", " 
+            }
+        }
+      printf "));\n\n"
+      printf "%s %s (", rettype, call
+      if (NF == 1)
+        {
+          printf "void"
+        }
+      for (i = 3; i <= NF; i++)
+        {
+          if ($i == "...") 
+            {
+              printf "..."
+            }
+          else if ($i == "ptr")
+            {
+              printf "void* a%d", i - 2
+            }
+          else 
+            {
+              printf "%s a%d", $i, i - 2
+            }
+          if (i != NF) 
+            {
+              printf ", " 
+            }
+        }
+      printf ")\n"
+      
+      
+      # Now the function body.
+      print "{"
+      if (need_stdargs == "yes")
+        {
+          if (rettype != "void")
+            {
+              print "  " rettype " retval;"
+            }
+          print "  va_list a" NF - 2 ";"
+          print "  va_start (a" NF - 2 ", a" NF - 3 ");"
+          if (rettype != "void")
+            {
+              printf "  retval = "
+            }
+          else
+            {
+              printf "  "
+            }
+          printf "__%s_v (", call
+        }
+      else
+        {
+          if (rettype != "void")
+            {
+              printf "  return "
+            }
+          else
+            {
+              printf "  "
+            }
+          printf "__%s (", call
+        }
+      for (i = 3; i <= NF; i++)
+        {
+          printf "a" i - 2
+          if (i != NF)
+            {
+              printf ", "
+            }
+        }
+      print ");"
+      if (need_stdargs == "yes")
+        {
+          printf "  va_end (a%d);\n", NF - 2
+          if (rettype != "void")
+            {
+              print "  return retval;"
+            }
+        }
+      print "}"
+      print "#endif /* HAVE_WEAK_SYMBOLS */\n"
+      if (errors == 0)
+        {
+          found = 1
+          exit 0
+        }
+      else
+        {
+          exit 1
+        }
+    }
+    END { if (found != 1) 
+            {
+              printf "%s: no function call %s found\n", FILENAME, call | "cat 1>&2" 
+              errors++
+            }
+          if (errors != 0) exit 1
+        }
+  ' $srcfile || exit 1
+}
+
+myname=$0
+
+# Check for right arguments
+srcfile=$2
+
+case $1 in
+  -header)
+    if test $# -ne 2; then 
+      usage
+    fi
+    make_header
+    ;;
+  -array)
+    if test $# -ne 2; then 
+      usage
+    fi
+    make_array
+    ;;
+  -syscalls)
+    if test $# -ne 2; then 
+      usage
+    fi
+    cat <<EOF
+# This file is auto-generated, DO NOT EDIT!!!  Edit the file
+# $srcfile instead.
+# The contents of this file will get included by several Makefiles to
+# determine which files to compile.
+#
+SYSCALLS = \\
+EOF
+    syscalls=`make_syscalls | sort | uniq`
+    for call in $syscalls; do
+      echo "  $call"_sys.c \\
+    done
+    echo
+    ;;
+  -sysdefs)
+    if test $# -ne 3; then 
+      usage
+    fi
+    make_sysdefs $3
+    ;;
+  *)
+    usage
+    ;;
+esac

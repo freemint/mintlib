@@ -1,0 +1,101 @@
+There is no global copyright on the MiNTlib.  Because the code was
+contributed independently by many people, or was borrowed from various
+sources, each source file in the library may have its own specific
+licence.  Read the source file if you are unsure of the legal status
+of a particular library component.  In addition, without any prejudice
+to the distribution terms of individual components of the library, you
+are reminded that, as a whole, this library, a compilation of free
+software, comes to you without any warranty of any sort, explicit or
+implied.  The library's maintainers and contributors, past and
+present, shall not be held responsible for any kind of damage, direct
+or indirect, physical or otherwise, that may have resulted from use or
+misuse of any part or combination of parts of this library in any
+context whatsoever.  Use of this library implies that you agree with
+the above terms and assume all the risks associated with its use.
+
+The library is being constantly developped, particular files are
+modified or replaced with new versions.  Hence, it is impossible 
+to give a statement which particular functions of the library are
+available under which licensing condition.  If you think you are
+able to isolate certain parts of the library which are available
+under conditions that you are not willing to meet it is your task
+to check the license notes in the individual source files.  
+
+Under normal circumstances, use of any library function or header
+file will at least during the link process drag so many libc modules
+into your link that you have to meet all license conditions listed
+hereafter.
+
+The individual terms are:
+
+o The COPYMINT license, the "main" license of this library:
+
+/*  Copyright (C) 2000 of the author (see sources).
+
+    This file is part of the MiNTLib project, and may only be used
+    modified and distributed under the terms of the MiNTLib project
+    license, COPYMINT.  By continuing to use, modify, or distribute
+    this file you indicate that you have read the license and
+    understand and accept it fully.
+*/
+
+o The GNU Library General Public License:
+
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+o The BSD license:
+
+/*
+ * Copyright (c) 2000 Regents of the University of California.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms are permitted
+ * provided that the above copyright notice and this paragraph are
+ * duplicated in all such forms and that any documentation,
+ * advertising materials, and other materials related to such
+ * distribution and use acknowledge that the software was developed
+ * by the University of California, Berkeley.  The name of the
+ * University may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+o Henry Spencer's license:
+
+/*	Copyright (c) 1986 by University of Toronto.
+ *	Written by Henry Spencer.  Not derived from licensed software.
+ *
+ *	Permission is granted to anyone to use this software for any
+ *	purpose on any computer system, and to redistribute it freely,
+ *	subject to the following restrictions:
+ *
+ *	1. The author is not responsible for the consequences of use of
+ *		this software, no matter how awful, even if they arise
+ *		from defects in it.
+ *
+ *	2. The origin of this software must not be misrepresented, either
+ *		by explicit claim or by omission.
+ *
+ *	3. Altered versions must be plainly marked as such, and must not
+ *		be misrepresented as being the original software.
+ *
+ * Modified by Eric Smith for use with the MiNT library.
+ */

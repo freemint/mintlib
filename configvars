@@ -1,0 +1,246 @@
+# This file is being included into all Makefiles and into the
+# installation script "libinstall".  Please make sure that it can
+# serve both as input to "make" and a Bourne shell.
+
+# Define this to the version of the package.
+VERSION=0.55.3
+
+# Uncomment this out if you want extra libraries that are optimized
+# for m68020 processors.
+WITH_020_LIB=yes
+
+# Uncomment this out if you want a debuggable lib lib_g.a.
+WITH_DEBUG_LIB=yes
+
+# Uncomment this out if you want a debugable lib lib_p.a.  
+# This is currently not recommended.  At least on my machine
+# all executables linked against a profiled lib crash and I
+# cannot debug it because the debugger runs out of memory before
+# it can fork (even for hello.c).  It may be a memory problem
+# that only occurs here, it may be a bug.
+WITH_PROFILE_LIB=yes
+
+# Comment this out if you don't want to build libraries with short
+# (i. e. 16 bit) integers.
+WITH_SHORT_INTS=yes
+
+# This variable is used for various others.  Change its value if 
+# need be.  When cross-compiling you will usually want to set this
+# to "/usr/local/m68k-atari-mint".
+# prefix=/usr/local/m68k-atari-mint
+# prefix=/usr/local
+prefix=/usr
+
+# This is where include files get installed.
+includedir=${prefix}/include
+
+# This is where the libraries and the startup modules (crt0.o etc.)
+# go.
+libdir=${prefix}/lib
+
+# This is where manpages get installed.
+mandir=${prefix}/share/man
+
+# This is where user programs get installed.
+bindir=${prefix}/bin
+
+# This is where system programs that are not necessary for booting the
+# system get installed.
+sbindir=${prefix}/sbin
+
+# This is where system programs that are necessary for booting the
+# system get installed.  If your general prefix is "/usr" (i. e.
+# you replace your system files with this distribution, you should
+# choose "/sbin".  If your general prefix is "/usr/local" (or something
+# else, then "$prefix/sbin" will be alright.
+#bootsbindir=${prefix}/sbin
+bootsbindir=/sbin
+
+# Define this to "m68k-atari-mint-" if you cross compile.
+#toolprefix=m68k-atari-mint-
+toolprefix=
+
+# Define this to the name of your C compiler.  You need at least 
+# gcc 2.7.2.  Older versions will not work.  If you use an older
+# gcc than 2.95.2 you will run into severe problems.
+CC=$(toolprefix)gcc
+
+# Define this if you cross-compile.  When cross-compiling some files
+# (notably programs and commands like zic, zdump or tzselect) won't
+# get installed.  You have to take car yourself that the libraries
+# and include files and so on will get installed in the right place
+# The easiest way to do this is to change "prefix", see above.
+#CROSS=yes
+
+# Only used when cross-compiling:
+# Define this to the size (in bytes) of a long double for your 
+# cross-compiler.  If you have an older gcc version it is probably
+# 0x08.  It should be 0x0a (decimal 12) however.  If in doubt leave 
+# it as it is (i. e. 0x0a).
+LONGDOUBLESIZE=0x0a
+
+# Define this to "no" if you don't want to let the installation 
+# routines remove stale include files from your system's include
+# directories.  Unless you build an rpm or do cross-compiling
+# you should leave that as "yes".
+HEADER_CLEANUP=yes
+
+# Define this to the name of your ar program.
+AR=$(toolprefix)ar
+
+# Define this to "${AR} s" if your system lacks the ranlib program.
+RANLIB=$(toolprefix)ranlib
+
+# Minimal set of CFLAGS to use.  The flags "-mshort", "-mbaserel"
+# will be added by the individual Makefiles.  If you want a debuggable
+# library you will have to add "-g" here.  If you want more or less
+# optimization you can change "-O2" to nothing, "-O" or "-O3".  Don't
+# add any "-f..." optimization options here, they will be handled
+# by the Makefiles because inidividual files need special options.
+#
+# If you have enough memory and want to speed up compilation you can
+# also add -pipe here.
+# 
+# ATTENTION: You have to optimize at least with -O, otherwise some
+# extern inlines will not work and will cause unresolved references
+# in certain modules.
+CFLAGS=-O2 -fomit-frame-pointer
+
+# Additional defines.
+DEFS=
+
+# Define this to the warning level you want.
+WARN=-Wall
+
+# If your system lacks a BSD compatible install you should set this
+# variable to "$(top_srcdir}/install-sh".
+# INSTALL=${top_srcdir}/install-sh
+INSTALL=install
+
+# Define this to the name of an awk program on your system.
+AWK=awk
+
+#####################################################################
+# Time zone stuff.
+#####################################################################
+# Important note: Along with the tz database comes a shell script
+# "tzselect".  This script requires a korn shell.  This is usually
+# no problem with MiNT because bash is assez korn shell compatible.
+# you should create a symbolic link
+#	ln -s /bin/bash /bin/ksh
+# before running the script.
+#
+# When cross-compiling nothing will get installed in the tz
+# tz subdirectory.  Only the binaries zdump and zic will get build
+# but not installed.
+
+# Change the line below for your time zone (after finding the zone 
+# you want in the time zone files, or adding it to a time zone file).
+# Alternately, if you discover you've got the wrong time zone, you 
+# can just
+#	zic -l rightzone
+# after installation to correct things.
+# Use the command
+#	make zonenames
+# to get a list of the values you can use for LOCALTIME.  If you have
+# a binary distribution simply run the installation script libinstall.
+# You will then find a list of possible zonenames in this directory
+# in the file "zonenames".
+#
+# The default setting "Factory" is also safe.  Whenever you use a
+# program that supports the tz database and your timezone is still
+# "Factory" its output will remind you to run "tz".
+#
+# This variable gets overridden if the file /etc/sparemint/timezone
+# exists and it defines a variable "TIMEZONE".
+LOCALTIME=Factory
+
+# If you want something other than Eastern United States time as a
+# template for handling POSIX-style time zone environment variables,
+# change the line below (after finding the zone you want in the time 
+# zone files, or adding it to a time zone file).  (When a POSIX-style
+# environment variable is handled, the rules in the template file are 
+# used to determine "spring forward" and "fall back" days and times; 
+# the environment variable itself specifies UTC offsets of standard 
+# and summer time.)
+# Alternately, if you discover you've got the wrong time zone, you 
+# can just
+#	zic -p rightzone
+# to correct things.
+# Use the command
+#	make zonenames
+# to get a list of the values you can use for POSIXRULES.  If you have
+# a binary distribution simply run the installation script libinstall.
+# You will then find a list of possible zonenames in this directory
+# in the file "zonenames".
+# If you want POSIX compatibility, use "America/New_York".  But you
+# must be a very POSIX compatible mind if you do not choose your
+# hometown instead.
+#
+# This variable gets overridden if the file /etc/sparemint/timezone
+# exists and it defines a variable "TIMEZONE".
+POSIXRULES=America/New_York
+
+# All time zone stuff gets put in subdirectories of...
+# Note that this variable defaults to "/usr" and not "/usr/local".
+# If you change the installation path you also have to change
+# the file src/tzfile.h to reflect your different setting.
+TZTOPDIR=$prefix
+
+# "Compiled" time zone information is placed in the "TZDIR" directory
+# (and subdirectories).
+# Use an absolute path name for TZDIR unless you're just testing the 
+# software.  Again, take care that this setting is synchronized with
+# src/tzfile.h.
+TZDIR=${TZTOPDIR}/share/zoneinfo
+
+# If you always want time values interpreted as "seconds since the epoch
+# (not counting leap seconds)", use
+#	REDO=posix_only
+# below.  If you always want right time values interpreted as "seconds since
+# the epoch" (counting leap seconds)", use
+#	REDO=right_only
+# below.  If you want both sets of data available, with leap seconds not
+# counted normally, use
+#	REDO=posix_right
+# below.  If you want both sets of data available, with leap seconds counted
+# normally, use
+#	REDO=right_posix
+# below.
+# POSIX mandates that leap seconds not be counted; for compatibility with it,
+# use either "posix_only" or "posix_right".  If you don't want to install
+# any timezone database specifiy "REDO=none".
+REDO=posix_right
+
+# If you want zic's -s option used when installing, uncomment the next line
+# (see zic(8) for details).
+# ZFLAGS=-s
+
+# Define this to the name of a korn shell compatible shell on your 
+# system.  Usually the default "/bin/bash" is alright.
+KSH=/bin/bash
+
+#####################################################################
+# End of time zone stuff.
+#####################################################################
+
+#####################################################################
+# Linker.
+#####################################################################
+# Which linker gets used?  Possible values are currently "GNU" or
+# "OLD_GNU".
+# Define this to "GNU" if you use the GNU linker at least version 2.9.1 
+# (type "ld --version" to see if this is the case).  For older versions
+# of the GNU linker define it to "OLD_GNU".  For other linkers you
+# have to edit the files "include/libc-symbols.h" and  
+# "include/linker.h.in".
+LINKER_TYPE=GNU
+
+#####################################################################
+# End of linker stuff.
+#####################################################################
+
+# The following variables shouldn't be changed by the user.
+TAR=tar
+GZIP=--best
+

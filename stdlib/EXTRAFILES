@@ -1,0 +1,10 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES dtest.c ftest.c \
+fpioconst.h gmp-impl.h gmp-mparam.h gmp.h longlong.h test-canon.c \
+test-canon2.c test-cc.c test-div.c test-div.input test-mb.c test-rand.c \
+test-sort.c test-strtod.c test-strtol.c

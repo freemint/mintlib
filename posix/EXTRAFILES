@@ -1,0 +1,11 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile PTESTS PTESTS2C.sed \
+SRCFILES TESTS TESTS2C.sed ptestcases.h test-fnmatch.c test-getopt.args \
+test-getopt.c test-glob.c test-glob.sh test-remove.c test-run.c test-runp.c \
+test-wordexp.c test-wordexp.sh testcases.h
+

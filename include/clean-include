@@ -1,0 +1,115 @@
+#!/bin/sh
+#
+# include/clean-include -- MiNTLib.
+# Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+#
+# This file is part of the MiNTLib project, and may only be used
+# modified and distributed under the terms of the MiNTLib project
+# license, COPYMINT.  By continuing to use, modify, or distribute
+# this file you indicate that you have read the license and
+# understand and accept it fully.
+#
+# Remove stale include files from include directories.  Note that
+# this script is based on a gcc installation.  The envariable $CC
+# must be set to the name of the C compiler driver gcc.
+
+stale_hdrs="cookie.h dcntl.h dir.h file.h ioctl.h \
+ssystem.h param.h stat.h statfs.h sys/restoresys timeb.h times.h \
+utsname.h sigvec.h"
+
+stale_system_hdrs="float.h stdarg.h stddef.h varargs.h"
+
+if test "$CC" = ""; then
+  exec >&2
+  echo "$0: fatal error: enviroment variable CC is not set."
+  echo "$0 should be invoked by a MiNTLIB Makefile."
+  exit 1
+fi
+
+if test "$MINTLIB_VERSION" = ""; then
+  exec >&2
+  echo "$0: fatal error: enviroment variable MINTLIB_VERSION is not set".
+  echo "$0 should be invoked by a MiNTLIB Makefile."
+  exit 1
+fi
+
+# Avoid NLS nuisances.
+LANG=C
+LANGUAGE=C
+LC_MESSAGES=C
+LC_ALL=C
+export LANGUAGE
+
+# Find out system include path.
+trap "rm -f conftest.c gccout; exit 1" 0 1 2 3 15
+
+echo >conftest.c
+
+# Preprocess the source.
+$CC -v -E conftest.c -o /dev/null >gccout 2>&1
+rm -f conftest.c
+
+# Now read lines from gccout.
+line=""
+exec <gccout
+# Eat up leading garbage.
+while test "$line" != "#include <...> search starts here:"; do
+  read line || exit 0
+done
+
+include_dirs=""
+read line
+while test "$line" != "End of search list."; do
+  include_dirs="$include_dirs $line" || exit 0
+  read line || exit 0
+done
+
+rm -f gccout
+
+# Restore signal handlers.
+trap 0 1 2 3 15
+
+rm_headers=""
+
+for dir in $include_dirs; do
+  for file in $stale_hdrs; do
+    test -f $dir/$file && rm_headers="$rm_headers $dir/$file"
+  done
+done
+
+if test -n "$rm_headers"; then
+  echo "Renaming obsoleted header files:"
+  for file in $rm_headers; do
+    echo "  Renaming '$file' to '$file.old'."
+    cat >$file.old <<EOF
+/* IMPORTANT: This file is obsoleted.  It has been renamed by the
+   MiNTLib version $MINTLIB_VERSION installation.  */
+EOF
+    cat $file >>$file.old && rm -f $file
+  done
+  echo "Done."
+fi
+
+# These headers should only be removed from system include directories.
+include_dirs="/usr/include /usr/local/include"
+rm_headers=""
+
+for dir in $include_dirs; do
+  for file in $stale_system_hdrs; do
+    test -f $dir/$file && rm_headers="$rm_headers $dir/$file"
+  done
+done
+
+if test -n "$rm_headers"; then
+  echo "Renaming obsoleted system header files:"
+  for file in $rm_headers; do
+    echo "  Renaming '$file' to '$file.old'."
+    cat >$file.old <<EOF
+/* IMPORTANT: This file is obsoleted.  It has been renamed by the
+   MiNTLib version $MINTLIB_VERSION installation.  */
+EOF
+    cat $file >>$file.old && rm -f $file
+  done
+  echo "Done."
+fi
+

@@ -1,0 +1,597 @@
+The Hacker's Guide to the MiNTLib
+=================================
+
+Please read this file if you intend to contribute code to the MiNTLib
+project.
+
+Patches
+-------
+
+Please always send patches, never complete files unless you have
+really rewritten them from the scratch.  Otherwise you will make
+it very difficult to integrate your code into the source tree.
+
+Patches are actually easy to create (even if you don't know how
+to apply them).  If you have rpm (the Redhat Package Manager)
+installed, you will have a shell script /usr/bin/gendiff.  If
+not, here you are:
+
+#!/bin/sh
+
+[ -z "$1" -o -z "$2" ] && {
+# usage
+  echo "usage: $0 <directory> <diff-extension>" 1>&2
+  exit 1
+}
+
+find $1 \( -name "*$2" -o -name ".*$2" \) -print |
+while read f; do
+        diff -u --new-file $f `echo $f | sed s/$2\$//`
+done
+
+Install the script as /usr/bin/gendiff or whatever.
+
+If you change a file make a copy of the original file and
+add some descriptive extender; your name is probably a good
+idea:
+
+	cp stdlib/foobar.c stdlib/foobar.c.harry
+	
+Do that with every file you change.  If you add new files to
+the source tree you should create an empty reference file
+first with one of the following commands:
+
+	cat /dev/null >stdlib/newfile.c.harry
+
+or
+
+	touch stdlib/newfile.c.harry
+
+It doesn't matter how you create the file but "stdlib/newfile.c.harry"
+should be empty whereas "stdlib/newfile.c" should contain your
+changes.  Be sure that you update the files SRCFILES, MISCFILES and BINFILES
+if you add files, otherwise they will not get included in the
+distribution (the same applies if you rename files).  Have a look
+into SRCFILES, MISCFILES and BINFILES and search for similar files
+to find out which of them you need to change.  In any case, in your
+accompanying e-mail you should mention which files are new.
+
+Once you have done all your changes cd into the directory that
+contains your source tree, for example "/usr/local/src".  In that
+directory run the gendiff script:
+
+	gendiff mintlib-1.2.3 .harry >harry.patch
+
+What happens here in brief is:  The entire directory "mintlib-1.2.3"
+(the directory that the source archive unpacks to) is searched recursively
+for files that end in ".harry".  If such a file is found it is
+diffed against the same file but without the ".harry" extension
+and the diff output is appended to your patch file "harry.patch".
+
+If you do big modifications it is probably a good idea to choose
+multiple extenders instead of just ".harry" and to create several
+patches to group related things.  For example:
+
+	gendiff mintlib-1.2.3 .stdiobug >stdiobug.patch
+	gendiff mintlib-1.2.3 .i18n >i18n.patch
+
+You have to be a little careful with the extenders that you choose.
+Make sure that they are never used for regular files in the library.
+For example ".c", ".h", ".o", or ".SP" are probably not a good idea.
+
+Of course, if you only make minor modifications you can also diff
+the individual files.  But making a source distribution ensures
+that your patch is complete.
+
+If your patches don't follow these rules, don't be surprised if they
+will not be accepted.  I rather spend my time on coding then on 
+figuring out what the heck you have modified.
+
+Style
+-----
+
+The MiNTLib hasn't got any conventions for your code (unfortunately).
+Feel free to code as you like it best but please be consequent.  Use
+your style throughout the file.
+
+If you change an existing file, please follow the style of the original
+author or change it completely.  But be consistent.
+
+Carriage Returns
+----------------
+
+Avoid them like the plague.  If your compiler needs carriage returns
+please remove them before mailing patches (for example with the crlf
+program, or with "tr -d '\r'").  If you can't remove the carriage
+returns please mention that fact in the accompanying mail.
+
+Tab stops
+---------
+
+It is up to you to use tab stops or not.  But if you use them they 
+should be 8 characters wide (this is a must).
+
+Namespace and Global Variables
+------------------------------
+
+Avoid global variables (unless documented) like the plague.  If you
+absolutely need a global variable (or a global function) make sure
+that it is prepended with a double underscore:
+
+int __my_internal_function (int foobar);
+int __my_internal_variable;
+
+The MiNTLib namespace is currently very polluted; but don't follow
+this example, do it better and remove namespace pollutions whereever
+you encounter them.
+
+A related problem: Of course you can reference other library functions
+at your will.  But be careful with the use of non-standard functions.
+For example the function stpcpy() is very handy to use but it is
+a GNU extension.  If you compile a program without "-D_GNU_SOURCE"
+the symbol "stpcpy" shouldn't be defined because the user is free
+to define it himself (and maybe his definition conflicts with the
+definition in the library).  Therefore: never (NEVER!) use any
+library functions that are not ANSI C (the minimal standard of the
+library).
+
+There is one important (very important) exception to that rule:
+All names (symbols and preprocessor macros) with a leading underscore
+are reserved for the libc and you can use them.  By the way: the
+MiNTLib prefers a double underscore "__".
+
+What you if you want to use non-standard functions like stpcpy() is
+using a version of them that begins with a double underscore, i. e.
+not 
+
+	char* tail = stpcpy (dest, src);
+
+but
+
+	char* tail = __stpcpy (dest, src);
+
+For many non-standard functions there is an equivalent definition with
+a double underscore available, if in doubt either run "nm" on the 
+library or look in the corresponding source file.  To stick with the
+stpcpy example, look in string/stpcpy.c.  It looks roughly like
+
+	char*
+	__stpcpy (char* dest, const char* src)
+	{
+		/* Code ... */
+	}
+	weak_alias (__stpcpy, stpcpy)
+
+So, what's this "weak alias"?  As you can see the library doesn't use
+the "forbidden" name "stpcpy", it uses the legal name "__stpcpy" 
+instead.  The macro "weak_alias" expands into some assembler magic
+that will define the name "stpcpy" as a weak alias for "__stpcpy".
+
+Now imagine that the user compiles a source without "-D_GNU_SOURCE".
+In this case the prototype for stpcpy() is not included from
+<string.h>.  The name "stpcpy" is still available for the application
+code.  The client programmer may define the symbol in a absolutely
+incompatible way.  Undefined references to "stpcpy" will be satisfied
+by the user code and since "stpcpy" in the library is a weak symbol
+that will not cause any name conflicts ("doubly defined symbol").
+Neither does it hurt the library code because it always references
+the safe and approved __stpcpy() from the library itself.
+
+However, if the user compiles with -D_GNU_SOURCE, the prototype
+for stpcpy() gets included and any conflicting definition in the
+client code will lead to a compile-time error.  If the user references
+the symbol "stpcpy" however the weak definition of "stpcpy" which
+is equivalent to "__stpcpy" is sufficient.
+
+For advanced readers: If you are working on a GNU extension it is
+of course safe to use other GNU extensions without worrying about
+all this.  For example in wordexp() (ok, that's a POSIX extension)
+it is safe to reference fnmatch() because if the user references
+wordexp() the other extension fnmatch() is also allowed to be
+defined.  But if you are not absolutely sure, please keep the 
+namespace clean and use the safe versions with the double
+underscore.  They have no performance penalty, nor do they increase
+the size of the resulting code.
+
+You can also benefit from weak symbols in assembler files that are
+run through the preprocessor (.SP files in the library).  But
+you should keep in mind that the symbol "foobar" in a C file is
+equivalent to the symbol "_foobar" in assembler.  However the
+macro weak_alias() uses the C symbol names, for example:
+
+	#include <libc-symbols.h>
+	.globl	___foobar
+	weak_alias (__foobar, foobar)
+
+	___foobar:
+		movel	#114, d0
+		...
+		
+On assembler level (which is displayed by the nm command) this would 
+define a global symbol "___foobar" with "_foobar" being a weak alias
+for it.  But from a C source the symbols "__foobar" (the strong
+definition) and the weak alias "foobar" would be visible and should
+therefore be used as arguments to the weak_alias macro.
+
+You haven't understood a word of that?  OK, that's it in brief:
+Don't use non-ANSI functions.  If you do, rename the function you
+reference from forbidden() to __forbidden() (in forbidden.c) and
+add a line "weak_alias (__forbidden, forbidden)" to forbidden.c.
+
+Like this:
+
+	myfunc.c:
+	
+	int 
+	myfunc (int x)
+	{
+		return forbidden (-x);
+	}
+
+	Should become now:
+	
+	__EXTERN __forbidden __P ((int __x));
+	int 
+	myfunc (int x)
+	{
+		return __forbidden (-x);
+	}
+	
+	And forbidden.c should now look like:
+	
+	int
+	__forbidden (int x)
+	{
+		do_something_with (x);
+		return y;
+	}
+	weak_alias (__forbidden, forbidden)
+
+Header Files
+------------
+
+Don't introduce non-standard header files.  At least put them into
+subdirectories like "mint" or "sys".
+
+Allow multiple inclusion for every header file you add.  If you
+create a file "foobar.h" and "sys/foobar.h" put the contents between
+preprocessor macros:
+
+#ifndef _FOOBAR_H
+# define _FOOBAR_H 1  /* Allow multiple inclusion.  */
+
+...
+#endif /* not _FOOBAR_H */
+
+#ifndef _SYS_FOOBAZ_H
+# define _SYS_FOOBAZ_H 1  /* Allow multiple inclusion.  */
+
+...
+#endif /* not _SYS_FOOBAZ_H */
+
+Please use a single leading underscore for the macro.
+
+Make sure that your header file will work with C++:
+
+...
+_BEGIN_DECLS
+/* Prototypes and other C stuff following.  */
+_END_DECLS
+
+The macros "_BEGIN_DECLS" and "_END_DECLS" are an abbreviation for:
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+...
+
+#ifdef __cplusplus
+}
+#endif
+
+Please _always_ include the header file <features.h>, /before/ 
+you do the C++ stuff:
+
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
+When prototyping functions you should either use no argument names
+at all or begin them with a double underscore:
+
+NOT:  __EXTERN foobar __P ((int arg1));
+
+BUT:  __EXTERN foobar __P ((int __arg1));
+OR:   __EXTERN foobar __P ((int));
+
+It is also a good idea to use descriptive names for arguments (not 
+"__arg1", "__arg2", ...) and to place a short comment describing
+the function before the prototype (convert argument names to
+uppercase and omit the double underscore):
+
+/* Return the `struct tm' representation
+   of *TIMER in the local timezone.  */
+__EXTERN struct tm *localtime __PROTO ((const time_t *__timer));
+
+Comments
+--------
+
+Don't follow the rule "if it was hard to write it has to be hard
+to read".  Make it easier for other people to fix bugs in your code
+and write descriptive comments.
+
+Describe as many variables that you use as possible.
+
+Integer Sizes
+-------------
+
+This library is intended to compile and run with 32 and 16 bit integers.
+Please keep that in mind.  If your code needs modifications for 16 bit
+integers you can surround it by "#ifdef __MSHORT__".  It is also a good
+idea to test your code both with 16 and 32 bit integers.
+
+It is usually not necessary to take any special measures for -mbaserel
+(unless you contribute assembler code).
+
+The "errno" variable
+--------------------
+
+This is a bigger problem than you think.  First of all: Never assign
+values directly to errno, i. e. don't
+
+	errno = -retval;
+
+but do
+
+	__set_errno (retval);
+
+The story behind that: A global errno variable is a very bad idea in
+a multi-threaded applications.  In multi-threaded applications every
+thread of execution should have an errno variable of its own.  It is
+ok to check for certain values of errno like in
+
+	if (errno == ENOTDIR)
+		try_another_approach ();
+
+The library will take care that you can always reference "errno" like
+an int although it may expand into something more complicated.  But
+setting errno should only be done with the __set_errno macro.
+
+This is only important for future extensions but it will reduce the
+amount of work necessary for making the library thread-safe.
+
+A much more important problem which is already relevant today: You will
+often call other library routines that may clobber errno, for example:
+
+	int 
+	rename (const char* before, const char* after)
+	{
+		struct stat sb;
+		if (stat (after, &sb) == 0) {
+			/* File exists.  */
+			__set_errno (EEXIST);
+			return -1;
+		}
+		...
+		return 0;
+	}
+	
+Looks harmless, but it is a bug.  You use the stat() function to check
+if the target file exists and you are happy when stat() returns an error
+because then it is ok to rename BEFORE to AFTER.  But you have forgotten
+that the failed stat() has clobbered errno.  Your routine will possibly
+succeed but nevertheless errno will be set to ENOENT.  This is not
+acceptable!   What you have to do is:
+
+	int 
+	rename (const char* before, const char* after)
+	{
+		struct stat sb;
+		int saved_errno = errno;
+		
+		if (stat (after, &sb) == 0) {
+			/* File exists.  */
+			__set_errno (EEXIST);
+			return -1;
+		}
+		...
+		__set_errno (saved_errno);
+		return 0;
+	}
+	
+Now if you return 0 (success) errno will always be reset to the value it
+had before.
+
+Please keep that in mind, it is a very common bug in the MiNTLib.
+
+Coding style
+------------
+
+As mentioned above you are not forced to use a fixed style.  But please
+make your code look nice, readable, and consistent.  If you use GNU
+emacs, your code will be formatted according to the GNU conventions.
+This is ugly but acceptable.
+
+If you don't mind I will be happy if you follow my coding style.  Distilled
+it is:
+
+- Always make sure that the name of a function starts in column 0, i. e.
+don't do:
+
+/* BAD.  */
+int foobar (void)
+{
+	...
+}
+
+but
+
+/* GOOD.  */
+int
+foobar (void)
+{
+}
+
+Simple reason:  If you want to find out where the function "foobar" is 
+defined you can do "grep '^foobar' *.c".
+
+- Don't put curly braces in a line of their own:
+
+	/* VERY BAD WINDOW$ STYLE.  */
+	if (x == y)
+	{
+		...
+	}
+	else
+	{
+		...
+	}
+	
+	/* STILL BAD.  */
+	if (x == y)
+	  {
+	    ...
+	  }
+	else 
+	  {
+	    ...
+	  }
+	  
+	/* GOOD.  */
+	if (x == y) {
+		...
+	} else {
+		...
+	}
+
+You will notice that the bad examples consume three more lines than the
+good one.  But wasting lines is bad for readability because the more
+lines of code fit into one screenful (resp. windowful) the better you
+can follow the program flow.
+
+- The language of the MiNTLib is English and the English language has
+orthographic, typographic, and interpunction rules:
+
+	o Frequent misspellings make your code look ugly.
+	o Sentences start with a capital letter and end with a full stop.
+	o Parentheses and operators that are words in spoken language
+	  should be embedded in spaces:
+	
+		/* BAD.  */
+		if((x==y)||(x==z)) {
+			fprintf(stderr,"error %d\n",17);fflush(stderr);
+		}
+		
+		/* GOOD.  */
+		if ((x == y) || (x == z)) {
+			fprintf (stderr, "error %d\n", 17); fflush (stderr);
+		}
+	
+	  The same with a comma, semi-colon, colon, ...
+	  
+	o There should be two spaces behind a full stop.  Like here.
+	o ...
+
+- A variable and a pointer are distinct data types.  It is unlogical and
+a common source of errors to write:
+
+	/* BAD.  */
+	char *text, the_char, **tail;
+	
+In our above example TEXT is a pointer to a char, not a char.  You should
+therefore write:
+	
+	/* GOOD.  */
+	char* text;
+	char the_char;
+	char** tail;
+
+That leads to another rule that you should not mix pointers and lvalues
+in declarations (even if this eats up several lines).  Of course you
+shouldn't fall into that trap:
+
+	/* Probably not what you mean: */
+	char* text1, text2, text3;
+
+- No line should be longer than 79 characters.  Otherwise popular editors
+like vi or emacs will break these lines and in other editors you have
+to scroll to see the entire line.  If your code intents so much that 79
+characters are not sufficient it is probably bad anyways.  Use macros,
+explicit inline functions (or trust the optimizer that simple functions
+will be inlined anyway), revise your code ...
+
+If you use string constants you can also do like this:
+
+				printf ("\
+This is a long line which doesn't fit at this level of indentation.\n");
+
+- Avoid comments in the function body.  Comment your code above the
+function header.  If you think that you need comments in the body,
+better revise your code and make it understandable without comments.
+One exception: You should comment automatic variables, unless the
+meaning is obvious from the name:
+
+	int
+	foobar (char* str)
+	{
+		int i;
+		size_t l;	/* Length of STR after normalization.  */
+		int return_value;
+		
+		...
+		for (i = 0; i < 100; i++) {
+			...
+		}
+		
+		return return_value;
+	}
+
+Every C programmer will correctly guess what the variable I is good for.
+No need for a comment.  The variable RETURN_VALUE is self-explanatory.
+
+- Declare automatic variables at the level where they are used:
+
+	int
+	foobar (char* str)
+	{
+		int i;
+		
+		for (i = 0; i < 100; i++) {
+			size_t len;
+			
+			...
+			if (isascii (str[i])) {
+				char converted;
+				...
+			}
+		}
+		return 0;
+	}
+	
+In long functions it is even no crime to use extra curly braces:
+
+	static void
+	foobar (char* str)
+	{
+		...
+		...
+		...
+		{
+			int i, j;	/* Only used around here.  */
+			
+			...
+		}
+		...
+		...
+		...
+	}
+
+Limiting the scope of automatic variables has several advantages.  It 
+enhances the readability of your code because the reader doesn't have
+to scroll back to find the declaration of a certain variable.  Furthermore
+long lists of variable are painful to read and to remember.  A short
+declaration list helps the reader to focus on the relevant things.
+Last but not least, the compiler can do a much better and quicker job
+optimizing your code.  Finally you also avoid stack overflows.
+

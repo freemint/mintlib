@@ -1,0 +1,12 @@
+This is an experimental version of the MiNTLib.  It is probably unstable
+and contains a lot of bugs.  You are welcome to test it and send bug
+reports (in fact, bug fixes are preferred) but please don't be to
+harsh with criticism.  The authors are well aware of this release's
+shortcomings.
+
+Please don't overwrite your system libraries and system include
+files, install in /usr/local.  Please don't distribute executables
+build with this version unless you mark them too as being experimental.
+
+If something is missing in the distribution it probably didn't get
+lost.  It's more likely that I have forgotten it, sorry!

@@ -1,0 +1,294 @@
+This is the MiNT library FAQ (Frequently Asked Questions).
+Last updated March 11, 2000.
+
+Most of this information was first put together by the former
+maintainers of the MiNT library, notably Knarf, Nox, and Entropy.
+There were some later additions and updates by Yves Pelletier and Frank
+Naumann.  Guido Flohr <guido@freemint.de> is the current 
+maintainer.
+
+You should also read the README file and any other documents accompanying
+this release of the MiNT library.
+
+1. What is the MiNT library?
+
+The MiNT library is a C language API (Application Program Interface)
+for MiNT (MiNT is Not TOS). MiNT is a multitasking environment for the
+Atari ST/TT/Falcon computers and clones thereof.  MiNT is currently at
+version 1.15.7 and can be obtained from any current Atari ftp site.
+See below for a list of suggested sites.  BTW, MiNT is now called
+FreeMiNT.
+
+1a. Who maintains it?
+
+Improvements and bug fixes depend almost entirely on the user
+community.  Patches can be sent to the library maintainer 
+<guido@freemint.de>.  We suggest you consider joining the
+MiNT mailing list, where the MiNTlib can be discussed among users.
+The list is located at mint@fishpool.com.
+
+2. What can I do with the MiNT library?
+
+The MiNT library will let you compile many UNIX programs under MiNT with
+very few changes in the source code of the program you're compiling.  There
+is a wide selection of free UNIX source code circulating around, and the
+MiNT library gives you the ability to compile and use many of these programs
+on your Atari computer.
+
+3. Where can I get the MiNT library?
+
+The MiNT library has currently no home site.  But it looks like you
+nevertheless managed to find a copy.  If you want/need the latest
+version you should enquire at the MiNT mailing list (mint@fishpool.com)
+or the maintainer Guido Flohr (guido@freemint.de).
+
+4. What is the '.tar.gz' extension used on the library distributions?
+
+The '.tar.gz' extension means the files have been archived with the UNIX
+archiver 'tar' and then compressed with the compression program 'gzip'.
+Versions of these programs are available for UNIX hosts via FTP from
+prep.ai.mit.edu and for Atari computers from atari.archive.umich.edu.
+
+5. Why isn't there a binary distribution of some versions of the MiNT library?
+
+The binary distribution is not always available for the latest version of
+the library.  This usually indicates that the most recent version is
+experimental and may not be suitable for general use.  Users of the library
+are generally encouraged to get the source code anyway, as the source code
+is really the only documentation for the library at the moment (and it's
+likely to stay that way for some time, unfortunately.)
+
+6. Do I need MiNT to use the MiNT library?
+
+Strictly speaking, no.  But programs compiled with this library will
+run best on a computer running MiNT or Magic.  But many programs
+compiled with the library will also run under plain TOS if you're
+lucky.  It really depends on how heavily the program in question
+depends on features that aren't supported under TOS (such as
+multitasking).
+
+6a. Do I need MiNT to build the MiNT library?
+
+Strictly speaking, no.  However the library is developed with MiNT
+and it can't be guaranteed that you can build it without an average
+MiNT environment.  Honestly, you probably need to be very skilled
+to build the libray without MiNT.
+
+7. What C compilers can I use with the MiNT library?
+
+The library supports GCC.  Any distribution of the library that you get
+should compile and work with GCC.  There is also support for Pure C, Sozobon
+C (Heat 'N Serve C), and Lattice C.  But we don't have any of these except
+GCC, so a given version of the library may require some modification to
+compile correctly (yet another reason to get the source code.)
+
+As of PL48, Pure C support has been restored.  There are no current
+maintainers for other compilers.
+
+8. How do I use the MiNT library with GCC?
+
+See the file INSTALL.
+
+9.  What's all this about "/usr/lib" and so on, don't you mean "C:\USR\LIB"?
+
+MiNT provides a unified file system called "U:" that you can use to make it
+look as if all your drives are really one huge drive.  I use this feature on
+my system, so when I refer to "/usr" the system knows I really mean
+"U:\usr".  The translation from "/" to "\" is performed by the GCC
+executable and will also be performed for filenames accessed by your program
+once it has been compiled with the MiNT library (for library calls, NOT for
+GEMDOS or MiNT calls.)  As for the lowercase letters, MiNT allows you to use
+either uppercase or lowercase to refer to your files and directories.
+Adding the Minix Filesystem to your MiNT setup will even allow you to use
+mixed-case filenames, and even long filenames and (nearly) everything else
+you may be used to from unix filesystems, after all its just a clone of
+early unix' V2 (and V1) filesystems.  Its also much faster than GEMDOS...
+
+10. I installed your binary distribution, but GCC doesn't seem to be able to
+find the library files.  What am I doing wrong?
+
+There is a some confusion about library naming schemes (see the table
+below).  We use version (A) here which is the standard Unix naming
+scheme.  If your linker expects other names, please rename the
+file: by hand.
+
+A			B			C
+---------------------------------------------------------------
+libc.a			c.olb			c.a
+libc16.a		c16.olb			c16.a
+...
+
+NOTE: If you have a binary distribution then this distribution uses
+the naming scheme (A).  If that doesn't fit for your system you're
+lost anyway because either your compiler or your binutils (linker,
+assembler) are outdated.  See the section "Which tools do I need
+for the MiNTLib?" for more details.
+
+11. Which tools do I need for the MiNTLib?
+
+If you have compiled the MiNTLib yourself you can probably get along
+with the stuff that you have compiled it with.  However, if your tools
+are outdated you will run into more or less severe problems.
+
+At the time of this writing, the following setup is required:
+
+	GNU binutils, at least version 2.9.1
+	GNU cc (gcc), at least version 2.95.2
+	
+If you use older tools, then don't send any bug reports concerning
+linker or assembler errors.  Update instead.
+
+12. I've tried to compile a program with the "-mbaserel" flag, but the
+linker complains (or the executable just crashes).  What's wrong?
+
+First: Since version 2.95, gcc doesn't support the -mbaserel flag
+any longer.  It's probably best to simply forget about it.  If you
+still have an mbaserel library and your compiler still understands
+the flag the following information may be valuable:
+
+When you compile and link with the "-mbaserel" flag, all data is accessed
+via a "base register" (register a4 is reserved for this purpose).  The
+machine code generated by the compiler when using this flag accesses data
+using addressing modes of the 68000 processor that let it compute the target
+address of the data as the sum of the contents of the base register and some
+relative offset from that address.  The offset in this addressing mode is 16
+bits long, therefore a given offset may not exceed 64k.
+
+With this in mind, there are three cases where you might see a "relocation
+out of range" message from the linker (or just a bad executable if you're
+using an old version of gcc-ld):
+
+- A const is being referenced PC-relative.
+
+- The size of data+bss exceeds 64K.  If it is exceeding 64K only by a small
+amount, one thing you can do is look for the largest array declaration and
+move it around so it gets linked last in the bss space.  You could actually
+have up to 64K of small variables and one single array of any arbitrary
+size, as long as the beginning of the array lived inside the 64K; the rest
+of it can extend as far as it wants.
+
+-  The code defines a const structure, which puts it in the text segment,
+but the structure contains elements that are pointers to entries in the data
+segment. 
+
+You can use the "size68" program (distributed with the GCC-utilities for
+TOS) to determine the size of the data and bss segments of your executable.
+
+Thanks to Howard Chu for providing most of the above information.
+
+13. I think I've found a bug in the library, what do I do?
+
+First, check the file called "BUGS" that comes with the source distribution,
+to make sure no one else has reported the same problem.  Also, have a look
+at the source code for the function in question, as some bugs may be
+discussed in comments in the source.
+
+If it seems you've discovered a new bug, try to fix the problem
+yourself and send a patch (see answer to question 1a).  To debug lib
+functions source-level use a lib (or just the offending function)
+built with TARGET `debug' and use gdb as normal, this is another
+advantage of having the source... (assuming gcc of course, don't know
+about others.)  Then you should use the program "diff" to produce a
+patch file of differences between the buggy version and your fixed
+version.  Be sure to use either the "-C" or "-u" flag to diff.  For
+example, if you've changed the file "startup.c", and have the original
+version saved under the name "startup.old", you would type:
+
+diff -u startup.old startup.c > myname.patch
+
+...and then mail the file myname.patch.  When mailing patches, please specify
+the version of the library you were working with, and give as much detail as
+possible about the problem you have fixed.  Please see the HACKING file
+distributed with the library source for more information on sending patches.
+
+If you cannot fix the problem yourself, please send a piece of code (as
+small as possible, don't mail your magnum opus and say "it doesn't work")
+that demonstrates the bug, and a detailed description of the problem you're
+having.  Be sure to give enough information about your system (TOS
+version, MiNT version, MiNT library version, and system type), because
+if we can't recreate your problem we probably can't fix it either.
+
+14. I'm having a problem with the library that isn't discussed in the FAQ.
+How do I get more help?
+
+Try asking in the newsgroup comp.sys.atari.st, or on the MiNT mailing
+list.  If you don't have access to either or if no one there can help you,
+send mail to us.  We'll try to help you out, but can't really provide
+full support for new users and that sort of thing, as we don't get paid
+for work on the library.
+
+15. How do I compile a program written for UNIX?
+
+The library by default provides a programming environment that is nearly
+POSIX compliant (but won't be 100% until certain features are added to
+MiNT).  It also has some support for compiling code written for BSD and
+System V UNIX.  Other standards are partly supported, see the header file
+features.h.
+
+When compiling POSIX code, you may need to define the macro _POSIX_VERSION
+since many programs check for that preprocessor symbol during configuration
+or compilation to decide if the target system provides POSIX features.  The
+MiNT library does not define this feature-test macro because the library is
+not truly POSIX-compliant at this time.  It is close enough, however, that
+simply defining this macro at complie time is sufficient to get a working
+version of many POSIX-conforming applications.  You may also need to define
+the macro _POSIX_SOURCE at compile time, but a POSIX-conforming application
+should already define this macro for you.
+
+When compiling source code written for System V UNIX, you generally won't
+have to do anything special.  If you specify the flag _SYSV_SOURCE you'll
+get a few extra definitions from stdio.h, but at the present time that's
+about it.
+
+When compiling source code written for BSD UNIX, you can usually get away
+with not specifying any feature-test macros, but you should define the macro
+_BSD_SOURCE or you may get strange results with certain types of programs.
+The _BSD_SOURCE macro controls the behavior of some functions that have the
+same names but different behavior in different types of UNIX.  A specific
+example of this is the setpgrp() function:  In System V UNIX, the function
+takes no arguments and puts the current process into its own process group.
+In BSD UNIX, setpgrp() takes two parameters, a pid and a process group id,
+and puts the specified process into the specified process group.  If you
+compile a program that is trying to use the BSD version of setpgrp(), you
+may get a successful compile but incorrect results, since by default the
+System V version, which ignores its parameters, is used.
+
+16. What's keeping the library from being POSIX-compliant?
+
+The library has some problems that make it non-compliant.  POSIX is
+very picky about namespace pollution.  The library isn't very careful
+about namespace (some illegal symbols are defined in POSIX specified
+headers, and some non-POSIX functions can be "dragged" into an
+executable at link-time because they are coded in the same library
+module as a POSIX function used in the program being linked.)  This
+situation is slowly getting much better, but it'll be some time before
+it is completely resolved.
+
+Hm, the situation has improved a lot now.
+
+17. The macros __USE_GNU, __USE_POSIX, or __USE_POSIX2 don't work.
+What's wrong?
+
+Nothing is wrong.  You simply shouldn't use them.  All names (symbols
+or preprocessor macros) that begin with an underscore should be
+considered as reserved to the libc.
+
+Here is what you have to do instead: If you don't care about compatibility
+to other Unix systems, simply add -D_GNU_SOURCE to your CFLAGS.  This
+will activate almost all extensions in the library.  If you want
+to activate only BSD extensions, add -D_BSD_SOURCE, for POSIX2 extensions
+add _D_POSIX_SOURCE and so on.
+
+If you are interested in what is exactly going on you have to study
+the header file features.h.
+
+Back to your problem: As an example we assume that you need to activate
+the BSD extensions and in an naive approach (by having a look at some
+header files) you compiled with -D__USE_BSD.  This is wrong.  Use
+-D_BSD_SOURCE instead.  In <features.h> all macros beginning with
+__USE_ are unconditionally #undef'd.  As a next step all macros
+"_*_SOURCE" are then translated into the appropriate "__USE_*" macros
+that are used within the library.
+
+As a rule of thumb: "_xxx_SOURCE" translates into "__USE_xxx" but
+some requested features may activate a lot more "__USE" macros.

@@ -1,0 +1,76 @@
+/*
+ * STDDEF.H	standard definitions
+ *	ansi draft sec 4.14
+ */
+
+#ifdef __GNUC__
+# error Ooops, this shouldn't happen, please read comment below.
+/* This file is obsolete for recent gcc versions.  Recent gcc systems
+   have their own <stddef.h> in 
+   $prefix/gcc-lib/m68k-atari-mint/<version>/include.  */
+#else
+
+#ifndef _STDDEF_H
+
+# if !defined (__need_size_t) && !defined (__need_ptrdiff_t) && \
+     !defined (__need_wchar_t) && !defined (__need_NULL) && \
+     !defined (__need_wint_t)
+#  define _STDDEF_H 1
+#  define _ANSI_STDDEF_H 1
+#  define __STDDEF_H
+# endif
+
+#ifndef _COMPILER_H
+# include <compiler.h>
+#endif
+
+#if defined __need_size_t || defined _STDDEF_H
+# ifndef _SIZE_T
+#  define _SIZE_T __SIZE_TYPEDEF__
+typedef _SIZE_T size_t;
+# endif
+# undef __need_size_t
+#endif
+
+#if defined __need_ptrdiff_t || defined _STDDEF_H
+# ifndef _PTRDIFF_T
+#  define _PTRDIFF_T __PTRDIFF_TYPEDEF__
+typedef _PTRDIFF_T ptrdiff_t;
+# endif
+# undef __need_ptrdiff_t
+#endif
+
+#if defined __need_wchar_t || defined _STDDEF_H
+# ifndef _WCHAR_T
+#  define _WCHAR_T __WCHAR_TYPEDEF__
+typedef _WCHAR_T wchar_t;
+# endif
+# undef __need_wchar_t
+#endif
+
+#if defined __need_NULL || defined _STDDEF_H
+# ifndef NULL
+#  define NULL __NULL
+# endif
+#endif
+
+#if defined __need_wint_t || defined _STDDEF_H
+# ifndef _WINT_T
+#  define _WINT_T __WINT_TYPEDEF__
+typedef _WINT_T wint_t;
+# endif
+# undef __need_wint_t
+#endif
+
+#ifdef _STDDEF_H
+
+__BEGIN_DECLS
+
+/* Offset of member MEMBER in a struct of type TYPE.  */
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+
+__END_DECLS
+
+# endif /* not _STDDEF_H */
+
+#endif

@@ -1,0 +1,19 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES \
+linewrap.h printf-parse.h test-bug1.c test-bug1.input test-bug2.c \
+test-bug3.c test-bug4.c test-bug5.c test-bug6.c test-bug6.input test-bug7.c \
+test-bug8.c test-bug9.c test-bug10.c test-bug11.c test-bug12.c test-doprnt.c \
+test-errnobug.c test-ferror.c test-ferror.input test-fformat.c test-fileno.c \
+test-fseek.c test-fwrite.c test-getln.c test-getln.input test-glue.c \
+test-glue.expect test-glue.input test-iformat.c \
+test-llformat.c test-popen.c test-printf.c test-printf.expect test-printfsz.c \
+test-rdwr.c test-scanf.c test-scanf.input test-scanf1.c test-scanf2.c \
+test-scanf3.c test-scanf4.c test-scanf5.c test-scanf6.c test-scanf7.c \
+test-scanf8.c test-scanf9.c test-scanf10.c  test-scanf11.c test-scanf12.c \
+test-scanf12.input test-stdiomisc.c test-temp.c test-tmpfile.c \
+test-tmpfile.sh test-tmpnam.c test-ungetc.c test-wc-printf.c test-xbug.c

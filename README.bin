@@ -1,0 +1,9 @@
+This is a binary distribution of the MiNTLib.  A binary distribution 
+should give you all you need for working with the MiNTLib.  
+
+Please proceed with reading the file README (note that some of the
+files mentioned there are not included in the binary distribution
+because you don't need them).
+
+The file INSTALL gives you installation instructions, both for
+binary and source distributions.

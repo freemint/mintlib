@@ -1,0 +1,25 @@
+# These are some additional rules for building a binary distribution in a
+# subdirectory Makefiles.
+
+BINDISTFILES = $(MISCFILES) $(BINFILES)
+
+bindistdir = $(binbasedir)/$(subdir)
+
+bindistdir: $(DISTFILES)
+	test -d $(bindistdir) \
+	|| mkdir $(bindistdir) \
+	|| exit 1; \
+	chmod 777 $(bindistdir)
+	@for file in $(BINDISTFILES); do \
+	  d=$(srcdir); \
+	  test -d $$d/$$file \
+	  || test -f $(bindistdir)/$$file \
+	  || ln $$d/$$file $(bindistdir)/$$file  \
+	  || cp -p $$d/$$file $(bindistdir)/$$file \
+	  || exit 1; \
+	done
+	@list='$(SUBDIRS)'; for subdir in $$list; do \
+	  (cd $$subdir && $(MAKE) top_distdir=../$(bindistdir) binbasedir=../$(bindistdir) bindistdir) \
+	    || exit 1; \
+	done
+

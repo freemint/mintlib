@@ -1,0 +1,11 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += BINFILES EXTRAFILES Makefile MISCFILES README.md5-crypt \
+README.ufc-crypt SRCFILES crypt-private.h des.h md5.h patchlevel.h \
+test-cert.c test-cert.input test-md5_1.c test-md5_2.c md5speeds.c speeds.c \
+test-ufc.c test-ufc.args ufc-crypt.h
+

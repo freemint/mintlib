@@ -1,0 +1,540 @@
+#!/bin/sh
+# libinstall - installation script for the MiNTLib (binary distributions).
+# Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>.
+#
+# This file is part of the MiNTLib project, and may only be used
+# modified and distributed under the terms of the MiNTLib project
+# license, COPYMINT.  By continuing to use, modify, or distribute
+# this file you indicate that you have read the license and
+# understand and accept it fully.
+
+here=`pwd`
+echo_n="/bin/echo -n"
+required_programs="cp cat sed awk tr grep sort uniq chmod rm"
+install=
+gcc=
+mkinstalldirs=./mkinstalldirs
+PRIMARY_YDATA="africa antarctica asia australasia \
+		europe northamerica southamerica"
+YDATA="$PRIMARY_YDATA pacificnew etcetera factory backward"
+NDATA="systemv"
+SDATA="solar87 solar88 solar89"
+TDATA="$YDATA $NDATA $SDATA"
+
+check_environment()
+{
+  # Check if run from current directory.
+  if test ! -x ./$0; then
+    echo "Error: $0 must be run from current directory."
+    exit 1
+  fi  
+
+  echo "Welcome to the MiNTLib installation script.  First we have to check"
+  echo "if your system is ready to install the MiNTLib."
+  sleep 3 2>/dev/null
+  
+  missing=""
+  for p in $required_programs; do
+    $echo_n "Checking for $p..."
+    found=no
+    IFS="${IFS= 	}"; save_ifs="$IFS"; IFS="${IFS}:"
+    for dir in $PATH; do
+      if test -x $dir/$p; then
+        found=yes
+        echo " $dir/$p"
+        break
+      fi
+    done
+    IFS="$save_ifs"
+    
+    if test $found = no; then
+      missing="$missing $p"
+      echo "missing"
+    fi
+  done
+  
+  $echo_n "Checking for ln..."
+  found=no
+  IFS="${IFS= 	}"; save_ifs="$IFS"; IFS="${IFS}:"
+  for dir in $PATH; do
+    if test -x $dir/ln; then
+      found=yes
+      echo " $dir/ln"
+      break
+    fi
+  done
+  IFS="$save_ifs"
+    
+  if test $found = no; then
+    ln_s="cp"
+    echo "missing, will take cp instead"
+  else
+    ln_s="ln -s"
+  fi
+  export ln_s
+  
+  if test -n "$missing"; then
+    echo "The following required programs are missing on your system:"
+    for p in $missing; do
+      echo "  $p"
+    done
+    
+    cat <<EOF
+Either you have not set up your PATH envariable correctly or you don't
+have the programs.  All of these standard programs should be widely
+available for anonymous download from various ftp servers.  If you
+can't find them please contact the MiNTLib maintainer (see README)
+or the MiNT mailing list (currently mint@fishpool.com).
+
+Good bye for now!
+EOF
+    exit 1
+  fi
+}
+
+add_missing ()
+{
+  $echo_n "Checking for install..."
+  try_install="$INSTALL install ginstall $here/install-sh"
+  for install in $try_install; do
+    IFS="${IFS= 	}"; save_ifs="$IFS"; IFS="${IFS}:"
+    for dir in $PATH; do
+      if test -x $dir/$try; then
+        if test $install != $here/install-sh; then
+          install="$install -c"
+        fi
+        echo " $dir/$install"
+        break
+      fi
+    done
+    IFS="$save_ifs"
+    break
+  done
+
+  $echo_n "Checking for gcc..."
+  try_gccs="$CC gcc cc"
+  gcc=""
+  for try_gcc in $try_gccs; do
+    IFS="${IFS= 	}"; save_ifs="$IFS"; IFS="${IFS}:"
+    for dir in $PATH; do
+      if test -x $dir/$try_gcc; then
+        echo " $dir/$try_gcc"
+        gcc=$try_gcc
+        break
+      fi
+    done
+    IFS="$save_ifs"
+    if test x"$gcc" != x; then
+      break
+    fi
+  done
+  
+  if test x"$gcc" = x; then
+    echo " missing"
+  fi
+  
+  $echo_n "Checking for korn shell..."
+  found=no
+  try_kshs="$KSH ksh bash ksh"  # ksh is listed twice on purpose!
+  for KSH in $try_kshs; do
+    search_path="/bin":$PATH
+    IFS="${IFS= 	}"; save_ifs="$IFS"; IFS="${IFS}:"
+    for dir in $search_path; do
+      if test -x $dir/$KSH; then
+        echo " $dir/$KSH"
+        found=yes
+        break
+      fi
+    done
+    IFS="$save_ifs"
+    if test x$found != xno; then
+      break
+    fi
+  done
+
+  if test x$found != xyes; then
+    echo " missing"
+  fi
+
+  unset TIMEZONE
+  . /etc/sparemint/timezone >/dev/null 2>/dev/null
+
+  if test "x$TIMEZONE" != "xFactory"; then
+  	LOCALTIME="$TIMEZONE"
+  	POSIXRULES="$TIMEZONE"
+  fi
+  
+  if test "$LOCALTIME" = "Factory" -o "$POSIXRULES" = "Factory"; then
+    cat <<EOF
+WARNING:  It seems like you haven't edited the file \`configvars'
+because either the variable \`LOCALTIME' or \`POSIXRULES' is still
+set to \`Factory'.  You should exit the installation now and 
+restart after you have edited \`configvars'.
+You will find a list of possible time zones in the file \`tz/zonelist'.
+EOF
+    $echo_n "Exit the installation for now [y/N]? "
+    read reply
+    case $reply in
+      [yY]*) exit 1 ;;
+      *) ;;
+    esac
+    
+    cat <<EOF
+OK, you can later correct the settings for your local time zone by
+	zic -l TIMEZONE
+and change the default rules with
+	zic -p TIMEZONE
+Replace TIMEZONE with one of the values you find in the file
+$here/zonenames.
+EOF
+    sleep 3 2>/dev/null
+  fi
+  
+  if test x$UID != x0; then
+    cat <<EOF
+WARNING: You are not the superuser.  It is very unlikely that you
+will manage to install the MiNTLib without superuser permissions.
+You should become superuser (for example with the su command) and
+then continue the installation).
+EOF
+  
+    $echo_n "Exit the installation for now [Y/n]? "
+    read reply
+    case $reply in
+      [nN]*) ;;
+      *) exit 1 ;;
+    esac
+  fi
+}
+
+install_headers ()
+{
+  echo "Installing library header files."
+  if test -n "$gcc"; then
+    if test "$HEADER_CLEANUP" != "no"; then
+      $echo_n "First we will clean up your old system include files..."
+      MINTLIB_VERSION=$VERSION CC=$gcc include/clean-include
+      echo " done"
+    fi
+  else
+    cat include/00README
+    echo
+    echo "You can reread this message in the file include/00README."
+    sleep 3 2>/dev/null
+  fi
+  
+  # Evaluate include/MISCFILES.
+  for dir in "" arpa bits mint net netinet protocols sys; do
+    test x$dir = x && dir= || dir=$dir/
+    headers=`cat include/"$dir"MISCFILES | \
+      sed -e 's,#.*,,g' -e 's,MISCFILES  *=  *,,g' | \
+      tr '[ \t]' '\n' | \
+      grep '\.h$'`
+    $mkinstalldirs $includedir/$dir
+    for header in $headers; do
+      echo "  $install -m 644 include/$dir$header $includedir/$dir$header"
+      $install -m 644 include/$dir$header $includedir/$dir$header || exit 1
+    done
+  done
+}
+
+install_startup ()
+{
+  echo "Installing startup files."
+  files="crt0.o gcrt0.o"
+  $mkinstalldirs $libdir
+  startupdir=startup
+  test -d $startupdir || startupdir=lib  # Binary distribution!
+  for file in $files; do
+    echo "  $install -m 644 $startupdir/$file $libdir"
+    $install -m 644 $startupdir/$file $libdir || exit 1
+  done
+}
+
+install_manpages ()
+{
+  echo "Installing manual pages."
+  sections="1 2 3 4 5 6 7 8"
+  
+  for section in $sections; do
+    manpages=`ls */*.$section 2>/dev/null`
+    if test x != "x$manpages"; then
+      installdir=$mandir/man$section
+      $mkinstalldirs $installdir
+      for manpage in $manpages; do
+        page=`echo $manpage | sed 's,.*/,,g'`
+        echo "rm -f $installdir/$page $installdir/$page.gz $installdir/$page.Z"
+        rm -f $installdir/$page $installdir/$page.gz $installdir/$page.Z
+        echo "  $install -m 644 $manpage $installdir/$page"
+        $install -m 644 $manpage $installdir/$page
+      done
+    fi
+  done
+}
+
+install_libs ()
+{
+  echo "Installing libraries."
+  $mkinstalldirs $libdir $libdir/m68020-60/mshort $libdir/mshort
+  for type in "" _p _g 020 16020 16; do
+    case x$type in
+      x020) 
+        libsuffix=020
+        libinstdir=$libdir/m68020-60
+        libheredir=lib020
+        type=
+        ;;
+      x16020) 
+        libsuffix=16020
+        libinstdir=$libdir/m68020-60/mshort
+        libheredir=lib16020
+        type=
+        ;;
+      x16) 
+        libsuffix=16 
+        libinstdir=$libdir/mshort
+        libheredir=lib16
+        type=
+        ;;
+      x_p|x_g)
+      	libsuffix=
+      	libinstdir=$libdir
+      	libheredir=lib$type
+      	;;
+      *) 
+        libsuffix=
+        libinstdir=$libdir
+        libheredir=lib
+        ;;
+    esac
+    
+    for lib in c iio socket; do
+      liblongname=lib$lib$libsuffix.a
+      libname=lib$lib$type.a
+      test -f $libheredir/$libname || continue
+      echo "  $install -m 644 $libheredir/$libname $libinstdir"
+      $install -m 644 $libheredir/$libname $libinstdir || exit 1
+      if test x$libsuffix != x; then
+        echo "  rm -f $libdir/$liblongname $libinstdir/$liblongname"
+        rm -f $libdir/$liblongname $libinstdir/$liblongname
+        echo "  $ln_s $libname $libinstdir/$liblongname"
+        $ln_s $libname $libinstdir/$liblongname
+      fi
+    done
+  done
+}
+
+install_tz ()
+{
+  echo "Installing time zone database."
+  $echo_n "  Creating tz/yearistype..."
+  rm -f tz/yearistype
+  cp tz/yearistype.sh tz/yearistype && chmod +x tz/yearistype || exit 1
+  echo " done"
+  $echo_n "  Creating tz/tzselect..."
+  rm -f tz/tzselect
+  sed \
+    -e 's|AWK=[^}]*|AWK=awl|g' \
+    -e 's|TZDIR=[^}]*|TZDIR=$TZDIR|' \
+    <tz/tzselect.ksh >tz/tzselect
+    chmod +x tz/tzselect || exit 1
+  echo " done"
+  echo "  Deleting stale zoneinfo files..."
+  echo "    rm -f $TZDIR/localtime"
+  rm -f $TZDIR/localtime
+  echo "    rm -f $TZDIR/posixrules"
+  rm -f $TZDIR/posixrules
+
+  if test ! -f /etc/sparemint/timezone; then
+    echo "creating /etc/sparemint/timezone, please read it."
+    cat >/etc/sparemint/timezone <<EOF
+#! /bin/sh
+# This is /etc/sparemint/timezone.
+#
+# This file is a shell script fragment that is read by installation
+# routines to select your preferred timezone.  To get a list of
+# possible timezones run the script "tzselect" (usually installed
+# as /usr/sbin/tzselect) to guess a timezone interactively.  If
+# this doesn't work you can also have a look at the timezone database,
+# usually installed in /usr/share/zoneinfo.  Choose any one of the
+# files found there, such as "Europe/Paris" or "America/New_York"
+# as your timezone.
+#
+# Please note that there must not be any whitespace around the
+# equality sign following.
+TIMEZONE=$LOCALTIME
+
+# If TIMEZONE above was set to "Factory" you have not yet installed
+# your timezone correctly (changing this here file only helps you
+# now you re-install the MiNTLib).  You should now run the program
+# "zic" to permanently set your timezone.  Do it as
+#
+#       zic -l Europe/Paris -p Europe/Paris
+#
+# or
+#
+#       zic -l America/New_York -p America/New_York
+#
+# depending on what timezone you chose.  See the manual page zic(8)
+# for details.
+EOF
+  else
+    . /etc/sparemint/timezone
+    if test "x$TIMEZONE" != x; then
+      echo "Reading /etc/sparemint/timezone for your timezone configuration."
+      LOCALTIME=$TIMEZONE
+      POSIXRULES=$TIMEZONE
+    fi
+  fi
+  
+  cat <<EOF
+Now compiling the timezone database.  This may require some time.  In
+the meantime you can say hello to your family in case they still know you.
+If you don't have a family ... you have a couple of minutes spare time
+now.
+EOF
+  
+  # Poor man's make rules.
+  case $REDO in
+    posix_right)  
+      REDO="posix_only posix_spare right_spare"
+      ;;
+    right_posix)
+      REDO="right_only posix_spare right_spare"
+      ;;
+    posix_only|right_only)
+      ;;
+    *)
+      cat <<EOF
+error: You must choose one of the values
+	right_only
+	posix_only
+	right_posix
+	posix_right
+for the variable REDO in \`configvars'.  Please edit \`configvars' 
+and re-install the database.
+EOF
+    exit 1
+    ;;
+  esac
+
+  tdata=""
+  for srcfile in $TDATA; do
+    tdata="$tdata tz/$srcfile"
+  done
+
+  $mkinstalldirs $TZDIR  
+  for target in $REDO; do
+    case $target in
+      posix_only|posix_spare)
+        tzdir=$TZDIR
+        test $target = posix_spare && tzdir=$tzdir/posix
+        cat <<EOF
+  Installing posixly correct (not accounting leapseconds) database in 
+  $tzdir.
+    tz/zic -y tz/yearistype -d $tzdir -L /dev/null $tdata
+EOF
+        tz/zic -y tz/yearistype -d $tzdir -L /dev/null $tdata || exit 1
+        ;;
+      right_only|right_spare)
+        tzdir=$TZDIR
+        test $target = right_spare && tzdir=$tzdir/right
+        cat <<EOF
+  Installing time zone database (with leapsecond calculation) in 
+  $tzdir.
+    tz/zic -y tz/yearistype -d $tzdir -L tz/leapseconds $tdata
+EOF
+        tz/zic -y tz/yearistype -d $tzdir -L /dev/null $tdata || exit 1
+        ;;
+    esac
+  done
+  
+  echo "  Installing system-wide default time zone and tabular data."
+  echo "    $install -m 644 tz/iso3166.tab $TZDIR"
+  $install -m 644 tz/iso3166.tab $TZDIR || exit 1
+  echo "    $install -m 644 tz/zone.tab $TZDIR"
+  $install -m 644 tz/zone.tab $TZDIR || exit 1
+  echo "    tz/zic -y tz/yearistype -d $TZDIR -l $LOCALTIME -p $POSIXRULES"
+  tz/zic -y tz/yearistype -d $TZDIR -l $LOCALTIME -p $POSIXRULES || exit 1
+  
+  echo "  Installing time zone tools in $sbindir."
+  progs="zic zdump tzselect"
+  $mkinstalldirs $sbindir
+  for prog in $progs; do
+    echo "    $install -m 755 tz/$prog $sbindir"
+    $install -m 755 tz/$prog $sbindir || exit 1
+  done
+  echo "  Installing time zone tools in $bootsbindir."
+  progs="tzinit"
+  $mkinstalldirs $bootsbindir
+  for prog in $progs; do
+    echo "    $install -m 755 tz/$prog $bootsbindir"
+    $install -m 755 tz/$prog $bootsbindir || exit 1
+  done
+}
+
+# Include Makefile fragment and ignore errors.
+. configvars 2>/dev/null
+
+case "x$CROSS" in
+  x)
+  	CROSS=
+  	;;
+  y|Y|yes|YES|Yes)
+  	CROSS=yes
+  	;;
+esac
+
+check_environment
+add_missing
+echo "Everything seems to be set up alright."
+
+if test -f Makefile -a "x$CROSS" = "x"; then
+  cat <<EOF
+The MiNTLib is now shipped with an exhaustive test suite that checks if
+your MiNTLib is fully functional.  If you haven't yet updated your system
+to FreeMiNT a lot of tests will fail because of missing features that
+are required in a modern operating system.  Even with FreeMiNT some tests
+may fail, either because they really reveal bugs that are still waiting
+to be fixed or because you don't use a recent kernel.
+
+To compile and run the test suite can take more than one hour, depending
+on your system's performance.  It may also need a considerable amount
+of memory (and fail if you don't have enough RAM).
+
+If after reading the above you decide not to run the test suite it's still
+not a hazard game to install the library.  The program \`zic' that is
+used here during the installation has been compiled and link with the
+library you are going to install.  If the library is broken it is very
+likely that the program will also crash or fail.
+
+EOF
+  $echo_n "Run the test suite now [N/y]? "
+  read reply
+  case $reply in
+    [yY]*) make -k check 
+     	   ;;
+    *)     echo "OK, you can always run it later by typing \`make -k check'."
+           ;;
+  esac
+fi
+
+# Installing the time zone database is already a very basic test for
+# the library.  It should therefore be done before installing the
+# library or header files.
+if test x$CROSS = x; then
+  install_tz
+else
+  echo "Not installing time zone database for cross compilation."
+fi
+install_headers
+install_startup
+install_libs
+install_manpages
+
+cat <<EOF
+
+Installation completed.  Good luck and have fun when writing free
+software that you contribute to the FreeMiNT community or the
+MiNTLib project.
+EOF

@@ -1,0 +1,10 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES += 00PatchLevel.in BINFILES CFILES EXTRAFILES HACKING MISCFILES \
+Makefile README-about-patches README.test SRCFILES bindist buildrules \
+checkrules checklib config.h do_test mintlib.spec mintlib.spec.in phony \
+rules test-skeleton.c

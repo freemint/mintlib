@@ -1,0 +1,23 @@
+Beginning with MiNTLib 0.54.99 the MiNTLib contains strong cryptography.
+You probably know that this creates a lot of legal hazzle since some
+countries have very restrictive laws about cryptographic software.
+
+I always upload the MiNTLib sources and binaries from servers located
+in Germany to servers located in Germany and as far as I know there is 
+no law against that in Germany at the time of this writing.
+
+The most prominent example of a country where it is forbidden to export
+certain cryptographic software are the United States of America.  That
+means that it is legal for you as an US citizen to import such software
+(for example the MiNTLib) but it is illegal to re-export it to other
+countries.
+
+However, at the time of this writing there are rumours that the United
+States are about to change their restrictive crypto policy, so this may
+well change in the near future.  Anyways, I can take no responsibility
+for what you do with the MiNTLib.  If you re-distribute it, please make
+sure that you meet your local laws.
+
+Saarbruecken/Germany, March 7, 2000
+
+Guido Flohr <guido@freemint.de>

@@ -1,0 +1,18 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = _itoa.c asprintf.c binmode.c clearerr.c defmode.c doprnt.c \
+dprintf.c fclose.c fcloseall.c fdopen.c feof.c ferror.c fflush.c fgetc.c \
+fgetpos.c fgets.c fileno.c fmemopen.c fopen.c fopncook.c fprintf.c fputc.c \
+fputs.c fread.c freopen.c fscanf.c fseek.c fsetpos.c ftell.c fungetc.c \
+fwrite.c getc.c getchar.c getdelim.c getline.c gets.c getw.c glue.c \
+internals.c itoa-digits.c linewrap.c lockfile.c memstream.c newstream.c \
+obstream.c perror.c popen.c putc.c putchar.c puts.c printf-prs.c printf.c \
+printf_fp.c printf_fphex.c printf_size.c psignal.c putw.c reg-printf.c \
+rewind.c setbuf.c setbuffer.c setlinebuf.c setvbuf.c scanf.c snprintf.c \
+sprintf.c sscanf.c stdio_init.c sysd-stdio.c tempnam.c tmpfile.c tmpnam.c \
+tmpnam_r.c ungetc.c vasprintf.c vdprintf.c vfprintf.c vfscanf.c vprintf.c \
+vscanf.c vsnprintf.c vsprintf.c vsscanf.c

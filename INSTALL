@@ -1,0 +1,334 @@
+How Do I Install the MiNTLib?
+=============================
+
+The installation process differs depending on the kind of distribution
+you got.  Sections of this file that only refers to source or binary
+distributions are marked.
+
+Building the Library (source only)
+----------------------------------
+
+Read the file configvars and edit it to your needs.  All configuration
+values are explained in a short comment.  If you edit the file, keep
+in mind that it is both a Makefile and a shell script fragment.  That
+means that no spaces should surround equal signs.
+
+IMPORTANT:  Please select a location from the file "zones" in the
+toplevel directory and set the variables LOCALTIME and POSIXRULES
+in "configvars" to that name.  The installation will succeed if you
+don't do that, and the programs that use the time zone database 
+provided here will you warn about it but it may be confusing.
+
+If you had previously installed a MiNTLib with the script 
+"libinstall" or you have installed a MiNTLib rpm, there will be
+a file /etc/sparemint/timezone.  Read and edit that file instead
+of configvars.  Settings in /etc/sparemint/timezone override
+settings in configvars or given to make on the command line.
+
+By default six types of libraries are built: regular libraries with
+32-bit integers (subdirectory lib), 32-bit libraries compiled for
+m68020 or higher plus (!) a math coprocessor (m68881 or m68881) in
+subdirectory lib020, a 16-bit library for plain m68000 in subdirectory
+lib16, a 16-bit library for m68020/m68881 in lib16020.  Additionally
+in lib_g you will find libraries that contain debug symbols (32 bit 
+ints, plain m68000, no coprocessor) and finally in lib_p the same
+but also with profiling support in case you want to examine the
+libs with gprof.
+
+Former versions of the MiNTLib may have built more libraries by default.
+To save space this has changed now.  If you need more libraries 
+you have two basic ways of doing it:
+
+	- Create new lib* subdirectories.  Copy the Makefile from another
+	  lib subdirectory and edit it.  If you cd into your new 
+	  lib directory and type "make" the library will be built.
+	  Advantage: You always have a recent copy of all object files
+	  you need and you can build all libraries with just one
+	  make run (provided that you also added your directory to
+	  the subdirectory list in the toplevel Makefile).
+	
+	- Edit configvars and add the options you need.  You will
+	  then still build the same six libraries but with the 
+	  additional options you specified.  If you still want
+	  the original libraries you can copy the entire source
+	  tree and edit configvars only in one tree.  To save space
+	  you can savely link the subdirectories include and src
+	  instead of copying them recursively.
+
+Special versions for special processors.  Well, if you only need
+the libraries for private use and never release software, simply
+add the flag to configvar's CFLAGS.  Otherwise choose one of
+the ways described above.
+
+Cross-building (source only)
+----------------------------
+
+It is very easy to cross-build the MiNTLib on another machine with
+a different architecture.  Edit configvars and change the values
+for CC, AR and RANLIB.  For the installation you should also
+change prefix, includedir, libdir and mandir.  You also have to
+define the variable CROSS to avoid some installations.
+
+Running make (source only)
+--------------------------
+
+Change into the toplevel directory and type "make".  Depending 
+on your system's performance this process may take up to
+several hours.
+
+NOTE: It may take a considerable amount of time for make to
+figure out all dependencies.  This applies primarily (but not
+only) to the "lib*" subdirectories, especially if you rebuild
+the library from a former version (in this case a lot of 
+dependency files have been created to force automatic recompilation
+of obsoleted modules).  During this time (up to several minutes)
+make will say nothing.  Don't desparate, just wait, once that
+make has figured out everything, it will proceed at normal
+speed.
+
+Installing (source only)
+------------------------
+
+With a source distribution you just have to type "make install".
+You probably need to be root for that.  You can also skip the
+above step (Running make) and directly type "make install".  The
+Makefiles won't install until everything is build correctly.
+
+Installing (binary and source)
+------------------------------
+
+NOTE:  In the toplevel directory you will find a shell-script
+called "libinstall".  It is still experimental but running it
+should actually install everything accurately.  The script is
+suitable both for binary and source distributions.  If it 
+fails, please read on.
+
+If for some reason "libinstall" resp. "make install" fails 
+you will have to install by hand.  
+
+In the following we presume that you install the library for 
+testing purposes.  Since your normal library and headers 
+will reside in "/usr/lib", "/usr/include" and so on, we will
+install in "/usr/local/lib" and "/usr/local/include" so that
+we won't clobber your system files.  If you want to make this
+MiNTLib your new default library, replace "/usr/local" with
+"/usr" in the following instructions.
+
+  Headers
+  
+First install the header files.  You will usually install them in 
+"/usr/local/include" (make sure that this is in your compiler's 
+include path and it comes before your system include directory).  
+
+You will probably need to be root to install!
+
+Make sure that the directory "/usr/local/include" exists.  Then
+cd into the subdirectory "include" of the mintlib and for every
+subdirectory within "include" ("arpa", "bits", ...) create the 
+corresponding subdirectory in "/usr/local/include".
+
+Copy all header files from "include" and its subdirectories into
+your system include directory "/usr/local/include", i. e. the
+file "include/sys/stat.h" in the MiNTLib distribution should end
+up as "/usr/local/include/sys/stat.h".  Simply copying the entire
+directory "include" to "/usr/local" will also work but will copy
+some garbage too, notably the files "Makefile", "MISCFILES" ...
+Copying only .h files is not enough: You will miss at least
+"include/stab.def" which is a header file.
+
+Bomb-proof would be to inspect the file "MISCFILES" in all subdirectories
+of "include" and copy exactly the files found there.
+
+  Startup modules
+  
+Most executables get linked with a starup object module "crt0.o"
+(respectively "gcrt0.o" for profiling).  You should install them
+in "/usr/local/lib" (resp. "/usr/lib" if you want to make this
+MiNTLib the default library on your system.
+
+  Libraries
+
+This MiNTLib requires at least gcc 2.95.2.  If this is new to you
+then read the file "README.1st" before you proceed!
+
+The following actions will install all libraries in the locations
+that current gcc versions expect.  See the following table for
+an overview
+
+	MiNTLib 	| System (gcc) location
+	================+============================
+	lib		| $prefix/lib
+	lib020		| $prefix/lib/m68020-60
+	lib16		| $prefix/lib/mshort
+	lib16020	| $prefix/lib/m68020-60/mshort
+	lib_g		| $prefix/lib
+	lib_p		| $prefix/lib
+
+What does that mean? First replace "$prefix" with either "/usr/local"
+or "/usr", wherever you chose to install the library.  This gives
+you the paths where libraries from a certain MiNTLib directory should
+be installed, for example the libraries in "lib16020" should be
+installed in "/usr/local/lib/m68020-60/mshort".  Generally speaking,
+all libraries that have been compiled with special compiler options
+should be installed in distinct directories (this is gcc's multilib
+feature).
+
+A little exception: The libraries in "lib_g" and "lib_p" have special
+names, for example the libc is "lib_g/libc_g.a" or "lib_p/lib_p.a".
+Since gcc can distinguish them by their names, there is no need for
+a special multilib directory.
+
+Arrrgh, you don't know which files are libraries and which aren't? 
+Libraries are files that match the pattern "lib*.a".
+
+Finally you should check that your gcc actually finds the libraries
+that you installed (otherwise gcc will link your programs against
+other libraries and you wonder why the features of the new libraries
+aren't available).  The file "README.1st" explains how you check
+that you installed correctly.
+
+  Manual pages
+
+The MiNTLib comes along with some manual pages.  If you failed to
+install with either "make install" or the script "libinstall" you
+will probaly not be able to read these manpages in groff format.
+But if you insist to install them you should search your kit for
+files ending in a dot followed by a single digit, for example 
+"tzinit.8" or "socket.3".  The trailing digit denotes the section
+where to install the files:
+
+	tzinit.8 => /usr/local/share/man/man8/tzinit.8
+	socket.3 => /usr/local/share/man/man3/socket.3
+	etc.
+
+  Other programs
+  
+Most of them will be useless if you have to install by hand because
+your system obviously lacks of a lot of features.  Currently 
+only the subdirectory "tz" contains extra programs, notably
+"zic", "zdump", "tzinit", "tzselect".  Install them in /usr/sbin
+or /sbin.
+
+  Time zone database
+
+Read the manpage to zic and the Makefile and try to figure it out
+yourself.  It's too hard to explain and (again ...) if your system
+is not powerful to run "make install" or the "libinstall" script
+you will have no need for that database anyway.  Set the environment
+variable "TZ" instead to inform the system about the timezone you
+live in.  
+
+NOTE: A missing or misinstalled timezone database does not effect
+the code you produce.  The timezone database is only important
+for user of programs that have been linked with the MiNTLib.
+If the database misses, the default behavior of the library is
+still good enough.
+
+Troubleshooting
+---------------
+
+If something doesn't work and you don't find a solution here
+you can also have a look at the file FAQ.
+
+For all of the following hints please write a simple test program 
+(for example hello.c) and compile it with the "-v" option for your 
+compiler.  The compiler will then list all the paths it searches for 
+include files and libraries and may also give other useful information.
+
+- Include files not found.
+  
+  Check if the directory where you installed the included files is
+  listed in the "gcc -v" output.  If you don't find it there you
+  should change your gcc specs file.  It can usually be found
+  in "/usr/local/lib/gcc-lib/m68k-mint/<VERSION>/specs".  Please
+  make sure that you use an editor that can handle very long lines
+  when editing "specs", notably qed and pico will probably mess
+  up the file.
+  
+  You will find a line like
+  
+  *cpp:
+  %{m...
+  
+  Put "-I/usr/local/include " (or wherever you installed) in front
+  of everything else in the line (here in front of the % sign).
+  
+  Alternatively you can set the environment variable C_INCLUDE_PATH
+  (or CPLUS_INCLUDE_PATH or OBJC_INCLUDE_PATH for C++/Objective C
+  respectively) to "/usr/local/include".  These environment variables
+  can actually contain colon separated lists of directories, much
+  like the PATH variable.  You can therefore also specify multiple
+  directories like "C_INCLUDE_PATH=/usr/local/include:/usr/special/include".
+
+- Libraries or startup modules not found.
+
+  See the file README.1st.
+  
+- File not found for "c.olb" or "c.a"
+  
+  You have an old linker that uses a non-standard naming scheme.  Rename
+  your libraries (or link them) to names that your linker expects, for
+  example from "libc.a" to "c.olb" or "c.a".
+  
+  But it is better to update your binutils instead to at least GNU
+  binutils 2.9.1.  If you have a binary distribution of the MiNTLib
+  this is even mandatory.  The old linker and archiver will not recognize
+  the new libraries.
+
+- Out of memory for some files
+
+  If you run out of memory while building the libraries you have several
+  options to reduce the memory consumption of the build process.
+  
+  You don't have to run the toplevel Makefile.  You can always cd into
+  a specific subdirectory (probably the one where you ran out of memory)
+  and do "make" there.
+  
+  If you only run out of memory for individual files you can also run
+  make, wait until the command line that does the actual compilation
+  ("gcc -...") shows up and interrupt make.  Then type in that command
+  line by hand.  This way the make program gets bypassed for this
+  module and will therefore not eat up your precious RAM.
+  
+  IMPORTANT: If you recompile a single module by hand without the
+  help of make ALWAYS run make first to see the individual command
+  line used for compilation/linking of the module in question.
+  The Makefiles are quite smart and certain options or switches
+  are only turned on for certain files.  You cannot generally guess
+  them!
+  
+  If it still doesn't work you can also bypass the compiler driver
+  (gcc or cc).  Type the command line again but this time add the
+  option -v.  You will then see how the compiler driver calls the other
+  programs, the preprocessor cpp, the actual compiler cc1 and the
+  assembler as.  The compiler driver will usually use temporary
+  files for intermediate results, you have to replace them by
+  non-temporary filenames but then you can run all required commands
+  yourself.
+  
+  You can also try to compile problematic source files with 
+  less optimization (remove -f... options or turn -O3 to -O2,
+  -O or don't give any -O option).
+
+- Generally not enough memory
+
+  Buy some more.
+  
+  If you can't afford this kill all other unnecessary processes
+  that are running simultaneously, for example daemons, accessories.
+  If you run under an AES environment you can also reboot and 
+  choose a command line login.
+  
+  Another possibility is to reduce the amount of optimization.  Edit
+  the file configvars and change CFLAGS.  Optimization variables
+  usually start with "-f".  The general degree of optimizaton
+  is specified with "-O" (little optimization) "-O2" (normal
+  optimization "-O3" (all most all except particulary expensive
+  optimizations).  But if you have come so far you should really
+  consider to grab a binary distribution from somewhere because
+  a library that is not or only poorly optimized will suffer from
+  considerable performance losses.
+
+Hope this information is enough.
+
+Guido Flohr <guido@freemint.de>

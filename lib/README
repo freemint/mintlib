@@ -1,0 +1,4 @@
+This directory contains the normal libs from the MiNTLib suite.
+
+Please install them in $prefix/lib/ where $prefix is either /usr
+or /usr/local.

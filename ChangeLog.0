@@ -1,0 +1,1732 @@
+2000-01-30 Guido Flohr <guido@freemint.de>
+
+	* include/nan.h, include/huge_val.h: New headers for gmp 
+	  implementation.
+	
+	* include/ieee754.h: Fixed for mshort.
+	
+	* src/longlong.h: Sigh, disabled all fpu code.
+	
+	* src/s_isinf.c, src/s_isinff.c, ssrc/s_isinfl.c, src/s_isnan.c,
+	  src/s_isnanf.c, src/s_isnanl.c: New files.
+	  
+	* include/math.h: New macros isnan and isinf.
+	
+	* src/strnlen.c: New file.
+	  
+2000-01-29 Guido Flohr <guido@freemint.de>
+
+	* include/assert.h: Changed assert/__assert macros to avoid
+	  compiler warnings.
+	  
+2000-01-20 Guido Flohr <guido@freemint.de>
+
+	* include/signal.h, src/signames.c: Renamed signal_names
+	  to __signal_names.
+	
+	* include/clean-include.h: Added sigvec.h (used to be in portlib)
+	  to list of stale header files (thanks to Johnny "Ligotage"
+	  Blakeley <john.blakeley@mon.bbc.co.uk> for the hint).
+	  
+1999-12-28 Guido Flohr <guido@freemint.de>
+
+	* include/sys/time.h: Corrected prototype for setitimer.
+	
+	* crypt, tests: New directories.
+	
+	* include/stdio.h: Typedef ssize_t for getline/getdelim.
+	
+	* src/strstr.c: Correctly return haystack when needle is
+	  empty.
+	
+	* src/strcmp.c, src/strncmp.c: Fixed, now 8 bit clean.
+
+1999-12-27 Frank Naumann <fnaumann@cs.uni-magdeburg.de>
+
+	* include/mintbind.h: Added new kernel calls Fsync, Dsetkey.
+	
+	* include/sys/ioctl.h: New ioctls FIOEXCEPT, FSTAT64, and
+	  FUTIME_UTC.
+	
+	* include/termios.h: New terminal speeds B460800 and B921600
+	  (optimist!).
+	
+	* src/do_stat.c: Changed to support new Fstat64 call.
+	
+	* src/fstat.c: Changed to use new FSTAT64 ioctl.
+	
+	* src/fsync.c: No more a dummy with new kernels.
+	
+	* src/utime.c: Changed to support new kernel features (UTC
+	  timestamps).
+	
+1999-12-27 Guido Flohr <guido@freemint.de>
+
+	* src/setitimer.c: Fixed embarassing bug, the function
+	  arguments were swapped!
+	
+	* include/macros.h: Added bitwise rotation macros ROLL, RORL,
+	  ROLW, RORW, ROLB, RORB, ROLL1, RORL1, ROLW1, RORW1, ROLB1
+	  and RORB1 to give access to m68k ROdx instructions.
+	
+	* src/stpcpy.c, src/stpncpy.c: Replaced buggy implementations
+	  with GNU libc files.
+	  
+1999-12-20 Guido Flohr <guido@freemint.de>
+
+	* src/SRCFILES: Added forgotten module vsnprintf.c.
+	
+1999-12-13 Guido Flohr <guido@freemint.de>
+
+	* include/linea.h: Changed char poiner to void pointer in
+	  definition of MFDB to avoid conflicts with <gem.h>.
+	  
+1999-11-28 Guido Flohr <guido@freemint.de>
+
+	* src/do_stat.c: Don't cache existence of Fstat system call.
+	  Treat ENOSYS and EINVAL alike.
+	  
+	* src/canonicalize.c: Prototype for __lstat added.
+	
+	* src/tconfig.h: Some changes to get libgcc2.c working (not
+	  complete).
+	
+1999-11-21 Guido Flohr <guido@freemint.de>
+
+	* src/getspent_r.c, src/killpg.c, src/putpwent.c, src/remove.c,
+	  src/tcattr.c, src/tzfile.h: Code cleanup.
+	
+	* src/globals.c: Defined _exit_dummy_decl.  Where does this come
+	  from? From gcc itself?
+	
+	* src/canconicalize.c, src/execvp.c: Code cleanup.
+	
+1999-10-23 Guido Flohr <guido@freemint.de>
+
+	* src/wordexp.c: Properly prototyped mempcpy.
+	
+1999-10-21 Guido Flohr <guido@freemint.de>
+
+	* src/ioctl.c: New ioctl TIOCSCTTY.  For TIOCNOTTY we first try
+	  the kernel's TIOCNOTTY and then emulate.  If MiNT is active
+	  then ENOSYS will be converted to EINVAL.
+
+	* include/sys/ioctl.h: Added TIOCSCTTY.
+	
+	* src/kill.c: Revoked special treatment for system processes.
+	  Has to be done by the kernel.  Everything else will not
+	  work.
+	
+	* src/siglist.c, src/signames.c, include/signal.h, src/wait4.c: 
+	  SIGSYS back again and SIGPWR is now 31.  Thanks to Thomas 
+	  Binder for fixing the kernel problem.
+	  
+	* include/macros.h: BUGFIX, abs macro was somehow messed up.
+	  
+1999-10-17 Guido Flohr <guido@freemint.de>
+
+	* src/wait4.c: Convert ENOENT to ECHILD.
+	
+	* src/kill.c, src/killpg.c: Emulate correct behavior for 
+	  kill (-1, sig).  The pids 0, 1, 2, and 3 are considered priviliged 
+	  and won't get signaled.
+	
+1999-10-12 Guido Flohr <guido@freemint.de>
+
+	* src/siglist.c, src/signames.c, include/signal.h, src/wait4.c: 
+	  Removed SIGSYS (unused) and replaced its meaning with SIGPWR.
+	  The kernel had problems with adding a new signal at the
+	  end of the list.  SIGSYS seems not to be used by any
+	  software.
+	  
+1999-10-11 Guido Flohr <guido@freemint.de>
+
+	* src/execvp.c: Bugfix, execvp always tried the current directory
+	  first, no matter what $PATH said.  Now $PATH gets respected.  
+	
+	* include/string.h: Removed prototype for __mempcpy().
+	
+	* include/unistd.h, include/sys/types.h: Changed off_t back to
+	  4 bytes (was temporarily 8 bytes).
+	  
+	* src/do_stat.c, src/fstat.c: Set st_flags to 0 (has nothing to
+	  do with former member st_attr).
+	
+	* include/unistd.h, src/lseek.c: Changed return value for lseek
+	  from long to off_t.
+	
+	* include/sys/ttydefaults.h: Changed defaults to output of
+	  "stty sane".
+	  
+1999-10-10 Guido Flohr <guido@freemint.de>
+
+	* include/utmp.h: Removed prototype for __setutent().
+	
+	* include/unistd.h: Corrected off_t to long long.
+
+1999-10-03 Guido Flohr <guido@freemint.de>
+
+	* src/fgetpwent_r.c, src/fgetspent_r.c, src/sgetspent_r.c:
+	  Bugfix, no more EFAULT if *result is NULL.
+	  
+1999-10-02 Guido Flohr <guido@freemint.de>
+
+	* src/rename.c: Bugfix, files residing on the same file system
+	  were always considered to be the same file triggering EEXIST.
+	
+	* src/open.c: Current kernels don't allow the superuser write
+	  access to write-protected files.  The MiNTLib tries to
+	  work around that.
+	
+1999-09-30 Guido Flohr <guido@freemint.de>
+
+	* src/wait4.c: Repair broken wait status for processes that terminated
+	  with exit codes > 255.  Reported by Helmut Karlowski 
+	  <Helmut_Karlowski@mausd.gun.de>.
+	
+	* include/signal.h: #define SIGPOLL to SIGIO (for SysV compatibility).
+	  
+1999-09-29 Guido Flohr <guido@freemint.de>
+
+	* include/errno.h: Include <compiler.h>!
+	
+1999-09-28 Guido Flohr <guido@freemint.de>
+
+	* src/signal.c: Return EINVAL and not ERANGE for invalid signals.
+	
+1999-09-27 Guido Flohr <guido@freemint.de>
+
+	* configvars: Bumped version number to 0.54 and did a pre-release.
+
+	* src/fstat.c, src/ioctl.c, src/isctty.c, src/ttyname.c,
+	  src/ttyname_r.c, src/write.c: Modified 
+	  for new Fstat() kernel interface.
+	
+	* src/setsid.c: Bugfix, define __setsid to setsid without
+	  weak symbols.
+	
+1999-09-26 Guido Flohr <guido@freemint.de>
+
+	* src/writev.c, src/readv.c: Removed, now in socket.  Otherwise
+	  we have problems with cross-dependencies.
+	
+	* socket/writev.c, src/readv.c: New files, came here from libsocket.
+
+	* include/sys/stat.h, src/do_stat.c: Modified for new kernel call
+	  Fstat().
+	
+	* include/sys/types.h:  Changed dev_t from short int (16 bits) to 
+	  unsigned long long int (64 bits) and off_t from long to long long.
+	
+	* include/compiler.h: Changed uid_t and gid_t from unsigned short
+	  to unsigned long.  Changed pid_t from short to long.
+	  
+	* src/utime.c, src/ttyname.c, src/ttyname_r.c, src/rename.c, 
+	  src/readlink.c, src/symlink.c, src/open.c, src/mknod., 
+	  src/mkfifo.c, src/link.c: 
+	  Changed struct stat in struct xattr for call to Fxattr.  FIXME:
+	  This should be changed in Fattrib() since we only check for
+	  existence (avoids recalculations of timestamps inside the
+	  kernel).
+	  
+1999-09-25 Guido Flohr <guido@freemint.de>
+
+	* include/mint/errno.h, src/strerror.c:  Added ENSLOCK and EXCPT for 
+	  kernel compatibility. 
+	
+1999-09-22 Guido Flohr <guido@freemint.de>
+
+	* src/ctime.c: Bugfix, call tzset() explicitely.
+	
+	* include/shadow.h, src/fgetspent.c, src/fgetspent_r.c, src/getspent.c,
+	  src/getspent_r.c, src/getspnam.c, src/getspnam_r.c, src/lckpwdf.c,
+	  src/putspent.c, src/sgetspent.c, src/sgetspent_r.c: New files.
+	
+1999-09-22 Guido Flohr <guido@freemint.de>
+
+	* include/crypt.h: New file.
+	
+	* src/getpass.c: Replaced with glibc version.
+	
+	* src/getline.c: Bugfix, really define weak aliases for
+	  getline and getdelim.
+	
+1999-09-21 Guido Flohr <guido@freemint.de>
+
+	* include/mint/ssystem.h: Added new opcode S_CTRLALTDEL.
+	
+1999-09-20 Guido Flohr <guido@freemint.de>
+
+	* include/sys/reboot.h, src/reboot.c: New file.
+	
+1999-09-19 Guido Flohr <guido@freemint.de>
+
+	* src/libgcc1.c: Removed.
+	
+	* src/temp.cpp: Removed, same as _normdf.cpp?
+	
+	* src/_fxunsd.cpp: Removed, all in libgcc2.c?
+	
+	* src/libgcc2.c: Replaced with recent version.
+	
+	* src/tconfig.h, src/gthr.h, src/eh-common.h: New files.
+	
+	* src/siglist.c, src/signames.c, include/signal.h: Added
+	  new signal SIGPWR (number 31).  This is experimental.
+	  Don't yet rely on it.
+	  
+1999-09-18 Guido Flohr <guido@freemint.de>
+
+	* src/rename.c, src/rmdir.c, src/setegid.c, src/setregid.c,
+	  src/bsd_setpgrp.c, src/setpriority.c, src/seteuid.c,
+	  src/setreuid.c, src/setsid.c, src/settimeofday.c, src/unlink.c,
+	  src/wait4.c: 
+	  Adapted to new error codes.
+	
+	* src/sysconf.c: Bug fixes for sysconf() and pathconf().  They
+	  returned error codes.
+	  
+	* src/getutid.c, src/getutid_r.c, src/getutline.c, src/getutline_r.c,
+	  src/logwtmp.c, src/updwtmp.c, src/utmp-private.h, src/utmp_file.c,
+	  include/libc-lock.h:
+	  New files.
+	
+	* src/utmp.c: Removed.
+	  
+1999-09-17 Guido Flohr <guido@freemint.de>
+
+	* include/stab.h, include/stab.def: Both files removed, they can
+	  now be found in the package mintbin.
+	
+	* src/strerror.c: Rewritten from scratch.
+	
+	* src/alarm.c, src/chdir.c, src/chown.c, src/fchown.c,
+	  src/lchown.c, src/flock.c, src/fcntl.c, src/do_lock.c,
+	  src/statfs.c, src/truncate.c, src/setgroups.c, src/getpgrp.c,
+	  src/getpriority.c, src/setpriority.c, src/getrusage.c,
+	  src/ioctl.c, src/kill.c, src/killpg.c, src/link.c,
+	  src/lseek.c, src/mkdir.c, src/open.c, src/pause.c, src/pipe.c,
+	  src/readv.c: 
+	  Adapted to new error codes.
+	
+	* include/mintbind.h: Renamed Pchroot to Dchroot.
+	
+1999-09-17 Frank Naumann <fnaumann@cs.uni-magdeburg.de>
+	
+	* src/chdir.c: Fixed to not mess up current drive.
+	  
+1999-09-14 Guido Flohr <guido@freemint.de>
+
+	* include/mint/errno.h: New file, containing the new
+	  error codes.
+	
+	* include/errno.h: Now basically includes <mint/errno.h>.
+	  
+	* src/getutent.c, src/getutent_r.c, src/utmpname.c: New files.
+	  
+1999-09-12 Guido Flohr <guido@freemint.de>
+	
+	* configvars: Bumped version number to 0.54.
+	
+	* include/protocols/routed.h, include/protocols/rwhod.h,
+	  include/protocols/talkd.h, include/protocols/timed.h:
+	  New files.
+	
+	* include/sys/ttychars.h, include/sys/ttydefaults.h:
+	  New files.
+	
+	* include/sys/uio.h, include/iovec.h: New files.
+	
+	* include/compiler.h, include/unistd.h, include/sys/types.h: 
+	  New macro __SSIZE_TYPEDEF__ for ssize_t.
+	
+	* src/cfsetspeed.c: New files.
+	
+	* src/gethostn.c: Renamed to gethostname.c.
+	
+	* src/cfsetspeed.c, src/chroot.c, src/daemon.c, src/fcrypt.c,
+	  src/getdomainname.c, src/gethostid.c, src/getusershell.c,
+	  src/ident.c, src/iflink.c, src/login_tty.c, src/logout.c,
+	  src/logwtmp.c, src/pty.c, src/readv.c, src/rtent.c, 
+	  src/sigvec.c, src/snprintf.c, src/strsep.c, src/syslog.c,
+	  src/writev.c: New files, either taken over or rewritten
+	  from Kay Roemer's portlib.
+	
+	* include/unistd.h: New function chroot().  Just btw,
+	  with recent MiNT kernels the function even works.  New
+	  function ttyname_r().
+	
+	* include/paths.h, include/pty.h: New files. 
+	
+	* include/mint/iflink.h: New file.
+	
+	* include/utmp.h: Replaced with adapted version from GNU
+	  libc.
+	 
+	* include/utmpbits.h: New file.
+	
+	* src/utmp.c, src/wtmp.c: Removed.  Attention, the undocumented
+	  functions _write_utmp and _write_wtmp are not available 
+	  anymore!  Use the functions listed (and explained) in
+	  <utmp.h> en lieu!
+	
+	* src/login.c: New file.
+	
+	* include/signal.h: Protos for new functions siginterrupt()
+	  and sigvec().  Added declaration for sys_siglist.
+	  
+	* include/stdio.h: Protos for new functions snprintf() and
+	  vsnprintf() added.
+	
+	* src/vsnprintf.c: New file.
+	
+	* include/string.h: Proto added for strsep().
+	
+	* include/syslog.h: New file.
+	
+	* include/sys/socket.h, include/sys/un.h, include/arpa/ftp.h,
+	  include/arpa/inet.h, include/arpa/nameser.h, 
+	  include/arpa/telnet.h, include/arpa/tftp.h, include/net/bpf.h,
+	  include/net/if.h, include/net/if_arp.h, include/net/if_ppp.h,
+	  include/net/if_sl.h, include/net/route.h, 
+	  include/net/slcompress.h, include/netinet/if_ether.h,
+	  include/netinet/in_systm.h, include/netinet/ip_icmp.h,
+	  include/netinet/tcp.h, include/netinet/tcpip.h,
+	  include/netinet/udp_var.h, include/netinet/in.h,
+	  include/netinet/ip.h, include/netinet/ip_var.h,
+	  include/netinet/udp.h, include/rtent.h: New files.
+	  
+	* include/siglist.h: Removed.
+	
+	* src/siglist.c, src/signames.c: Correct types.
+	
+	* src/ttyname_r.c: New file.
+	
+1999-09-12 Guido Flohr <guido@freemint.de>
+
+	* src/getcwd.c:  Allow 0 for SIZE argument to getcwd().  In this
+	  case the buffer is allocated with the size needed.
+	
+	* src/main.c: Set root drive when __libc_unix_name is non-zero.
+	
+	* src/open.c: Always return -1 on error instead of 
+	  SMALLEST_VALID_HANDLE - 1.  Hope this won't break anything
+	  but returning anything but -1 or a valid file handle
+	  is a bug.
+	
+	* src/new_york.h: Append `L' to long constants, reported by
+	  Helmut_Karlowski@mausd.gun.de (Helmut Karlowski).
+	
+1999-09-09 Guido Flohr <guido@freemint.de>
+	
+	* src/do_lock.c: Check open mode before acquiring lock.
+	  Thus, files don't have to be opened for writing in 
+	  order to get a read lock.
+	  
+1999-20-06 Guido Flohr <guido@freemint.de>
+
+	* src/ioctl.c: Set default terminal speeds for MiNT emulation
+	  to 9600 Baud.
+	
+	* src/tcattr.c: Added fake line discipline.
+	
+	* include/termios.h: Added member c_line to struct termios.
+	
+	* include/sys/ioctl.h: New macros TOS and XKEY.
+	
+1999-08-06 Guido Flohr <guido@freemint.de>
+
+	* src/setlocal.c: Removed, renamed to setlocale.c.
+	
+	* include/locale.h: Fixed struct localeconv.
+
+1999-08-06 Guido Flohr <guido@freemint.de>
+
+	* src/utime.c: Workaround for kernel bug when changing timestamps
+	  of toplevel directories that are symlinks.
+	
+1999-08-02 Guido Flohr <guido@freemint.de>
+
+	* src/exit.c: Typo fixed, no more unresolved references to
+	  ___fclose_all_files (reported by Johnnie Ligotage,
+	  <johnnie@ligotage.demon.co.uk>.
+	  
+1999-07-29 Frank Naumann <fnaumann@prinz-atm.cs.uni-magdeburg.de>
+
+	* src/readlink.c, src/symlink.c: Changed behavior of the
+	  two functions once again.  Only convert link names
+	  when necessary.
+	
+1999-07-28 Guido Flohr <guido@freemint.de>
+
+	* src/div.c: Removed.
+	
+	* src/div_safe.c: New file, former div.c.  Having the assembler
+	  file div.cpp and div.c simultaneously confused dependency
+	  generation.  Now, div.c is provided for information (or
+	  other compilers than gcc) only.
+	  
+1999-07-22 Guido Flohr <guido@freemint.de>
+
+	* src/temp.s: Removed.
+	
+	* src/temp.c: New file, replaces temp.s.  We needed a preprocessed
+	  version so that there is no dangerous relocation to errno in
+	  case of shared text compilation.
+	  
+1999-07-21 Guido Flohr <guido@freemint.de>
+
+	* src/crt0.cpp: Removed definition for setstack().
+	
+	* src/crtinit.c: Removed definition for _exit().
+
+	* src/setstack.cpp, src/_exit.c: New files, put into 
+	  separate modules to avoid crtinit.o and crt0.o to be dragged into 
+	  the link.
+	
+	* src/_mon.cpp: Provide dummy definitions for profiling
+	  stuff so that crt0.o is not dragged into the link if not
+	  linked with no standard startup files.
+	
+	* src/crtinit.c, src/globals.c: Moved another bunch of global
+	  symbols from crtinit.c to globals.c.
+
+	* src/chdir.c: Include <string.h> for prototyping strcmp ().
+	   
+1999-07-13 Guido Flohr <guido@freemint.de>
+
+	* src/readlink.c, src/symlink.c: Don't obey __libc_unix_names
+	  here.  Symlinks will continue to be stored in DOS format
+	  on the medium.
+	  
+1999-07-10 Guido Flohr <guido@freemint.de>
+
+	* include/mint/random.h: New file.
+	
+1999-07-10 Guido Flohr <guido@freemint.de>
+
+	* src/lchown.c: Removed, needs to get worked out first.
+	
+	* include/mintbind.h: Removed macro for Flchown.
+	
+	* include/unistd.h: Removed prototype for lchown().
+	
+1999-07-09 Guido Flohr <guido@freemint.de>
+
+	* src/fchown.c, src/fchmod.c, src/lchown.c: Bindings were completely
+	  bogus.  Sorry, too tired then.
+	  
+1999-07-05 Guido Flohr <guido@freemint.de>
+	
+	* include/mint/dcntl.h: #undef redeclaration of struct flock
+	  (already in fcntl.h) if not compiling the kernel.
+
+	* src/read.c: The proverbial one-byte-error, logical OR instead
+	  of logical AND and the entire I/O part is blown.
+
+1999-07-04 Guido Flohr <guido@freemint.de>
+
+	* src/main.c: Moved exit() to different module so that referencing 
+	  exit() won't drag main.o into the link.  Additionally moved
+	  global variables into global.c and made _main a weak alias
+	  for __libc_main.
+	
+	* src/globals.c, src/exit.c: New files.
+	
+1999-07-03 Guido Flohr <guido@freemint.de>
+
+	* configvars: Bumped version number to 0.52.3
+	
+	* buildrules, include/stdlib.h, include/ieee754.h: Disabled
+	  compilation of POSIX 48 bit random functions when using
+	  short (aka castrated) integers.
+	
+1999-07-03 Guido Flohr <guido@freemint.de>
+
+	* buildrules: Whew, crt0.o has made it into the library,
+	  fixed.
+	
+	* src/SRCFILES: Uhm, getrlimit.c has somehow fallen out
+	  of the distribution, sorry Frank!
+	  
+	* src/libgcc2.c, src/psignal.c: Fixed unresolved references to 
+	  _write.
+
+	* src/mrand48.c, src/mrand48_r.c: Typos fixed.
+
+	* include/sys/fcntl.h: New file, simply includes <fcntl.h>,
+	  reported by Frank Naumann <fnaumann@prinz-atm.cs.uni-magdeburg.de>.
+	
+	* src/Makefile: Typo fixed. The `_sys.c' files will now
+	  build (reported by Edgar Aichinger <eaiching@t0.or.at>.
+	
+	* src/basename.c: Bugfix, return first character _after_
+	  slash.
+	
+	* include/mintbind.h: New macros for Ffchown, Ffchmod,
+	  Flchown and Pchroot.
+	
+	* src/fchown.c, src/lchown.c, src/fchmod.c: Check for
+	  descriptors > SHRT_MAX, stubs implementation replaced
+	  with real one.
+	
+1999-07-04 Frank Naumann <fnaumann@prinz-atm.cs.uni-magdeburg.de>
+
+	* src/siglist.c: Moved definition of array signal_names to
+	  different file to avoid namespace problems.
+	  
+	* src/signames.c: New file.
+
+	* include/mint/dcntl.h: Several updates to recent kernels.
+	
+	* src/statfs.c: Optimization for gcc.
+	
+	* src/sysinfo.c: Removed non-existant processor types mc68070-90,
+	  properly detect milan hardware.
+	
+1999-07-03 Guido Flohr <guido@freemint.de>
+
+	* src/gbl-ctors.h, src/glob.c, src/getopt.c, src/regex.c: 
+	  Fixed compiler warnings.
+	
+	* src/fchmod.c, src/fchown.c, src/lchown.c: New files, first 
+	  implementation as a stub.
+	  
+	* include/sys/stat.h: Added prototype for fchmod().
+
+	* include/unistd.h: Added prototypes for fchown() and lchown().
+
+	* src/isatty.c, src/main.c, src/spawn.c: Fixed compiler warnings.
+	
+	* include/errno.h: #defined EAGAIN to EWOULDBLOCK.
+	
+	* include/fcntl.h: Renamed O_NDELAY to POSIX O_NONBLOCK.  O_NDELAY
+	  is still available with __USE_GNU.
+	
+	* include/macros.h: Replaced `typedef' with `__typeof__' in
+	  GNU macros (typedef throws a compiler warning with recent
+	  gcc versions and __typeof__ should also be C++-safe).
+	
+1999-07-02 Guido Flohr <guido@freemint.de>
+
+	* src/crtinit.c: Changed default stksize to 16 kBytes.  It seems 
+	  that the library internal code (tz evaluation) already consumes 
+	  too much stack to stay with the old limit of 8k.
+	
+	* src/main.c: Global variable __libc_unix_names is set to 1
+	  for recent MiNT versions (currently > 1.12) iff the root
+	  drive is `U'.  In this case the library will not call
+	  _unx2dos to convert pathnames to Redmond style with drive
+	  letter and backslash.
+	  
+	* src/chdir.c, src/chmod.c, src/do_stat.c, src/link.c, src/mkfifo.c,
+	  src/mknod.c, src/open.c, src/opendir.c, src/readlink.c, 
+	  src/rename.c, src/rmdir.c, src/spawn.c, src/symlink.c, src/sysconf.c,
+	  src/truncate.c, src/unlink.c, src/utime.c: 
+	  Don't convert filenames with _unx2dos() if __libc_unix_names is 
+	  non-zero.
+	
+	* src/dostime.c: Renamed _dostime() to __dostime().
+	  
+	* src/lib.h: Changed protos for _unixtime to __unixtime and
+	  _dostime to __dostime.  Added declarations of global variables
+	  __mint, __libc_enable_secure and __libc_unix_names.
+	
+	* src/utime.c: Call __dostime() instead of _dostime(), see
+	  above.
+	
+	* src/do_stat.c: Check also for extenders `.app' and `.gtp'
+	  when emulating x-bit for TOS.
+
+	* src/unixtime.c: Bugfix, the function previously assumed that
+	  today's value of TIMEZONE is valid for all ages.  It now
+	  uses mktime() to calculate the correct value for the time
+	  in question.
+	  
+1999-06-30 Guido Flohr <guido@freemint.de>
+
+	* include/time.h, include/sys/resource.h, include/sys/time.h,
+	  include/sys/times.h, include/sys/utsname.h: Changed 
+	  `__EXTERN "C" {' to `extern "C" {' resp. used __BEGIN_DECLS
+	  instead (reported by Frank Naumann 
+	  <fnaumann@prinz-atm.cs.uni-magdeburg.de>).
+	
+	* include/alloc.h: Removed.
+	
+	* include/alloca.h: New file.
+	
+	* include/memory.h: Moved prototypes for alloca() into
+	  <alloca.h>.
+	
+	* src/getpages.c: Removed.
+	
+	* src/getpagesize.c: New file, former getpages.c.  Patch
+	  by Frank Naumann <fnaumann@prinz-atm.cs.uni-magdeburg.de>
+	  to return correct pagesize for MiNT without MP.
+	
+1999-06-25 Guido Flohr <guido@freemint.de>
+	
+	* src/lrand48.c: Added prototype for __nrand48_r().
+	
+	* src/lrand48_r.c: Fixed wrong prototype for __nrand48_r().
+
+1999-06-25 Guido Flohr <guido@freemint.de>
+
+	* configvars: Released version 0.52, bumped version number to
+	  0.52.1.
+	
+	* src/tmpfile.c: Bugfix, don't use a NULL pointer as argument
+	  to tmpnam_r().
+	  
+1999-06-25 Guido Flohr <guido@freemint.de>
+
+	* src/drand48_r.c, src/erand48.c, src/erand48_r.c: Fixed broken
+	  macros for calling erand48_r().
+	
+	* include/sys/cdefs.h: New file, compatibility with GNU libc.
+	
+	* src/err.c, include/err.h: New files, 4.4BSD error functions.
+
+1999-06-23 Guido Flohr <guido@freemint.de>
+
+	* include/stdio.h: Removed prototype for getstr(), reported
+	  by Frank Naumann <fnaumann@prinz-cs.uni-magdeburg.de>.
+	
+	* src/getline.c: Made getstr() static, weakened getline() and
+	  getdelim().
+	
+1999-06-17 Guido Flohr <guido@freemint.de>
+
+	* src/drand48.c, src/drand48_r.c, src/erand48.c, src/erand48_r.c,
+	  src/jrand48.c, src/jrand48_r.c, src/lcong48.c, src/lcong48_r.c, 
+	  src/lrand48.c, src/lrand48_r.c, src/mrand48.c, src/mrand48_r.c, 
+	  src/nrand48.c, src/nrand48_r.c, src/seed48.c, src/srand48.c, 
+	  src/srand48_r.c: Adapted for MiNTLib weak symbols.
+	
+	* include/stdlib.h: Fixed buggy prototypes (use doubly-underscored
+	  argument names).
+	  
+1999-06-17 Andreas Jaeger <aj@arthur.rhein-neckar.de>
+
+	* src/jrand48_r.c (__jrand48_r): Set also upper half of result.
+	  Fixes PR libc/757 (Reported by Michael Creutz <creutz@bnl.gov).
+
+1999-06-17 Ulrich Drepper <drepper@cygnus.com>
+	* include/stdlib.h (struct drand48_data): Leave X to user macros
+	  and use x for member name.
+	  Reported by Daniel Lyddy <daniel@cs.berkeley.edu>.
+	
+	* src/drand48.c: Change according to member name change.
+	
+	* src/drand48_r.c: Likewise.
+	* src/lcong48_r.c: Likewise.
+	* src/lrand48.c: Likewise.
+	* src/lrand48_r.c: Likewise.
+	* src/mrand48.c: Likewise.
+	* src/mrand48_r.c: Likewise.
+	* src/seed48.c: Likewise.
+	* src/seed48_r.c: Likewise.
+	* src/srand48_r.c: Likewise.
+
+1999-06-17 Klaus Espenlaub <kespenlaub@hydra.informatik.uni-ulm.de>
+
+	* src/erand48_r.c (__erand48_r): Implement for 32 bit short
+	  int.
+	  
+1999-06-16 Guido Flohr <guido@freemint.de>
+
+	* src/rename.c: Fixed typo, defined weak alias for pause()
+	  instead of rename().
+	
+1999-06-13 Petr Stehlik <stehlik@cas3.zlin.vutbr.cz>
+
+	* src/read.c: Patch to make the MiNTLib work with ncurses.
+
+1999-06-13 Guido Flohr <guido@freemint.de>
+
+	* include/termcap.h: Removed.  This does not belong here,
+	  install it with ncurses.
+
+1999-06-12 Guido Flohr <guido@freemint.de>
+	* src/access.c, src/alarm.c, src/canonicalize.c, src/chdir.c, 
+	  src/chmod.c, src/chown.c, src/close.c, src/creat.c, src/dup.c, 
+	  src/dup2.c, src/error.c, src/execve.c, src/fcntl.c, 
+	  src/fgetpwent_r.c, src/flock.c, src/fork.c, src/fstat.c, src/fsync.c,
+	  src/ftruncate.c, src/getegid.c, src/geteuid.c, src/getgid.c, 
+	  src/getgroups.c, src/getitimer.c, src/getpid.c, src/getppid.c,
+	  src/getpriority.c, src/getpw.c, src/getpwent_r.c, src/getpwnam_r.c, 
+	  src/getpwuid_r.c, src/getrlimit.c, src/getrusage.c, 
+	  src/gettimeofday.c, src/getuid.c, src/getumask.c, src/glob.c, 
+	  src/gtty.c, src/initgroups.c, src/ioctl.c, src/kill.c, src/killpg.c, 
+	  src/link.c, src/lseek.c, src/lstat.c, src/mempcpy.c, src/mkdir.c, 
+	  src/nice.c, src/open.c, src/pause.c, src/pipe.c, src/read.c, 
+	  src/readdir.c, src/readlink.c, src/rename.c, src/rmdir.c, 
+	  src/select.c, src/setenv.c, src/setgid.c, src/setgroups.c, 
+	  src/setitimer.c, src/setpriority.c, src/setregid.c, src/setreuid.c, 
+	  src/setrlimit.c, src/setsid.c, src/settimeofday.c, src/setuid.c, 
+	  src/sigaction.c, src/sigblock.c, src/signal.c, src/sigpause.c, 
+	  src/sigpending.c, src/sigreturn.c, src/sigsetmask.c, src/stat.c, 
+	  src/statfs.c, src/stty.c, src/symlink.c, src/sync.c, src/times.c, 
+	  src/truncate.c, src/umask.c, src/unlink.c, src/utime.c, src/wait.c, 
+	  src/wait3.c, src/wait4.c, src/waitpid.c, src/write.c:
+	  Various modifications to support weak symbols.
+	
+	* src/libc-symbols.h: New file.
+
+	* include/sys/param.h: Include endian.h to avoid run-time tests
+	  when configuring with GNU autoconf.
+	
+	* src/canonicalize.c: New file, definining canonicalize_file_name()
+	  and realpath().
+	
+	* src/setenv.c: New file, defining setenv(), clearenv(),
+	  and unsetenv().
+	  
+	* include/stdlib.h: Added prototypes for setenv(), clearenv(),
+	  canonicalize_file_name() and realpath().
+	  
+1999-06-11 Guido Flohr <guido@freemint.de>
+
+        * src/stpcpy.c, src/stpncpy.c: New files, define stpcpy() and
+          stpncpy().
+        
+        * src/strndup.c: New file, definining strndup().
+        
+        * include/string.h: Added prototypes for stpcpy(), stpncpy(),
+          and strndup().
+          
+1999-06-08 Guido Flohr <guido@freemint.de>
+
+	* src/wordexp.c, include/wordexp.h: New files, implementation
+	  for wordexp().
+	
+	* src/mempcpy.c: New file, new function mempcpy().
+	
+	* include/string.h: Added prototype for mempcpy().
+	
+	* src/crtinit.c: Replaced static definitions of argc and
+	  argv by global definitions for __libc_argc and __libc_argv
+	  (needed by wordexp).
+	
+	* src/getpw.c: File removed.
+	
+	* src/fgetpwent.c, src/fgetpwent_r.c, src/getpwent.c, src/getpwent_r.c,
+	  src/getpwnam.c, src/getpwnam_r.c, getpwuid.c, getpwuid_r.c:
+	  New files, password file handling rewritten from scratch.
+
+	* include/pwd.h: Rewritten.
+		
+	* include/sys/types.h: Added #defines for uid_t, gid_t and pid_t
+	  so that we can remember if we already typedef'd them.
+	  
+1999-06-05 Guido Flohr <guido@freemint.de>
+
+	* src/seekdir.c, include/sys/utsname.h, src/system.c: Typos fixed, 
+	  changed #ifndef __TURBOC__ to #ifdef __TURBOC__ (or similar).
+	
+	* src/getcookie.c: Fixed compiler warning.
+	  
+1999-05-28 Guido Flohr <guido@freemint.de>
+
+	* src/unlink.c: unlink() is NOT the same as remove, rewritten.
+	
+	* src/remove.c: New file, proper implementation for remove().
+	
+1999-05-25 Guido Flohr <guido@freemint.de>
+
+	* src/mknod.c: Changed function header to match sys/stat.h.
+
+	* include/sys/stat.h: Included prototype for mknod().
+
+	* include/sys/stat.h: Removed "#ifdef __MINT__" around reserved
+	  members in struct statbuf definition: The size of this structure
+	  should always be the same, no matter what the compile time 
+	  flags are. Or have I missed something here?
+	  Namespace cleanup: Conditionally define macros depending on
+	  features used.
+	
+	* include/support.h: Removed prototypes for
+	    - nice ->sys/resource.h
+	    - putenv ->stdlib.h
+	
+	* src/dirname.c, src/basename.c: New files, new functions.
+	
+	* include/string.h: Added prototype for basename().
+	
+	* include/libgen.h: New file.  Declares basename() and dirname().
+	  
+1999-05-25 Joerg Westheide <Joerg_Westheide@su.maus.de>
+
+	* src/vfork.cpp: New method (only if MiNT is present):
+	  The return address is duplicated on the stack.  The child will 
+	  use the upper one (at sp@) which it is allowed to clobber, the 
+	  parent will remove the (possibly clobbered) one of the child and 
+	  use the lower one (at sp@4).  Ao this implementation relies on the 
+	  vfork specification that the child returns before the parent.
+	  
+1999-05-23 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+	* src/getopt_init.c: Removed inline for Turbo C.
+
+	* include/regexp.h: #define regexec to __V8_regexec to avoid
+	  name conflict with regex.c.
+	
+	* src/clock.c: Rewritten.
+	
+	* src/main.c: Sets global variable __has_no_ssystem to avoid
+	  letting Ssystem fail over and over again.
+	  
+	* src/getcookie.c: Optimized to use global variable
+	  __has_no_ssystem.
+	
+	* src/ioctl.c, src/sysvar.c: Use __has_no_ssystem now.
+	
+1999-05-22 Guido Flohr <guido@freemint.de>
+
+	* src/gmon.c: Changed output format of gmon.out to the format
+	  expected by GNU gprof 2.9.1.  To get the old format set the
+	  envariable "OLD_GMON" while running (!) the profiled program.
+	  
+1999-05-17 Guido Flohr <guido@freemint.de>
+
+	* src/gmon.c: Changed call to _write() in call to write().
+
+1999-05-13 Guido Flohr <guido@freemint.de>
+
+	* src/mktime.c: Bugfix for mktime(), if tm_isdst was set to 0
+	  and DST really applied for that particular date, mktime() 
+	  returned an error.  Now it is always set to -1 (undecided)
+	  before the algorithm is entered.  This fixes the bug but
+	  I'm not sure if this is really the right place to do it
+	  (it should probably be done in one of the sub-algorithms).
+	  
+1999-05-09 Guido Flohr <guido@freemint.de>
+
+	* include/termios.h: Replaced conditional defines for _IOCTL_H
+	  with _SYS_IOCTL_H.
+	  
+1999-05-08 Guido Flohr <guido@freemint.de>
+
+	* src/drand48.c, src/drand48-iter.c, src/drand48_r.c, 
+	  src/erand48.c, src/erand48_r.c, src/jrand48.c, src/jrand48_r.c,
+	  src/lcong48.c, src/lcong48_r.c, src/lrand48.c, src/lrand48_r.c,
+	  src/mrand48.c, src/mrand48_r.c, src/nrand48.c, src/nrand48_r.c,
+          src/seed48.c, src/seed48_r.c, src/srand48.c, src/srand48_r.c:
+          New files, implementation for 48 bit pseudo number generation.
+        
+        * include/stdlib.h: Added prototypes for 48 bit pseudo number
+          generation functions.
+          
+	* include/compiler.h: New convenience macros __P, __BEGIN_DECLS and
+	  __END_DECLS for GNU compatibility (unnecessary nuisances without
+	  them).
+	  
+	* src/ctype.c, include/ctype.h: Provide real functions for ctype 
+	  macros as demanded by C standard (reported by Katherine Ellis 
+	  <kellis@leading.net>).  Note that the macro __NO_CTYPE (name
+	  taken from GNU libc) can be used to disable all macros.
+
+	* include/endian.h: Added macro __BYTE_ORDER.
+	
+	* include/features.h.in: Include <compiler.h>.
+	
+	* include/ieee754.h: New file.
+	
+1999-05-08 Guido Flohr <guido@freemint.de>
+
+	* include/osbind.h: Removed prototype for Getcookie(), not
+	  used.
+	
+1999-05-04 Guido Flohr <guido@freemint.de>
+
+	* include/unistd.h: New variable __libc_enable_secure.
+	
+	* src/main.c: Define __libc_enable_secure if secure mode
+	  is advised (if suid or guid).  Note that in secure mode
+	  the default drive is automatically set to 'u' and binary
+	  mode is always set on (we can't call getenv).
+
+	* src/fread.c: Replaced call to _read() by call to read().
+	
+	* src/diraccess.c: New file for internal library function
+	  __diraccess().
+	
+	* src/tmpfile.c: This function was not reentrant, fixed.
+	
+	* src/mkstemp.c: New file, new function mkstemp().
+	
+	* include/stdlib.h: Added prototypes for mktemp() and mkstemp().
+	
+	* include/unistd.h: Moved prototype for mktemp() to unistd.h.
+	
+	* src/mktemp.c: Replaced #include <unistd.h> by #include <stdlib.h>
+	
+	* include/stdio.h: Added protoype for tmpnam_r().  New library
+	  internal function __secure_getenv().
+	
+	* src/tmpnam_r: New file, reentrant version tmpnam_r() of
+	  tmpnam().
+	  
+1999-05-03 Guido Flohr <guido@freemint.de>
+
+	* include/sys/types.h: Added some BSD compatibility typedefs.
+
+	* include/sys/queue.h: New file.
+
+	* src/getline.c: New file, new functions getline() and getdelim().
+	
+	* include/stdio.h: Protoypes for getline() and getdelim() added.
+
+1999-05-02 Guido Flohr <guido@freemint.de>
+
+	* src/creat.c, include/fcntl.h:  Changed mode argument for creat() 
+	  from unsigned to unsigned short (mode_t).
+	
+	* src/chmod.c, include/sys/stat.h: Changed mode argument for
+	  chmod() from int to mode_t.
+	
+	* src/chown.c, include/unistd.h: Changed 2nd and 3rd argument
+	  of chown() from int to uid_t and gid_t.
+	  
+1999-05-01 Guido Flohr <guido@freemint.de>
+
+	* include/time.h: Ooops, tm->tm_gmtoff was int instead of
+	  long, fixed.
+
+	* src/fflush.c, src/fputc.c, src/fwrite.c, src/eprintf.c,
+	  src/lseek.c: Changed call to _write() in call to write().
+	
+	* src/filbuf.c: Changed call to _read() in call to read().
+
+	* src/malloc.c: Changed default chunksize to 8k to match the
+	  kernel page size (suggested by Thomas Binder,
+	  <gryf@hrzpub.tu-darmstadt.de>).
+	  
+1999-04-31 Guido Flohr <guido@freemint.de>
+
+	* src/syscalls.list, sys/syscall.c:
+	  New files, syscall() implemented.
+	
+	* include/unistd.h, src/write.c, src/read.c: Changed prototypes 
+	  for read and write to size_t (from unsiged).  This makes the
+	  extra functions _write() and _read() unnecessary:
+	
+	* src/lib.h: Removed prototype for _write() and _read().
+	
+	* src/write.c, src/read.c, src/fstat.c, src/times.c, 
+	  src/pause.c, src/rename.c:
+	  Renamed library calls to doubly underscored versions (e. g.
+	  write -> __write) resp. doubled them to allow overriding 
+	  those functions that are usually expected to be system calls.
+	
+	* include/unistd.h: Added prototypes for doubly underscored 
+	  versions __write(), __read(), __pause(), dup2(), __getppid(),
+	  __close(), __setgid(), __fork(), __setsid(), __setuid(),
+	  __link(), __lseek(), __execve(), __getgid(), __rmdir(),
+	  __getegid(), __getuid(), __pipe(), __getpid(), __dup(),
+	  __setregid(), __alarm(), __geteuid(), __setreuid(), __chdir(),
+	  __access(), __getgroups(), __chown() and __unlink().
+	
+	* include/sys/stat.h: Added prototypes for doubly underscored
+	  versions of __fstat(), __lstat(), __umask(), __mkdir(), __stat()
+	  __chmod().
+	
+	* include/sys/statfs.h: Added prototype for doubly underscored
+	  versions of __statfs().
+
+	* include/stdio.h: Added prototype for doubly underscored
+	  version of __rename().
+	
+	* include/sys/times.h: Added prototype for __times().
+	  
+	* include/sys/time.h: Added prototypes for __gettimeofday(),
+	  __settimeofday(), __getitimer(), __setitimer() and __select().
+	  
+	* include/sys/types.h: Added prototypes for __truncate() and
+	  __ftruncate().
+	
+	* include/sys/wait.h: Added prototypes for __wait(), __wait3(),
+	  __wait4() and __waitpid().
+	
+	* include/sys/dirent.h: Added prototypes for __readdir(),
+	
+	* include/sys/resource.h: Added prototypes for __getpriority(),
+	  __setpriority(), __nice(), __getrusage(), __getrlimit() and
+	  __setrlimit().  Removed prototype for ulimit() because it's 
+	  not implemented.
+	
+	* include/sys/file.h: Added prototype for __flock().
+	
+	* include/sys/mount.h: Emptied, only #include <sys/statfs.h>.
+	
+	* include/utime.h: Added prototype for __utime().
+	
+	* src/utime.c: Moved definition for _dostime to ...
+	
+	* src/dostime.c: New file, _dostime now calls localtime_r
+	  instead of localtime.
+	  
+	* include/grp.h: Added prototypes for __initgroups() and
+	  __setgroups().
+	
+	* include/support.h: Added prototypes for __sync(), __fsync().
+	  Removed prototypes for _fork() and _wait() because these
+	  functions are not defined.
+	
+	* include/signal.h: Added prototypes for __sigaction(), __sigblock(),
+	  __signal(), __sigpause(), __sigpending(), __sigreturn(),
+	  __sigsetmask(), __kill() and __killpg().
+	
+	* include/sys/ioctl.h: Added prototypes for __ioctl(), __stty()
+	  and __gtty().
+	
+	* include/fcntl.h: Added prototypes for __open(), __fcntl() and 
+	  __creat().  The prototypes for __open_v() and __fcntl_v are 
+	  hidden in order to avoid including <stdarg.h> resp. <varargs.h>.
+	
+	* src/setrlimi.c:
+	  Renamed to setrlimit.c.  Moved definition for getrlimit()
+	  to separate module.
+	
+	* src/setrlimit.c:
+	  New file (renamed from setrlimi.c).
+	
+	* src/getrlimit.c:
+	  New file.  Moved definition for getrlimit() here from
+	  setrlimit.c.
+	
+	* src/pgrp.c:
+	  Removed, resp. split up into ...
+	
+	* src/setsid.c, src/setpgid.c, src/bsd_getpgrp.c, src/bsd_setpgrp.c,
+	  src/setpgrp.c:
+	  New files, excerpts from the old src/pgrp.c.
+	
+	* src/pause.c: Moved definition for sigpause() to sigpause.c.
+	
+	* src/sigpause.c: New file, excerpts from pause.c.
+	
+	* src/truncate.c Moved definition for ftruncate() to ftruncate.c.
+	
+	* src/ftruncate.c: New file, excerpts from truncate.c.
+	  
+	* src/sync.c Moved definition for ftruncate() to fsync.c.
+	
+	* src/fsync.c: New file, excerpts from sync.c.
+	
+	* include/unistd.h: Removed prototype for open(), belongs in
+	  fcntl.h.
+	  
+	* src/sigactio.c:
+	  Removed, resp. split up into ...
+	
+	* src/sigaction.c, src/sigaddset.c, src/sigdelset.c,
+	  src/sigemptyset.c, src/sigfillset.c, src/sigismember.c, 
+	  src/sigpending.c, src/sigprocmask.c, src/sigsuspend.c:
+	  New files, excerpts from the old src/sigactio.c.
+	
+	* include/unistd.h: Moved prototype for sigsetmask to signal.h.
+	
+	* src/sigreturn.c, include/signal.h: New function sigreturn().
+	
+	* src/sigblock.c: Moved definition for sigpause() to sigsetmask.c.
+	
+	* src/sigsetmask.c: New file, excerpts from sigblock.c.
+	
+	* src/symlink.c: Moved definition for sigpause() to readlink.c.
+	
+	* src/readlink.c: New file, excerpts from symlink.c.
+	
+	* src/sgtty.c:
+	  Removed, resp. split up into ...
+	
+	* src/stty.c, src/gtty.c:
+	  New files, excerpts from the old src/sgtty.c.
+	
+	* src/open.c: Moved definition for creat() to creat.c and
+	  definition for umask() to umask.c.
+	
+	* src/creat.c: New file, excerpts from open.c.
+	
+	* src/umask.c: New file, excerpts from open.c.  Don't check if
+	  MiNT is present.
+	
+	* src/open.c: Only get variadic argument if flags & O_CREAT.
+	
+	* src/kill.c, src/killpg.c: Made flag _have_pkill static in
+	  both modules.
+	  
+	* src/lseek.c: Moved definition for tell() to tell.c.
+	
+	* src/tell.c: New file.
+	
+	* src/execl.c, execle.c, 
+	
+	* src/execp.c:
+	  Removed, resp. split up into ...
+	
+	* src/execvp.c, src/execlp.c:
+	  New files.
+	
+	* src/execvp.c:
+	  Do not look for similar files with typical executables
+	  extenders (".tos", ".ttp", ...) if MiNT is present. If MiNT
+	  is not present, stick to that behavior but also look for
+	  ".app" and ".gtp".
+	
+	* src/execl.c, src/execle.c, src/execlp.c, src/execv.c, 
+	  src/execvp.c: Now all call execve() internally instead of
+	  _spawnve.  Reason: Allow client programmer to override
+	  definition of execve() (or to make the linker wrap the
+	  function) and catch all exec* calls nonetheless.
+	
+	* src/getrusag.c:  Renamed to ...
+	
+	* src/getrusage.c: New file.  Made _ms2tval() static and 
+	  removed _add_tval().
+	
+	* include/sys/stat.h: Added prototype for getumask().
+	
+	* src/getumask.c: New GNU extension function getumask().
+	
+1999-04-29 Guido Flohr <guido@freemint.de>
+
+	* configvars: Released version 0.51, bumped version number to 
+	  0.51.1.
+
+	* include/unistd.h:  New prototype for function syscall ().
+	
+	* include/syscall.h, include/sys/syscall.h: New files.
+	
+1999-04-28 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+	* include/obdefs.h:  Removed.
+	
+1999-04-27 Guido Flohr <guido@freemint.de>
+
+	* include/sgtty.h:  Include <sys/types.h>, not <types.h>.
+	
+1999-04-24 Guido Flohr <guido@freemint.de>
+
+	* src/wait4.c: Bugfix, mask out the child pid from return 
+	  value of Pwaitpid().
+
+	* LGPL, include/COPYRIGHT: Remvoved file.
+	
+	* COPYING.LIB, COPYING, include/COPYING.LIB,
+	  include/COPYING: Added.
+
+	* tz/Makefile, tz/SRCFILES, tz/MISCFILES, tz/BINFILES, tz/ialloc.c,
+	  tz/private.h, tz/scheck.c, tz/stack.c, tz/tzinit.c, tz/zdump.c,
+	  tz/zic.c, tz/Arts.htm, tz/README, tz/README.1st, tz/Theory,
+	  tz/WWW.htm, tz/africa, tz/antarctica, tz/asia, tz/australasia,
+	  tz/backward, tz/checktab.awk, tz/etcetera, tz/europe, tz/factory,
+	  tz/iso3166.tab, tz/leapseconds, tz/northamerica, tz/pacificnew,
+	  tz/solar87, tz/solar88, tz/solar89, tz/southamerica, tz/systemv,
+	  tz/tzfile.5, tz/tzinit.8, tz/tzselect.8, tz/tzselect.ksh,
+	  tz/usno1988, tz/usno1989, tz/usno1989a, tz/usno1995, tz/usno1997,
+	  tz/yearistype.sh, tz/zdump.8, tz/zic.8, tz/zone.tab, tz/zonelist:
+	  New files.  The MiNTLib now contains full support for
+	  timezone database files.  See tz/REAMDE and tz/README.1st
+	  for details.
+	  
+	* configvars, Makefile, phony: Changed for tz database support.
+	
+	* src/tzfile.h: Updated to version 7.14.
+	
+	* src/tz.c: Includes "new_york.h".  If the time zone string
+	  from the environment contained the name of an alternative
+	  time zone without rules __tzparse gave up and returned an
+	  error.  Now it will use the rules for New York instead
+	  (which is the POSIX compliant behavior).
+	 
+	* src/new_york.h: New file containing default time zone rules
+	  in the absence of a default rules file.
+	
+1999-04-23 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+	* include/compiler.h: #define atarist for __TURBOC__.
+	
+	* include/sys/wait.h: Fixed typo (changed ifndef __TURBOC__
+	  to ifdef __TURBOC__).
+	  
+	* src/localtime.c: Ansified localtime_r function header for
+	  __TURBOC__.
+	
+	* src/wait3.c: Include <sys/resource.h>.
+	
+1999-04-22 Guido Flohr <guido@freemint.de>
+
+	* include/widget.h: Fixed comment (had "/*" inside comment).
+	
+1999-04-21 Guido Flohr <guido@freemint.de>
+
+	* src/readdir.c, include/sys/dirent.h: New function readdir_r(),
+	  reentrant version of readdir().  The function doesn't make
+	  any sense if you only write for MiNT because the ordinary
+	  readdir() is already reentrant in the MiNTLib.  It may
+	  be handy for portable code though.
+	  No more bus error for NULL argument to readdir().
+	  
+	* src/closedir.c: No more bus error for NULL argument to closedir().
+
+	* include/mint/ssystem.h: New version from current kernel sources.
+
+	* src/clock.c, src/getcookie.c, src/ioctl.c, src/main.c,
+	  src/sysvar.c: Changed macro names to new versions in ssystem.h.
+
+1999-04-20 Guido Flohr <guido@freemint.de>
+
+	* src/regex.c, include/regex.h, include/re_comp.h: New files
+	  implement both the GNU and the POSIX regular expression API.
+	  To use the old non-GPL regex functionality you have to include
+	  <regexp.h>.
+	  
+	* src/glob.c, include/glob.h: New files and new function glob().
+	
+	* src/fnmatch.c, include/fnmatch.h: New files and new function 
+	  fnmatch().
+	
+	* src/error.c, include/error.h: New files, GNU error functions 
+	  error() and error_at_line() implemented.
+	  
+	* src/getopt.c: Renamed to getopt_old.c.
+	
+	* src/getopt_old.c: Includes unistd.h to rename all external
+	  functions and variables.
+	
+	* src/getopt.c, src/getopt1.c, src/getopt_init.c, include/getopt.h:
+	  Getopt function familiy taken over from the GNU libc.  To
+	  use the old non-GPL getopt version you have to define _AVOID_GPL
+	  and include <unistd.h>
+
+	* include/sys/types.h: Includes <endian.h> for BSD compatibility.
+
+	* src/crtinit.c, include/errno.h: New global variables 
+	  program_invocation_name and program_invocation_short_name.
+	  
+	* include/stdio.h: Fixed warning with getc macro.
+	
+1999-04-18 Guido Flohr <guido@freemint.de>
+  
+  	* include/features.h.in: Removed preprocessor macro 
+  	  "__GNU_LIBRARY__".  The code for GNU getopt will think that
+  	  getopt_long is implemented in the library otherwise.
+  	  
+1999-04-15 Guido Flohr <guido@freemint.de>
+
+	* include/clean-include: New file.  Shell script that automatically
+	  detects obsoleted header files and renames them.
+	  
+	* include/Makefile: Invokes include/clean-include when installing.
+	
+	* include/MISCFILES: Added "clean-include".
+	
+1999-04-14 Guido Flohr <guido@freemint.de>
+	
+	* buildrules: Fixed typo that made dependency files get included
+	  twice, "make" invoked in subdirectories now works and some
+	  minor performance tweaks got fixed.
+	  
+1999-03-13 Guido Flohr <guido@freemint.de>
+
+	* Makefile, include, lib, libb, lib16, libb16, startup, bindist,
+	  BINFLES, buildrules, ChangeLog, checkfiles, configvars,
+	  HACKING, INSTALL, install-sh, LICENSES, MISCFILES, mkinstalldirs,
+	  NEWS, phony, README.bin, README-alpha, rules, SRCFILES,
+	  TODO: New files resp. new subdirectories.
+	  
+	  The build process of the MiNTLib has been completely restructured.
+	  All Makefiles have been rewritten from the scratch.  Object 
+	  files are now restored on the harddisk to save recompilation
+	  time.  The new Makefile is more comfortable, it offers some
+	  of the standard GNU targets like "make all", "make install",
+	  "make dist".  Additionally a target "make bindist" was added
+	  to simplify binary distributions.
+	  
+1999-03-13 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+	* include/mintbind.h: missing prototypes for new kernel
+	  functions for PureC added.
+	  
+	* src/purec/mintbind.s: implementation for new kernel
+	  functions added.
+	  
+1999-03-11 Guido Flohr <guido@freemint.de>
+
+	* include/time.h: New function tzsetwall().
+
+	* src/statfs.c: Include <mint/dcntl.h> instead of <dcntl.h>.
+
+	* src/open.c: Include <string.h>.
+	
+	* src/mkfifo.c, src/mknod.c, sleep.c, thread.c: Fixed warnings.
+
+	* src/gmtime.c: Include <stdlib.h> for malloc().
+
+	* src/getopt.c: Added return type int to getopt().
+
+	* include/support.h: Removed prototype for putenv, changed
+	  unixtime() to __unixtime().
+	
+	* include/stdlib.h: Added prototype for putenv.
+
+	* include/tzfile.h: Defined NOID.
+	
+1999-03-09 Guido Flohr <guido@freemint.de>
+
+	* src/sysconf.c: Changed macro _PC_NAME_MAX to _MINT_PC_NAME_MAX.
+
+	* include/dcntl.h: typedef for ulong may conflict with
+	  typedef in sys/types.h
+	  
+1999-03-08 Eric-Martin-Racine <q-funk@hal.fishpool.com>
+
+	* include/utmp.h: Added macros UTMP_FILE, WTMP_FILE, UTMP_FILENAME
+	  and WTMP_FILENAME.
+	
+	* src/utmp.c: Removed macro UTMP_FILE (now in utmp.h).
+	
+	* src/wtmp.c: Removed macro WTMP_FILE (now in wtmp.h).
+	
+1999-03-08 Tommy Andersen <tommya@post3.tele.dk>
+
+	* src/getcookie.c: Make sure that argument P_VALUE to
+	  Getcookie() is always set to zero if the requested
+	  cookie can't be found.
+	  
+1999-03-08 Guido Flohr <guido@freemint.de>
+
+	* src/obstack.c, include/obstack.h: Included recent versions.
+	
+	* mincl, src/getgroup.c: Renamed getgroup.c to getgroups.c.
+
+	* include/bsd/tzfile.h: Moved back to src/tzfile.h.
+	
+	* src/tzstruct.h: Include "tzfile.h" again instead of
+	  <bsd/tzfile.h>
+	  
+	* include/endian.h: New file, for better cross-compiling
+	  support.
+
+	* include/fcntl.h, include/unistd.h: Both files now define
+	  the lockf stuff conditionally.
+
+	* include/unistd.h: Renamed _PC_NAME_CASE to _MINT_PC_NAME_CASE.
+
+	* include/stdio.h: Removed macro EOS (conflicts with some
+	  software and is not really superfluous).
+
+	* include/stddef.h: Removed macros EXIT_FAILURE and EXIT_SUCCESS,
+	  they are stdlib.h.
+	  
+	* include/signal.h: Added macros BADSIG, SignalBad, SignalDefault
+	  and SignalIgnore.
+
+	* include/ctype.h, src/ctype.c: Added GNU extension isblank(c),
+	  removed non-standard iswhite(c).
+	
+	* include/sys/dirent.h, include/sys/stat.h, include/sys/types.h,
+	  include/sys/wait.h, include/time.h, include/setjmp.h,
+	  include/ctype.h, include/grp.h, include/limits.h, 
+	  include/pwd.h, include/signal.h, include/stddef.h, include/stdio.h,
+	  include/string.h, include/time.h, include/unistd.h: Adapted
+	  to features.h.
+	  
+	* include/sys/stat.h, include/sys/param.h: Moved DEV_BSIZE
+	  from sys/stat.h to sys/param.h.
+
+	* include/compiler.h: Include features.h.
+	
+	* include/features.h: New file, adapted from GNU libc.
+	
+  	* FAQ: Some adaptions.
+  	
+  	* README.FAQ: Renamed to FAQ.
+  	
+  	* HACKING: New file.
+  	
+	* include/00README: New file, instructions which old include
+	  files have to be deleted.
+	  
+        * Toplevel directory: Moved expired files to "expired".
+
+        * ChangeLog: New file, new structure.
+        
+        * COPYRIGHT: Renamed to LICENSES.
+
+        * include/unistd.h: Declared external variables optind,
+          opterr and optarg.
+
+        * src/getcookie.c: Fixed mshort error in getMiNT().
+          (reported by Jan "Honza" Krivanek <honza@szt.cdrail.cz>).
+
+        * src/localtime.c, src/tz.c, src/tzstruct.h, src/gmtime.c,
+          src/mktime.c: Various changes to stop time code from
+          crashing with short integers (reported by Frank Naumann,
+          <fnaumann@prinz.cs.uni-magdeburg.de>).
+
+1999-03-07 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+        * include/sys/time.h: Changed `__const' to `const'.
+
+        * include/time.h: Declared external variables `extern'
+          instead of `__EXTERN' to avoid problems with the PureC
+          compiler.
+
+        * src/ctime.c, src/gmtime.c, src/localtime.c, src/mktime.c,
+          src/tz.c: Changed various function headers to make
+          PureC happy.
+
+        * src/getrusage.c: Changed prototype from enum to int.
+
+        * src/sysinfo.c: Replaced proprietary __getcookie() by
+          libraries Getcookie().
+
+1999-02-22 Guido Flohr <guido@freemint.de>
+
+        * COPYMINT, include/COPYMINT: New files.
+
+        * include/bsd/tzfile.h: New file in new subdirectory.  Linux
+          keeps it in bsd/ and so it may be handy to have it there.  You
+          will rarely need it.
+
+        * include/cookie.h: Moved to include/sys/cookie.h.
+
+        * include/dnctl.h: Moved to include/mint/dcntl.h.
+
+        * include/dir.h: Removed, include sys/dir.h instead.
+
+        * include/dirent.h: Shortened to an include directive for
+          inlcude/sys/dirent.h.
+
+        * file.h: Removed, include sys/file.h instead.
+
+        * include/mint/dcntl.h, include/mint/ssystem.h: Moved here from
+          parent directory.
+
+        * include/mintbind.h: Adapted to recent kernel versions, added
+          gcc macros for Tsettimeofday, Pgetpriority and Psetpriority.
+          Macros resp. bindings for other compilers are still missing.
+
+        * include/param.h: Removed, include sys/param.h instead.
+
+        * include/regexp.h: Includes sys/types.h instead of types.h.
+
+        * include/resource.h: Shortened to an include directive for
+          sys/resource.h.
+
+        * include/stat.h, include/statfs.h: Removed, include sys/stat
+          resp. sys/statfs.h instead.
+
+        * include/support.h: Moved prototype for gethostname to unistd.h.
+
+        * include/sys/cookie.h: Moved here from parent directory.
+
+        * include/sys/dirent.h: Include sys/types.h instead of types.h.
+
+        * include/sys/errno.h: Shortened to an include directive for errno.h.
+
+        * include/sys/file.h: Changed preprocessor identifier to _SYS_FILE_H.
+
+        * include/sys/ioctl.h: Changed preprocessor identifier to _SYS_IOCTL_H.
+
+        * include/sys/param.h: Changed preprocessor identifier to _SYS_PARAM_H,
+          added macro MAXHOSTNAMELEN.
+
+        * include/restoresys: Removed, don't use it anymore!
+
+        * include/sys/signal.h: Shortened to an include directive for
+          signal.h.
+
+        * include/sys/stat.h: Changed preprocessor identifier to _SYS_STAT_H.
+
+        * include/sys/types.h: Changed preprocessor identifier to _SYS_TYPES_H.
+
+        * include/sys/systeminfo.h: New file.
+
+        * include/sys/termios.h: Shortened to an include directive for
+          termios.h.
+
+        * include/sys/time.h, include/sys/timeb.h, includesys/times.h:
+          Rewritten.
+
+        * includesys/types.h: Changed preprocessor identifier to
+          _SYS_TYPES_H, only partly includes time.h.
+
+        * include/sys/utsname.h: Rewritten, attention: Size of struct
+          utsname has increased a lot!
+
+        * include/sys/vfs.h: Shortened to an include directive for
+          sys/statfs.h.
+
+        * include/sys/wait.h: #include <sys/*.h>, minor changes, new
+          macros WCOREFLAG, WCOREDUMP, W_EXITCODE and W_STOPCODE.
+
+        * include/termio.h: new file for compatibility only, simply includes
+          termios.h.
+
+        * include/time.h: Rewritten.
+
+        * include/timeb.h, include/times.h, include/types.h: Removed, include
+          sys/timeb.h, sys/times.h or sys/types.h instead.
+
+        * include/unistd.h: Added prototypes for gethostname and sethostname,
+          Moved prototype for stime to time.h.
+
+        * utime.h: now only partially includes time.h.
+
+        * utsname.h: Removed, include sys/utsname.h instead.
+
+        * wait.h: Stays here for compatibility with SVR4 ABI, simply includes
+          sys/wait.h
+        * src/access.c, src/alphasor.c, src/buffindf.c, src/cfgetisp.c,
+          src/cfgetosp.c, src/cfsetisp.c, src/cfsetosp.c, src/chmod.c,
+          src/chown.c, src/clock.c, src/closdir.c, do_lock.c, src/enoent.c,
+          src/flock.c, src/ftw.c, src/getcookie.c, src/getegid.c,
+          src/geteuid.c, src/getgid.c, src/getgroup.c, src/getpass.c,
+          src/getpw.c, src/getuid.c, src/inode.c, src/ioctl.c, src/isatty.c,
+          src/isctty.c, src/link.c, src/lstat.c, src/mkdir.c, src/mkfifo.c,
+          src/mknod.c, src/open.c, src/opendir.c, pgrp.c, src/read.c,
+          src/readdir.c, src/regexp.c, src/rename.c rewinddi.c, src/scandir.c,
+          src/seekdir.c, src/select.c, src/setegid.c, src/seteuid.c,
+          src/setgid.c, src/setregid.c, src/setreuid.c, src/setuid.c,
+          src/sgtty.c, src/spawn.c, stat.c, src/statfs.c, src/symlink.c,
+          src/sysvar.c, src/tcattr.c, src/tcbreak.c, tcdrain.c, src/tcflow.c,
+          src/tcflush.c, src/tcpgrp.c, src/telldir.c, src/truncate.c,
+          src/ttyname.c, src/uidgid.c, src/unx2dos.c, src/utime.c,
+          src/write.c: Files now include the right files from the
+          <sys/*.h> instead of <*.h>.
+
+        * src/ctime.c: Added thread-safe versions ctime_r and asctime_r.
+
+        * src/do_stat.c, src/fstat.c: #include <sys/*.h>, _unixtime
+          renamed to __unixtime.
+
+        * src/ftime.c: Moved to separate file, rewritten from the scratch.
+
+        * src/getcooki.c: Renamed to getcookie.c.
+
+        * src/gethostn.c: Now uses MAXHOSTNAMELEN, truncates hostname when
+          taken from environment to MAXHOSTNAMELEN, new (stubs) function
+          sethostname.
+
+        * src/getitimer.c: Rewritten.
+
+        * src/getpriority.c: new file, new function.
+
+        * src/gettimeofday.c: new file, implementation rewritten.
+
+        * src/gmtime.c: new file, implementation revised.
+
+        * src/lib.h: Renamed _unixtime to __unixtime.
+
+        * src/localtime.c: New file, implementation rewritten.  Previous
+          patchlevels simply included the localtime.c from the tz database
+          without any adaption to MiNT. The new implementation is based
+          on the 1998c version of the tz database.  The large file
+          localtime.c has been split up into localtime.c, gmtime.c, mktime.c
+          and tz.c.  This may save space at link time and it's better
+          structured.  As a negative side effect we have some new global
+          symbols (with leading double underscore).
+
+        * src/localtim.c: Renamed to localtime.c
+
+        * src/main.c: #include <sys/*.h>, fixed compiler warning with
+          Getcookie().
+
+        * src/mincl: Reflects new files.
+
+        * src/mktime.c: New file, implementation revised.
+
+        * src/nice.c: Rewritten.  Function should now work as documented,
+          i. e. it returns the right sign.  However it's use is
+          deprecated.  Better write
+
+          int nice (int increment)
+          {
+            int old = getpriority (PRIO_PROCESS, 0);
+            return setpriority (PRIO_PROCESS, 0, old + increment);
+          }
+
+        * src/private.h: Removed (now in src/tzstruct.h and C files).
+
+        * src/setitimer.c: Rewritten
+
+        * src/setpriority.c: New file, new library function setpriority.
+
+        * setrlimi.c: #include <sys/*.h>, changed first argument type
+          to enum __rlimit_resource
+
+        * src/settimeofday.c: New file, implementation rewritten.
+
+        * src/stime.c: Rewritten.
+
+        * src/strerror.c: Added thread-safe version strerror_r.
+
+        * src/strtok.c: Added thread-safe version strtok_r.
+
+        * src/sysinfo.c: New file, new library function sysinfo.  See
+          include/sys/systeminfo.h for details.
+
+          The function sysinfo is now the base for uname.  Compromise for
+          the uname -s discussion: As a non-standard extension the
+          function will read the environment variable $SYSTEMNAME for
+          the system name.  Otherwise "FreeMiNT", "MiNT" or "TOS" get
+          returned.
+
+        * src/system.c: Rewritten.  The function behaves now more or less
+          POSIX-compliant if the user has a more or less POSIX-compliant
+          system (i. e. /bin/sh exists and is executable).  Otherwise $SHELL
+          is tried and as a last resort we fall back into a crude emulation
+          of a shell.
+
+        * src/time.c: Rewritten.
+
+        * src/timeoday.c: Removed, now in gettimeofday.c and
+          settimeofday.c.
+
+        * src/times.c: Rewritten.
+
+        * src/tz.c: New file, contains backends for other time functions,
+          defines daylight, timezone and tznames and tzset.
+
+        * src/tzfile.h: Moved to include/bsd/tzfile.h (that's where Linux
+          has it)-
+
+        * src/tzstruct.h: New file, internal library header for time
+          functions.
+
+        * src/uname.c: Rewritten, now completely based on sysinfo.
+
+        * src/unxitime.c: New file, renamed _unixtime to __unixtime and moved
+          it here.
+
+        * src/utimes.c: New file, implementation rewritten.
+
+        * src/wait.c, wait3.c: Rewritten, now internally call wait4.
+
+        * src/wait.c: Rewritten, bugfix (actually kernel bug): If no more
+          processes and WNOHANG the kernel should actually return 0 but
+          it returns ENOENT.  We fix that here and the next version of make
+          won't show the famous "*** wait: file not found" message anymore.
+
+        * src/waitpid.c: Rewritten, now calls waitpid
+
+1999-01-25 Joerg Westheide <Joerg_Westheide@su.maus.de>
+
+        * src/setjump.cpp: Register a0 is now saved through callout.
+
+1998-11-26 Christian Felsch <Christian_Felsch@hh.maus.de>
+
+        * src/crtinit.c: Parse for quoted arguments (MagXDesk).
+
+        * src/getcooki.c: Correction for return value of Ssystem().
+
+        * src/main.c, src/main.c, src/timeoday.c, src/utime.c: Use
+          cookie.h and Getcookie().
+
+        * src/opendir.c: _NO_CASE only for Dpathconf(6) = 1 or EINVAL.
+
+        * src/statfs.c strings.h and type cast missing, correction
+          on fall back mode.

@@ -1,0 +1,84 @@
+This file is not intended for intelligent people with modern attitudes.
+It asks for your help. ;-)
+
+Enhancing the MiNTLib is a task to big for one single person.  There
+are many ways for you to lend a helping hand though.  Remember that
+enhancements or bug fixes for the MiNTLib will improve the FreeMiNT
+system in general as there are only very few programs that do not
+use the MiNTLib.
+
+Bug reports
+-----------
+
+Bug reports are always welcome.  Don't be afraid to be called pedantic
+if you have only a petitesse to report.  Even reports on typos or
+stylos are appreciated.
+
+Incompatibilities and Missing Features
+--------------------------------------
+
+If you fail to compile a certain software because of missing libc
+functionality report that.  Such functions can usually be imported from
+free sources into the MiNTLib.  If you have written a workaround for
+such a problem it is very likely that this could be already the base
+for a future implementation.
+
+In brief: Share your experiences and your work with others!
+
+[NOTE: Please don't report that fchown(), fchmod() are missing.  They
+cannot be implemented, this is a kernel caveat.]
+
+Contributions
+-------------
+
+If you have too much time and no current programming project, have a
+look into the file TODO.  It lists some things that are still missing
+in the MiNTLib.
+
+Binary Distribution
+-------------------
+
+I usually do the development on the MiNTLib on a Linux box which is
+much faster than my TT.  Unfortunately, the cross compiler on the
+Linux box cannot produce code with a sharable text segment (-mbaserel).
+This makes it very hard for me to build binary distributions.
+
+If you want to volunteer for this task, please get into contact
+with me.  Binary distributions are currently build in two forms.
+First a conventional tarball.  All you have to do for this is
+type "make && make bin-dist" and wait a few minutes (uhm, probably
+hours).  The resulting tarball "mintlib-<VERSION>.bin.tar.gz" is
+then ready for upload.
+
+The other form is a binary rpm (rpm is the Redhat Package Manager
+and also a common name for the files produced by it).  You don't
+need any special knowledge about building rpm files, I can provide
+you a suitable spec file.  All that is left to do is to type
+"cd /usr/src/redhat/SPECS && rpm -ba mintlib.spec" and upload
+"mintlib-<VERSION>-<RELEASE>.m68kmint.rpm" (and the corresponding
+source rpm if you care).
+
+Note: You currently need about 20-30 MB of free harddisk space and
+6000 free inodes to create a full-blown binary MiNTLib distribution.
+You should also have a current gcc (>= 2.7.2) and recent binutils
+(>= 2.9.1).
+
+Other specific tasks
+--------------------
+
+The MiNTLib extensively steals from some other sources, notably the
+GNU libc and the timezone database (tzcode and tzdata).  If you hear
+of bugs, or bug fixes in these sources, please report that.  The timezone
+database is entirely integrated into the MiNTLib (although the sources
+have been heavily rehacked).  With the GNU libc things are somewhat
+different.  It consists of thousands of files and only few of them
+are also part of the MiNTLib (those that are marked as being under
+the GNU Lesser General Public License - formerly known as the GNU
+Library General Public License).  If somebody would systematically
+scan the GNU libc ChangeLog files for relevant changes, this would
+really be appreciated very much.
+
+Never ask what MiNT can do for you.  Ask what you can do for
+MiNT.
+
+Thank you!

@@ -1,0 +1,203 @@
+Please examine this file (and maybe TODO) before you send in bug reports.
+Please examine this file (and TODO) if you want to send in bug fixes.
+
+When mailing bug reports please make sure that the problem you encountered
+is somehow reproducable for the receiver.  The best thing is to send a
+short self-containing code example that reproduces the bug.  If you can't
+isolate the problem try first to describe it as best as you can before
+sending large tarballs of source code.  If you have problems with
+the compilation of freely available code rather mail a reference to
+the site that offers the code than sending it to the maintainers.  If
+you are sure that the bug is in some particular function you should
+also have a glimpse into the library source file; use "nm libc.a" to
+find out in which module the function in question is defined. They are
+usually marked with "T" (maybe "W") in the output of nm.
+
+Please always include the following information:
+
+	- compiler switches you used (optimization, -mshort, -m68020-60, ...)
+	- other libraries that you linked with
+	- your operating system (and version)
+	- your hardware platform (with processor type)
+	- your e-mail address (and your full name for ChangeLog/AUTHORS)
+
+The following bugs and shortcomings are known and don't need to be
+reported (fixes are welcome):
+
+everywhere:
+  The MiNTLib is designed for FreeMiNT resp. MiNT.  It tries its best
+  to emulate MiNT features for operating systems where they are not
+  available but you cannot expect to make things like pipe() or
+  fork() or even signal() work with plain TOS or other OSes/emulators that
+  share TOS' shortcomings.
+
+dcntl.h, mint/dcntl.h: Guido
+  The files are not the same, one should be removed.  Which one?
+  
+alarm.c: ++entropy
+  alarm() will silently "round down" any requested time greater than
+  LONG_MAX / 1000 (approximately 2 million seconds).  Most UNIXes allow much
+  larger maximum values (usually LONG_MAX).  MiNT needs this extremely small
+  maximum value because wakeup scheduling is calculated in milliseconds by
+  the kernel.  This cannot be fixed without changing MiNT.  alarm() does not
+  work at all under TOS.
+
+clock.c: ++boender, ++entropy
+  clock() is currently implemented as an alias for _clock(), which makes it
+  hopelessly different from the UNIX version, since it returns time elapsed
+  since the program started, and not the CPU time used by the process and
+  its children that have terminated so far.
+  
+crtinit.c: ++nox
+  Some programs like uuxqt (taylors at least) understand exit code
+  EX_TEMPFAIL (75) to mean retry the command (uux job) later.  Now when
+  _crtinit can't initialize it does Pterm(-1) and uuxqt thinks the job can't
+  be retried, although it probably can...  so would it make sense to use
+  Pterm(EX_TEMPFAIL) instead?  Or maybe make this exit code compile-time
+  configurable like __default_mode__...
+
+ioctl.c: ++nox
+  TIOCSETP is #defined to be == TIOCSETN, but they are not really...
+  also still looks like it disables RTSCTS every time, unless i
+  specifically set that bit (0x2000), and thats not #defined in ioctl.h.
+  (and more things like TIOCFLUSH... but Eric knows them already. :-)
+
+kill.c: ++boender, ++entropy 
+  On UNIX (SysV), system processes (PID 0 and 1) are treated specially.
+  This is somewhat different under MiNT, where init(1), if run at all, need
+  not have PID 1.  PID 0 is already treated in the correct manner by
+  Pkill().  PID 1 really deserves special treatment under MiNT in any case,
+  because shooting signals at MiNT's child process (be it init(1), or some
+  shell, or whatever) isn't likely to have the expected results.  I'm not
+  sure if this can reasonably be resolved in the library alone.
+
+  Ultrix defines a system process as any process with a parent PID of 0.
+  This definition may be helpful for implementing kill() correctly in the
+  library.
+
+  The man page for the MiNT call Pkill() forgets to mention that
+  either the effective user ID of the caller must be zero (super-user) or
+  else the real user IDs must match.  Note that, on UNIX, the caller must
+  be super-user or else the real or effective user IDs of both processes
+  must match.  This might be a bug in MiNT or the MiNT documentation.
+  Ask Eric?
+
+limits.h: ++Uwe_Ohse@pb2.maus.de
+  CLK_TCK should be defined here and not just in time.h, since SVR4 does.
+  [I disagree, limits.h should be strictly ANSI and is already polluted
+  as it is -entropy]
+
+link.c: ++nox
+  link() returns the same error code for different things i.e. EACCESS when
+  it really means EEXIST.
+
+exit.c: ++boender
+  In exit(), stdout and stderr are flushed, all other file
+  descriptors are closed. I don't know what POSIX says, but System V
+  wants stdin, stdout and stderr to be closed too.
+
+mkfifo.c: ++entropy
+  The mkfifo() function is fake.  It always returns failure.
+
+mknod.c: ++entropy
+  The current "emulation" of mknod() is really silly, it does nothing at
+  all and indicates that an error occurred.  We could at least try to
+  emulate properly for the kinds of files we know how to make (directories,
+  regular files, etc).
+
+open.c: ++nox
+  Should open() do a TIOCSPGRP too when it Fforces the control tty?
+  I think, but i'm not 100% sure...
+  [The kernel does this for us automagically. -entropy]
+
+pgrp.c: ++entropy
+  The setsid() function never really disassociates the controlling tty from
+  the current process, since MiNT doesn't seem to have any such concept.  It
+  gets around this with a bunch of kludges in setsid(), ioctl(), and open().
+
+popen.c: ++boender
+  This function reads the environment variable SHELL to find your shell,
+  and takes /bin/sh as an alternative. I think the opposite should be
+  done: only take SHELL of /bin/sh does not exist.
+  [See my comments on system.c -entropy]
+
+read.c, write.c: ++entropy
+  When a backgrounded process is reading from or writing to its controlling 
+  tty, and its process group has no controlling tty, it should get a return
+  value of -1 from the read() or write() with errno set to EIO.  I'm
+  not really sure what the controlling tty of a process _group_ is, so
+  I'm clueless as to how to try to implement this.
+
+sleep.c: ++boender, ++entropy
+  sleep() will never sleep for more than LONG_MAX / 1000 (approximately 2
+  million) seconds because Talarm() is used in its implementation (see
+  alarm.c).  usleep() is of type void.  This may not be correct:  it is of
+  type unsigned on UN*X, and should be of type unsigned long in the mintlibs.
+
+stat.c: +nox
+  In lstat(), maybe make filenames with trailing slash follow symlinks?
+  sometimes it would be nice if i could do `ls -l /usr/' and get whats 
+  in there, not just the link...
+  [This sounds like a bad idea to me.  GNU ls takes a flag -L that does
+   this without any kludgery. -entropy]
+
+statfs.c: ++entropy
+  Hildo's kludge for /PROC, /PIPE, /SHM will have really unexpected results
+  for any signal handler that deals with the current directory, if it is
+  called in the small period of time while the current directory is
+  changed.  Shouldn't cause major problems.
+
+unlink.c: ++nox@jelal.north.de
+  When a file is still open on a GEMDOS filesystem MiNT already sets some
+  flag and unlinks after the close, but until then open() still finds the
+  file!  (which can be annoying on things like lock files...)
+  [I don't think this can be fixed in the library.  MiNT acts this
+  way on purpose.  -entropy]
+
+utime.c: ++entropy
+  The utime() contains a kludge to make it look like the call succeds on a
+  directory, even though it really doesn't change the timestamp.
+
+write.c: ++nox
+  On GEMDOS filesystems, don't try to write to a file when some other
+  process might have it open, you'll lose data.  And O_APPEND doesn't help.
+  Also writes don't update timestamps on GEMDOS filesystems.
+
+various math files: Guido
+  If the preprocessor symbol _M68881 is defined some object files 
+  (e. g. _addsubd.o) will be empty.  Unfortunately current ranlib
+  resp. ar versions cannot handle this.  I don't know yet whether
+  this has to be fixed here or in the ranlib sources.
+
+stdio.h, nlist.c, ...: Guido
+  At least gcc 2.8.2c produces warnings like 
+  
+  	foobar.c: 8: warning: type defaults to `int' in declaration of _ta
+  
+  for macros using gcc's feature to name an expressions's type.  You
+  can safely ignore these warnings.  The compiler's behavior has somehow
+  changed in an undocumented way, maybe it's a gcc bug, maybe these 
+  macros should be reformulated, not yet decided.
+
+compiler.h, sys/cdefs.h: Guido
+  Currently gcc -traditional will barf out. :-(
+
+src/tcattr.c: Helmut Karlowski
+  The ISIG doesn't work as it is supposed to work.  Don't use it for
+  now and send a patch to fix it!
+
+stdlib/strtold.c: Guido
+  If a long double is 8 bytes big (which is currently the default)
+  strtold() and printf/scanf and friends (when using things like "%Lg")
+  will all produce bullshit.  If you are concerned about this you should
+  add "-D__NO_LONG_DOUBLE_MATH" to CDEFS in configvars.  Currently this
+  is not necessarily done to give the gcc porters a chance to implement
+  96-Bit long doubles.
+
+stdio/vfscanf.c: Guido
+  There is a loser case in the scanf family:  If the format string ends
+  with "%i" and the byte sequence "0x" or "0X" is read the streams position
+  will be behind instead of in front of the `x' (resp. `X').  If the stream
+  is seekable it will be fseek'd in front of the x, if it isn't we
+  lose.
+

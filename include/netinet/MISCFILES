@@ -1,0 +1,5 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go both into binary and source distributions.
+
+MISCFILES = MISCFILES if_ether.h in.h in_systm.h ip.h ip_icmp.h ip_var.h \
+tcp.h tcpip.h udp.h udp_var.h 

@@ -1,0 +1,138 @@
+How to update the MiNTLib source tree from a patch file
+=======================================================
+
+Normally, whenever a new source tree of the MiNTLib is released you
+can either download the entire archive or a patch file that only modifies
+those files that have been changed since the last version.  In some
+pathological cases a patch would be larger or almost as large as
+the old version and there is no patch available.
+
+IMPORTANT: As an experienced user you will not read the rest of this
+file.  No problem but please make ABSOLUTELY sure that you always
+patch the MiNTLib with the option "-E".  See below, "Step #3" for
+details.
+
+Assume that you have currently installed the MiNTLib version 0.54.8
+and want to update to version 0.54.9.  Furthermore assume that you have
+installed your source tree in /usr/local/src, thus there should be a
+directory named /usr/local/src/mintlib-0.54.8 containing the old 
+version of the sources.
+
+Step #1
+-------
+
+Rename your old source tree:
+
+	$ cd /usr/local/src
+	$ mv mintlib-0.54.8 mintlib-0.54.9
+	
+Step #2
+-------
+
+Download the patch from a server of your choice:
+
+	$ cd /usr/local/src/mintlib-0.54.9
+	$ wget ftp://path.to.server/pub/whatever/mintlib-0.54.8-0.54.9.patch.gz
+
+The name of the patch file is always 
+
+	"mintlib-<old_version>-<new_version>.patch.gz"
+
+And I assume that you have copied/downloaded that patch file into the
+top-level directory of the source tree.
+
+Step #3
+-------
+
+Patch the sources:
+
+	$ cd /usr/local/src/mintlb-0.54.9
+	$ zcat mintlib-0.54.8-0.54.9.patch.gz | patch -p1 -E
+
+This will produce a lot of messages on stdout like "patching file `foobar.c'".
+There shouldn't be any errors.
+
+Both options to patch are absolutely mandatory.  The option "-p1" tells
+patch to ignore one (1) directory component from all path names.  The
+next option is even more important.  The "-E" tells patch to remove 
+files that are empty after patching.  This can happen if a file has been
+renamed.  In that case the patch will leave an empty file with the
+original name.  This is harmless if the file has been really renamed
+but dangerous if the file has actualy been moved from one directory
+to another.  Dangerous because the MiNTLib Makefiles search for 
+source files in all directories that contain sources.  Whichever
+file has been found first will get compiled.  If the file "dir1/foobar.c"
+has been moved to "dir2/foobar.c" and the Makefile happens to find
+"dir1/foobar.c" (which is empty after patching) first, you will compile
+an empty source file.  This will not lead to any compiler options or
+warnings.  You will only eventually notice the error when the linker
+complains about missing symbols and then you will still have a hard
+job finding the reason for that.
+
+Therefore: Make sure that there are no empty files around and make
+sure that in the entire MiNTLib there are never 2 source files of
+the same name.
+
+Step #4
+-------
+
+Check for errors that occured while patching.  Either you have seen
+the message from patch or you should search for rejected patches:
+
+	$ find ./ -name '*.rej'
+
+Whenever patch failed to apply a patch completely it will save the
+rejected hunks in "<file>.rej".  Your original version will be
+saved as "<file>.orig".
+
+Refer to the next section (Troubleshooting) for how to solve these
+problems.  After you have fixed everything you should remove the
+unnecessary .orig and .rej files, so that you are sure that all
+such files are new when you apply another patch.
+
+Troubleshooting
+===============
+
+If patch failed to apply a patch completely it will save the rejected
+hunks in a file called "<file>.rej" where "<file>" denotes the filename
+that couldn't be patched.  The most likely reason for that is that
+you have modified "<file>" in a way that conflicts with the changes
+made between the different releases.
+
+However, not everything is lost now.  You can inspect "<file>.rej" and
+try to apply the patch manually. The .rej files are regular patches
+and look like this (MiNTLib patches are always in unified format):
+
+	#######################	
+	### FROMLINE,TOLINE ### 
+
+	 context line
+	 context line
+	- line to remove
+	- another line to remove
+	 context line
+	 context line
+	- line to remove
+	+ line to add
+	 context line
+	 context line
+	 ...
+ 
+[The hash signs `###' are really asterisks `***' but I cannot write
+this here.  Otherwise patch gets confused.]
+ 
+Every hunk is preceded by line number information.  This line number 
+information gives patch a basic idea on where to look for the lines
+to change.  Around the lines in questions you always have some (usually
+2) lines of context and then lines beginning with '-' that should
+be removed and lines beginning with '+' that should be added.
+
+Normally you can guess from the .rej file what should be done.
+
+Saarbruecken/Germany, March 18, 2000
+
+Guido Flohr <guido@freemint.de>
+
+If this file is a patch file, the actual patch is following now.
+Everything above is what patch calls "leading garbage".
+

@@ -1,0 +1,204 @@
+# This file is a generated secondary file. Do not edit.
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+CRYPTCFILES = crypt-entry.c crypt.c crypt_util.c des_impl.c md5-crypt.c md5.c 
+
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+GMPCFILES = dbl2mpn.c ldbl2mpn.c mp_clz_tab.c mpn-add_n.c \
+mpn-addmul_1.c mpn-cmp.c mpn-divmod_1.c mpn-divrem.c mpn-inlines.c \
+mpn-lshift.c mpn-mod_1.c mpn-mul.c mpn-mul_1.c mpn-mul_n.c mpn-rshift.c \
+mpn-sub_n.c mpn-submul_1.c mpn2dbl.c mpn2flt.c mpn2ldbl.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+LOGINCFILES = getutent.c getutent_r.c getutid.c getutid_r.c getutline.c \
+getutline_r.c login.c login_tty.c logout.c logwtmp.c oldutmp.c oldwtmp.c \
+pty.c updwtmp.c utmp_file.c utmpname.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+#
+# The support subdirectories (crlf, lattice, purec and sozobon) are
+# handled in the Makefile.
+
+MINTLIBCFILES = _infinitydf.S _mon.S _normdf.S abort.c alglobal.c \
+alphasor.c assert-perr.c assert.c buffindf.c calloc.c console.c crtinit.c \
+ctermid.c ctype.c cuserid.c \
+div.c do_lock.c do_stat.c dostime.c enoent.c frexp.S ftime.c ftw.c \
+getcookie.c getcwd.c getenv.c getloadavg.c getlogin.c getopt_old.c \
+getumask.c getwd.c globals.c gmon.c heapbase.c ident.c iflink.c ig.c \
+inistack.c inode.c isatty.c isctty.c labs.c ldexp.S libc_exit.S \
+libc_fatal.c linea.c llabs.c lldiv.c lockf.c ltoa.c main.c malloc.c modf.S \
+osbind.S pselect.c \
+putenv.c quickstat.c raise.c realloc.c regexp.c regsup.c rewinddi.c rtent.c \
+s_isinf.c s_isinff.c s_isinfl.c s_isnan.c s_isnanf.c s_isnanl.c scandir.c \
+seekdir.c setenv.c setjmp.S setlocale.c setstack.S spawn.c spawnve.c \
+spawnvp.c stksiz.c syscall.c sysconf.c sysvar.c tell.c telldir.c \
+thread.c toxxx.c ttyname.c ttyname_r.c uidgid.c unixtime.c unx2dos.c \
+wcmb.c wcscat.c wcscmp.c wcscpy.c wcslen.c wnull.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+MISCCFILES = daemon.c diraccess.c dirname.c err.c error.c getpass.c \
+getusershell.c hsearch.c hsearch_r.c insremque.c lsearch.c mkstemp.c \
+mktemp.c obstack.c syslog.c tsearch.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+POSIXCFILES = bsd_getpgrp.c bsd_setpgrp.c execl.c execle.c execlp.c execv.c \
+execvp.c fnmatch.c getopt.c getopt1.c getopt_init.c glob.c regex.c remove.c \
+sleep.c system.c wordexp.c
+
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+PWDGRPCFILES = fgetpwent.c fgetpwent_r.c getpw.c getpwent.c getpwent_r.c \
+getpwnam.c getpwnam_r.c getpwuid.c getpwuid_r.c grp.c initgroups.c putpwent.c
+
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SHADOWCFILES = fgetspent.c fgetspent_r.c getspent.c getspent_r.c getspnam.c \
+getspnam_r.c lckpwdf.c putspent.c sgetspent.c sgetspent_r.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SIGNALCFILES = initsig.c sigaddset.c sigandset.c sigdelset.c sigemptyset.c \
+sigfillset.c siggetmask.c sighold.c sigignore.c sigisempty.c sigismember.c \
+siglist.c signames.c sigorset.c sigrelse.c sigset.c sigwait.c sysv_signal.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SOCKETCFILES = accept.c bind.c connect.c gethostnamadr.c getnetbyaddr.c \
+getnetbyname.c getnetent.c getpeername.c getproto.c getprotoent.c \
+getprotoname.c getservbyname.c getservbyport.c getservent.c getsockname.c \
+getsockopt.c herror.c hton.c ident_sock.c inet_addr.c inet_lnaof.c \
+inet_makeaddr.c inet_netof.c inet_network.c inet_ntoa.c listen.c \
+rcmd.c recv.c recvfrom.c recvmsg.c readv.c res_comp.c res_debug.c res_init.c \
+res_mkquery.c res_query.c res_send.c send.c sendmsg.c sendto.c sethostent.c \
+setsockopt.c shutdown.c sncpy.c socket.c socketpair.c writev.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+STDIIOCFILES = ivfprintf.c ivfscanf.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+STDIOCFILES = _itoa.c asprintf.c binmode.c clearerr.c defmode.c doprnt.c \
+dprintf.c fclose.c fcloseall.c fdopen.c feof.c ferror.c fflush.c fgetc.c \
+fgetpos.c fgets.c fileno.c fmemopen.c fopen.c fopncook.c fprintf.c fputc.c \
+fputs.c fread.c freopen.c fscanf.c fseek.c fsetpos.c ftell.c fungetc.c \
+fwrite.c getc.c getchar.c getdelim.c getline.c gets.c getw.c glue.c \
+internals.c itoa-digits.c linewrap.c lockfile.c memstream.c newstream.c \
+obstream.c perror.c popen.c putc.c putchar.c puts.c printf-prs.c printf.c \
+printf_fp.c printf_fphex.c printf_size.c psignal.c putw.c reg-printf.c \
+rewind.c setbuf.c setbuffer.c setlinebuf.c setvbuf.c scanf.c snprintf.c \
+sprintf.c sscanf.c stdio_init.c sysd-stdio.c tempnam.c tmpfile.c tmpnam.c \
+tmpnam_r.c ungetc.c vasprintf.c vdprintf.c vfprintf.c vfscanf.c vprintf.c \
+vscanf.c vsnprintf.c vsprintf.c vsscanf.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+STDLIBCFILES = a64l.c abs.c alloca.S atexit.c atof.c atoi.c atol.c atoll.c \
+bsearch.c canonicalize.c drand48-iter.c drand48.c drand48_r.c erand48.c \
+erand48_r.c exit.c fpioconst.c jrand48.c jrand48_r.c l64a.c lcong48.c \
+lcong48_r.c lrand48.c lrand48_r.c mrand48.c mrand48_r.c msort.c nrand48.c \
+nrand48_r.c qsort.c rand.c random.c secure-getenv.c seed48.c seed48_r.c \
+srand48.c srand48_r.c strtod.c strtof.c strtol.c strtold.c strtoll.c \
+strtoul.c strtoull.c xpg_basename.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+STRINGCFILES = argz-addsep.c argz-append.c argz-count.c argz-create.c \
+argz-ctsep.c argz-delete.c argz-extract.c argz-insert.c argz-next.c \
+argz-replace.c argz-stringify.c basename.c bcmp.c bcopy.S bzero.S ffsl.c \
+ffsll.c ffss.c memccpy.c \
+memchr.c memcmp.c memfrob.c mempcpy.c memset.S rawmemchr.c stpcpy.c \
+stpncpy.c strcasecmp.c strcasestr.c strcat.c strchr.c strcmp.c strcoll.c \
+strcpy.c strcspn.c strdup.c strerror.c strerror_r.c strfry.c strlen.c \
+strlwr.c strncasecmp.c strncat.c strncmp.c strncpy.c strndup.c strnlen.c \
+strpbrk.c strrchr.c strrev.c strsep.c strsignal.c strspn.c strstr.c \
+strtoimax.c strtoumax.c strtok.c strtok_r.c strupr.c strverscmp.c strxfrm.c
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+TERMIOSCFILES = cfgetisp.c cfgetosp.c cfsetisp.c cfsetosp.c cfsetspeed.c tcattr.c \
+tcbreak.c tcdrain.c tcflow.c tcflush.c tcpgrp.c
+
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+TIMECFILES = clock.c ctime.c difftime.c gmtime.c localtime.c mktime.c \
+strftime.c tz.c 
+
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+UNIXCFILES = access.c alarm.c chdir.c chmod.c chown.c chroot.c close.c \
+closedir.c creat.c dup.c dup2.c execve.c fchmod.c fchown.c fcntl.c flock.c \
+fork.c fstat.c fsync.c ftruncate.c getdomainname.c getdtabl.c getegid.c \
+geteuid.c getgid.c getgroups.c gethostid.c gethostname.c getitimer.c \
+getpagesize.c getpgrp.c getpid.c getppid.c getpriority.c getrlimit.c \
+getrusage.c gettimeofday.c getuid.c gtty.c ioctl.c kill.c killpg.c \
+link.c lseek.c lstat.c mkdir.c mkfifo.c mknod.c nice.c open.c opendir.c \
+pause.c pipe.c poll.c read.c readdir.c readlink.c reboot.c rename.c rmdir.c \
+sbrk.c select.c setegid.c seteuid.c setgid.c setgroups.c setitimer.c \
+setpgid.c setpgrp.c setpriority.c setregid.c setreuid.c setrlimit.c setsid.c \
+settimeofday.c setuid.c sigaction.c sigblock.c signal.c \
+sigpause.c sigpending.c sigprocmask.c sigreturn.c sigsetmask.c sigsuspend.c \
+sigvec.c stat.c statfs.c stime.c stty.c symlink.c sync.c sysinfo.c time.c \
+times.c truncate.c umask.c uname.c unlink.c utime.c utimes.c vfork.S wait.c \
+wait3.c wait4.c waitpid.c write.c

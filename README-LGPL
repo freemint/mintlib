@@ -1,0 +1,166 @@
+If you are in doubt what the terms of the GNU Lesser General Public License
+(also known as the GNU Library General Public License) mean, the following
+two mails may help you:
+
+From gufl0000@stud.uni-sb.de Sun May 30 10:50:13 1999
+Return-Path: <gufl0000@stud.uni-sb.de>
+Delivered-To: guido@zowee.localnet
+Received: (qmail 807 invoked by alias); 30 May 1999 10:50:12 -0000
+Delivered-To: alias-isp-gufl0000@stud.uni-sb.de
+Received: (qmail 801 invoked by uid 500); 30 May 1999 10:50:10 -0000
+From: "Guido Flohr" <gufl0000@stud.uni-sb.de>
+Date: Sun, 30 May 1999 12:50:10 +0200
+To: "Richard Stallman" <rms@gnu.ai.mit.edu>
+Subject: GPL without shared libs
+Message-ID: <19990530125010.A588@zowee.rz.uni-sb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 0.95.3i
+X-Hello-To-Secret-Service: Bombs Terror Ghaddafi PGP Marx Engels Lenin Che Guevara Fidel Castro Anarchy Porno Punk Saddam Password Mafia Peter Graf
+Content-Length: 2948
+Lines: 60
+
+Hi,
+
+I am the current maintainer of the MiNTLib, the standard libc for MiNT.
+MiNT is an alternative and free operating system for Atari computers
+mostly compatible to *ix operating systems or clones like Linux.  One of
+the major features still missing are shared libraries and this lack is
+responsible for an immense confusion regarding GPLed software in the MiNT
+resp. Atari community.
+
+If I understand the GPL correctly (sorry if I don't, English is not my
+native language) it is alright to distribute software in binary form that
+has unresolved references that get resolved by the dynamic linker into
+libraries that are partly or entirely available under the terms of the
+GPL (like the GNU libc).  Under MiNT - in the absence of shared libraries
+or dynamic linking features - linking against GPLed libraries always ends
+up in files that physically contain GPLed code in binary, assembled form.
+
+Now there is a wide range of opinions about how to follow the GPL in that
+case.  The extreme positions are 
+
+- If you want to write commercial (non open-source) software with GPLed
+libraries you have to include the library sources plus your compiled
+object files and leave it to the end user to link the program.
+
+- The GPL only says that you may not modify GPLed code without publishing
+your sources.  But it is legal to link against GPLed libraries and sell
+the resulting programs because the source of the library is still freely
+available (the MiNTLib sources are free).
+
+As a result of this uncertainty it has been common practice to strictly
+avoid GPLed code in the MiNTLib with some exceptions, for example the
+obstack code - which can be easily isolated and avoided by not using it -
+is the original GNU obstack code.  Additionally the documentation that
+comes with the MiNTLib explicitely states that the obstacks are provided
+under the terms of the GPL.
+
+I have introduced other GPLed code, like regular expressions, globbing and
+pattern matching and these functions have also been marked as GPLed.
+
+The next block of functionality I want to add are i18n and l10n features
+and now I am really in a dilemma.  The underlying functions for these
+features are really central routines, so taking this code from the GNU
+libc would result in a library that you cannot link against without
+dragging GPLed code into the link.  However, I actually don't want to
+waste my time for a probably imperfect implementation re-written by
+myself, if the GNU libc already contains all the code I need in a
+platform-independent manner.  So I decided to waste your time instead by
+first asking you what to do. ;-)
+
+Any help or clarification is appreciated very much.  And would you mind if
+I include your answer in the documentation of the MiNTLib so that the
+users can be sure of what they are allowed to do and what they are not
+allowed to do with the GPLed code?
+
+Thank you in advance
+
+Guido
+-- 
+http://stud.uni-sb.de/~gufl0000
+mailto:gufl0000@stud.uni-sb.de
+
+From guido Wed Jun  2 22:17:36 1999
+Return-Path: <rms@gnu.org>
+Received: from pele.santafe.edu (pele.santafe.edu [192.12.12.119])
+	by sbustd.stud.uni-sb.de (8.9.3/8.9.3) with ESMTP id VAA11226
+	for <gufl0000@stud.uni-sb.de>; Tue, 1 Jun 1999 21:06:02 +0200 (CST)
+Received: from wijiji.santafe.edu (wijiji [192.12.12.5])
+	by pele.santafe.edu (8.9.1/8.9.1) with ESMTP id NAA19729
+	for <gufl0000@stud.uni-sb.de>; Tue, 1 Jun 1999 13:03:21 -0600 (MDT)
+Received: (from rms@localhost)
+	by wijiji.santafe.edu (8.9.1b+Sun/8.9.1) id NAA19217;
+	Tue, 1 Jun 1999 13:03:21 -0600 (MDT)
+Date: Tue, 1 Jun 1999 13:03:21 -0600 (MDT)
+Message-Id: <199906011903.NAA19217@wijiji.santafe.edu>
+X-Authentication-Warning: wijiji.santafe.edu: rms set sender to rms@gnu.org using -f
+From: Richard Stallman <rms@gnu.org>
+To: gufl0000@stud.uni-sb.de
+In-reply-to: <19990530125010.A588@zowee.rz.uni-sb.de>
+	(gufl0000@stud.uni-sb.de)
+Subject: Re: GPL without shared libs
+Reply-to: rms@gnu.org
+References:  <19990530125010.A588@zowee.rz.uni-sb.de>
+X-UIDL: 86de15860b9d2bb2a5c539c1163103ee
+Status: RO
+X-Status: A
+Content-Length: 2357
+Lines: 52
+
+    If I understand the GPL correctly (sorry if I don't, English is not my
+    native language) it is alright to distribute software in binary form that
+    has unresolved references that get resolved by the dynamic linker into
+    libraries that are partly or entirely available under the terms of the
+    GPL 
+
+No, that is not allowed.  Any program that depends on linking in a
+GPL-covered module must *as a whole* be covered by the GPL.  Thus, the
+program must be free.  It makes no difference whether the linking is
+static or dynamic, and no difference whether the module is stored in
+the form of a library or a plain .o file.
+
+	(like the GNU libc).
+
+GNU libc is covered by the LGPL, NOT the GPL.
+So what I wrote above does not apply to GNU libc.
+
+The LGPL permits linking GNU libc with non-free programs;
+once again, both static and dynamic linking are permitted.
+
+    - If you want to write commercial (non open-source) software with GPLed
+    libraries
+
+You can use GPL-covered libraries in a commercial program if the
+commercial program satisfies the terms of the GPL--the same criterion
+as in noncommercial software.  Our licenses do not discriminate
+between commercial software, academic software, and software written
+as an avocation.  That isn't a relevant consideration.
+
+Perhaps when you wrote "commercial" you really meant "non-free".
+In that case, the answer to your question is that a GPL-covered
+library cannot be used in a non-free program.  See above.
+
+Please don't identify "commercial" with "non-free".  It is important
+for people to know that commercial free software is possible, and that
+some already exists.  See
+http://www.gnu.org/philosophy/categories.html for definitions.
+
+(I cannot comment about "open source" because I am not involved with
+the open source movement.  What I do is free software--see
+http://www.gnu.org/philosophy/free-software-for-freedom.html.)
+
+    I have introduced other GPLed code, like regular expressions, globbing and
+    pattern matching and these functions have also been marked as GPLed.
+
+If these functions are covered by the GPL, you should inform users
+that only GPL-compatible programs can use these functions.
+
+However, if these functions are found in GNU libc, they are available
+also under the LGPL.  You might want to get the copies that are
+released under the LGPL and use those instead.
+
+=============================================================================
+Note: The above mentioned functions are now taken in their LGPL's version
+for the MiNTLib.
+

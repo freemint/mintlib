@@ -1,0 +1,13 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = a64l.c abs.c alloca.S atexit.c atof.c atoi.c atol.c atoll.c \
+bsearch.c canonicalize.c drand48-iter.c drand48.c drand48_r.c erand48.c \
+erand48_r.c exit.c fpioconst.c jrand48.c jrand48_r.c l64a.c lcong48.c \
+lcong48_r.c lrand48.c lrand48_r.c mrand48.c mrand48_r.c msort.c nrand48.c \
+nrand48_r.c qsort.c rand.c random.c secure-getenv.c seed48.c seed48_r.c \
+srand48.c srand48_r.c strtod.c strtof.c strtol.c strtold.c strtoll.c \
+strtoul.c strtoull.c xpg_basename.c
