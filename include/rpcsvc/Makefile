@@ -30,6 +30,7 @@ dont_install_libs = yes
 include $(top_srcdir)/rules
 
 includefiles = $(filter %.h, $(MISCFILES))
+includefiles += $(filter %.x, $(MISCFILES))
 
 install-include: 
 	$(mkinstalldirs) $(includedir)/$(subdir)
