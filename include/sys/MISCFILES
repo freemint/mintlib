@@ -3,7 +3,6 @@
 
 MISCFILES = MISCFILES \
 	cdefs.h \
-	cookie.h \
 	dir.h \
 	dirent.h \
 	errno.h \

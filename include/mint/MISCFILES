@@ -5,6 +5,7 @@
 MISCFILES = MISCFILES \
 	\
 	basepage.h \
+	cookie.h \
 	dcntl.h \
 	errno.h \
 	falcon.h \
@@ -22,5 +23,6 @@ MISCFILES = MISCFILES \
 	ssystem.h \
 	sysbind.h \
 	sysctl.h \
+	sysvars.h \
 	trap.h \
 	xbra.h

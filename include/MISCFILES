@@ -33,7 +33,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	ieee754.h \
 	inttypes.h \
 	iovec.h \
-	keycodes.h \
 	lastlog.h \
 	libgen.h \
 	limits.h \
@@ -78,7 +77,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	syscall.h \
 	sysexits.h \
 	syslog.h \
-	sysvars.h \
 	tar.h \
 	tcfloat.h \
 	tchars.h \
@@ -94,5 +92,4 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	values.h \
 	vt52.h \
 	wait.h \
-	widget.h \
 	wordexp.h

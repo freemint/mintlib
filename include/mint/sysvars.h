@@ -6,15 +6,13 @@
  * 	the address for each variable is defined.
  */
 #ifndef _SYSVARS_H
-#define _SYSVARS_H
+# define _SYSVARS_H 1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 
 /* Processor state and post mortem dump area */
@@ -120,12 +118,10 @@ typedef struct _osheader
     
 /* zzzz to-do more */
 
-__EXTERN long	get_sysvar		__PROTO((void *var));
-__EXTERN void	set_sysvar_to_long	__PROTO((void *var, long val));
+extern long get_sysvar (void *var) __THROW;
+extern void set_sysvar_to_long (void *var, long val) __THROW;
 
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _SYSVARS_H */

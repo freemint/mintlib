@@ -16,9 +16,9 @@
  */
 
 #include <errno.h> 
-#include <sysvars.h>
 #include <mint/mintbind.h>
 #include <mint/ssystem.h>
+#include <mint/sysvars.h>
 
 #include "lib.h"
 

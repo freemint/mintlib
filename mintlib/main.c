@@ -10,14 +10,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <ctype.h>
-#include <sysvars.h>
 #include <limits.h>
 #include <alloca.h>
 #include <errno.h>
 
+#include <mint/cookie.h>
 #include <mint/mintbind.h>
 #include <mint/ssystem.h>
-#include <sys/cookie.h>
+#include <mint/sysvars.h>
 #include <sys/param.h>
 
 #include "lib.h"
@@ -32,25 +32,17 @@ extern clock_t _starttime;	/* 200 HZ tick when we started the program.  */
 extern clock_t _childtime;	/* Time consumed so far by our children.  */
 
 /* Functions registered by user for calling at exit.  */
-typedef void (*ExitFn) __PROTO ((void));
-__EXTERN ExitFn *_at_exit;
+typedef void (*ExitFn) (void);
+extern ExitFn *_at_exit;
 extern int _num_at_exit;	/* Number of functions registered - 1.  */
 
 /* Supplied by the user */
-__EXTERN int main __PROTO((int, char **, char **));
-
-#if defined(__TURBOC__) && !defined(__NO_FLOAT__)
-__EXTERN void _fpuinit (void); /* in PCFLTLIB.LIB */
-
-extern long _fpuvect[10];
-extern long _pfumode;
-extern long _fpuctrl;
-#endif
+extern int main (int, char **, char **);
 
 extern __io_mode __default_mode__; /* in defmode.c or defined by user */
 extern short _app; /* tells if we're an application or acc */
 
-void __libc_main __PROTO((long, char **, char **));
+void __libc_main (long, char **, char **);
 
 void
 __libc_main (long _argc, char **_argv, char **_envp)
@@ -67,10 +59,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 
 	__libc_enable_secure = 1;
 	__libc_unix_names = 0;
-
-#if defined(__TURBOC__) && !defined(__NO_FLOAT__)
-	_fpuinit();
-#endif
 
 	__has_no_ssystem = Ssystem (-1, NULL, NULL);
 	_starttime = get_sysvar (_hz_200);
@@ -203,6 +191,9 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	}
 
 #if 0
+/* used in limits.h, stdio.h */
+#define	_NFILE		(32)		/* maximum number of open streams */
+
 	/* FIXME:  Handle streams for fd 3-5.  */
  	for (i = 3; i < _NFILE; i++, f++) {
  		/* clear flags, if this is a dumped program */
@@ -299,5 +290,4 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	 */
 	exit(main((int) _argc, _argv, _envp));
 }
-
 weak_alias (__libc_main, _main)
