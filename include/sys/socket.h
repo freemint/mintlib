@@ -59,6 +59,10 @@ enum
 
 /* This is the type we use for generic socket address arguments.  */
 
+#if defined __cplusplus
+# define __SOCKADDR_ARG		struct sockaddr *__restrict
+# define __CONST_SOCKADDR_ARG	__const struct sockaddr *
+#else
 /* Add more `struct sockaddr_AF' types here as necessary.  */
 # define __SOCKADDR_ALLTYPES \
   __SOCKADDR_ONETYPE (sockaddr) \
@@ -73,6 +77,7 @@ typedef union { __SOCKADDR_ALLTYPES
 typedef union { __SOCKADDR_ALLTYPES
 	      } __CONST_SOCKADDR_ARG __attribute__ ((__transparent_union__));
 # undef __SOCKADDR_ONETYPE
+#endif
 
 
 /* Create a new socket of type TYPE in domain DOMAIN, using
