@@ -9,7 +9,7 @@
 #rtld_installed_name=$1; shift
 
 #: ${TMPDIR=${common_objpfx}posix}
-: ${TMPDIR=tests}
+: ${TMPDIR=./}
 testout=$TMPDIR/wordexp-test-result
 
 failed=0
