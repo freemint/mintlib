@@ -126,12 +126,12 @@ __libc_main (_argc, _argv, _envp)
  * a few of the UNIXMODE variables, namely "b" (binary mode default)
  * and "r<c>" (default root directory).
  */
-#if 0
+#if 1
  	if (__libc_enable_secure) {
  	  /* Don't do any TOS nonsense in secure mode.  */
  	  __default_mode__.__binary = 1;
- 	  _rootdir = 'u';
-	} else if ((s = getenv("UNIXMODE")) != 0) {
+ 	  /* _rootdir = 'u'; */
+	} else
 #endif
 	/* For UNIXMODE we currently have to live with the security
 	   hole imposed by getenv().  */
