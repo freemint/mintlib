@@ -67,7 +67,12 @@ generate_args(FILE *out, LIST *l, const char *pre, const char *post, int flags)
 {
 	while (l)
 	{
-		fprintf(out, "%s%s", pre, l->types);
+		fprintf(out, "%s", pre);
+		
+		if (l->flags & FLAG_CONST)
+			fprintf(out, "const ");
+		
+		fprintf(out, "%s", l->types);
 		
 		if (l->flags & FLAG_POINTER)
 			fprintf(out, " *");
@@ -119,6 +124,30 @@ generate_bindings_impl(FILE *out, SYSTAB *tab)
 {
 	int i;
 	
+	fprintf(out, "/* forward declarations */\n");
+	for (i = 0; i < tab->size; i++)
+	{
+		SYSCALL *call = tab->table[i];
+		
+		if (call && strcmp(call->name, "RESERVED"))
+		{
+			LIST *l;
+			
+			l = call->args;
+			while (l)
+			{
+				if (l->flags & FLAG_STRUCT
+				    || l->flags & FLAG_UNION)
+				{
+					fprintf(out, "%s;\n", l->types);
+				}
+				
+				l = l->next;
+			}
+		}
+	}
+	fprintf(out, "\n");
+	
 	for (i = 0; i < tab->size; i++)
 	{
 		SYSCALL *call = tab->table[i];
@@ -128,7 +157,7 @@ generate_bindings_impl(FILE *out, SYSTAB *tab)
 			char trap[128]; char *s = trap;
 			LIST *l;
 			
-			fprintf(out, "static long __%c%s", toupper (call->class), call->name);
+			fprintf(out, "static inline long __%c%s", toupper (call->class), call->name);
 			
 			fprintf(out, "(");
 			

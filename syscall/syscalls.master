@@ -83,13 +83,32 @@ opcode	class name	args */
 0x017	s slbclose	(void)				/* 1.15.3, MagiC 5 */
 0x018	  RESERVED
 0x019	d getdrv	(void)
-0x01a	f setdta	(DTABUF *dta)
+0x01a	f setdta	(_DTA *dta)
 0x01b	  RESERVED
 0x01c	  RESERVED
 0x01d	  RESERVED
 0x01e	  RESERVED
 0x01f	  RESERVED
 
+/*
+ * The next binding is not quite right if used in another than the usual ways:
+ *      1. Super(1L) from either user or supervisor mode
+ *      2. ret = Super(0L) from user mode and after this Super(ret) from
+ *         supervisor mode
+ * We get the following situations (usp, ssp relative to the start of Super):
+ *      Parameter       Userstack       Superstack      Calling Mode    ret
+ *         1L              usp             ssp              user         0L
+ *         1L              usp             ssp           supervisor     -1L
+ *         0L             usp-6            usp              user        ssp
+ *         0L              ssp            ssp-6          supervisor   ssp-6
+ *        ptr             usp-6           ptr+6             user        ssp
+ *        ptr             usp+6            ptr           supervisor      sr
+ * The usual C-bindings are safe only because the "unlk a6" is compensating
+ * the errors when you invoke this function. In this binding the "unlk a6" at
+ * the end of the calling function compensates the error made in sequence 2
+ * above (the usp is 6 to low after the first call which is not corrected by
+ * the second call).
+ */
 0x020	s super		(long new_ssp)
 0x021	  RESERVED
 0x022	  RESERVED
@@ -362,7 +381,7 @@ opcode	class name	args */
 0x11a	p sigreturn	(void)
 0x11b	p fork		(void)
 0x11c	p wait3		(short nohang, long *rusage)
-0x11d	f select	(unsigned timeout, long *rfdp, long *wfdp, long *xfdp)
+0x11d	f select	(ushort timeout, long *rfdp, long *wfdp, long *xfdp)
 0x11e	p rusage	(long *r)
 0x11f	p setlimit	(short i, long v)
 
@@ -385,7 +404,7 @@ opcode	class name	args */
 
 0x130	d cntl		(short cmd, const char *name, long arg)
 0x131	f chown		(const char *name, short uid, short gid)
-0x132	f chmod		(const char *name, unsigned mode)
+0x132	f chmod		(const char *name, ushort mode)
 0x133	p umask		(ushort mode)
 0x134	p semaphore	(short mode, long id, long timeout)
 0x135	d lock		(short mode, short drv)
@@ -410,9 +429,9 @@ opcode	class name	args */
 0x147	p getgroups	(short gidsetlen, ushort gidset[])
 0x148	p setgroups	(short ngroups, ushort gidset[])
 0x149	t setitimer	(short which, long *interval, long *value, long *ointerval, long *ovalue)
-0x14a	d chroot	(const char *dir)				/* 1.15.3  */
+0x14a	d chroot	(const char *dir) /* 1.15.3  */
 0x14b	f stat64	(short flag, const char *name, struct stat *stat) /* 1.15.4  */
-0x14c	f seek64	(long hiplace, long lowplace, short fh, short how, llong *newpos) /* 1.15.10 */
+0x14c	f seek64	(long hiplace, long lowplace, short fh, short how, void *newpos) /* 1.15.10 */
 0x14d	d setkey	(long hidev, long lowdev, char *key, short cipher) /* 1.15.4  */
 0x14e	p setreuid	(ushort rid, ushort eid)
 0x14f	p setregid	(ushort rid, ushort eid)
@@ -427,10 +446,10 @@ opcode	class name	args */
 0x157	  RESERVED	/* tadjtime */
 0x158	p getpriority	(short which, short who)
 0x159	p setpriority	(short which, short who, short prio)
-0x15a	f poll		(POLLFD *fds, ulong nfds, ulong timeout)	/* 1.15.10 */
+0x15a	f poll		(struct pollfd *fds, ulong nfds, ulong timeout)	/* 1.15.10 */
 0x15b	f writev	(short fd, const struct iovec *iov, long niov)	/* 1.16 */
 0x15c	f readv		(short fd, const struct iovec *iov, long niov)	/* 1.16 */
-0x15d	f fstat		(short fd, struct stat *st)			/* 1.16 */
+0x15d	f fstat64	(short fd, struct stat *st)			/* 1.16 */
 0x15e	p sysctl	(long *name, ulong namelen, void *old, ulong *oldlenp, const void *new, ulong newlen)
 0x15f	  RESERVED
      /* s emulation	(ushort which, ushort op,

@@ -322,7 +322,7 @@ simple_type
 		LIST *l = $2;
 		
 		l->flags |= FLAG_CONST;
-		insert_string(l->types, $1);
+		// insert_string(l->types, $1);
 		
 		$$ = l;
 	}
@@ -339,9 +339,10 @@ simple_type
 	{
 		LIST *l = $3;
 		
-		l->flags |= FLAG_CONST | FLAG_CONST;
+		l->flags |= FLAG_CONST;
+		l->flags |= FLAG_STRUCT;
 		insert_string(l->types, $2);
-		insert_string(l->types, $1);
+		// insert_string(l->types, $1);
 		
 		$$ = l;
 	}
