@@ -9,13 +9,73 @@
  */
 
 #ifndef _NET_IF_H
-#define _NET_IF_H
+#define _NET_IF_H 1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
+#include <features.h>
 
 #include <sys/types.h>
+#include <sys/socket.h>
+
+
+/* Standard interface flags. */
+enum
+  {
+    IFF_UP = 0x1,		/* Interface is up.  */
+#define IFF_UP	IFF_UP
+    IFF_BROADCAST = 0x2,	/* Broadcast address valid.  */
+#define IFF_BROADCAST	IFF_BROADCAST
+    IFF_DEBUG = 0x4,		/* Turn on debugging.  */
+#define IFF_DEBUG	IFF_DEBUG
+    IFF_LOOPBACK = 0x8,		/* Is a loopback net.  */
+#define IFF_LOOPBACK	IFF_LOOPBACK
+    IFF_POINTOPOINT = 0x10,	/* Interface is point-to-point link.  */
+#define IFF_POINTOPOINT	IFF_POINTOPOINT
+    IFF_NOTRAILERS = 0x20,	/* Avoid use of trailers.  */
+#define IFF_NOTRAILERS	IFF_NOTRAILERS
+    IFF_RUNNING = 0x40,		/* Resources allocated.  */
+#define IFF_RUNNING	IFF_RUNNING
+    IFF_NOARP = 0x80,		/* No address resolution protocol.  */
+#define IFF_NOARP	IFF_NOARP
+
+#if 0
+/* Not supported */
+    IFF_PROMISC = 0x100,	/* Receive all packets.  */
+#define IFF_PROMISC	IFF_PROMISC
+    IFF_ALLMULTI = 0x200,	/* Receive all multicast packets.  */
+#define IFF_ALLMULTI	IFF_ALLMULTI
+    IFF_MASTER = 0x400,		/* Master of a load balancer.  */
+#define IFF_MASTER	IFF_MASTER
+    IFF_SLAVE = 0x800,		/* Slave of a load balancer.  */
+#define IFF_SLAVE	IFF_SLAVE
+    IFF_MULTICAST = 0x1000,	/* Supports multicast.  */
+#define IFF_MULTICAST	IFF_MULTICAST
+    IFF_PORTSEL = 0x2000,	/* Can set media type.  */
+#define IFF_PORTSEL	IFF_PORTSEL
+    IFF_AUTOMEDIA = 0x4000	/* Auto media select active.  */
+#define IFF_AUTOMEDIA	IFF_AUTOMEDIA
+#endif
+  };
+
+/* The ifaddr structure contains information about one address of an
+   interface.  They are maintained by the different address families,
+   are allocated and attached when an address is set, and are linked
+   together so all addresses for an interface can be located.  */
+
+struct ifaddr
+  {
+    struct sockaddr ifa_addr;	/* Address of interface.  */
+    union
+      {
+	struct sockaddr	ifu_broadaddr;
+	struct sockaddr	ifu_dstaddr;
+      } ifa_ifu;
+    struct iface *ifa_ifp;	/* Back-pointer to interface.  */
+    struct ifaddr *ifa_next;	/* Next address for interface.  */
+  };
+
+#define	ifa_broadaddr	ifa_ifu.ifu_broadaddr	/* broadcast address	*/
+#define	ifa_dstaddr	ifa_ifu.ifu_dstaddr	/* other end of link	*/
+
 
 #define	IFNAMSIZ	16
 
@@ -52,32 +112,6 @@ struct ifnet {
 	struct	ifnet *if_next;
 };
 
-#define	IFF_UP		0x0001		/* interface is up */
-#define	IFF_BROADCAST	0x0002		/* broadcast address valid */
-#define	IFF_DEBUG	0x0004		/* turn on debugging */
-#define	IFF_LOOPBACK	0x0008		/* is a loopback net */
-#define	IFF_POINTOPOINT	0x0010		/* interface is point-to-point link */
-#define	IFF_NOTRAILERS	0x0020		/* avoid use of trailers */
-#define	IFF_RUNNING	0x0040		/* resources allocated */
-#define	IFF_NOARP	0x0080		/* no address resolution protocol */
-
-/*
- * The ifaddr structure contains information about one address
- * of an interface.  They are maintained by the different address families,
- * are allocated and attached when an address is set, and are linked
- * together so all addresses for an interface can be located.
- */
-struct ifaddr {
-	struct sockaddr	ifa_addr;		/* local address */
-	union {
-		struct sockaddr	ifu_broadaddr;	/* broadcast address */
-		struct sockaddr	ifu_dstaddr;	/* point2point dst address */
-	} ifa_ifu;
-	struct ifnet	*ifa_ifp;		/* interface this belongs to */
-	struct ifaddr	*ifa_next;		/* next ifaddr */
-#define ifa_broadaddr	ifa_ifu.ifu_broadaddr
-#define ifa_dstaddr	ifa_ifu.ifu_dstaddr
-};
 
 struct	ifstat {
 	u_long	in_packets;	/* # input packets */

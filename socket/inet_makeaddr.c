@@ -50,8 +50,7 @@ static char sccsid[] = "@(#)inet_makeaddr.c	5.6 (Berkeley) 2/24/91";
  * building addresses stored in the ifnet structure.
  */
 struct in_addr
-inet_makeaddr(net, host)
-	u_long net, host;
+inet_makeaddr (in_addr_t net, in_addr_t host)
 {
 	u_long addr;
 

@@ -2,7 +2,10 @@
 # the files that should go both into binary and source distributions.
 
 MISCFILES = MISCFILES \
+	\
+	byteswap.h \
 	dirent.h \
+	in.h \
 	ipc.h \
 	libc-lock.h \
 	local_lim.h \
@@ -20,6 +23,8 @@ MISCFILES = MISCFILES \
 	signum.h \
 	sigset.h \
 	sigstack.h \
+	sockaddr.h \
+	socket.h \
 	stdio_lim.h \
 	string.h \
 	string2.h \

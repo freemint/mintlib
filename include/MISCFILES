@@ -2,17 +2,100 @@
 # the files that should go both into binary and source distributions.
 
 MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
-_float_h _stdarg_h _stddef_h _varargs_h \
-alloca.h argz.h assert.h err.h clean-include compiler.h crypt.h \
-ctype.h device.h dirent.h endian.h errno.h error.h \
-fcntl.h features.h fnmatch.h ftw.h getopt.h glob.h \
-gnu-ar.h gnu-out.h grp.h huge_val.h ieee754.h inttypes.h iovec.h keycodes.h \
-lastlog.h libgen.h limits.h linea.h linker.h locale.h \
-macros.h malloc.h math-68881.h math.h memory.h minimal.h mintbind.h \
-nan.h netdb.h obstack.h osbind.h paths.h poll.h process.h printf.h \
-pty.h pwd.h re_comp.h regex.h regexp.h resource.h resolv.h rtent.h \
-screen.h search.h setjmp.h sgtty.h shadow.h signal.h sockios.h socklib.h \
-st-out.h stdint.h stdio.h stdlib.h string.h strings.h support.h \
-syscall.h sysexits.h syslog.h sysvars.h tcfloat.h tchars.h tcmath.h \
-termio.h termios.h time.h ucontext.h unistd.h utime.h utmp.h utmpbits.h \
-values.h vt52.h wait.h widget.h wordexp.h
+	\
+	_float_h \
+	_stdarg_h \
+	_stddef_h \
+	_varargs_h \
+	alloca.h \
+	argz.h \
+	assert.h \
+	byteswap.h \
+	err.h \
+	clean-include \
+	compiler.h \
+	crypt.h \
+	ctype.h \
+	device.h \
+	dirent.h \
+	endian.h \
+	errno.h \
+	error.h \
+	fcntl.h \
+	features.h \
+	fnmatch.h \
+	ftw.h \
+	getopt.h \
+	glob.h \
+	gnu-ar.h \
+	gnu-out.h \
+	grp.h \
+	huge_val.h \
+	ieee754.h \
+	inttypes.h \
+	iovec.h \
+	keycodes.h \
+	lastlog.h \
+	libgen.h \
+	limits.h \
+	linea.h \
+	linker.h \
+	locale.h \
+	macros.h \
+	malloc.h \
+	math-68881.h \
+	math.h \
+	memory.h \
+	minimal.h \
+	mintbind.h \
+	nan.h \
+	netdb.h \
+	obstack.h \
+	osbind.h \
+	paths.h \
+	poll.h \
+	process.h \
+	printf.h \
+	pty.h \
+	pwd.h \
+	re_comp.h \
+	regex.h \
+	regexp.h \
+	resource.h \
+	resolv.h \
+	rtent.h \
+	screen.h \
+	search.h \
+	setjmp.h \
+	sgtty.h \
+	shadow.h \
+	signal.h \
+	sockios.h \
+	socklib.h \
+	st-out.h \
+	stdint.h \
+	stdio.h \
+	stdlib.h \
+	string.h \
+	strings.h \
+	support.h \
+	syscall.h \
+	sysexits.h \
+	syslog.h \
+	sysvars.h \
+	tcfloat.h \
+	tchars.h \
+	tcmath.h \
+	termio.h \
+	termios.h \
+	time.h \
+	ucontext.h \
+	unistd.h \
+	utime.h \
+	utmp.h \
+	utmpbits.h \
+	values.h \
+	vt52.h \
+	wait.h \
+	widget.h \
+	wordexp.h

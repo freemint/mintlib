@@ -8,6 +8,8 @@
 #ifndef _MINTSOCK_H
 #define _MINTSOCK_H
 
+#include <sys/types.h>
+
 
 #define SOCKDEV "u:\\dev\\socket"
 #define UN_OFFSET ((short)((struct sockaddr_un *)0)->sun_path)

@@ -58,6 +58,7 @@ static char sccsid[] = "@(#)res_send.c	6.27 (Berkeley) 2/24/91";
 #include <resolv.h>
 #include <unistd.h>
 #include <string.h>
+#include <iovec.h>
 
 static int s = -1;	/* socket used for communications */
 static struct sockaddr no_addr;

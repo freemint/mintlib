@@ -49,9 +49,8 @@ static char sccsid[] = "@(#)inet_netof.c	5.7 (Berkeley) 2/24/91";
  * Return the network number from an internet
  * address; handles class a/b/c network #'s.
  */
-u_long
-inet_netof(in)
-	struct in_addr in;
+in_addr_t
+inet_netof (struct in_addr in)
 {
 	register u_long i = ntohl(in.s_addr);
 

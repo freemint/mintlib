@@ -51,8 +51,7 @@ static char sccsid[] = "@(#)inet_ntoa.c	5.6 (Berkeley) 2/24/91";
 #include <stdio.h>
 
 char *
-inet_ntoa(in)
-	struct in_addr in;
+inet_ntoa (struct in_addr in)
 {
 	static char b[18];
 	register char *p;

@@ -92,24 +92,22 @@ struct	protoent {
 };
 
 /*
- * DO NOT USE -mshort with this !! */
-struct rpcent {
-	char	*r_name;	/* name of server for this rpc program */
-	char	**r_aliases;	/* alias list */
-	int	r_number;	/* rpc program number */
-};
-
-/*
  * Error return codes from gethostbyname() and gethostbyaddr()
  * (left in extern int h_errno).
  */
 extern int h_errno;
 
-#define	HOST_NOT_FOUND	1 /* Authoritative Answer Host not found */
-#define	TRY_AGAIN	2 /* Non-Authoritive Host not found, or SERVERFAIL */
-#define	NO_RECOVERY	3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
-#define	NO_DATA		4 /* Valid name, no data record of requested type */
-#define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
+/* Possible values left in `h_errno'.  */
+#define	NETDB_INTERNAL	-1	/* See errno.  */
+#define	NETDB_SUCCESS	0	/* No problem.  */
+#define	HOST_NOT_FOUND	1	/* Authoritative Answer Host not found.  */
+#define	TRY_AGAIN	2	/* Non-Authoritative Host not found,
+				   or SERVERFAIL.  */
+#define	NO_RECOVERY	3	/* Non recoverable errors, FORMERR, REFUSED,
+				   NOTIMP.  */
+#define	NO_DATA		4	/* Valid name, no data record of requested
+				   type.  */
+#define	NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
 
 /* Print error indicated by `h_errno' variable on standard error.  STR
    if non-null is printed before the error string.  */
@@ -135,17 +133,10 @@ __EXTERN struct protoent	*getprotoent	__PROTO((void));
 __EXTERN struct servent		*getservbyname	__PROTO((const char *, const char *));
 __EXTERN struct servent		*getservbyport	__PROTO((int, const char *));
 __EXTERN struct servent		*getservent	__PROTO((void));
-__EXTERN void			herror		__PROTO((const char *));
 __EXTERN void			sethostent	__PROTO((int));
 __EXTERN void			setnetent	__PROTO((int));
 __EXTERN void			setprotoent	__PROTO((int));
 __EXTERN void			setservent	__PROTO((int));
-
-__EXTERN struct rpcent		*getrpcbyname	__PROTO((char *));
-__EXTERN struct rpcent		*getrpcbynumber	__PROTO((int));
-__EXTERN struct rpcent		*getrpcent	__PROTO((void));
-__EXTERN void			setrpcent	__PROTO((int));
-__EXTERN void			endrpcent	__PROTO((void));
 
 __END_DECLS
 

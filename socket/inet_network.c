@@ -50,9 +50,8 @@ static char sccsid[] = "@(#)inet_network.c	5.8 (Berkeley) 2/24/91";
  * The library routines call this routine to interpret
  * network numbers.
  */
-u_long
-inet_network(cp)
-	register const char *cp;
+in_addr_t
+inet_network (const char *cp)
 {
 	register u_long val, base, n;
 	register char c;

@@ -140,7 +140,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	} else {
 		char num[8];
 		int s2 = rresvport(&lport), s3;
-		size_t len = sizeof (from);
+		socklen_t len = sizeof (from);
 
 		if (s2 < 0)
 			goto bad;

@@ -1,5 +1,5 @@
 /*  endian.h -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -19,6 +19,12 @@
 
 #define __BYTE_ORDER BIG_ENDIAN
 
+/* Some machines may need to use a different endianness for floating point
+   values.  */
+#ifndef __FLOAT_WORD_ORDER
+# define __FLOAT_WORD_ORDER __BYTE_ORDER
+#endif
+
 #if defined (__USE_BSD) && !defined (__STRICT_ANSI__)
 
 #ifndef LITTLE_ENDIAN
@@ -35,6 +41,12 @@
 
 #define BYTE_ORDER __BYTE_ORDER
 
+#endif
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define __LONG_LONG_PAIR(HI, LO) LO, HI
+#elif __BYTE_ORDER == __BIG_ENDIAN
+# define __LONG_LONG_PAIR(HI, LO) HI, LO
 #endif
 
 #endif /* _ENDIAN_H  */
