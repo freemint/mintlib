@@ -27,7 +27,7 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.57.3
+Version       : 0.57.5
 Release       : 1
 Group         : Base
 Copyright     : distributable
