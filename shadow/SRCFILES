@@ -4,5 +4,14 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = fgetspent.c fgetspent_r.c getspent.c getspent_r.c getspnam.c \
-getspnam_r.c lckpwdf.c putspent.c sgetspent.c sgetspent_r.c
+SRCFILES = \
+	fgetspent.c \
+	fgetspent_r.c \
+	getspent.c \
+	getspent_r.c \
+	getspnam.c \
+	getspnam_r.c \
+	lckpwdf.c \
+	putspent.c \
+	sgetspent.c \
+	sgetspent_r.c

@@ -4,6 +4,16 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = fgetpwent.c fgetpwent_r.c getpw.c getpwent.c getpwent_r.c \
-getpwnam.c getpwnam_r.c getpwuid.c getpwuid_r.c grp.c initgroups.c putpwent.c
-
+SRCFILES = \
+	fgetpwent.c \
+	fgetpwent_r.c \
+	getpw.c \
+	getpwent.c \
+	getpwent_r.c \
+	getpwnam.c \
+	getpwnam_r.c \
+	getpwuid.c \
+	getpwuid_r.c \
+	grp.c \
+	initgroups.c \
+	putpwent.c

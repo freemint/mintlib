@@ -4,4 +4,6 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = ivfprintf.c ivfscanf.c
+SRCFILES = \
+	ivfprintf.c \
+	ivfscanf.c

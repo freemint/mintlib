@@ -4,6 +4,20 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = getutent.c getutent_r.c getutid.c getutid_r.c getutline.c \
-getutline_r.c login.c login_tty.c logout.c logwtmp.c oldutmp.c oldwtmp.c \
-pty.c updwtmp.c utmp_file.c utmpname.c
+SRCFILES = \
+	getutent.c \
+	getutent_r.c \
+	getutid.c \
+	getutid_r.c \
+	getutline.c \
+	getutline_r.c \
+	login.c \
+	login_tty.c \
+	logout.c \
+	logwtmp.c \
+	oldutmp.c \
+	oldwtmp.c \
+	pty.c \
+	updwtmp.c \
+	utmp_file.c \
+	utmpname.c

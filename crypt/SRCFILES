@@ -4,5 +4,10 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = crypt-entry.c crypt.c crypt_util.c des_impl.c md5-crypt.c md5.c 
-
+SRCFILES = \
+	crypt-entry.c \
+	crypt.c \
+	crypt_util.c \
+	des_impl.c \
+	md5-crypt.c \
+	md5.c 

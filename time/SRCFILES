@@ -4,6 +4,12 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = clock.c ctime.c difftime.c gmtime.c localtime.c mktime.c \
-strftime.c tz.c 
-
+SRCFILES = \
+	clock.c \
+	ctime.c \
+	difftime.c \
+	gmtime.c \
+	localtime.c \
+	mktime.c \
+	strftime.c \
+	tz.c 

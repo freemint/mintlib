@@ -4,6 +4,22 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES = initsig.c sigaddset.c sigandset.c sigdelset.c sigemptyset.c \
-sigfillset.c siggetmask.c sighold.c sigignore.c sigisempty.c sigismember.c \
-siglist.c signames.c sigorset.c sigrelse.c sigset.c sigwait.c sysv_signal.c
+SRCFILES = \
+	initsig.c \
+	sigaddset.c \
+	sigandset.c \
+	sigdelset.c \
+	sigemptyset.c \
+	sigfillset.c \
+	siggetmask.c \
+	sighold.c \
+	sigignore.c \
+	sigisempty.c \
+	sigismember.c \
+	siglist.c \
+	signames.c \
+	sigorset.c \
+	sigrelse.c \
+	sigset.c \
+	sigwait.c \
+	sysv_signal.c
