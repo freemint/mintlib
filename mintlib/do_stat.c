@@ -124,6 +124,11 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 		return -1;
 	}
 
+	if (*_path == '\0') {
+		__set_errno (ENOENT);
+		return -1;
+	}
+
 	if (__libc_unix_names) {
 		nval = 0;
 	} else {
