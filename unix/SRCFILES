@@ -35,6 +35,7 @@ SRCFILES = \
 	gethostname.c \
 	getitimer.c \
 	getpagesize.c \
+	getpgid.c \
 	getpgrp.c \
 	getpid.c \
 	getppid.c \
