@@ -61,7 +61,7 @@ _do_stat(_path, statbuf, lflag)
 	long	r;
 
 	if (!_path) {
-		errno = EFAULT;
+		__set_errno (EFAULT);
 		return -1;
 	}
 
@@ -91,6 +91,8 @@ _do_stat(_path, statbuf, lflag)
 			break;
 		default:
 			if (r < 0) {
+				if ((r == -ENOTDIR) && _enoent(path))
+					r = -ENOENT;
 				__set_errno (-r);
 				return -1;
 			}
@@ -123,7 +125,7 @@ _do_stat(_path, statbuf, lflag)
 			if ((r == -ENOTDIR) && _enoent(path)) {
 				r = -ENOENT;
 			}
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1;
 		} else {
 			unsigned short* ptr;
@@ -156,7 +158,7 @@ _do_stat(_path, statbuf, lflag)
 				r = Freadlink(PATH_MAX, buf, path);
 				if (r < 0)
 				  {
-					errno = (int) -r;
+					__set_errno (-r);
 					return -1;
 				  }
 				buf[PATH_MAX] = 0;
@@ -206,7 +208,7 @@ rootdir:
 
 /* forbid wildcards in path names */
 	if (index(path, '*') || index(path, '?')) {
-		errno = ENOENT;
+		__set_errno (ENOENT);
 		return -1;
 	}
 
@@ -236,7 +238,7 @@ rootdir:
 	Fsetdta(olddta);
 	if (r < 0) {
 		if (isdot && r == -ENOENT) goto rootdir;
-		errno = (int) -r;
+		__set_errno (-r);
 		return -1;
 	}	
 
@@ -279,7 +281,7 @@ rootdir:
 	if ( (statbuf->st_mode & S_IFMT) == S_IFREG) {
 		if (_x_Bit_set_in_stat) {
 			if ((fd = (int) Fopen(path,0)) < 0) {
-				errno = -fd;
+				__set_errno (-fd);
 				return -1;
 			}
 			magic = 0;

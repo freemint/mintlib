@@ -75,12 +75,14 @@ __quickstat (_path, statbuf, lflag)
 			break;
 		default:
 			if (r < 0) {
+				if ((r == -ENOTDIR) && _enoent(path))
+					r = -ENOENT;
 				__set_errno (-r);
 				return -1;
 			}
 			return 0;
 	}
-		
+	
 	/* Next try Fxattr.  */
 	{
 	char	*ext, drv;
@@ -96,7 +98,7 @@ __quickstat (_path, statbuf, lflag)
 			if ((r == -ENOTDIR) && _enoent (path)) {
 				r = -ENOENT;
 			}
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1;
 		} else {
 			memset (statbuf, 0, sizeof *statbuf);
