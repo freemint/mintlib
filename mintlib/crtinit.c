@@ -91,7 +91,7 @@
 
 #define MINFREE	(8L * 1024L)		/* free at least this much mem */
 					/* on top */
-#define MINKEEP (17L * 1024L)		/* keep at least this much mem */
+#define MINKEEP (24L * 1024L)		/* keep at least this much mem */
 
 extern BASEPAGE *_base;
 extern char **environ;
