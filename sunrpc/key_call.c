@@ -288,7 +288,7 @@ key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
   FILE *frslt;
   sigset_t oldmask, mask;
   union wait status;
-  int pid;
+  pid_t pid;
   int success;
   uid_t ruid;
   uid_t euid;
