@@ -143,7 +143,7 @@ __read (fd, buf, size)
 			    S_ISREG (sb.st_mode))
 			        r = -EAGAIN;
 		}
-#ENDIF		
+#endif	
 
 		if (r < 0) {
 			__set_errno ((int) -r);
