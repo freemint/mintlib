@@ -14,8 +14,8 @@ chdir: change the directory and (possibly) the drive.
 By ERS: it's in the public domain.
 ****************************************************************/
 
-void *__malloc (size_t __n);
-void __free (void* __param);
+void *malloc (size_t __n);
+void free (void* __param);
 
 int
 __chdir (const char *dir)
@@ -30,7 +30,7 @@ __chdir (const char *dir)
 
 	if (!__libc_unix_names) {
 		/* convert Unix filename to DOS */
-		tmp = __malloc(strlen(dir)+16);
+		tmp = malloc(strlen(dir)+16);
 		if (!tmp) {
 			__set_errno(ENOMEM);
 			return -1;
@@ -55,7 +55,7 @@ __chdir (const char *dir)
 			dir += 2;
 		}
 		else {
-			tmp = __malloc(strlen(dir)+16);
+			tmp = malloc(strlen(dir)+16);
 			if (!tmp) {
 				__set_errno(ENOMEM);
 				return -1;
@@ -80,7 +80,7 @@ __chdir (const char *dir)
 	}
 
 	if (tmp)
-		__free (tmp);
+		free (tmp);
 
 	return r;
 }
