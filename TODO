@@ -1,3 +1,13 @@
+o includepath: Guido
+  Makefile doesn't detect a new gcc version.  Fix: echo gcc version into
+  stamp file and move-if-change.
+
+o sunrpc/: Guido
+  Binaries don't get installed.
+
+o mintlib.spec.in: Guido
+  Finish sunrpc stuff.
+
 o Rewrite ctermid.c and cuserid.c.
 
 o Missing reentrant functions (omitted for now because the corresponding
