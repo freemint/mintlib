@@ -100,6 +100,9 @@ extern struct mem_chunk _mchunk_free_list;
 struct __open_file {
 	short	status;		/* whether or not it's a tty */
 	short	flags;		/* if a tty, its flags */
+	short	check_eagain;	/* < 0 uninitialized
+				 * = 0 don't need workaround 
+				 * > 0 need workaround */
 };
 
 #else
@@ -159,5 +162,7 @@ struct xattr {
 };
 
 __EXTERN int __quickstat __PROTO ((const char*, struct stat*, int));
+__EXTERN int __do_fstat __PROTO ((int, struct stat *, int));
+
 
 #endif /* _LIB_H */

@@ -315,8 +315,10 @@ noent:
 		(void)Fseek(0L, rv, SEEK_END);
 
 	/* fix the case `isatty() called before and not closed thru close()' */
-	if (__OPEN_INDEX(rv) < __NHANDLES)
+	if (__OPEN_INDEX(rv) < __NHANDLES) {
 		__open_stat[__OPEN_INDEX(rv)].status = FH_UNKNOWN;
+		__open_stat[__OPEN_INDEX(rv)].check_eagain = -1;
+	}
  	/* Important side effect:  isatty(rv) sets up flags under TOS */
 	if (isatty(rv) && (!(iomode & O_NOCTTY)) && (!(isatty(-1)))) {
           /* If the process is a session leader with no controlling tty,

@@ -95,7 +95,7 @@ __read (fd, buf, size)
 		       know if our process group has no controlling terminal.
 		    */
 		    if (fd == -1 && __open_stat[indx] == FH_ISAFILE) {
-		      errno = EIO;
+		      __set_errno (EIO);
 		      return -1;
 		    }
 #endif
@@ -104,7 +104,7 @@ __read (fd, buf, size)
 		    (void) Psignal(SIGTTIN, (long) osigt);
 		    (void) Psigsetmask(omask);
 		    if ((omask & sigmask(SIGTTIN)) || (osigt == SIG_IGN)) {
-		      errno = EIO;
+		      __set_errno (EIO);
 		      return -1;
 		    }
 		  }
@@ -119,20 +119,47 @@ __read (fd, buf, size)
 		   we have hit the bug.  We then return -1 and set errno
 		   to EAGAIN.
 		   Note: A return value of 0, no matter if blocking or
-		   non-blocking read always signifies end of file.  */ 
-		if (__mint && (Fcntl (fd, 0, F_GETFL) & O_NONBLOCK)) {
-			if (Fcntl(fd, &waiting_bytes, FIONREAD) != 0)
-				waiting_bytes = 1;
+		   non-blocking read always signifies end of file.  */
+#ifdef EAGAIN
+		if (__mint) {
+			register int handle = __OPEN_INDEX(fd);
+			register int checkit = 1;
+			
+			if (handle < __NHANDLES) {
+				if (__open_stat[handle].check_eagain < 0) {
+					struct stat s;
+					int saved_errno = errno;
+					if (__do_fstat (fd, &s, 0) == 0) {
+						if (S_ISREG (s.st_mode)
+						    || S_ISDIR (s.st_mode)
+						    || S_ISLNK (s.st_mode))
+							__open_stat[handle].check_eagain = checkit = 0;
+						else
+							__open_stat[handle].check_eagain = 1;
+					}
+					__set_errno (saved_errno);
+				}
+				else
+					checkit = __open_stat[handle].check_eagain;
+			}
+			
+			if (checkit)
+				if ((Fcntl (fd, 0, F_GETFL)) & O_NONBLOCK)
+					if (Fcntl(fd, &waiting_bytes, FIONREAD) != 0)
+							waiting_bytes = 1;
 		}
-
+#endif
+		
 		r = Fread(fd, size, buf);
 		
+#ifdef EAGAIN
 		if (__mint && r == 0 && waiting_bytes == 0) {
 			r = -EAGAIN;
 		}
+#endif
 		
 		if (r < 0) {
-			errno = (int) -r;
+			__set_errno (-r);
 			return -1;
 		}
 
