@@ -36,24 +36,21 @@
    Don't modify errno if there is no error.
 */
 
-#include	<stdarg.h>
-#include	<process.h>
+#include <stdarg.h>
+#include <process.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include <unistd.h>
+#include <support.h>
 
-#ifdef __TURBOC__
-# include <sys\param.h>
-#else
-# include <sys/param.h>
-#endif
+#include <sys/param.h>
+#include <mint/mintbind.h>
 
-#include	<errno.h>
-#include	<osbind.h>
-#include	<mintbind.h>
-#include	<stdlib.h>
-#include	<time.h>
-#include	<string.h>
-#include	<unistd.h>
-#include	<support.h>
-#include	"lib.h"
+#include "lib.h"
+
 
 #define TOS_ARGS 126
 
@@ -78,7 +75,7 @@ interpret_script(mode, path, _path, argv, envp)
 	char	*const *argv;
 	char	*const *envp;
 {
-	char	tmppath[MAXPATHLEN];
+	char	tmppath[PATH_MAX];
 	char	*shell;
 	char	*shellargs;
 	char	**shellargv;
@@ -196,7 +193,7 @@ const char	*_path;
 char	*const *argv;
 char	*const *envp;
 {
-	char		pathbuf[MAXPATHLEN];
+	char		pathbuf[PATH_MAX];
 	char*		path = (char*) _path;
 	char		cmd[TOS_ARGS + 1];
 	size_t		cmlen;

@@ -23,6 +23,7 @@ static char sccsid[] = "@(#)getusershell.c	5.5 (Berkeley) 7/21/88";
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,17 +35,21 @@ static char** initshells __PROTO ((void));
  * Do not add local shells here.  They should be added in /etc/shells
  */
 static char *okshells[] =
-    { "/bin/sh", "/bin/csh", 0 };
+{
+	"/bin/sh",
+	"/bin/csh",
+	0
+};
 
 static char **shells, *strings;
 static char **curshell = NULL;
-extern char **initshells();
+extern char **initshells(void);
 
 /*
  * Get a list of shells from SHELLS, if it exists.
  */
 char *
-getusershell()
+getusershell(void)
 {
 	char *ret;
 
@@ -56,7 +61,8 @@ getusershell()
 	return (ret);
 }
 
-void endusershell()
+void
+endusershell(void)
 {
 	
 	if (shells != NULL)
@@ -68,14 +74,14 @@ void endusershell()
 	curshell = NULL;
 }
 
-void setusershell()
+void
+setusershell(void)
 {
-
 	curshell = initshells();
 }
 
 static char **
-initshells()
+initshells(void)
 {
 	register char **sp, *cp;
 	register FILE *fp;
@@ -106,7 +112,7 @@ initshells()
 	}
 	sp = shells;
 	cp = strings;
-	while (fgets(cp, MAXPATHLEN + 1, fp) != NULL) {
+	while (fgets(cp, PATH_MAX + 1, fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;
 		if (*cp == '#' || *cp == '\0')

@@ -1,16 +1,12 @@
 /* make a hard link */
 
 #include <errno.h>
-#include <mintbind.h>
 #include <unistd.h>
+#include <limits.h>
 
-#ifdef __TURBOC__
-# include <sys\param.h>
-# include <sys\stat.h>
-#else
-# include <sys/param.h>
-# include <sys/stat.h>
-#endif
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 
@@ -19,13 +15,12 @@
  */
 
 int
-__link(_old, _new)
-	const char *_old, *_new;
+__link(const char *_old, const char *_new)
 {
 	long r;
-	char oldbuf[MAXPATHLEN], newbuf[MAXPATHLEN];
-	char* old = (char*) _old;
-	char* new = (char*) _new;
+	char oldbuf[PATH_MAX], newbuf[PATH_MAX];
+	char *old = (char *) _old;
+	char *new = (char *) _new;
 	
 	if (!__libc_unix_names)
 	  {
@@ -53,5 +48,4 @@ __link(_old, _new)
 	}	
 	return 0;
 }
-
 weak_alias (__link, link)

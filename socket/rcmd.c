@@ -274,7 +274,7 @@ again:
 	if (first == 1 && (_check_rhosts_file || superuser)) {
 		struct stat sbuf;
 		struct passwd *pwd;
-		char pbuf[MAXPATHLEN];
+		char pbuf[PATH_MAX];
 
 		first = 0;
 		if ((pwd = getpwnam(luser)) == NULL)
