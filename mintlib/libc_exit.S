@@ -24,10 +24,11 @@ ___libc_exit:
 #else
 	movew a6@(8),d3
 #endif
-	clrl sp@-
-	jbsr __moncontrol
+| now on _mcleanup handled
+|	clrl sp@-
+|	jbsr __moncontrol
+	
 	jbsr ___mcleanup
 	movw	d3,sp@-
 	movw    #76,sp@-
 	trap    #1
-

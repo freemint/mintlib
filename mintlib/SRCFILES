@@ -14,8 +14,8 @@ div.c do_lock.c do_stat.c dostime.c enoent.c frexp.S ftime.c ftw.c \
 getcookie.c getcwd.c getenv.c getloadavg.c getlogin.c getopt_old.c \
 getumask.c getwd.c globals.c gmon.c heapbase.c ident.c iflink.c ig.c \
 inistack.c inode.c isatty.c isctty.c labs.c ldexp.S libc_exit.S \
-libc_fatal.c linea.c llabs.c lldiv.c lockf.c ltoa.c main.c malloc.c modf.S \
-osbind.S pselect.c \
+libc_fatal.c linea.c llabs.c lldiv.c lockf.c ltoa.c main.c malloc.c mcount.c \
+modf.S osbind.S profil-freq.c profil-posix.c pselect.c \
 putenv.c quickstat.c raise.c realloc.c regexp.c regsup.c rewinddi.c rtent.c \
 s_isinf.c s_isinff.c s_isinfl.c s_isnan.c s_isnanf.c s_isnanl.c scandir.c \
 seekdir.c setenv.c setjmp.S setlocale.c setstack.S spawn.c spawnve.c \

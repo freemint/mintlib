@@ -1,755 +1,415 @@
-/*
- * monitor(3), mcount() and profil(2) clones for gcc-Tos library
+/*-
+ * Copyright (c) 1983, 1992, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
- * Note: these routines need tuning up. they are very space
- * inefficient. the implementation is totally biased towards support
- * for gprof rather than prof (does anyone use prof anymore? why?)
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
- *	++jrb	bammi@cadence.com
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
  */
- 
-/* Changed May 99 to support gprof 2.9.1.  The new format is incompatible
-   to the old one.  To revert to the old format set the envariable
-   "OLD_GMON" while the program is running.  */
-   
-/* Changed again March 2000 to remove external references that will 
-   cause an infinite loop when profiling the library itself.  */
-   
-#include <stddef.h>
-#include <memory.h>
-#include <unistd.h>
+
+/* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
+
+#include <sys/param.h>
+#include <sys/time.h>
+#include <sys/gmon.h>
+#include <sys/gmon_out.h>
+#include <sys/uio.h>
+
+#include <errno.h>
+#include <stdio.h>
 #include <fcntl.h>
-#define NDEBUG
-#include <assert.h>
-#include <mintbind.h>
-#include <basepage.h>
-#include <sysvars.h>
-#include <xbra.h>
-#include <string.h>
+#include <unistd.h>
+
+#include <stdio.h>
 #include <stdlib.h>
-#include <mint/ssystem.h>
+#include <string.h>
+#include <unistd.h>
 
-/* gmon header */
-struct gm_header {
-    void		*low;		/* low pc  */
-    void		*high;		/* hi  pc  */
-    unsigned long	nbytes;		/* bytes in header + histo size */
-};
+extern int __profile_frequency __P ((void));
 
-typedef unsigned short CHUNK; /* type of each histogram entry */
+struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
-struct gm_call {	/* gm call record */
-    void	*from;	/* the caller 				*/
-    void	*to;	/* the called function (callee)		*/
-    unsigned long ncalls; /* # of calls from FROM to  TO	*/
-};
-
-#define	GMON_FILE	"gmon.out"	/* name of GMON file */
-
-/* format of gmon file
- *	gm_header
- *	((gm_header.nbytes - sizeof(gm_header))/sizeof(CHUNK)) histo entries
- *	gm_call records upto EOF
- */
-
-
-/* histogram variables and defines */
-#define	HIST_SCALE	2 /* text space scaled into size/HIST_SCALE  CHUNKS */
-#define HIST_SHIFT	1 /* HIST_SCALE == 2 ** HIST_SHIFT (assumption) */
-			  /* 1 <= HIST_SHIFT <= 8          (assumption) */
-
-static CHUNK *hist_buffer;	/* histogram buffer */
-static unsigned long hist_size; /* size of histogram in bytes */
-
-/* call graph variables and defines */
-typedef struct  {	/* a to chain element */
-    void	*selfpc;	/* the callee's pc */
-    unsigned long count;	/* number of times called */
-    unsigned short link;	/* link to next in chain (an index) */
-} tostruct ;
-
-tostruct       *tos;		/* pool of to chain elements */
-unsigned short *froms;		/* called from hash chain heads (an index) */
- /* inherent assumption: typeof froms == typeof CHUNK, otherwise
-    change code in monstartup() */
-
-#define MINARCS	64		/* min # of to's, a rand() # */
-#define ARCDENSITY 2		/* scaling of to's (as a % of  textsize) */
-#define HASHFRACTION 1		/* scaling of froms over textsize. 
-				   note this is very memory wasteful,
-				   but the alternatives are worse 
-				   beacuse of two reasons:
-				   - increase compute requirements(in mcount)
-				   - bsr, followed by bsr will loose!
-				   the coding of mcount below almost
-				   assumes that HASHFRACTION==1
-				   anyone else have some brilliant ideas?
-				   */
-#define HASH_SHIFT 0	/* HASHFRACTION = 2 ** HASH_SHIFT (assumption) */
-
-/* housekeeping variables */
-static long	      profiling;	/* profiling flag */
-static unsigned long  textsize;		/* size of profiled text area */
-static unsigned short tolimit;		/* max to == 65534, min == MINARCS */
-static unsigned short toalloc;		/* next free to record index  */
-static void 	      *s_lowpc;		/* low  pc rounded down to multiples
-					   of histo density =
-					   (CHUNK size * HIST_SCALE)
-					   (assumption: its mult of 2)
-					 */
-
-#define USL(X)	((unsigned long)(X))	/* cast X to unsigned long */
-
-/* round X down to last multiple of Y */ /* see assumption above */
-#define ROUNDDOWN(X,Y)	( USL(X) & (~(USL((Y)-1))) ) 
-
-/* round X up to next multiple of Y */
-#define ROUNDUP(X,Y)	( USL((X)+((Y)-1)) & (~(USL((Y)-1))) )
-
-/* functions */
-__EXTERN void monstartup __PROTO((void *lowpc, void *highpc));
-__EXTERN void monitor __PROTO((void *lowpc, void *highpc, void *buffer,
-		 unsigned long bufsize,  unsigned int nfunc));
-__EXTERN void moncontrol __PROTO((long flag));
-__EXTERN void _mcleanup __PROTO((void));
-__EXTERN int profil __PROTO((void *buff, unsigned long bufsiz, unsigned long offset,
-	       int shift));
-/* static */ void tick __PROTO((void));
-static void term __PROTO((void));
-static void install_handlers __PROTO((void));
-static void remove_handlers __PROTO((void));
-static void unlink_handler __PROTO((xbra_struct *me, int exc));
-static void build_graph __PROTO((void *caller, void *callee));
-static long mon_get_sysvar __PROTO((void* var));
-
-#define MON_WRITE(fd, buf, size) Fwrite (fd, size, buf)
-
-extern int __has_no_ssystem;
-
-static
-long mon_get_sysvar (void* var)
-{
-	long ret;
-    	long save_ssp;
-
-	if(__has_no_ssystem) {
-    		save_ssp = (long) Super((void *) 0L);
-    	/* note: dont remove volatile, otherwise gcc will reorder these
-       	statements and we get bombs */
-    		ret = *((volatile long *)var);
-    		(void)Super((void *) save_ssp);
-    		return ret;
-	} else
-		return Ssystem(S_GETLVAL, var, NULL);
-}
+struct gmonparam _gmonparam = { GMON_PROF_OFF };
 
 /*
- * allocate space for histogram and call graph given the sampling
- * range. call monitor to start up profiling.
+ * See profil(2) where this is described:
  */
+static long int	s_scale;
+#define		SCALE_1_TO_1	0x10000L
 
-void monstartup(lowpc, highpc)
-void *lowpc, *highpc;
+#define ERR(s) __write(2, s, sizeof(s) - 1)
+
+void moncontrol __P ((int mode));
+void __moncontrol __P ((int mode));
+static void write_hist __P ((int fd)) internal_function;
+static void write_call_graph __P ((int fd)) internal_function;
+static void write_bb_counts __P ((int fd)) internal_function;
+
+// FIXME !!!
+int __profil (u_short *, size_t, size_t, u_int);
+int __write (int, const void *, size_t);
+int
+__writev (int s, const struct iovec *iov, int niov)
 {
-    unsigned long	monsize; /* size of hist buffer + gm_header rounded */
-    void		*buf;    /* hist + gm_header space */
-    unsigned long	i;
+	ssize_t ret = 0;
+	int i;
 
-    assert(USL(lowpc) < USL(highpc));
-
-#if 0	/* dont define: screws up gmon because of reloc assumptions */
-    s_lowpc = lowpc = (void *)
-	(ROUNDDOWN(USL(lowpc), sizeof(CHUNK)<<HIST_SHIFT ));
-#else
-    s_lowpc = lowpc;
-#endif
-    highpc = (void *)
-	(ROUNDUP(USL(highpc), sizeof(CHUNK)<<HIST_SHIFT ));
-    textsize = USL(highpc) - USL(lowpc);
-
-    /* allocate histogram buffer + gm_header buffer */
-    monsize = (textsize >> HIST_SHIFT) * sizeof(CHUNK) +
-	       sizeof(struct gm_header);
-    monsize = ROUNDUP(monsize, sizeof(short));
-
-    if((buf = (CHUNK *)Malloc(monsize)) == (CHUNK *)0)
-    {
-	Cconws("monitor: No memory for histogram buffer\r\n");
-	froms = (unsigned short *)0;
-	tos = (tostruct *)0;
-
-	return;
-    }
-    __bzero(buf, monsize);
-
-    /* allocate space for graph data structs */
-    i = (textsize>>HASH_SHIFT) * sizeof(*froms);
-    i = ROUNDUP(i, sizeof(long));
-    if((froms = (unsigned short *)Malloc(i)) == (unsigned short *)0)
-    {
-	Cconws("monitor: No memory for FROMs\r\n");
-	Mfree(buf);
-	tos = (tostruct *)0;
-	return;
-    }
-    __bzero(froms, i);
-    
-    i = textsize * ARCDENSITY / 100;
-    if( i < MINARCS)
-	i = MINARCS;
-    else if ( i > 65534)
-	i = 65534;
-    tolimit = (unsigned short)i;
-    i = ROUNDUP(i*sizeof(tostruct), sizeof(long));
-    if((tos = (tostruct *)Malloc(i)) == (tostruct *)0)
-    {
-	Cconws("monitor: No memory for TOs pool\r\n");
-	Mfree(froms);
-	Mfree(buf);
-	froms = (unsigned short *)0;
-	return;
-    }
-    __bzero(tos, i);
-    toalloc = 0;	/* index of next available element in TOs pool */
-
-    monitor(lowpc, highpc, buf, monsize, (unsigned int)tolimit);
-}
-
-    
-/*
- * monitor(3) interface to profil(2)
- * last arg is silly and not used
- */
-void monitor(lowpc, highpc, buffer, bufsize, nfunc)
-void *lowpc, *highpc, *buffer;
-unsigned long bufsize;
-unsigned int nfunc;
-{
-	struct gm_header *hdr;
-
-	if(lowpc == 0)
-	{ /* finished */
-	    moncontrol(0L);
-	    _mcleanup();
-	    return;
+	for (i = 0; i < niov; i++) {
+		if (iov[i].iov_len >= 0) {
+			int r = __write (s, iov[i].iov_base, iov[i].iov_len);
+			if (r < 0) return r;
+			ret += r;
+		} else {
+			__set_errno (EINVAL);
+			return -1;
+		}
 	}
-
-	s_lowpc = lowpc;	/* in case user is calling */
-	/* initialize gm_header */
-	hdr = (struct gm_header *)buffer;
-	hdr->low = lowpc;
-	hdr->high = highpc;
-	hdr->nbytes = bufsize;
-
-	hist_size = bufsize - sizeof(struct gm_header); /* sizof hist buffer */
-	hist_buffer = (CHUNK *)(USL(buffer) + sizeof(struct gm_header));
-
-	/* integ. check, (user can call monitor) */
-	if((hist_size == 0) ||
-           (hist_size <
-	    (((USL(highpc) - USL(lowpc))>>HIST_SHIFT)*sizeof(CHUNK))) )
-	{
-	    return;
-	}
-	/* note: difference in scaling semantics from unix */
-	moncontrol(1L); /* begin */
+	return ret;	
 }
+int __open (const char *, int, ...);
+int __close (int);
+int __getpid ();
 
 /*
- * control profiling
+ * Control profiling
+ *	profiling is what mcount checks to see if
+ *	all the data structures are ready.
  */
-void moncontrol(flag)
-long flag;
+void
+//__moncontrol (mode)
+moncontrol (mode)
+     int mode;
 {
-    if(flag)
-    { /* start */
-	profil(hist_buffer, hist_size, (unsigned long)s_lowpc, HIST_SHIFT);
-	profiling = 0;
-    }
-    else
+  struct gmonparam *p = &_gmonparam;
+
+  /* Don't change the state if we ran into an error.  */
+  if (p->state == GMON_PROF_ERROR)
+    return;
+
+  if (mode)
     {
-	/* stop */
-	profil((void *)0, 0L, 0L, 0);
-	profiling = 3;
+      /* start */
+      __profil((void *) p->kcount, p->kcountsize, p->lowpc, s_scale);
+      p->state = GMON_PROF_ON;
+    }
+  else
+    {
+      /* stop */
+      __profil(NULL, 0, 0, 0);
+      p->state = GMON_PROF_OFF;
     }
 }
+//weak_alias(__moncontrol, moncontrol)
 
-/*
- * mcount
- *	called as a part of the entry prologue of a profiled function.
- *	the function that calls mcount is the CALLEE, and the function
- *	that called the CALLEE is the CALLER. mcount grabs the
- *	address of the CALLEE and the address of the CALLER off the
- *	stack, and then calls build_graph that incrementally
- * 	constructs the call graphs in the FROMs and TOs structures,
- *	keeping track of the number of times the CALLER called CALLEE.
- *	on entry the stack look like:
- *
- *		sp-> |	ret address of CALLEE	|
- *		     |--------------------------|
- *		     .  CALLEE's locals		.
- *		     .__________________________.
- * CALLEEs	fp-> |  CALLERS saved fp	|
- *		     |--------------------------|
- *		     |  ret address of CALLER	|
- *		     |--------------------------|
- *
- * Note: 
- *	-this is true becuase -fomit-frame-pointer and -pg are
- *	 incompatible flags (gcc will say so if you try)
- *
- *	-on the 68k, the address of a long count location is passed in a0
- *	 we dont use this, it was a convention for the old prof stuff.
- */
-
-#if __GNUC__ > 1
-void mcount (void) asm ("mcount");
 
 void
-mcount ()
+//__monstartup (lowpc, highpc)
+monstartup (lowpc, highpc)
+     u_long lowpc;
+     u_long highpc;
 {
-  void *callee, *caller;
-  callee = (void *) __builtin_return_address (0);
-  caller = (void *) __builtin_return_address (1);
-  build_graph (caller, callee);
-}
+  register int o;
+  char *cp;
+  struct gmonparam *p = &_gmonparam;
+
+  /*
+   * round lowpc and highpc to multiples of the density we're using
+   * so the rest of the scaling (here and in gprof) stays in ints.
+   */
+  p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->textsize = p->highpc - p->lowpc;
+  p->kcountsize = p->textsize / HISTFRACTION;
+  p->hashfraction = HASHFRACTION;
+  p->log_hashfraction = -1;
+  /* The following test must be kept in sync with the corresponding
+     test in mcount.c.  */
+  if ((HASHFRACTION & (HASHFRACTION - 1)) == 0) {
+      /* if HASHFRACTION is a power of two, mcount can use shifting
+	 instead of integer division.  Precompute shift amount. */
+      p->log_hashfraction = ffs(p->hashfraction * sizeof(*p->froms)) - 1;
+  }
+  p->fromssize = p->textsize / HASHFRACTION;
+  p->tolimit = p->textsize * ARCDENSITY / 100;
+  if (p->tolimit < MINARCS)
+    p->tolimit = MINARCS;
+  else if (p->tolimit > MAXARCS)
+    p->tolimit = MAXARCS;
+  p->tossize = p->tolimit * sizeof(struct tostruct);
+
+  cp = calloc (p->kcountsize + p->fromssize + p->tossize, 1);
+  if (! cp)
+    {
+      ERR("monstartup: out of memory\n");
+      p->tos = NULL;
+      p->state = GMON_PROF_ERROR;
+      return;
+    }
+  p->tos = (struct tostruct *)cp;
+  cp += p->tossize;
+  p->kcount = (u_short *)cp;
+  cp += p->kcountsize;
+  p->froms = (u_short *)cp;
+
+  p->tos[0].link = 0;
+
+  o = p->highpc - p->lowpc;
+  if (p->kcountsize < (u_long) o)
+    {
+#ifndef hp300
+      s_scale = ((float)p->kcountsize / o ) * SCALE_1_TO_1;
 #else
-    __asm__("\
-  		.text; .even
- 		.globl mcount	/* note: no `_' */
- 	mcount:
- 		movl	sp@,d0		/* CALLEE's address */
- 		movl	d0,sp@-
- 		movl	a6@(4),d0	/* CALLERs  address */
- 		movl	d0,sp@-
- 		jbsr	_build_graph	/* build_graph(caller, callee) */
- 		addqw	#8,sp
- 		rts
- 	    ");
-#endif
+      /* avoid floating point operations */
+      int quot = o / p->kcountsize;
 
-/*
- * build_graph
- *	incrementally build the call graph. at each call the CALLER
- *	and CALLEE are specified. this function builds an arc from
- *	CALLER to CALLEE, or increments the arc count if it already
- *	exists.
- *	the graph is maintianed in the structures FROMs and TOs. each
- *	entry in FROMs is the head of a chain of records of all
- *	functions called from FROM. The CALLERs address is hashed
- *	into FROMs
- */
-static void build_graph(caller, callee)
-void *caller, *callee;
+      if (quot >= 0x10000)
+	s_scale = 1;
+      else if (quot >= 0x100)
+	s_scale = 0x10000 / quot;
+      else if (o >= 0x800000)
+	s_scale = 0x1000000 / (o / (p->kcountsize >> 8));
+      else
+	s_scale = 0x1000000 / ((o << 8) / p->kcountsize);
+#endif
+    } else
+      s_scale = SCALE_1_TO_1;
+
+  //__moncontrol(1);
+  moncontrol(1);
+}
+//weak_alias(__monstartup, monstartup)
+
+
+static void
+internal_function
+write_hist (fd)
+     int fd;
 {
-    unsigned short	*fromp;	  /* hashed ptr into froms 		*/
-    tostruct		*top;	  /* current hash chain element		*/
-    unsigned short	ti;	  /* index of current chain element	*/
-    tostruct		*last;	  /* previous element	   		*/
-    
-    if(profiling)
-	return;	/* out if we are not profiling or this is a recursive call */
-    profiling++;
-    
-    /* hash callee, to a pointer into FROMs */
-    fromp = (unsigned short *)(USL(caller) - USL(s_lowpc)); /* lowpc orig */
-    if(USL(fromp) > textsize)
-    {	/* not within profiled text area */
-	profiling--;
-	return;
-    }
-    /* scale to an index */
-    fromp = (unsigned short *)(USL(fromp) >> (HASH_SHIFT + sizeof(*froms)));
-    fromp = &froms[((long)fromp)]; /* hash bucket pointer */
-    ti = *fromp;	/* head of the chain */
-    if(ti == 0)
-    {	/* head is null, first time in the bucket, start a new chain */
-	if((ti = ++toalloc) >= tolimit) /* allocate an element from tos pool */
-	{	/* ran out */
-	    profiling = 3; /* give up profiling */
-	    return;
-	}
-	*fromp = ti;
-	top = &tos[ti];
-	top->selfpc = callee;
-	top->count  = 1;
-	top->link   = 0;
-	profiling--;
-	return;
-    }
-    /* otherwise  search the chain */
-    for(last = top = &tos[ti]; top->link != 0;  last = top,
-						top = &tos[top->link])
+  u_char tag = GMON_TAG_TIME_HIST;
+  struct gmon_hist_hdr thdr __attribute__ ((aligned (__alignof__ (char *))));
+
+  if (_gmonparam.kcountsize > 0)
     {
-	if(top->selfpc == callee)
-	{ /* found it */
-	    top->count++;	/* increment call count */
-	    if(top == last)
-	    { /* at the head of the chain already */
-		profiling--;
-		return;
-	    }
-	    /* otherwise bring it to the head */
-	    ti = last->link;
-	    last->link = top->link;
-	    top->link = *fromp;
-	    *fromp = ti;
-	    profiling--;
-	    return;
-	}
+      extern u_long _base;
+      u_long offset = (u_long) _base + 0x100;
+      struct iovec iov[3] =
+        {
+	  { &tag, sizeof (tag) },
+	  { &thdr, sizeof (struct gmon_hist_hdr) },
+	  { _gmonparam.kcount, _gmonparam.kcountsize }
+	};
+
+      *(char **) thdr.low_pc = (char *) _gmonparam.lowpc - offset;
+      *(char **) thdr.high_pc = (char *) _gmonparam.highpc - offset;
+      *(int32_t *) thdr.hist_size = (_gmonparam.kcountsize
+				     / sizeof (HISTCOUNTER));
+      *(int32_t *) thdr.prof_rate = __profile_frequency ();
+      strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
+      thdr.dimen_abbrev = 's';
+
+      __writev (fd, iov, 3);
     }
-    /* not found */
-    if((ti = ++toalloc) >= tolimit) /* allocate an element from tos pool */
-    {	/* ran out */
-	profiling = 3; /* give up profiling */
-	return;
-    }
-    /* put it at head of the chain */
-    top = &tos[ti];
-    top->count = 1;
-    top->selfpc = callee;
-    top->link = *fromp;
-    *fromp = ti;
-    
-    profiling--;
 }
 
-/*
- * _mcleanup
- *	dump out the gmon file
- */
-void _mcleanup()
+
+static void
+internal_function
+write_call_graph (fd)
+     int fd;
 {
-    int		fd;
-    unsigned long   i;
-    unsigned short  j;
-    unsigned long   frompc;
-    struct gm_call  arc;
-    /* For new gmon.out format.  */
-    unsigned long offset = (unsigned long) _base + 0x100;
-    int new_format = 0;
-    
-    if((fd = Fcreate (GMON_FILE, 0)) < 0)
+#define NARCS_PER_WRITEV	32
+  u_char tag = GMON_TAG_CG_ARC;
+  struct gmon_cg_arc_record raw_arc[NARCS_PER_WRITEV]
+    __attribute__ ((aligned (__alignof__ (char*))));
+  int from_index, to_index, from_len;
+  u_long frompc;
+  struct iovec iov[2 * NARCS_PER_WRITEV];
+  int nfilled;
+  extern u_long _base;
+  u_long offset = _base + 0x100;
+
+  for (nfilled = 0; nfilled < NARCS_PER_WRITEV; ++nfilled)
     {
-	Cconws(GMON_FILE); Cconws(": error opening\r\n");
-	return;
+      iov[2 * nfilled].iov_base = &tag;
+      iov[2 * nfilled].iov_len = sizeof (tag);
+
+      iov[2 * nfilled + 1].iov_base = &raw_arc[nfilled];
+      iov[2 * nfilled + 1].iov_len = sizeof (struct gmon_cg_arc_record);
     }
 
-    if (__secure_getenv ("OLD_GMON") == NULL)
-      new_format = 1;
-    
-    if (new_format)
+  nfilled = 0;
+  from_len = _gmonparam.fromssize / sizeof (*_gmonparam.froms);
+  for (from_index = 0; from_index < from_len; ++from_index)
     {
-      /* Convert the header and the call graph to the format that
-         gprof 2.9.1 expects.  We only have to subtract the address
-         of the text start segment from every entry.  */
-      struct gm_header* hdr = (struct gm_header*) (USL (hist_buffer)
-                               - sizeof (struct gm_header));
-      hdr->low = (void*) ((char*) hdr->low - offset);
-      hdr->high = (void*) ((char*) hdr->high - offset);
-    }
-        
-    /* dump the header + histogram */
-    if(MON_WRITE(fd, (void *)(USL(hist_buffer) - sizeof(struct gm_header)),
-	   hist_size + sizeof(struct gm_header)) != 
-       (hist_size + sizeof(struct gm_header)) )
-    {
-	Cconws(GMON_FILE); Cconws(": error writing\r\n");
-	Fclose(fd); return;
-    }
+      if (_gmonparam.froms[from_index] == 0)
+	continue;
 
-    /* dump the call graph */
-    for( i = 0; i < (textsize >> (HASH_SHIFT + sizeof(*froms))); i++)
-    {
-	if(froms[i] != 0)
+      frompc = _gmonparam.lowpc;
+      frompc += (from_index * _gmonparam.hashfraction
+		 * sizeof (*_gmonparam.froms));
+      for (to_index = _gmonparam.froms[from_index];
+	   to_index != 0;
+	   to_index = _gmonparam.tos[to_index].link)
 	{
-	    frompc = USL(s_lowpc) + ( i << (HASH_SHIFT + sizeof(*froms)));
-	      
-	    for(j = froms[i]; j != 0; j = tos[j].link)
+	  *(char **) raw_arc[nfilled].from_pc = (char *) frompc - offset;
+	  *(char **) raw_arc[nfilled].self_pc =
+	    (char *)_gmonparam.tos[to_index].selfpc - offset;
+	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
+
+	  if (++nfilled == NARCS_PER_WRITEV)
 	    {
-		arc.from = (void *)frompc;
-		arc.to   = tos[j].selfpc;
-		
-		/* For new format relative to text start.  */
-		if (new_format)
-		{
-		  arc.from = (void*) (frompc - offset);
-		  arc.to = (void*) ((char*) tos[j].selfpc - offset);
-		} 
-		
-		arc.ncalls = tos[j].count;
-		if(MON_WRITE(fd, &arc, sizeof(arc)) != sizeof(arc))
-		{
-		    Cconws(GMON_FILE); Cconws(": error writing\r\n");
-		    Fclose(fd); return;
-		}
+	      __writev (fd, iov, 2 * nfilled);
+	      nfilled = 0;
 	    }
 	}
     }
-    Fclose(fd);
-}
-
-#ifdef _USE_TIMER_C_
-static unsigned short countdown;
-#endif
-static short installed = 0;	/* reset to 0 before exit */
-static unsigned short *bufr;
-static unsigned long maxidx;
-static unsigned long off;
-static unsigned long shift_val;
-
-static xbra_struct tick_xbra = _XBRA_INIT(tick);
-static xbra_struct term_xbra = _XBRA_INIT(term);
-
-extern BASEPAGE *_base;
-static BASEPAGE **act_pd;
-static BASEPAGE *my_base;
-
-/*
- * profil
- *	record pc every N ms into buffer
- *	index into buffer == (pc - offset) >> shift
- *		(note difference in scaling semantics)
- * 	turned off by shift == 0
- *	ineffective by bufsiz == 0
- *
- *	on the St, we hook into the Timer C interrupt, and record
- *	every 4'th tick (20 ms).
- *	this method was chosen over user Timer A, so that applications
- *	that use the timer can be profiled.
- *	vbl was not considered because we dont have the flexibility
- *	of changing the time resolution, and because its frequency is
- *	screen rez dependent (plus its harder to get at the user pc!)
- *
- *	xbra protocol to hook in/out handlers. we hook into the terminate
- *	vector independent of the rest of the library to make sure we
- *	unhook before process termination. this is also necessary because
- *	the user can call up these routines independent of gcrt0
- */
-int profil(buff, bufsiz, offset, shift)
-void *buff;
-unsigned long bufsiz, offset;
-int shift;
-{
-    if(shift == 0)
-    {
-	if(installed)
-	    remove_handlers();
-	installed = 0;
-	return 0;
-    }
-    /* set the params atomically */
-    Jdisint(5);
-#ifdef _USE_TIMER_C_
-    countdown = 4;
-#endif
-    bufr = (unsigned short *)buff;
-    maxidx = bufsiz>>1;	/* max index into short array */
-    off = offset;
-    shift_val = shift;
-
-    if(!installed)
-    {
-	installed = 1;
-	install_handlers();
-    }
-    Jenabint(5);
-    return 0;
-}
-
-#ifdef __MBASE__
-#define Countdown __MBASESTR__ "@(_countdown:w)"
-#define Off __MBASESTR__ "@(_off:w)"
-#define Shift_val __MBASESTR__ "@(_shift_val:w)"
-#define Maxidx __MBASESTR__ "@(_maxidx:w)"
-#define Bufr __MBASESTR__ "@(_bufr:w)"
-#define Tick_xbra __MBASESTR__ "@((_tick_xbra+8):w)"
-#else
-#define Countdown "_countdown"
-#define Off "_off"
-#define Shift_val "_shift_val"
-#define Maxidx "_maxidx"
-#define Bufr "_bufr"
-#define Tick_xbra "_tick_xbra+8"
-#endif
-#ifdef _USE_TIMER_C_
-/*
- * tick handler
- *	if countdown = 0, record pc
- */
-__asm__ ("\
- 	.text; .even
-_tick:
- 	subqw	#1," Countdown "
- 	jne	1f
-
- 	movw	#4," Countdown "
- 	moveml	d0-d1/a0,sp@-
- 	movl	sp@(14),d0	/* get user pc from exception frame */
- 	subl	" Off ",d0
-	jcs	2f		/* branch if below */
- 	movl	" Shift_val ",d1	/* shift it */
- 	lsrl	d1,d0
- 	cmpl	" Maxidx ",d0	/* compare with max index */
- 	jhi	2f		/* branch if out of range */
-
- 	lsll	#1,d0		/* word index */
-	movl	" Bufr ",a0
- 	addl	d0,a0		/* incr hist word */
- 	addqw	#1,a0@
-2:
- 	moveml	sp@+,d0-d1/a0
-1:
-	movl	" Tick_xbra ",sp@-
- 	rts ");
-#else
-/*
- * tick handler
- *	in etv_timer timer handoff vector chain (called every 4th tick)
- *	stack at  this point:
- *	<exception frame user pc, sr>			2
- *	<saved d0-d7/a0-a6>				60
- *	<timer calibration .w>				2
- *	<return address to timer C intr routine>	4
- *							---
- *							68 (offset to user pc)
- */
-__asm__ ("\
- 	.text; .even
-_tick:
- 	movl	sp@(68),d0	/* get user pc from exception frame */
- 	subl	" Off ",d0
-	jcs	1f		/* branch if below */
- 	movl	" Shift_val ",d1	/* shift it */
- 	lsrl	d1,d0
- 	cmpl	" Maxidx ",d0	/* compare with max index */
- 	jhi	1f		/* branch if out of range */
-
- 	lsll	#1,d0		/* word index */
-	movl	" Bufr ",a0
- 	addl	d0,a0		/* incr hist word */
- 	addqw	#1,a0@
-1:
-	movl	" Tick_xbra ",sp@-	/* call next handler in chain */
- 	rts ");
-#endif
-
-/*
- * terminate vector
- */
-static void term()	
-{
-    /* validate  process id */
-    if(_base != *act_pd)
-    {
-	__asm__ volatile("\
- 			unlk	a6
- 			jmp	%0@"
-			 :
-			 : "a"(term_xbra.next));
-    }
-    if(installed)
-	    remove_handlers();
-    /* go on to the next guy */
-    __asm__ volatile("\
- 			unlk	a6
- 			jmp	%0@"
-			 :
-			 : "a"(term_xbra.next));
-}
-
-/*
- * install tick and terminate handlers at the head of the xbra chains
- *	coding thanks to edgar roeder
- */
-static void  install_handlers()
-{
-    long	*sysbase;
-
-    sysbase = (long *) mon_get_sysvar((void *) _sysbase);
-    switch(sysbase[6])
-    {
-      case 0x11201985L:
-      case 0x02061986L:
-      case 0x04241986L:
-	act_pd = (BASEPAGE **) 0x602CL;
-	break;
-      default:
-	act_pd = (BASEPAGE **) sysbase[10];
-    }
-
-#ifdef _USE_TIMER_C_
-    tick_xbra.next = (xptr) Setexc(276>>2, _XBRA_VEC(tick_xbra));
-#else
-    tick_xbra.next = (xptr) Setexc(0x100, _XBRA_VEC(tick_xbra));
-#endif
-    term_xbra.next = (xptr) Setexc(0x102, _XBRA_VEC(term_xbra));
-    my_base = _base;
-}
-
-/*
- * unlink a handler in a xbra friendly manner from the exc chain
- */
-static void unlink_handler(me, exc)
-xbra_struct *me;
-int exc;
-{
-    xbra_struct *this, *prev;
-    long save_ssp;
-    
-    this = (xbra_struct *)	/* get head of chain */
-	((unsigned long)Setexc(exc, -1L) - offsetof(xbra_struct, jump));
-    if(this == me)
-    {	/* at the head, just unlink */
-	(void)Setexc(exc, me->next);
-	return;
-    }
-    /* otherwise find me in the chain and unlink */
-    save_ssp = Super(0L);
-    for(prev = this; this && (this != me); prev = this,
-        this = (xbra_struct *)((this->next)
-	     ? (((char *)(this->next)) - offsetof(xbra_struct, jump)) : 0))
-    {
-	/* validate the xbra */
-	if(this->xbra_magic != _XBRA_MAGIC) 
-	{	/* shame on you */
-	    Super(save_ssp);
-	    (void)Setexc(exc, me->next); /* nuke it, otherwise it may call ME */
-	    return;		   /* after i am deinstalled */
-	}
-    }
-    
-    if(this == me)
-    { 	/* unlink me from middle of the chain */
-	prev->next = this->next;
-	Super(save_ssp);
-	return;
-    }
-    /* we are screwed */
-    Super(save_ssp);
-    Cconws("\r\nwhat the fuck!\r\n\n");
+  if (nfilled > 0)
+    __writev (fd, iov, 2 * nfilled);
 }
 
 
-static void remove_handlers()
+static void
+internal_function
+write_bb_counts (fd)
+     int fd;
 {
-    /* first validate pid */
-    if(_base == *act_pd)
+  struct __bb *grp;
+  u_char tag = GMON_TAG_BB_COUNT;
+  size_t ncounts;
+  size_t i;
+
+  struct iovec bbhead[2] =
     {
-	if(_base != my_base)	/* in vfork()ed parallel addr space */
-	    _base -= 2;
-	else
+      { &tag, sizeof (tag) },
+      { &ncounts, sizeof (ncounts) }
+    };
+  struct iovec bbbody[8];
+  size_t nfilled;
+
+  for (i = 0; i < (sizeof (bbbody) / sizeof (bbbody[0])); i += 2)
+    {
+      bbbody[i].iov_len = sizeof (grp->addresses[0]);
+      bbbody[i + 1].iov_len = sizeof (grp->counts[0]);
+    }
+
+  /* Write each group of basic-block info (all basic-blocks in a
+     compilation unit form a single group). */
+
+  for (grp = __bb_head; grp; grp = grp->next)
+    {
+      ncounts = grp->ncounts;
+      __writev (fd, bbhead, 2);
+      for (nfilled = i = 0; i < ncounts; ++i)
 	{
-	    /* do i need to Super and raise IPL here ?? */
+	  if (nfilled > (sizeof (bbbody) / sizeof (bbbody[0])) - 2)
+	    {
+	      __writev (fd, bbbody, nfilled);
+	      nfilled = 0;
+	    }
 
-#ifdef _USE_TIMER_C_
-	    unlink_handler(&tick_xbra, 276>>2);
-#else
-	    unlink_handler(&tick_xbra, 0x100);
-#endif
-	    unlink_handler(&term_xbra, 0x102);
-	    installed = 0;
+	  bbbody[nfilled++].iov_base = (char *) &grp->addresses[i];
+	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
+      if (nfilled > 0)
+	__writev (fd, bbbody, nfilled);
     }
 }
 
+
+static void
+write_gmon (void)
+{
+    struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
+    int fd = -1;
+    char *env;
+
+    env = getenv ("GMON_OUT_PREFIX");
+    if (env != NULL && !__libc_enable_secure)
+      {
+	size_t len = strlen (env);
+	char buf[len + 20];
+	sprintf (buf, "%s.%u", env, __getpid ());
+	fd = __open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0666);
+      }
+
+    if (fd == -1)
+      {
+	fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	if (fd < 0)
+	  {
+	    char buf[300];
+	    int errnum = errno;
+	    fprintf (stderr, "_mcleanup: gmon.out: %s\n",
+		     __strerror_r (errnum, buf, sizeof buf));
+	    return;
+	  }
+      }
+
+    /* write gmon.out header: */
+    memset (&ghdr, '\0', sizeof (struct gmon_hdr));
+    memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
+    *(int32_t *) ghdr.version = GMON_VERSION;
+    __write (fd, &ghdr, sizeof (struct gmon_hdr));
+
+    /* write PC histogram: */
+    write_hist (fd);
+
+    /* write call-graph: */
+    write_call_graph (fd);
+
+    /* write basic-block execution counts: */
+    write_bb_counts (fd);
+
+    __close (fd);
+}
+
+
+void
+__write_profiling (void)
+{
+  int save = _gmonparam.state;
+  _gmonparam.state = GMON_PROF_OFF;
+  if (save == GMON_PROF_ON)
+    write_gmon ();
+  _gmonparam.state = save;
+}
+weak_alias (__write_profiling, write_profiling)
+
+
+void
+_mcleanup (void)
+{
+  //__moncontrol (0);
+  moncontrol (0);
+
+  if (_gmonparam.state != GMON_PROF_ERROR)
+    write_gmon ();
+
+  /* free the memory. */
+  if (_gmonparam.tos != NULL)
+    free (_gmonparam.tos);
+}
