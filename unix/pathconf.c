@@ -1,5 +1,5 @@
 /*
- * sysconf() and pathconf() for TOS/MiNT (kinda POSIXy)
+ * pathconf() for TOS/MiNT (kinda POSIXy)
  * Written by Dave Gymer and placed in the Public Domain
  *
  * NOTE: this file will have to be updated as and when MiNT gains
@@ -11,49 +11,12 @@
 #include <mintbind.h>
 #include <errno.h>
 #include <limits.h>
-#ifndef _COMPILER_H
-#include <compiler.h>		/* ++ ers */
-#endif
 #include "lib.h"
 
 #define UNLIMITED	(0x7fffffffL)
 
 long
-sysconf(var)
-	int var;
-{
-	long r;
-
-	if ((r = Sysconf(var)) != -ENOSYS)
-	  {
-	    if (r < 0)
-	      return -1;
-	    else
-	      return r;
-	  }
-
-	switch(var) {
-	case _SC_LAST:
-		return 4;
-	case _SC_MEMR_MAX:
-		return UNLIMITED; /* not true for TOS < 1.4 :-( */
-	case _SC_ARG_MAX:
-		return 127; /* ignore this, cuz we can pass via the env */
-	case _SC_OPEN_MAX:
-		return 45; /* think I read this somewhere */
-	case _SC_NGROUPS_MAX:
-		return 0; /* this is bad news :-( */
-	case _SC_CHILD_MAX:
-		return UNLIMITED; /* good 'ol TOS :-) */
-	default:
-		return -1;
-	}
-}
-
-long
-pathconf(_path, var)
-	const char *_path;
-	int var;
+pathconf(const char *_path, int var)
 {
 	long r;
 	char pathbuf[PATH_MAX];

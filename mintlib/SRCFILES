@@ -88,7 +88,6 @@ SRCFILES = \
 	spawnvp.c \
 	stksiz.c \
 	syscall.c \
-	sysconf.c \
 	sysvar.c \
 	tell.c \
 	thread.c \

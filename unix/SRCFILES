@@ -21,6 +21,7 @@ SRCFILES = \
 	fcntl.c \
 	flock.c \
 	fork.c \
+	fpathconf.c \
 	fstat.c \
 	fsync.c \
 	ftruncate.c \
@@ -54,6 +55,7 @@ SRCFILES = \
 	mknod.c \
 	nice.c \
 	open.c \
+	pathconf.c \
 	pause.c \
 	pipe.c \
 	poll.c \
@@ -95,6 +97,7 @@ SRCFILES = \
 	stty.c \
 	symlink.c \
 	sync.c \
+	sysconf.c \
 	sysinfo.c \
 	time.c \
 	times.c \
