@@ -9,9 +9,7 @@
 #include <compiler.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 extern unsigned int* _ctype;
 
@@ -26,26 +24,27 @@ extern unsigned int* _ctype;
 #define _CTg	0x100		/* graph */
 #define _CTP	0x200		/* print */
 
-__EXTERN int isalnum __PROTO ((int c));
-__EXTERN int isalpha __PROTO ((int c));
+extern int isalnum __P ((int c));
+extern int isalpha __P ((int c));
 #if defined(__USE_SVID) || defined(__USE_MISC)
-__EXTERN int isascii __PROTO ((int c));
-__EXTERN int toascii __PROTO ((int c));
+extern int isascii __P ((int c));
+extern int toascii __P ((int c));
 #endif /* _POSIX_SOURCE */
-__EXTERN int iscntrl __PROTO ((int c));
-__EXTERN int isdigit __PROTO ((int c));
-__EXTERN int isgraph __PROTO ((int c));
-__EXTERN int isprint __PROTO ((int c));
-__EXTERN int ispunct __PROTO ((int c));
-__EXTERN int isspace __PROTO ((int c));
-__EXTERN int isupper __PROTO ((int c));
-__EXTERN int isxdigit __PROTO ((int c));
+extern int iscntrl __P ((int c));
+extern int isdigit __P ((int c));
+extern int isgraph __P ((int c));
+extern int islower __P ((int c));
+extern int isprint __P ((int c));
+extern int ispunct __P ((int c));
+extern int isspace __P ((int c));
+extern int isupper __P ((int c));
+extern int isxdigit __P ((int c));
 #ifdef __USE_GNU
-__EXTERN int isblank __PROTO ((int c));
+extern int isblank __P ((int c));
 #endif
 #ifdef __USE_SVID
-__EXTERN int _toupper __PROTO ((int c));
-__EXTERN int _tolower __PROTO ((int c));
+extern int _toupper __P ((int c));
+extern int _tolower __P ((int c));
 #endif
 
 #ifndef __NO_CTYPE
@@ -147,11 +146,9 @@ __EXTERN int _tolower __PROTO ((int c));
 
 #endif /* no __NO_CTYPE */
 
-__EXTERN int	toupper	__PROTO((int));
-__EXTERN int 	tolower	__PROTO((int));
+extern int toupper __P((int));
+extern int tolower __P((int));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _CTYPE_H */
