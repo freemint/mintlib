@@ -31,7 +31,7 @@
 #define	_POSIX_SAVED_IDS	1
 
 /* Priority scheduling is supported.  */
-#define	_POSIX_PRIORITY_SCHEDULING	1
+/* #define	_POSIX_PRIORITY_SCHEDULING	1 */
 
 /* Synchronizing file data is supported.  */
 #define	_POSIX_SYNCHRONIZED_IO	1
@@ -68,13 +68,13 @@
 #define	_POSIX_NO_TRUNC	1
 
 /* X/Open realtime support is available.  */
-#define _XOPEN_REALTIME	1
+/* #define _XOPEN_REALTIME	1 */
 
 /* XPG4.2 shared memory is not supported.  */
 /* #define	_XOPEN_SHM	1 */
 
 /* Real-time signals are supported.  */
-#define _POSIX_REALTIME_SIGNALS	1
+/* #define _POSIX_REALTIME_SIGNALS	1 */
 
 #if 0 /* Not supported.  */
 /* The LFS interface is available, except for the asynchronous I/O.  */
