@@ -28,5 +28,6 @@ SRCFILES = \
 	qefgcvt.c \
 	qefgcvt_r.c \
 	sa_len.c \
+	setmode.c \
 	syslog.c \
 	tsearch.c

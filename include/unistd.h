@@ -1017,17 +1017,22 @@ extern int __libc_enable_secure;
 
 #endif
 
+#ifdef __USE_BSD
+extern __mode_t getmode (const void *, __mode_t) __THROW;
+extern void *setmode (const char *) __THROW;
+#endif
 
-__EXTERN int	getloadavg __PROTO((double *, int));  /* Should it be here?  */
 
-__EXTERN char *	initstate __PROTO((unsigned int __seed, char *__arg_state, int __n));
-__EXTERN char *	setstate __PROTO((char *arg_state));
+extern int getloadavg (double *, int) __THROW;  /* Should it be here?  */
 
-__EXTERN long 	random	__PROTO((void));
-__EXTERN void	srandom	__PROTO((unsigned int seed));
+extern char *initstate (unsigned int __seed, char *__arg_state, int __n) __THROW;
+extern char *setstate (char *arg_state) __THROW;
 
-__EXTERN void	psignal	__PROTO((int, const char *));
-__EXTERN long	tell	__PROTO((int));
+extern long random (void) __THROW;
+extern void srandom (unsigned int seed) __THROW;
+
+extern void psignal (int, const char *) __THROW;
+extern long tell (int) __THROW;
 
 
 __END_DECLS
