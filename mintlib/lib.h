@@ -13,12 +13,6 @@
 #include <sys/stat.h>	/* For struct stat.  */
 #include <stdarg.h>
 
-/* filename mapping function type */
-#ifndef __FNMAP
-#define __FNMAP
-typedef int (*fnmapfunc_t) __PROTO((const char *, char *));
-#endif
-
 extern int __mint;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
@@ -28,7 +22,6 @@ __EXTERN int		_dos2unx __PROTO((const char *, char *, size_t));
 #ifndef __MINT__
 __EXTERN int		unx2dos __PROTO((const char *, char *));
 __EXTERN int		dos2unx __PROTO((const char *, char *));
-__EXTERN void		fnmapfunc __PROTO((fnmapfunc_t u2dos, fnmapfunc_t dos2u));
 #endif
 __EXTERN int		_path_dos2unx __PROTO((const char *, char *, size_t));
 __EXTERN int		_path_unx2dos __PROTO((const char *, char *, size_t));

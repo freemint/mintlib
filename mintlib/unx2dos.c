@@ -25,10 +25,7 @@ int _unixmode;		/* not used right now */
  */
 
 int
-_unx2dos(unx, dos, len)
-	const char *unx;
-	char *dos;
-	size_t len;
+_unx2dos(const char *unx, char *dos, size_t len)
 {
 	const char *u;
 	char *d, c;
@@ -113,10 +110,7 @@ _unx2dos(unx, dos, len)
 }
 
 int
-_dos2unx(dos, unx, len)
-	const char *dos;
-	char *unx;
-	size_t len;
+_dos2unx(const char *dos, char *unx, size_t len)
 {
 	register char c;
 
@@ -164,28 +158,21 @@ _dos2unx(dos, unx, len)
 }
 
 int
-unx2dos(unx, dos)
-        const char *unx;
-        char *dos;
+unx2dos(const char *unx, char *dos)
 {
 	return _unx2dos(unx, dos, PATH_MAX);
 }
 
 int
-dos2unx(dos, unx)
-        const char *dos;
-        char *unx;
+dos2unx(const char *dos, char *unx)
 {
 	return _dos2unx(dos, unx, PATH_MAX);
 }
 
 int
-_path_unx2dos(unx, dos, len)
-	const char *unx;
-	char *dos;
-	size_t len;
+_path_unx2dos(const char *unx, char *dos, size_t len)
 {
-	char buf[MAXPATHLEN], *s;
+	char buf[PATH_MAX], *s;
 		
 	while (*unx) {
 		s = buf;
@@ -217,12 +204,9 @@ _path_unx2dos(unx, dos, len)
 }		
 
 int 
-_path_dos2unx(dos, unx, len)
-	const char *dos;
-	char *unx;
-	size_t len;
+_path_dos2unx(const char *dos, char *unx, size_t len)
 {
-	char buf[MAXPATHLEN], *s;
+	char buf[PATH_MAX], *s;
 
 	while (*dos) {
 		s = buf;

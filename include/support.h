@@ -12,25 +12,10 @@
 
 #include <time.h>	/* for time_t */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-/* filename mapping function type */
-#ifndef __FNMAP
-#define __FNMAP
-#ifdef __STDC__
-typedef void (*fnmapfunc_t)(const char *, char *);
-#else
-typedef void (*fnmapfunc_t)();
-#endif
-#endif
+__BEGIN_DECLS
 
 __EXTERN int _unx2dos __PROTO((const char *, char *, size_t));
 __EXTERN int _dos2unx __PROTO((const char *, char *, size_t));
-__EXTERN int _full_dos2unx __PROTO((char *, char *));
-__EXTERN void fnmapfunc __PROTO((fnmapfunc_t, fnmapfunc_t));
 __EXTERN int unx2dos __PROTO((const char *, char *));
 __EXTERN int dos2unx __PROTO((const char *, char *));
 __EXTERN void _set_unixmode __PROTO((char *));
@@ -59,8 +44,8 @@ __EXTERN char *_itoa __PROTO((int, char *, int));
 __EXTERN long get_sysvar __PROTO((void *));
 __EXTERN void set_sysvar_to_long __PROTO((void *, long));
 
-__EXTERN __EXITING	__exit	__PROTO((long status)) __NORETURN;
-__EXTERN __EXITING _exit	__PROTO((int)) __NORETURN;
+__EXTERN __EXITING __exit __PROTO((long status)) __NORETURN;
+__EXTERN __EXITING _exit __PROTO((int)) __NORETURN;
 
 __EXTERN void monstartup __PROTO((void *, void *));
 __EXTERN void monitor __PROTO((void *, void *, void *, unsigned long, unsigned int));
@@ -80,15 +65,13 @@ __EXTERN void _console_write_byte __PROTO((int, int));
 __EXTERN int _text_read __PROTO((int, char *, int));
 __EXTERN int _text_write __PROTO((int, const char *, int));
 
-__EXTERN int	getdtablesize __PROTO((void));
+__EXTERN int getdtablesize __PROTO((void));
 
-__EXTERN int	sync	__PROTO((void));
-__EXTERN int	__sync	__PROTO((void));
-__EXTERN int	fsync	__PROTO((int));
-__EXTERN int	__fsync	__PROTO((int));
+__EXTERN int sync __PROTO((void));
+__EXTERN int __sync __PROTO((void));
+__EXTERN int fsync __PROTO((int));
+__EXTERN int __fsync __PROTO((int));
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _SUPPORT_H */
