@@ -1,3 +1,4 @@
+
 #include <errno.h>
 #include <osbind.h>
 #include <stddef.h>
@@ -13,57 +14,86 @@ chdir: change the directory and (possibly) the drive.
 By ERS: it's in the public domain.
 ****************************************************************/
 
-int __chdir(dir)
-const char *dir;
+void *__malloc (size_t __n);
+void __free (void* __param);
+
+int
+__chdir (const char *_dir)
 {
 	int old = 0;
 	int r;
-	char tmp[PATH_MAX];
-	register char *d;
+	char *tmp = NULL;
+	const char *dir;
 
-	if (dir == NULL)
-	  {
-	    __set_errno (EFAULT);
-	    return -1;
-	  }
+	dir = _dir;
 
-	/* We can't simply use the user supplied buffer because we may
-	   write into the buffer.  */
-	if (!__libc_unix_names)
-	  (void)_unx2dos(dir, tmp, sizeof (tmp));	/* convert Unix filename to DOS */
-	else
-	  strcpy (tmp, dir);
+	if (dir == NULL) {
+	  	__set_errno (EFAULT);
+	  	return -1;
+	}
 
-	d = tmp;
-
-	/* save old drive */
-	if (!__libc_unix_names)
+	if (!__libc_unix_names) {
+		/* save old drive */
 		old = Dgetdrv();
 
-	if (!*d) {		/* empty path means root directory */
-		*d = '\\';
-		*(d+1) = '\0';
-	} else if (*(d+1) == ':') {
+		/* convert Unix filename to DOS */
+		tmp = __malloc(strlen(dir)+16);
+		if (!tmp) {
+			__set_errno(ENOMEM);
+			return -1;
+		}
+
+		_unx2dos(dir, tmp, strlen(dir)+16);
+
+		dir = tmp;
+	}
+
+	if (!*dir) {
+		/* empty path means root directory */
+		dir = "\\";
+	}
+	else if (dir[1] == ':') {
 		if (!__libc_unix_names) {
-			int drv = toupper(*d) - 'A';
-			d+=2;
-			(void)Dsetdrv(drv);
-		} else {
-			*(d+1) = tolower(*d);
-			*d = '/';
+			int drv;
+
+			drv = toupper(dir[0]) - 'A';
+			Dsetdrv(drv);
+
+			dir += 2;
+		}
+		else {
+			tmp = __malloc(strlen(dir)+16);
+			if (!tmp) {
+				__set_errno(ENOMEM);
+				return -1;
+			}
+
+	  		strcpy (tmp, dir);
+
+			tmp[1] = tolower(tmp[0]);
+			tmp[0] = '/';
+
+			dir = tmp;
 		}
 	}
 
-	if ((r = Dsetpath(d)) < 0) {
+	r = Dsetpath(dir);
+
+	if (tmp)
+		__free (tmp);
+
+	if (r < 0) {
 		/* restore old drive */
 		if (!__libc_unix_names)
-			(void)Dsetdrv(old);
-		if ((r == -ENOTDIR) && _enoent(tmp)) {
+			Dsetdrv(old);
+
+		if ((r == -ENOTDIR) && _enoent(tmp))
 			r = -ENOENT;
-		}
+
 		__set_errno (-r);
 		return -1;
 	}
+
 	return 0;
 }
 weak_alias (__chdir, chdir)

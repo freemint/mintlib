@@ -1,12 +1,13 @@
-#include <compiler.h>
-#include <stddef.h>
-#include <stdlib.h>	/* both of these added for malloc() */
-#include <limits.h>
+
 #include <errno.h>
+#include <limits.h>
+#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
-#include <osbind.h>
-#include <mintbind.h>
 #include <unistd.h>
+
+#include <mint/mintbind.h>
+
 #include "lib.h"
 
 /*******************************************************************
@@ -16,21 +17,30 @@ This routine is in the public domain.
 
 extern char _rootdir;	/* in main.c: user's preferred root directory */
 
-char *__getcwd(buf, size)
-char *buf; int size;
+/* we want to be on the safe side */
+#if PATH_MAX < 1024
+#undef PATH_MAX
+#define PATH_MAX 1024
+#endif
+
+char *
+__getcwd(char *buf, int size)
 {
-	char _path[PATH_MAX];
+	const int len = (size > 0 ? size : PATH_MAX) + 16;
+	char _path[len]; /* XXX non ANSI */
 	char *path;
 	char drv;
 	int buf_malloced = 0;
 	int r;
 
 	if (!buf) {
-	        if (size == 0)
-	          size = PATH_MAX;
-	          
-		if ((buf = malloc((size_t)size)) == 0)
+		if (size == 0)
+			size = PATH_MAX;
+		
+		buf = malloc (size);
+		if (!buf)
 			return NULL;
+		
 		buf_malloced = 1;
 	}
 
@@ -40,15 +50,15 @@ char *buf; int size;
 	_path[2] = '\0';
 	path = _path + 2;
 
-	r = (int) Dgetcwd(path, 0, size - 2);
-
+	r = (int) Dgetcwd(path, 0, len - 2);
 	if (r != 0 && r != -ENOSYS) {
-			if (buf_malloced)
-				free(buf);
-			__set_errno (-r);
-			return NULL;
-	} else if (r == -ENOSYS) {
-		(void)Dgetpath(path, 0);
+		if (buf_malloced)
+			free(buf);
+		__set_errno (-r);
+		return NULL;
+	}
+	else if (r == -ENOSYS) {
+		Dgetpath(path, 0);
 	}
 
 	if (_rootdir && drv == _rootdir) {
@@ -56,17 +66,21 @@ char *buf; int size;
 			path[0] = '\\';
 			path[1] = '\0';
 		}
-		_dos2unx((char *)path, buf, size);
-		return buf;
+		_dos2unx(path, buf, size);
 	}
-	_dos2unx(_path, buf, size);	/* convert DOS filename to unix */
+	else
+		/* convert DOS filename to unix */
+		_dos2unx(_path, buf, size);
 	
 	if (buf_malloced) {
-	  size_t len = strlen (buf) + 1;
-	  (void) realloc (buf, len);
+		size_t len = strlen (buf) + 1;
+		void *newptr;
+
+		newptr = realloc (buf, len);
+		if (newptr)
+			buf = newptr;
 	}
-	
+
 	return buf;
 }
-
 weak_alias (__getcwd, getcwd)
