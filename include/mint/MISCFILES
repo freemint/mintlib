@@ -18,4 +18,5 @@ MISCFILES = MISCFILES \
 	random.h \
 	slb.h \
 	ssystem.h \
+	sysctl.h \
 	xbra.h

@@ -17,11 +17,13 @@ MISCFILES = MISCFILES \
 	msg.h \
 	param.h \
 	poll.h \
+	ptrace.h \
 	queue.h \
 	reboot.h \
 	resource.h \
 	select.h \
-	sem.h shm.h \
+	sem.h \
+	shm.h \
 	signal.h \
 	socket.h \
 	stat.h \
