@@ -37,12 +37,10 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
-# override crosscompiler
-ifdef CROSS
+# override (cross)compiler
 CC = gcc
 CFLAGS = -Wall -O
 COMPILE = $(CC) $(CFLAGS)
-endif
 
 MANS =  
 DOCS = 
