@@ -109,8 +109,6 @@ CFLAGS-ivfprintf.c = -Wno-uninitialized
 DEFS-ident.c = -DVERSION=\"$(VERSION)\"
 DEFS-ident_sock.c = -DVERSION=\"$(VERSION)\"
 CFLAGS-crypt = -O3 -fexpensive-optimizations
-# This relies on a correctly working fstat()!
-DEFS-stdio_init.c = -D_STATBUF_ST_BLKSIZE
 # These source come from ... you know where
 DEFS-xbootparam_prot.c = -Wno-unused
 DEFS-xmount.c = -Wno-unused
