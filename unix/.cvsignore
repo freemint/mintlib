@@ -2,3 +2,11 @@
 *.o
 *~
 lib*.a
+test-fdset
+test-open
+test-opendir
+test-select
+test-stat
+test-time
+test-utime
+test-vfork

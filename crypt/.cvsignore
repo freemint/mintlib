@@ -2,3 +2,9 @@
 *.o
 *~
 lib*.a
+md5speeds
+speeds
+test-cert
+test-md5_1
+test-md5_2
+test-ufc

@@ -2,3 +2,5 @@
 *.o
 *~
 lib*.a
+test-signal
+test-sigset

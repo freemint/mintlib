@@ -2,3 +2,12 @@
 *.o
 *~
 lib*.a
+test-canon
+test-canon2
+test-cc
+test-div
+test-mb
+test-rand
+test-sort
+test-strtod
+test-strtol

@@ -3,3 +3,13 @@
 *~
 lib*.a
 syscalls.h
+test-assert
+test-assert-perr
+test-atexit
+test-ctype
+test-ctype1
+test-dirent
+test-mallocbug
+test-seekdir
+test-setjmp
+test-setjmp1
