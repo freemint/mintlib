@@ -51,7 +51,7 @@ __EXTERN int __isinfl __PROTO ((long double));
 #else	/* ! USE_IN_LIBIO */
 #  define PUT(f, s, n) fwrite (s, 1, n, f)
 #  define PAD(f, c, n) __printf_pad (f, c, n)
-ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
+ssize_t __printf_pad __P ((FILE *, char pad, size_t n)); /* In vfprintf.c.  */
 #endif	/* USE_IN_LIBIO */
 
 /* Macros for doing the actual output.  */
