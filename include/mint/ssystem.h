@@ -35,7 +35,10 @@
 # define S_BLOCKCACHE	21
 # define S_FLUSHCACHE	22
 # define S_CTRLCACHE	23
-# define S_CTRLALTDEL	25
+# define S_INITIALTPA	24
+# define S_CTRLALTDEL	25 /* ctraltdel behavoiur */
+# define S_DELCOOKIE	26
+# define S_LOADKBD	27	/* reload the keyboard table */
 # define S_CLOCKUTC	100
 # define S_TIOCMGET	0x54f8	/* 21752 */
 
@@ -54,6 +57,7 @@
  */
 # define S_DEBUGLEVEL	1000	/* debug level */
 # define S_DEBUGDEVICE	1001	/* BIOS device number */
+# define S_DEBUGKMTRACE	1100	/* KM_TRACE debug feature */
 
 
 # ifdef __KERNEL__
