@@ -81,7 +81,6 @@ chdir			int	ptr
 access			int	ptr int
 getgroups		int	int ptr
 chown			int	ptr int int
-chown16			int	ptr int int int
 select			int	int ptr ptr ptr
 getrusage		int	int ptr
 initgroups		int	ptr int
