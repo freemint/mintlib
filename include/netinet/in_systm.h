@@ -1,69 +1,41 @@
-/*
- * Adopted to Mint-Net 1994, Kay Roemer.
- */
+/* System specific type definitions for networking code.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)in_systm.h	7.4 (Berkeley) 6/28/90
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _NETINET_IN_SYSTM_H
-#define _NETINET_IN_SYSTM_H
+#define _NETINET_IN_SYSTM_H 1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
-
-/*
- * Miscellaneous internetwork
- * definitions for kernel.
- */
+#include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
 /*
- * Network types.
- *
- * Internally the system keeps counters in the headers with the bytes
- * swapped so that VAX instructions will work on them.  It reverses
- * the bytes before transmission at each protocol level.  The n_ types
- * represent the types with the bytes in ``high-ender'' order.
+ * Network order versions of various data types. Unfortunately, BSD
+ * assumes specific sizes for shorts (16 bit) and longs (32 bit) which
+ * don't hold in general. As a consequence, the network order versions
+ * may not reflect the actual size of the native data types.
  */
-typedef u_short n_short;		/* short as received from the net */
-typedef u_long	n_long;			/* long as received from the net */
 
-typedef	u_long	n_time;			/* ms since 00:00 GMT, byte rev */
+typedef u_int16_t n_short;      /* short as received from the net */
+typedef u_int32_t n_long;       /* long as received from the net  */
+typedef u_int32_t n_time;       /* ms since 00:00 GMT, byte rev   */
 
 __END_DECLS
 
-#endif /* _NETINET_IN_SYSTM_H */
+#endif /* netinet/in_systm.h */

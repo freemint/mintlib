@@ -1,63 +1,101 @@
-/*
- * Adopted to Mint-Net 1994, Kay Roemer.
- */
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * Copyright (c) 1983 Regents of the University of California.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)inet.h	5.7 (Berkeley) 4/3/91
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-#ifndef _ARPA_INET_H_
-#define	_ARPA_INET_H_
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-/* External definitions for functions in inet(3) */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <netinet/in.h>
+#ifndef _ARPA_INET_H
+#define	_ARPA_INET_H	1
 
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
+#include <features.h>
+#include <sys/types.h>
+#include <netinet/in.h>		/* To define `struct in_addr'.  */
 
 __BEGIN_DECLS
 
-__EXTERN unsigned long	inet_addr	__PROTO((const char *));
-__EXTERN unsigned long	inet_lnaof	__PROTO((struct in_addr));
-__EXTERN struct in_addr	inet_makeaddr	__PROTO((unsigned long , unsigned long));
-__EXTERN unsigned long	inet_netof	__PROTO((struct in_addr));
-__EXTERN unsigned long	inet_network	__PROTO((const char *));
-__EXTERN char		*inet_ntoa	__PROTO((struct in_addr));
-__EXTERN int		inet_aton	__PROTO((const char *, struct in_addr *));
+/* Convert Internet host address from numbers-and-dots notation in CP
+   into binary data in network byte order.  */
+extern in_addr_t inet_addr (__const char *__cp) __THROW;
+
+/* Return the local host address part of the Internet address in IN.  */
+extern in_addr_t inet_lnaof (struct in_addr __in) __THROW;
+
+/* Make Internet host address in network byte order by combining the
+   network number NET with the local address HOST.  */
+extern struct in_addr inet_makeaddr (in_addr_t __net, in_addr_t __host)
+     __THROW;
+
+/* Return network number part of the Internet address IN.  */
+extern in_addr_t inet_netof (struct in_addr __in) __THROW;
+
+/* Extract the network number in network byte order from the address
+   in numbers-and-dots natation starting at CP.  */
+extern in_addr_t inet_network (__const char *__cp) __THROW;
+
+/* Convert Internet number in IN to ASCII representation.  The return value
+   is a pointer to an internal array containing the string.  */
+extern char *inet_ntoa (struct in_addr __in) __THROW;
+
+/* Convert from presentation format of an Internet number in buffer
+   starting at CP to the binary network format and store result for
+   interface type AF in buffer starting at BUF.  */
+extern int inet_pton (int __af, __const char *__restrict __cp,
+		      void *__restrict __buf) __THROW;
+
+/* Convert a Internet address in binary network format for interface
+   type AF in buffer starting at CP to presentation form and place
+   result in buffer of length LEN astarting at BUF.  */
+extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
+				char *__restrict __buf, socklen_t __len)
+     __THROW;
+
+
+/* The following functions are not part of XNS 5.2.  */
+#ifdef __USE_MISC
+/* Convert Internet host address from numbers-and-dots notation in CP
+   into binary data and store the result in the structure INP.  */
+extern in_addr_t inet_aton (__const char *__cp, struct in_addr *__inp) __THROW;
+
+/* Format a network number NET into presentation format and place result
+   in buffer starting at BUF with length of LEN bytes.  */
+extern char *inet_neta (in_addr_t __net, char *__buf, size_t __len) __THROW;
+
+/* Convert network number for interface type AF in buffer starting at
+   CP to presentation format.  The result will specifiy BITS bits of
+   the number.  */
+extern char *inet_net_ntop (int __af, __const void *__cp, int __bits,
+			    char *__buf, size_t __len) __THROW;
+
+/* Convert network number for interface type AF from presentation in
+   buffer starting at CP to network format and store result int
+   buffer starting at BUF of size LEN.  */
+extern int inet_net_pton (int __af, __const char *__cp,
+			  void *__buf, size_t __len) __THROW;
+
+/* Convert ASCII representation in hexadecimal form of the Internet
+   address to binary form and place result in buffer of length LEN
+   starting at BUF.  */
+extern unsigned int inet_nsap_addr (__const char *__cp,
+				    unsigned char *__buf, int __len) __THROW;
+
+/* Convert internet address in binary form in LEN bytes starting at CP
+   a presentation form and place result in BUF.  */
+extern char *inet_nsap_ntoa (int __len, __const unsigned char *__cp,
+			     char *__buf) __THROW;
+#endif
 
 __END_DECLS
 
-#endif /* !_ARPA_INET_H_ */
+#endif /* arpa/inet.h */

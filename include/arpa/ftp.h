@@ -1,10 +1,6 @@
 /*
- * Adopted to Mint-Net 1994, Kay Roemer.
- */
-
-/*
- * Copyright (c) 1983, 1989 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1983, 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -14,10 +10,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -34,15 +26,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)ftp.h	5.6 (Berkeley) 4/3/91
+ *	@(#)ftp.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _ARPA_FTP_H_
-#define	_ARPA_FTP_H_
-
-#ifndef _COMPILER_H
-#include <compiler.h>
-#endif
+#ifndef _ARPA_FTP_H
+#define	_ARPA_FTP_H 1
 
 /* Definitions for FTP; see RFC-765. */
 
@@ -114,4 +102,4 @@ char *modenames[] =  {"0", "Stream", "Block", "Compressed" };
 
 #define	BLK_BYTECOUNT	2	/* Bytes in this block */
 
-#endif /* !_ARPA_FTP_H_ */
+#endif /* arpa/ftp.h */
