@@ -64,6 +64,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	resource.h \
 	resolv.h \
 	rtent.h \
+	sched.h \
 	screen.h \
 	search.h \
 	setjmp.h \

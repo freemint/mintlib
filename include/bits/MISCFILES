@@ -15,6 +15,7 @@ MISCFILES = MISCFILES \
 	posix1_lim.h \
 	posix2_lim.h \
 	posix_opt.h \
+	sched.h \
 	select.h \
 	sem.h \
 	shm.h \
