@@ -42,6 +42,7 @@ SRCFILES = \
 	getpriority.c \
 	getrlimit.c \
 	getrusage.c \
+	getsid.c \
 	gettimeofday.c \
 	getuid.c \
 	gtty.c \
