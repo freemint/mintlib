@@ -137,7 +137,7 @@ typedef unsigned int            uintptr_t;
 __extension__
 typedef long long int           intmax_t;
 __extension__
-typedef unsigned long long int  intmax_t;
+typedef unsigned long long int  uintmax_t;
 
 
 /* The ISO C 9X standard specifies that in C++ implementations these
