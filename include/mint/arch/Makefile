@@ -1,4 +1,4 @@
-# include/mint/Makefile -- MiNTLib.
+# include/mint/arch/Makefile -- MiNTLib.
 # Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
 #
 # This file is part of the MiNTLib project, and may only be used
@@ -10,19 +10,17 @@
 SHELL = /bin/sh
 
 srcdir = .
-top_srcdir = ../..
+top_srcdir = ../../..
 csrcdir = $(top_srcdir)/src
-subdir = mint
-
-SUBDIRS = arch
-
-default: all
+subdir = arch
 
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
 
 # Make install-libs work.
 LIBS =
+
+default: all
 
 all-here:
 
@@ -37,8 +35,8 @@ install-include:
 	$(mkinstalldirs) $(includedir)/mint
 	@list='$(includefiles)'; for p in $$list; do \
   	  if test -f $$p; then \
-	    echo " $(INSTALL) -m 644 $$p $(includedir)/mint"; \
-	    $(INSTALL) -m 644 $$p $(includedir)/mint; \
+	    echo " $(INSTALL) -m 644 $$p $(includedir)/mint/arch"; \
+	    $(INSTALL) -m 644 $$p $(includedir)/mint/arch; \
 	  else :; fi; \
 	done
 	
@@ -46,8 +44,8 @@ uninstall-include:
 	@list='$(includefiles)'; \
 	for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " rm -f $(includedir)/mint/$$p"; \
-	    rm -f $(includedir)/mint/$$p; \
+	    echo " rm -f $(includedir)/mint/arch/$$p"; \
+	    rm -f $(includedir)/mint/arch/$$p; \
 	  else :; fi; \
 	done
 

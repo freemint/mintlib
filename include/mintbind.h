@@ -650,6 +650,9 @@ __extension__								\
 		trap_1_www(0x13e, (short)(vec), (short)(sig))
 #define Suptime(uptime, avenrun)				\
 		trap_1_wll(0x13f, (long)(uptime), (long)(avenrun))
+#define Ptrace(request, pid, addr, data)		\
+		trap_1_wwwll(0x140, (short)(request), (short)(pid), \
+			      (long)(addr), (long)(data))
 #define Dxreaddir(len, handle, buf, xattr, xret)		\
 		trap_1_wwllll(0x142, (short)(len), (long)(handle), \
 			      (long)(buf), (long)(xattr), (long)(xret))

@@ -11,7 +11,7 @@ geteuid.c getgid.c getgroups.c gethostid.c gethostname.c getitimer.c \
 getpagesize.c getpgrp.c getpid.c getppid.c getpriority.c getrlimit.c \
 getrusage.c gettimeofday.c getuid.c gtty.c ioctl.c kill.c killpg.c \
 link.c lseek.c lstat.c mkdir.c mkfifo.c mknod.c nice.c open.c opendir.c \
-pause.c pipe.c poll.c read.c readdir.c readlink.c reboot.c rename.c rmdir.c \
+pause.c pipe.c poll.c ptrace.c read.c readdir.c readlink.c reboot.c rename.c rmdir.c \
 sbrk.c select.c setegid.c seteuid.c setgid.c setgroups.c setitimer.c \
 setpgid.c setpgrp.c setpriority.c setregid.c setreuid.c setrlimit.c setsid.c \
 settimeofday.c setuid.c sigaction.c sigblock.c signal.c \
