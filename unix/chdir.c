@@ -18,14 +18,11 @@ void *__malloc (size_t __n);
 void __free (void* __param);
 
 int
-__chdir (const char *_dir)
+__chdir (const char *dir)
 {
-	int old = 0;
-	int r;
 	char *tmp = NULL;
-	const char *dir;
-
-	dir = _dir;
+	int old = -1;
+	int r;
 
 	if (dir == NULL) {
 	  	__set_errno (EFAULT);
@@ -33,9 +30,6 @@ __chdir (const char *_dir)
 	}
 
 	if (!__libc_unix_names) {
-		/* save old drive */
-		old = Dgetdrv();
-
 		/* convert Unix filename to DOS */
 		tmp = __malloc(strlen(dir)+16);
 		if (!tmp) {
@@ -55,6 +49,9 @@ __chdir (const char *_dir)
 	else if (dir[1] == ':') {
 		if (!__libc_unix_names) {
 			int drv;
+
+			/* save old drive */
+			old = Dgetdrv();
 
 			drv = toupper(dir[0]) - 'A';
 			Dsetdrv(drv);
@@ -78,22 +75,21 @@ __chdir (const char *_dir)
 	}
 
 	r = Dsetpath(dir);
+	if (r < 0) {
+		if ((r == -ENOTDIR) && _enoent(dir))
+			r = -ENOENT;
+
+		__set_errno (-r);
+		r = -1;
+	}
 
 	if (tmp)
 		__free (tmp);
 
-	if (r < 0) {
-		/* restore old drive */
-		if (!__libc_unix_names)
-			Dsetdrv(old);
+	/* restore old drive */
+	if (old >= 0)
+		Dsetdrv(old);
 
-		if ((r == -ENOTDIR) && _enoent(tmp))
-			r = -ENOENT;
-
-		__set_errno (-r);
-		return -1;
-	}
-
-	return 0;
+	return r;
 }
 weak_alias (__chdir, chdir)
