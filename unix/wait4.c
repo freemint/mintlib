@@ -23,7 +23,7 @@
 # include <sys/resource.h>
 #endif
 
-static int have_Pwaitpid = 1;
+static short have_Pwaitpid = 1;
 
 extern long __waitval, __waittime;
 
@@ -33,6 +33,7 @@ pid_t __wait4 (pid, stat_loc, options, usage)
   int options;
   struct rusage* usage;
 {
+  extern int __mint;
   long retval;
   long lusage[8];  /* For current MiNT versions 2 longs should 
                     * be enough.  The MiNTLib has 8 longs.
@@ -79,58 +80,61 @@ pid_t __wait4 (pid, stat_loc, options, usage)
     /* Previous kernel versions had been confused by programs that
        terminate with bogus exit codes (i. e. more than 8 bits). 
        We try our best to fix that here.  */
-    if ((retval & 0x7f) == 0x7f)
+    if (__mint < 0x110)
       {
-        /* Check if we have a valid stop signal.  */
-        if ((retval & 0xff00) != (SIGSTOP << 8) 
-            && (retval & 0xff00) != (SIGTSTP << 8)
-            && (retval & 0xff00) != (SIGTTIN << 8)
-            && (retval & 0xff00) != (SIGTTOU << 8))
+        if ((retval & 0x7f) == 0x7f)
           {
-            /* Somehing wrong here.  Strip down to 8 bits.  */
-            retval &= 0xff;
+            /* Check if we have a valid stop signal.  */
+            if ((retval & 0xff00) != (SIGSTOP << 8) &&
+                (retval & 0xff00) != (SIGTSTP << 8) &&
+                (retval & 0xff00) != (SIGTTIN << 8) &&
+                (retval & 0xff00) != (SIGTTOU << 8))
+              {
+                /* Somehing wrong here.  Strip down to 8 bits.  */
+                retval &= 0xff;
+                
+                /* If the child had a non-zero exit status, make sure
+                   this is preserved.  This behavior is non-standard but
+                   it is also non-standard to terminate with an exit code
+                   wider than 8 bits.  */
+                if (!retval)
+                  retval = 1;
+              }
+          }  
+        else if ((retval & 0xff00) != 0)
+          {
+            /* Signaled and possibly core dumped.  Check if this can
+               be true.  */
+            int termsig = (retval & 0x7f00) >> 8;
+            int coredumped = retval & 8000;
+            int correct = 0;  /* Be pessimistic.  */
             
-            /* If the child had a non-zero exit status, make sure
-               this is preserved.  This behavior is non-standard but
-               it is also non-standard to terminate with an exit code
-               wider than 8 bits.  */
-            if (!retval)
-              retval = 1;
-          }
-      }  
-    else if ((retval & 0xff00) != 0)
-      {
-        /* Signaled and possibly core dumped.  Check if this can
-           be true.  */
-        int termsig = (retval & 0x7f00) >> 8;
-        int coredumped = retval & 8000;
-        int correct = 0;  /* Be pessimistic.  */
-
-        if (coredumped)
-          {
-            if (termsig == SIGFPE || termsig == SIGILL || termsig == SIGSEGV
-                || termsig == SIGBUS || termsig == SIGABRT || termsig == SIGPRIV 
-                || termsig == SIGTRAP || termsig == SIGSYS)
-              correct = 1;
-          }
-        if (!correct & termsig)
-          {
-            /* Fatal signals are 1-15 (SIGHUP to SIGTERM), SIGXCPU, SIGXFSZ,
-               and SIGPWR.  */
-            if (termsig <= SIGTERM || termsig == SIGXCPU || termsig == SIGXFSZ
-                || termsig == SIGPWR)
-              correct = 1;
-          }
-        
-        if (!correct)
-          {
-            /* The program screwed up the exit code.  Fix it.  */
-            retval &= 0xff;
-            if (!retval)
-              retval = 1;
+            if (coredumped)
+              {
+                if (termsig == SIGFPE || termsig == SIGILL || termsig == SIGSEGV
+                    || termsig == SIGBUS || termsig == SIGABRT || termsig == SIGPRIV 
+                    || termsig == SIGTRAP || termsig == SIGSYS)
+                  correct = 1;
+              }
+            if (!correct & termsig)
+              {
+                /* Fatal signals are 1-15 (SIGHUP to SIGTERM), SIGXCPU, SIGXFSZ,
+                   and SIGPWR.  */
+                if (termsig <= SIGTERM || termsig == SIGXCPU || termsig == SIGXFSZ
+                    || termsig == SIGPWR)
+                  correct = 1;
+              }
+          
+            if (!correct)
+              {
+                /* The program screwed up the exit code.  Fix it.  */
+                retval &= 0xff;
+                if (!retval)
+                  retval = 1;
+              }
           }
       }
-    
+      
     if (((char) (retval & 0xff)) == (char) -32 && Pdomain (0) != 1) {
       /* Special kludge in the MiNT kernel.  */
       *stat_loc = SIGINT;
