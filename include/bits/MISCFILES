@@ -2,6 +2,7 @@
 # the files that should go both into binary and source distributions.
 
 MISCFILES = MISCFILES \
+	dirent.h \
 	ipc.h \
 	libc-lock.h \
 	local_lim.h \
