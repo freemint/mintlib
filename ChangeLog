@@ -1,3 +1,439 @@
+2003-03-14 Friday 08:39  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.57.3 for new release.
+	
+2003-03-14 Friday 08:39  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/Makefile:
+
+	Disabled generation and compilation, not ready yet.
+	
+2003-03-12 Wednesday 13:44  Frank Naumann <fnaumann@freemint.de>
+
+	* config.h, stdio/vfprintf.c:
+
+	Minor updates and corrections.
+	
+2003-03-12 Wednesday 13:43  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/syscalls.list:
+
+	Corrected some syscall arguments from short to int.
+	
+2003-03-12 Wednesday 13:23  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/do_fstat.c, mintlib/do_stat.c, mintlib/enoent.c,
+	mintlib/lib.h, mintlib/quickstat.c, mintlib/ttyname.c,
+	mintlib/ttyname_r.c, unix/link.c, unix/mkfifo.c, unix/mknod.c,
+	unix/readlink.c, unix/rename.c, unix/symlink.c, unix/utime.c:
+
+	Renamed internal system call wrapper to a better name.
+	
+2003-03-12 Wednesday 13:09  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/: generate.c, pars.y, syscalls.master:
+
+	Slight updates, compile now.
+	
+2003-03-06 Thursday 21:18  Standa Opichal <opichals@seznam.cz>
+
+	* include/stdint.h:
+
+	copy/paste typo fixed.
+	
+2003-02-28 Friday 08:44  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: math.h, stdint.h:
+
+	Hide clog() prototype, conflicts with libstdc++ math header. Updated
+	stdint.h.
+	
+2003-02-27 Thursday 23:24  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* mintlib/thread.c:
+
+	Child process does not need own copy of the environment, so release
+	it and free at least 8 K of memory.
+	
+2003-02-14 Friday 20:43  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* unix/sysinfo.c:
+
+	Under MiNT the TOS version is obtained without switching to Super()-mode
+	(via Ssystem(3)).
+	
+2002-08-22 Thursday 14:41  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/: fread.c, fwrite.c:
+
+	Two patches to increase -mshort compatibility (contributed by Markus
+	F.X.J. Oberhumer).
+	
+2002-06-03 Monday 12:50  Standa Opichal <opichals@seznam.cz>
+
+	* buildrules, rules, mintlib/EXTRAFILES, socket/SRCFILES,
+	sunrpc/EXTRAFILES, sunrpc/Makefile, sunrpc/RPCGENCFILES,
+	sunrpc/RPCINFOCFILES, sunrpc/SRCFILES, syscall/EXTRAFILES,
+	syscall/Makefile:
+
+	Makefiles updated to be able to make dist && rpm -bb mintlib.spec.
+	
+	The NEWS and other files were not commited however to not to
+	confuse public release versioning.
+	
+2002-05-27 Monday 14:23  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/sysd-stdio.c:
+
+	Reworked CRLF -> LF conversion for text read. It's now hopefully better.
+	For unbuffered streams no conversion at all is done. On buffered
+	streams only CRLF combinations are filtered to LF.
+	
+2002-05-13 Monday 20:25  Standa Opichal <opichals@seznam.cz>
+
+	* mintlib/do_stat.c:
+
+	Fsfirst() fetched file type (dta_attribute) wasn't put into the st->st_mode.
+	This had affected the cflib file_path_exist() function so that it wasn't working
+	properly on ROM GEMDOS handled drives under SingleTOS.
+	
+2002-05-06 Monday 15:48  Frank Naumann <fnaumann@freemint.de>
+
+	* include/support.h, mintlib/_itoa.h, mintlib/lib.h,
+	mintlib/ltoa.c, mintlib/unx2dos.c, stdlib/a64l.c, stdlib/l64a.c:
+
+	Cleanup, removed no longer available protypes, corrected other
+	mintlib specific stuff.
+	
+2002-05-06 Monday 10:52  Frank Naumann <fnaumann@freemint.de>
+
+	* include/errno.h, include/mint/errno.h, mintlib/errbase.h:
+
+	Fixes for compilation with assembler files.
+	
+2002-05-06 Monday 10:01  Frank Naumann <fnaumann@freemint.de>
+
+	* dirent/telldir.c, include/stdlib.h, include/string.h,
+	include/mint/falcon.h, include/mint/linea.h, mintlib/_itoa.h,
+	mintlib/buffindf.c, mintlib/crtinit.c, mintlib/ftw.c,
+	mintlib/getloadavg.c, mintlib/globals.c, mintlib/regexp.c,
+	mintlib/rewinddi.c, mintlib/thread.c:
+
+	Cleanup, removed no longer necessary macros and preprocessors
+	conditions.
+	
+2002-05-06 Monday 09:59  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sched.h:
+
+	Commented out prototypes of the non-supported routines.
+	
+2002-05-06 Monday 09:57  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/generate.c:
+
+	Fixed generated macros, the opcode was missing.
+	
+2002-04-26 Friday 12:01  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/chdir.c:
+
+	Bugfix for non unix_name mode, chdir() should not reset the current drv.
+	
+2002-04-26 Friday 12:00  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/socket.h:
+
+	Updated.
+	
+2002-04-24 Wednesday 06:54  Frank Naumann <fnaumann@freemint.de>
+
+	* include/termios.h, include/bits/MISCFILES,
+	include/bits/termios.h, termios/cfgetisp.c, termios/cfgetosp.c,
+	termios/cfmakeraw.c, termios/cfsetisp.c, termios/cfsetosp.c,
+	termios/cfsetspeed.c, termios/tcdrain.c, termios/tcflow.c,
+	termios/tcflush.c, termios/tcgetattr.c, termios/tcgetpgrp.c,
+	termios/tcsendbreak.c, termios/tcsetattr.c, termios/tcsetpgrp.c:
+
+	Heavily updated the termios header files and cleaned up the
+	termios implementation.
+	
+2002-04-24 Wednesday 06:53  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/Makefile:
+
+	Correction for cross/native compiling.
+	
+2002-04-24 Wednesday 06:52  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/do_stat.c:
+
+	Minor optimization.
+	
+2002-04-24 Wednesday 06:51  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/test-wordexp.sh:
+
+	Minor correction.
+	
+2002-04-24 Wednesday 06:50  Frank Naumann <fnaumann@freemint.de>
+
+	* include/net/if_arp.h:
+
+	Added some missing definitions.
+	
+2002-04-24 Wednesday 06:50  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: compiler.h, mint/ostruct.h:
+
+	Two small bugfixes for C++ compiling.
+	
+2002-03-15 Friday 09:28  Frank Naumann <fnaumann@freemint.de>
+
+	* include/compiler.h:
+
+	Bugfix for compiling .S files.
+	
+2002-03-14 Thursday 20:50  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/: getopt.c, getopt1.c, getopt_init.c:
+
+	Updated to current glibc version.
+	
+2002-03-14 Thursday 20:49  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/: gettimeofday.c, sysctl.c, sysinfo.c:
+
+	Cleanup.
+	
+2002-03-14 Thursday 20:48  Frank Naumann <fnaumann@freemint.de>
+
+	* include/compiler.h, include/features.h.in, include/getopt.h,
+	include/locale.h, include/minimal.h, include/process.h,
+	include/string.h, include/mint/basepage.h, include/mint/xbra.h,
+	include/sys/cdefs.h, include/sys/dirent.h, include/sys/file.h,
+	include/sys/gmon.h, include/sys/gmon_out.h, include/sys/ioctl.h,
+	include/sys/ipc.h, include/sys/msg.h, include/sys/param.h,
+	include/sys/poll.h, include/sys/ptrace.h, include/sys/reboot.h,
+	include/sys/resource.h, include/sys/select.h, include/sys/syslog.h,
+	include/sys/systeminfo.h, include/sys/timeb.h, include/sys/times.h,
+	include/sys/uio.h, include/sys/utsname.h, include/sys/wait.h,
+	mintlib/libc-symbols.h:
+
+	Cleanup, reworked lot of prototypes, added new glibc macros, removed
+	unsupported compiler stuff.
+	
+2002-03-14 Thursday 20:47  Frank Naumann <fnaumann@freemint.de>
+
+	* include/time.h, include/sys/time.h, time/.cvsignore,
+	time/Makefile, time/SRCFILES, time/asctime.c, time/clock.c,
+	time/ctime.c, time/ctime_r.c, time/datemsk, time/difftime.c,
+	time/dysize.c, time/getdate.c, time/gmtime.c, time/localtime.c,
+	time/mktime.c, time/offtime.c, time/strftime.c, time/strptime.c,
+	time/test-getdate.c, time/test-mktime.c, time/test-strptime.c,
+	time/timegm.c, include/bits/MISCFILES, include/bits/time.h:
+
+	Heavily reworked the ANSI/POSIX time functions. Added lot of glibc
+	stuff.
+	
+2002-03-14 Thursday 20:44  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/MISCFILES, include/mint/cookie.h,
+	include/mint/sysvars.h, include/MISCFILES, include/keycodes.h,
+	include/sysvars.h, include/widget.h, include/sys/MISCFILES,
+	include/sys/cookie.h, mintlib/getcookie.c, mintlib/main.c:
+
+	Moved MiNT specific header files to the mint/ subdir.
+	
+2002-03-14 Thursday 09:40  Frank Naumann <fnaumann@freemint.de>
+
+	* pwdgrp/grp.c, unix/close.c, unix/open.c, unix/read.c:
+
+	Fixed the EAGAIN workaounds (patch sent by gryf).
+	
+2002-03-14 Thursday 09:39  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Check kernel version for TIOCSTTY (patch sent by gryf).
+	
+2002-03-12 Tuesday 17:02  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/Makefile:
+
+	Fixes for crosscompiling.
+	
+2002-03-12 Tuesday 16:21  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile, buildrules, configvars, include/mint/.cvsignore,
+	include/mint/MISCFILES, syscall/.cvsignore, syscall/BINFILES,
+	syscall/EXTRAFILES, syscall/MISCFILES, syscall/Makefile,
+	syscall/SRCFILES, syscall/check.c, syscall/check.h,
+	syscall/generate.c, syscall/generate.h, syscall/list.c,
+	syscall/list.h, syscall/main.c, syscall/main.h, syscall/pars.y,
+	syscall/scan.l, syscall/syscalls.master, syscall/traps.c,
+	syscall/traps.h:
+
+	Added new syscall binding generator.
+	
+2002-03-12 Tuesday 16:13  Frank Naumann <fnaumann@freemint.de>
+
+	* include/arpa/inet.h:
+
+	Corrected conditionals around the prototypes.
+	
+2002-03-12 Tuesday 16:12  Frank Naumann <fnaumann@freemint.de>
+
+	* include/MISCFILES, include/mntent.h, misc/SRCFILES,
+	misc/mntent.c, misc/mntent_r.c:
+
+	Added get/setmnent interface.
+	
+2002-03-12 Tuesday 16:10  Frank Naumann <fnaumann@freemint.de>
+
+	* misc/efgcvt.c:
+
+	Register memory freeup routine on program termination.
+	
+2002-03-12 Tuesday 16:08  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/chdir.c:
+
+	Bugfix, don't use already freed memory.
+	
+2002-03-12 Tuesday 16:08  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/enoent.c:
+
+	Bugfix, check for NULL ptr parameter.
+	
+2002-03-12 Tuesday 16:06  Frank Naumann <fnaumann@freemint.de>
+
+	* crypt/SRCFILES, gmp/SRCFILES, login/SRCFILES, pwdgrp/SRCFILES,
+	shadow/SRCFILES, signal/SRCFILES, stdiio/SRCFILES, stdio/SRCFILES,
+	stdlib/SRCFILES, sunrpc/RPCSVCCFILES, time/SRCFILES:
+
+	Unified the SRCFILES.
+	
+2002-02-26 Tuesday 08:58  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/s_isinf.c, mintlib/s_isinff.c, mintlib/s_isinfl.c,
+	mintlib/s_isnan.c, mintlib/s_isnanf.c, mintlib/s_isnanl.c,
+	stdio/printf_fp.c:
+
+	Slightly updated isnan/isinf functions.
+	
+2002-02-26 Tuesday 08:56  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: MISCFILES, math-68881.h, math.h, bits/MISCFILES,
+	bits/math-68881.h:
+
+	Moved math-68881.h to the machine specific bits subdir.
+	
+2002-02-26 Tuesday 08:51  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: features.h.in, stdio.h, stdlib.h, bits/huge_val.h,
+	bits/mathdef.h:
+
+	Changed ISOC9X macros to the final ISOC99 name.
+	
+2002-02-22 Friday 23:08  Frank Naumann <fnaumann@freemint.de>
+
+	* include/EXTRAFILES, include/MISCFILES, include/endian.h,
+	include/huge_val.h, include/math-68881.h, include/math.h,
+	include/nan.h, include/stdlib.h, include/bits/MISCFILES,
+	include/bits/endian.h, include/bits/huge_val.h,
+	include/bits/mathdef.h, include/bits/nan.h, mintlib/SRCFILES,
+	mintlib/math_ldbl.h, mintlib/math_private.h, mintlib/s_finite.c,
+	mintlib/s_finitef.c, mintlib/s_finitel.c, mintlib/s_isinf.c,
+	mintlib/s_isnan.c, mintlib/s_signbit.c, mintlib/s_signbitf.c,
+	mintlib/s_signbitl.c, misc/.cvsignore, misc/EXTRAFILES,
+	misc/Makefile, misc/SRCFILES, misc/efgcvt.c, misc/efgcvt_r.c,
+	misc/qefgcvt.c, misc/qefgcvt_r.c, misc/test-efgcvt.c,
+	stdio/printf_fphex.c, stdlib/strtod.c:
+
+	Added some math functions, updated and reworked related header files.
+	
+2002-02-22 Friday 23:06  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/: SRCFILES, getsid.c:
+
+	Added missing getsid() function.
+	
+2002-02-22 Friday 22:54  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/ioctl.c:
+
+	Cleanup, removed unused code.
+	
+2002-02-22 Friday 22:54  Frank Naumann <fnaumann@freemint.de>
+
+	* sunrpc/: clnt_gen.c, clnt_udp.c:
+
+	Fixed two warnings (reported from Patrice Mandin).
+	
+2002-02-22 Friday 22:51  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/_normdf.S, mintlib/frexp.S, mintlib/getopt_old.c,
+	mintlib/ldexp.S, mintlib/libc_fatal.c, mintlib/modf.S,
+	socket/res_mkquery.c, socket/res_send.c, string/rawmemchr.c:
+
+	Corrected some minor things reported from Patrice Mandin (missing
+	/* */ about comments, missing includes).
+	
+2002-02-20 Wednesday 08:42  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/posix_opt.h:
+
+	Corrected supported feature defines.
+	
+2002-01-09 Wednesday 23:05  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: arpa/inet.h, net/MISCFILES, net/ethernet.h,
+	net/ethertypes.h, net/if.h, net/if_ether.h, netinet/if_ether.h,
+	netinet/ip.h:
+
+	Added some missing generic network header files. Slightly updated
+	other network header files too.
+	
+2001-12-15 Saturday 15:54  Ralph Lowinski <altf4@freemint.de>
+
+	* include/arpa/inet.h:
+
+	corrected type of char buffer len to size_t
+	
+2001-11-22 Thursday 09:37  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/wait4.c:
+
+	Run workaround code only for kernels < 1.15, not 1.16.
+	
+2001-11-22 Thursday 09:36  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/param.h:
+
+	Fixed typo.
+	
+2001-11-15 Thursday 23:41  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: net/bpf.h, sys/param.h:
+
+	Minor updates.
+	
+2001-09-30 Sunday 22:46  Guido Flohr <guido@freemint.de>
+
+	* unix/getuid.c:
+
+	fixed cast problem
+	
+2001-09-27 Thursday 18:03  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog, configvars, mintlib.spec:
+
+	Official 0.57.1 release.
+	
 2001-09-27 Thursday 16:39  Frank Naumann <fnaumann@freemint.de>
 
 	* include/mint/: mintbind.h, osbind.h:
@@ -133,7 +569,7 @@
 	
 2001-08-09 Thursday 18:35  Frank Naumann <fnaumann@freemint.de>
 
-	* ChangeLog
+	* ChangeLog:
 
 	Official 0.57 release.
 	
@@ -899,4 +1335,10 @@
 
 	Reworked the TIOCNOTTY/TIOCSCTTY modes. They are hopefully correct
 	now. This patch was send from Thomas Binder (Thanks!).
+	
+2001-03-09 Friday 00:18  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
 	
