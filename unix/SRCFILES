@@ -67,10 +67,12 @@ SRCFILES = \
 	rmdir.c \
 	sbrk.c \
 	select.c \
+	setdomainname.c \
 	setegid.c \
 	seteuid.c \
 	setgid.c \
 	setgroups.c \
+	sethostname.c \
 	setitimer.c \
 	setpgid.c \
 	setpgrp.c \

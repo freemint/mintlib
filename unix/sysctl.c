@@ -14,17 +14,29 @@
 #include <mint/mintbind.h>
 #include <mint/sysctl.h>
 
+#ifdef __MSHORT__
+#error sysctl not 16bit int clean
+#endif
+
 int
 __sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
           const void *new, unsigned long newlen)
 {
+	static int __have_sysctl = 1;
 	int ret;
-	
-	ret = Psysctl (name, namelen, old, oldlenp, new, newlen);
-	if (ret < 0) {
-		__set_errno (-ret);
-		return -1;
+
+	if (__have_sysctl) {
+		ret = Psysctl (name, namelen, old, oldlenp, new, newlen);
+		if (ret < 0) {
+			if (ret == -ENOSYS)
+				__have_sysctl = 0;
+			__set_errno (-ret);
+			return -1;
+		}
+		return ret;
 	}
-	return ret;
+
+	__set_errno (ENOSYS);
+	return -1;
 }
 weak_alias (__sysctl, sysctl)
