@@ -14,7 +14,6 @@
 #include <sys/dirent.h>
 
 #define direct		dirent
-#define d_fileno	d_ino
 #define d_namlen	d_reclen
 
 #define DIRSIZ(dp) 	__DIRENTSIZ((dp)->d_namlen)
