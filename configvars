@@ -185,7 +185,7 @@ POSIXRULES=America/New_York
 # Note that this variable defaults to "/usr" and not "/usr/local".
 # If you change the installation path you also have to change
 # the file src/tzfile.h to reflect your different setting.
-TZTOPDIR=$prefix
+TZTOPDIR=${prefix}
 
 # "Compiled" time zone information is placed in the "TZDIR" directory
 # (and subdirectories).
