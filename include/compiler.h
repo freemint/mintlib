@@ -71,7 +71,8 @@
 #  define _WCHAR_T __WCHAR_TYPEDEF__
 #endif
 #endif
-#if (__GNUC__ == 2) && (__GNUC_MINOR__ >= 5) /* false for gcc < 2.5 */
+#if (__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 5))
+/* false for gcc < 2.5 */
 #define __NORETURN __attribute__ ((noreturn))
 #define __EXITING void
 #else
