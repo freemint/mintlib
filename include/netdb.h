@@ -111,6 +111,14 @@ extern int h_errno;
 #define	NO_DATA		4 /* Valid name, no data record of requested type */
 #define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
 
+/* Print error indicated by `h_errno' variable on standard error.  STR
+   if non-null is printed before the error string.  */
+extern void herror (__const char *__str) __THROW;
+
+/* Return string associated with error ERR_NUM.  */
+extern __const char *hstrerror (int __err_num) __THROW;
+
+
 __EXTERN void			endhostent	__PROTO((void));
 __EXTERN void			endnetent	__PROTO((void));
 __EXTERN void			endprotoent	__PROTO((void));

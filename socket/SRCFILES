@@ -21,7 +21,9 @@ SRCFILES = \
 	getservent.c \
 	getsockname.c \
 	getsockopt.c \
+	h_errlist.c \
 	herror.c \
+	hstrerror.c \
 	hton.c \
 	ident_sock.c \
 	inet_addr.c \
