@@ -3,27 +3,17 @@ Public domain termios tc[get|set]pgrp() for the MiNT library
 10 October 1993 entropy@terminator.rs.itd.umich.edu -- first attempt
 */
 
-#include <mintbind.h>
 #include <errno.h>
 #include <limits.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\file.h>
-# include <sys\types.h>
-# include <sys\termios.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/file.h>
-# include <sys/types.h>
-# include <sys/termios.h>
-#endif
-
+#include <termios.h>
 #include <unistd.h>
 
+#include <sys/ioctl.h>
+#include <sys/file.h>
+#include <mint/mintbind.h>
+
 pid_t
-tcgetpgrp(fd)
-  int fd;
+tcgetpgrp(int fd)
 {
   long pg;
   long r;

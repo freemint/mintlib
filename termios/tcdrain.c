@@ -4,22 +4,13 @@ Public domain termios tcdrain() for the MiNT library
 */
 
 #include <errno.h>
+#include <termios.h>
 
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\types.h>
-# include <sys\termios.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/types.h>
-# include <sys/termios.h>
-#endif
-
-#include <mintbind.h>
+#include <sys/ioctl.h>
+#include <mint/mintbind.h>
 
 int
-tcdrain(fd)
-  int fd;
+tcdrain(int fd)
 {
   long outq;
   long r;

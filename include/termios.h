@@ -1,11 +1,33 @@
-#ifndef _TERMIOS_H
-#define _TERMIOS_H
+/* Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/*
+ *	POSIX Standard: 7.1-2 General Terminal Interface	<termios.h>
+ */
+
+#ifndef	_TERMIOS_H
+#define	_TERMIOS_H	1
 
 #ifndef _FEATURES_H
 # include <features.h>
 #endif
 
-#if defined __USE_UNIX98 && !defined _BITS_TYPES_H
+#ifdef __USE_UNIX98
 /* We need `pid_t'.  */
 # include <bits/types.h>
 # ifndef pid_t
@@ -14,213 +36,70 @@ typedef __pid_t pid_t;
 # endif
 #endif
 
-#define VEOF	0
-#define VEOL	1
-#define VERASE	2
-#define VINTR	3
-#define VKILL	4
-#define VQUIT	5
-#define VSUSP	6
-#define VSTART	7
-#define VSTOP	8
-#define VMIN	9
-#define VTIME	10
-#define VLNEXT	11		/* <-- Not POSIX */
-#define VWERASE	12		/* <-- Not POSIX */
-#define VDSUSP	13		/* <-- Not POSIX */
-#define VREPRINT 14		/* <-- Not POSIX */
-#define VFLUSHO	15		/* <-- Not POSIX */
-
-#define NCCS	(VFLUSHO + 1)
-
-#ifndef CEOF
-#define	CEOF	('d' & 0x1f)
-#endif
-#ifndef CEOL
-#define	CEOL	('m' & 0x1f)
-#endif
-#ifndef CERASE
-#define	CERASE	('h' & 0x1f)
-#endif
-#ifndef CINTR
-#define	CINTR	('c' & 0x1f)
-#endif
-#ifndef CKILL
-#define	CKILL	('u' & 0x1f)
-#endif
-#ifndef CQUIT
-#define	CQUIT	28
-#endif
-#ifndef CSUSP
-#define	CSUSP	('z' & 0x1f)
-#endif
-#ifndef CSTART
-#define	CSTART	('q' & 0x1f)
-#endif
-#ifndef CSTOP
-#define	CSTOP	('s' & 0x1f)
-#endif
-#ifndef CLNEXT
-#define	CLNEXT	('v' & 0x1f)
-#endif
-#ifndef CWERASE
-#define	CWERASE	('w' & 0x1f)
-#endif
-#ifndef CDSUSP
-#define	CDSUSP	('y' & 0x1f)
-#endif
-#ifndef CRPRNT
-#define	CRPRNT	('r' & 0x1f)
-#endif
-#ifndef CFLUSHO
-#define CFLUSHO	('o' & 0x1f)
-#endif
-
 __BEGIN_DECLS
 
-typedef unsigned short tcflag_t;
-typedef unsigned short speed_t;
-typedef unsigned char cc_t;
+/* Get the system-dependent definitions of `struct termios', `tcflag_t',
+   `cc_t', `speed_t', and all the macros specifying the flag bits.  */
+#include <bits/termios.h>
 
-struct termios {
-  tcflag_t c_iflag;
-  tcflag_t c_oflag;
-  tcflag_t c_cflag;
-  tcflag_t c_lflag;
-  speed_t  _c_ispeed;
-  speed_t  _c_ospeed;
-  cc_t     c_cc[NCCS];
-  int      c_line;	/* Fake.  */
-};
+#ifdef __USE_BSD
+/* Compare a character C to a value VAL from the `c_cc' array in a
+   `struct termios'.  If VAL is _POSIX_VDISABLE, no character can match it.  */
+# define CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
+#endif
 
-/* input flags */
-#define BRKINT	0x0001
-#define IGNBRK	0x0002
-#define IGNPAR	0x0004
-#define PARMRK	0x0008
-#define INPCK	0x0010
-#define ISTRIP	0x0020
-#define INLCR	0x0040
-#define IGNCR	0x0080
-#define ICRNL	0x0100
-#define IXON	0x0200
-#define IXOFF	0x0400
-#define IXANY   0x0800
+/* Return the output baud rate stored in *TERMIOS_P.  */
+extern speed_t cfgetospeed (__const struct termios *__termios_p) __THROW;
 
-/* output modes */
-#define OPOST	0x0001
-#define ONLCR	0x0002
+/* Return the input baud rate stored in *TERMIOS_P.  */
+extern speed_t cfgetispeed (__const struct termios *__termios_p) __THROW;
 
-/* control modes */
-#define CLOCAL	0x0001
-#define CREAD	0x0002
-/* next four must agree with _TF_?BIT */
-#define CS5	0x000C
-#define CS6	0x0008
-#define CS7	0x0004
-#define CS8	0x0000
-# define CSIZE	0x000C
-#define CSTOPB	0x0040
-#define HUPCL	0x0080
-#define PARENB	0x0100
-#define PARODD	0x0200
-#define CRTSCTS	0x2000		/* <-- Not POSIX(?) */
+/* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
+extern int cfsetospeed (struct termios *__termios_p, speed_t __speed) __THROW;
 
-/* local modes */
-#define ECHOE	0x0001
-#define ECHOK	0x0002
-#ifndef _SYS_IOCTL_H
-#define ECHO	0x0004
-#endif /* _SYS_IOCTL_H */
-#define ECHONL	0x0008
-#define ICANON	0x0010
-#define ISIG	0x0020
-#ifndef _SYS_IOCTL_H
-#define NOFLSH	0x0040
-#endif /* _SYS_IOCTL_H */
-#define IEXTEN	0x0080
-#ifndef _SYS_IOCTL_H
-#define TOSTOP	0x0100
-#define ECHOCTL	0x0400
-#endif /* _SYS_IOCTL_H */
+/* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
+extern int cfsetispeed (struct termios *__termios_p, speed_t __speed) __THROW;
 
-/* actions for tcflow() */
-#define TCOOFF		0
-#define TCOON		1
-#define TCIOFF		2
-#define TCION		3
-
-/* actions for tcflush() */
-#define TCIFLUSH	0
-#define TCOFLUSH	1
-#define TCIOFLUSH	3
-
-/* actions for tcsetattr() */
-#define TCSANOW		0
-#define TCSADRAIN	1
-#define TCSAFLUSH	2
-
-/* internal use only */
-#define _TF_STOPBITS	0x0003
-#define _TF_1STOP	0x0001
-#define _TF_15STOP	0x0002
-#define	_TF_2STOP	0x0003
-#define _TF_CHARBITS	0x000C
-#define _TF_8BIT	0
-#define _TF_7BIT	0x4
-#define _TF_6BIT	0x8
-#define _TF_5BIT	0xC
-#define _TF_CAR		0x800
-#define _TF_BRKINT	0x80
-
-#define _TS_BLIND	0x800
-#define _TS_HOLD	0x1000
-#define _TS_HPCL	0x4000
-#define _TS_COOKED	0x8000
-
-/* baud rate codes */
-#ifndef _SYS_IOCTL_H
-#define B0		0
-#define B50		1
-#define B75		2
-#define B110		3
-#define B134		4
-#define B135		4
-#define B150		5
-#define B200		6
-#define B300		7
-#define B600		8
-#define B1200		9
-#define B1800		10
-#define B2400		11
-#define B4800		12
-#define B9600		13
-#define B19200		14
-#define B38400		15
-#define B57600          16
-#define B115200         17
-#define B230400         18
-#define B460800         19
-#define B921600         20
-#endif /* _SYS_IOCTL_H */
-
-__EXTERN speed_t cfgetispeed	__PROTO((const struct termios *stp));
-__EXTERN speed_t cfgetospeed	__PROTO((const struct termios *stp));
-__EXTERN int	cfsetispeed	__PROTO((struct termios *stp,
-						speed_t baudcode));
-__EXTERN int	cfsetospeed	__PROTO((struct termios *stp,
-						speed_t baudcode));
 #ifdef	__USE_BSD
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
-__EXTERN int cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
+extern int cfsetspeed (struct termios *__termios_p, speed_t __speed) __THROW;
 #endif
-__EXTERN int	tcdrain		__PROTO((int fd));
-__EXTERN int	tcflow		__PROTO((int fd, int action));
-__EXTERN int	tcflush		__PROTO((int fd, int action));
-__EXTERN int	tcgetattr	__PROTO((int fd, struct termios *stp));
-__EXTERN int	tcsendbreak	__PROTO((int fd, int duration));
-__EXTERN int	tcsetattr	__PROTO((int fd, int action, 
-						const struct termios *stp));
+
+
+/* Put the state of FD into *TERMIOS_P.  */
+extern int tcgetattr (int __fd, struct termios *__termios_p) __THROW;
+
+/* Set the state of FD to *TERMIOS_P.
+   Values for OPTIONAL_ACTIONS (TCSA*) are in <bits/termios.h>.  */
+extern int tcsetattr (int __fd, int __optional_actions,
+		      __const struct termios *__termios_p) __THROW;
+
+
+#ifdef	__USE_BSD
+/* Set *TERMIOS_P to indicate raw mode.  */
+extern void cfmakeraw (struct termios *__termios_p) __THROW;
+#endif
+
+/* Send zero bits on FD.  */
+extern int tcsendbreak (int __fd, int __duration) __THROW;
+
+/* Wait for pending output to be written on FD.  */
+extern int tcdrain (int __fd) __THROW;
+
+/* Flush pending data on FD.
+   Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <bits/termios.h>.  */
+extern int tcflush (int __fd, int __queue_selector) __THROW;
+
+/* Suspend or restart transmission on FD.
+   Values for ACTION (TC[IO]{OFF,ON}) are in <bits/termios.h>.  */
+extern int tcflow (int __fd, int __action) __THROW;
+
+
+#ifdef __USE_UNIX98
+/* Get process group ID for session leader for controlling terminal FD.  */
+extern __pid_t tcgetsid (int __fd) __THROW;
+#endif
+
 
 #ifdef __USE_BSD
 # include <sys/ttydefaults.h>
@@ -228,4 +107,4 @@ __EXTERN int	tcsetattr	__PROTO((int fd, int action,
 
 __END_DECLS
 
-#endif /* _TERMIOS_H */
+#endif /* termios.h  */

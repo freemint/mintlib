@@ -3,23 +3,14 @@ Public domain termios tcflow() for the MiNT library
 10 October 1993 entropy@terminator.rs.itd.umich.edu -- first attempt
 */
 
-#include <mintbind.h>
 #include <errno.h>
+#include <termios.h>
 
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\types.h>
-# include <sys\termios.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/types.h>
-# include <sys/termios.h>
-#endif
+#include <sys/ioctl.h>
+#include <mint/mintbind.h>
 
 int
-tcflow(fd, action)
-  int fd;
-  int action;
+tcflow(int fd, int action)
 {
   long r;
 

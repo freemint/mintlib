@@ -8,12 +8,10 @@
     understand and accept it fully.
 */
 
-#include <sys/types.h>
 #include <termios.h>
 
-__EXTERN int cfsetspeed __PROTO ((struct termios* tt, speed_t baud));
-
-int cfsetspeed (struct termios* tt, speed_t baud)
+int
+cfsetspeed (struct termios *tt, speed_t baud)
 {
   cfsetispeed (tt, baud);
   cfsetospeed (tt, baud);

@@ -3,25 +3,15 @@ Public domain termios tcflush() for the MiNT library
 10 October 1993 entropy@terminator.rs.itd.umich.edu -- first attempt
 */
 
-#include <mintbind.h>
 #include <errno.h>
+#include <termios.h>
 
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\file.h>
-# include <sys\types.h>
-# include <sys\termios.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/file.h>
-# include <sys/types.h>
-# include <sys/termios.h>
-#endif
+#include <sys/ioctl.h>
+#include <sys/file.h>
+#include <mint/mintbind.h>
 
 int
-tcflush(fd, action)
-  int fd;
-  int action;
+tcflush(int fd, int action)
 {
   long flushtype;
   long r;

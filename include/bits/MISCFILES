@@ -8,7 +8,7 @@ MISCFILES = MISCFILES \
 	dirent.h \
 	endian.h \
 	fcntl.h \
-	hige_val.h \
+	huge_val.h \
 	in.h \
 	ipc.h \
 	libc-lock.h \
@@ -38,6 +38,7 @@ MISCFILES = MISCFILES \
 	stdio_lim.h \
 	string.h \
 	string2.h \
+	termios.h \
 	time.h \
 	types.h \
 	xopen_lim.h
