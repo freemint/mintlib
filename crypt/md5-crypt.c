@@ -37,12 +37,6 @@ static const char md5_salt_prefix[] = "$1$";
 static const char b64t[64] =
 "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-#ifdef __MINT__
-# include <macros.h>
-# define MIN min
-# define MAX max
-#endif
-
 /* Prototypes for local functions.  */
 #ifndef __MSHORT__
 __EXTERN char *__md5_crypt_r __P ((const char *key, const char *salt,

@@ -24,9 +24,7 @@
 #include <stdint.h>
 #ifdef __MINT__
 # define UCHAR_T unsigned char
-# include <macros.h>
 # include <limits.h>
-# define MAX max
 #endif
 #include <stddef.h>
 #include <string.h>

@@ -91,9 +91,6 @@ __EXTERN int __fork __P ((void));
 __EXTERN int __close __P ((int));
 __EXTERN int __dup2 __P ((int, int));
 
-#include <macros.h>
-#define MAX(a, b) max(a, b)
-
 #ifndef _PATH_BSHELL
 # define _PATH_BSHELL "/bin/sh"
 #endif
