@@ -84,6 +84,9 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
   const long int fd = (long int) cookie;
 #endif
 
+#if 0
+/* old implementation */
+
   int save = errno;
   ssize_t nread = 0;
   char* bufptr = buf;
@@ -122,6 +125,33 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
     
     __set_errno (save);
     return nread;
+#else
+/* new implementation from jens */
+
+/* Completly recoded, but I'm not really sure if it is a good idea.
+ * But now it is working more compatible to the binary version
+ * 'stdio_read' of it, and fgets is now working also on standard
+ * TOS systems. fgetc is no longer skipping <CR> keys .... but I'm
+ * not sure what may happen in other library functions.
+ */
+	
+  int save = errno;
+  ssize_t read_bytes = __read (fd, buf, (int) (n));
+  ssize_t i;
+
+  if (read_bytes < 0)
+    return -1;
+
+  /* Now squeeze '\r' characters out of our buffer.  */
+  for (i = 0; i < read_bytes; i++)
+    {
+      if (buf[i] == '\r')
+	buf[i] = '\n';
+    }
+
+  __set_errno (save);
+  return read_bytes;
+#endif
 }
 
 /* Write N bytes from BUF to COOKIE.  */
