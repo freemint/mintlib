@@ -115,7 +115,7 @@ enum __rusage_who
     RUSAGE_SELF = -1,
 #define RUSAGE_SELF RUSAGE_SELF
     /* Current processes children.  */
-    RUSAGE_CHILDREN = -2,    
+    RUSAGE_CHILDREN = -2
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
   };
 
@@ -158,7 +158,7 @@ enum __priority_which
        a user ID.  */
     /* Note that this opcode is not implemented yet.  The return value
        will be -1 and errno will be set to ENOSYS.  */
-    PRIO_USER = 2,
+    PRIO_USER = 2
 #define PRIO_USER PRIO_USER
   };
   
