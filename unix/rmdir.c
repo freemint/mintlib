@@ -4,15 +4,15 @@
 /* Modified by Guido: The return code from Ddelete is to unreliable.
    We therefore check ourselves for correct arguments.  */
    
-#include <limits.h>
-#include <mintbind.h>
 #include <errno.h>
+#include <limits.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
-int __rmdir(_path)
-	const char *_path;
+int
+__rmdir(const char *_path)
 {
 	char pathbuf[PATH_MAX];
 	int  r;

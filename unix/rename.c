@@ -1,28 +1,21 @@
 /* a public domain rename, by ERS */
 
-#include <limits.h>
 #include <errno.h>
-#include <osbind.h>
+#include <limits.h>
 #include <string.h>
 #include <unistd.h>
-
-#ifdef __TURBOC__
-# include <sys\stat.h>
-#else
-# include <sys/stat.h>
-#endif
-
-#include <mintbind.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
-int __rename(_oldname, _newname)
-	const char *_oldname, *_newname;
+int
+__rename(const char *_oldname, const char *_newname)
 {
 	char oldnamebuf[PATH_MAX], newnamebuf[PATH_MAX];
 	int rval, r;
 	long xattr;
-	struct xattr oldstat;
-	struct xattr newstat;
+	struct stat oldstat;
+	struct stat newstat;
 	char* oldname = (char*) _oldname;
 	char* newname = (char*) _newname;
 	
@@ -39,17 +32,17 @@ int __rename(_oldname, _newname)
 	    _unx2dos(_newname, newname, sizeof (newnamebuf));
 	  }
 	
-	xattr = Fxattr (1, newname, &newstat);
+	xattr = Fstat (newname, &newstat, 1, 0);
 	if (xattr == 0)
-	  xattr = Fxattr (1, oldname, &oldstat);
+	  xattr = Fstat (oldname, &oldstat, 1, 0);
 	if (xattr == 0)
 	  {
 	    /* Find some errors.  FIXME:  That should be done conditionally
 	       when the kernel can do that.  */
 	    
 	    /* First check: new is a directory and old isn't.  */
-	    if (S_ISDIR ((mode_t) newstat.st_mode) 
-	    	&& !S_ISDIR ((mode_t) oldstat.st_mode))
+	    if (S_ISDIR (newstat.st_mode) 
+	    	&& !S_ISDIR (oldstat.st_mode))
 	      {
 	        __set_errno (EISDIR);
 	        return -1;
@@ -99,12 +92,11 @@ int __rename(_oldname, _newname)
 
 	if (rval < 0) {
 		if ((rval == -ENOTDIR) && (xattr != -ENOSYS) &&
-		    (_enoent(Fxattr(1, oldname, &oldstat) ? oldname : newname)))
+		    (_enoent(Fstat (oldname, &oldstat, 1, 0) ? oldname : newname)))
 			rval = -ENOENT;
 		__set_errno (-rval);
 		rval = -1;
 	}
 	return rval;
 }
-
 weak_alias (__rename, rename)

@@ -5,25 +5,14 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <osbind.h>
-#include <mintbind.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
 #include <unistd.h>
+#include <mint/mintbind.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "lib.h"
 
-
 int 
-__mkdir(_path, mode)
-	const char *_path;
-	mode_t mode;
+__mkdir(const char *_path, mode_t mode)
 {
 	struct stat statbuf;
 	int rv, umask;
@@ -66,5 +55,4 @@ __mkdir(_path, mode)
 	}
 	return 0;
 }
-
 weak_alias (__mkdir, mkdir)

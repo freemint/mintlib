@@ -9,9 +9,9 @@
 */
 
 #include <errno.h>
-#include <mintbind.h>
 #include <stdio.h>
 #include <sys/ptrace.h>
+#include <mint/mintbind.h>
 
 #ifdef __MSHORT__
 #define int long

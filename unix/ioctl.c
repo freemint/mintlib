@@ -6,23 +6,16 @@
  */
 
 #include <errno.h>
-#include <mintbind.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <mint/linea.h>	/* for TIOCGWINSZ under TOS */
 #include <support.h>
 
-#ifdef __TURBOC__
-# include <mint\ssystem.h>
-# include <sys\ioctl.h>
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <mint/ssystem.h>
-# include <sys/ioctl.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
+#include <mint/linea.h>	/* for TIOCGWINSZ under TOS */
+#include <mint/mintbind.h>
+#include <mint/ssystem.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "lib.h"	/* for __open_stat */
 
@@ -301,5 +294,4 @@ __ioctl (int fd, int cmd, void *arg)
 	}
 	return (int) r;
 }
-
 weak_alias (__ioctl, ioctl)

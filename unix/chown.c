@@ -2,31 +2,20 @@
 /* written by Eric R. Smith and placed in the public domain */
 /* this is faked if MiNT is not running */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
-#include <osbind.h>
-#include <mintbind.h>
-#include <limits.h>
 #include <errno.h>
+#include <limits.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
-
 int
-__chown(_name, uid, gid)
-       const char *_name;
-       uid_t uid;
-       gid_t gid;
+__chown (const char *_name, uid_t uid, gid_t gid)
 {
-	int r;
 	char namebuf[PATH_MAX];
-	char* name = (char*) _name;
+	char *name = (char *) _name;
+	int r;
 
 	if (_name == NULL)
 	  {

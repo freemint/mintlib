@@ -1,5 +1,5 @@
 /*  uname.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,34 +8,25 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\utsname.h>
-# include <sys\systeminfo.h>
-#else
-# include <sys/utsname.h>
-# include <sys/systeminfo.h>
-#endif
-
 #include <errno.h>
+#include <sys/systeminfo.h>
+#include <sys/utsname.h>
 
-int uname (info)
-  struct utsname* info;
+int
+__uname (struct utsname *info)
 {
-  if (info == (struct utsname*) 0) {
-    __set_errno (EFAULT);
-    return -1;
-  }
-  
-  (void) sysinfo (SI_SYSNAME, info->sysname, sizeof (info->sysname));
-  (void) sysinfo (SI_HOSTNAME, info->nodename, sizeof (info->nodename));
-  (void) sysinfo (SI_RELEASE, info->release, sizeof (info->release));
-  (void) sysinfo (SI_VERSION, info->version, sizeof (info->version));
-  (void) sysinfo (SI_PLATFORM, info->machine, sizeof (info->machine));
+	if (info == (struct utsname *) 0) {
+		__set_errno (EFAULT);
+		return -1;
+	}
 
-#if 0
-  (void) sysinfo (SI_ARCHITECTURE, info->architecture, 
-      sizeof (info->architecture));
-#endif
+	sysinfo (SI_SYSNAME, info->sysname, sizeof (info->sysname));
+	sysinfo (SI_HOSTNAME, info->nodename, sizeof (info->nodename));
+	sysinfo (SI_RELEASE, info->release, sizeof (info->release));
+	sysinfo (SI_VERSION, info->version, sizeof (info->version));
+	sysinfo (SI_PLATFORM, info->machine, sizeof (info->machine));
+//	sysinfo (SI_ARCHITECTURE, info->architecture, sizeof (info->architecture));
 
-  return 0;
+	return 0;
 }
+weak_alias (__uname, uname)

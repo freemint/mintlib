@@ -6,24 +6,14 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <mintbind.h>
-
-#ifdef __TURBOC__
-# include <sys\file.h>
-#else
-# include <sys/file.h>
-#endif
+#include <mint/mintbind.h>
+#include <sys/file.h>
 
 #include "lib.h"
 
-extern int __mint;
 
 int
-_do_lock(fd, cmd, size, whence)
-	int fd;
-	int cmd;
-	long size;
-	int whence;
+__do_lock (int fd, int cmd, long size, int whence)
 {
 	struct flock lock;
 	int fcmd;

@@ -24,8 +24,7 @@
 #include <unistd.h>
 
 #ifdef __MINT__
-__EXTERN int __isatty __P ((int fd));
-__EXTERN int __do_fstat __P ((int fd, struct stat* sb, int timestamps));
+# include "lib.h"
 # define __fstat(fd, sb) __do_fstat (fd, sb, 0)
 #endif
 

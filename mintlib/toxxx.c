@@ -1,3 +1,4 @@
+
 #include <ctype.h>
 
 #undef	toupper /* note that in gcc we have a safe version of these, */

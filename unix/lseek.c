@@ -1,11 +1,10 @@
-#include <compiler.h>
+#include <errno.h>
+#include <memory.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <errno.h>
-#include <osbind.h>
-#include <memory.h>
 #include <string.h>
 #include <unistd.h>
+#include <mint/osbind.h>
 
 /*
  * emulate berzerkly lseek too
@@ -65,5 +64,4 @@ __lseek (int handle, off_t offset, int mode)
     }
     return(new_pos);  
 }
-
 weak_alias (__lseek, lseek)

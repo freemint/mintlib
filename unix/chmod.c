@@ -1,30 +1,20 @@
 /* chmod -- change the permissions of a file */
 /* written by Eric R. Smith and placed in the public domain */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
-#include <osbind.h>
-#include <mintbind.h>
-#include <limits.h>
 #include <errno.h>
+#include <limits.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
-
 int
-__chmod(_path, mode)
-	const char *_path;
-	mode_t   mode;
+__chmod (const char *_path, mode_t mode)
 {
 	int  dosattrib = 0, r;
 	char buf[PATH_MAX];
-	char* path = (char*) _path;
+	char *path = (char *) _path;
 
 	if (!__libc_unix_names)
 	  {

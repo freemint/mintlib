@@ -1,103 +1,81 @@
+/* Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
 /*
- *	FCNTL.H
+ *	POSIX Standard: 6.5 File Control Operations	<fcntl.h>
  */
 
 #ifndef	_FCNTL_H
-#define	_FCNTL_H
+#define	_FCNTL_H	1
 
 #ifndef	_FEATURES_H
 # include <features.h>
 #endif
 
+/* This must be early so <bits/fcntl.h> can define types winningly.  */
 __BEGIN_DECLS
 
-#define	O_RDONLY	0x00		/* read only */
-#define	O_WRONLY	0x01		/* write only */
-#define	O_RDWR		0x02		/* read/write */
-#define O_ACCMODE	0x03		/* used to mask off file access mode */
+/* Get the definitions of O_*, F_*, FD_*: all the
+   numbers and flag bits for `open', `fcntl', et al.  */
+#include <bits/fcntl.h>
 
-/* file sharing modes (not POSIX) */
-#define O_COMPAT	0x00		/* old TOS compatibility mode */
-#define O_DENYRW	0x10		/* deny both reads and writes */
-#define O_DENYW		0x20
-#define O_DENYR		0x30
-#define O_DENYNONE	0x40		/* don't deny anything */
-#define O_SHMODE	0x70		/* mask for file sharing mode */
-
-#define	O_NONBLOCK	0x100		/* Non-blocking I/O */
-#ifdef __USE_BSD
-# define O_NDELAY	O_NONBLOCK
+/* For XPG all symbols from <sys/stat.h> should also be available.  */
+#ifdef __USE_XOPEN
+# include <sys/stat.h>
 #endif
 
-#ifdef __MINT__
-# define O_SYNC		0x00		/* sync after writes (not implemented) */
-#endif
+#ifdef	__USE_MISC
+# ifndef R_OK			/* Verbatim from <unistd.h>.  Ugh.  */
+/* Values for the second argument to access.
+   These may be OR'd together.  */
+#  define R_OK	4		/* Test for read permission.  */
+#  define W_OK	2		/* Test for write permission.  */
+#  define X_OK	1		/* Test for execute permission.  */
+#  define F_OK	0		/* Test for existence.  */
+# endif
+#endif /* Use misc.  */
 
-/* the following flags are not passed to the OS */
-#define	O_CREAT		0x200		/* create new file if needed */
-#define	O_TRUNC		0x400		/* make file 0 length */
-#define	O_EXCL		0x800		/* error if file exists */
-#define	O_APPEND	0x1000		/* position at EOF */
-#define _REALO_APPEND	0x08		/* this is what MiNT uses */
-#ifndef __MINT__
-# define O_PIPE		0x2000		/* serial pipe     */
-#endif
-#define O_NOCTTY	0x4000		/* do not open new controlling tty */
+/* XPG wants the following symbols.  */
+#ifdef __USE_XOPEN		/* <stdio.h> has the same definitions.  */
+# define SEEK_SET	0	/* Seek from beginning of file.  */
+# define SEEK_CUR	1	/* Seek from current position.  */
+# define SEEK_END	2	/* Seek from end of file.  */
+#endif	/* XPG */
 
-/*
- * defines for the access() function
- */
-#define	F_OK			0
-#define	X_OK			1
-#define	W_OK			2
-#define	R_OK			4
+/* Do the file control operation described by CMD on FD.
+   The remaining arguments are interpreted depending on CMD.  */
+extern int fcntl (int __fd, int __cmd, ...) __THROW;
+extern int __fcntl (int __fd, int __cmd, ...) __THROW;
 
-/*
- * defines for fcntl()
- */
-#define	F_DUPFD		0	/* Duplicate fildes */
-#define	F_GETFD		1	/* Get fildes flags */
-#define	F_SETFD		2	/* Set fildes flags */
-#define	F_GETFL		3	/* Get file flags */
-#define	F_SETFL		4	/* Set file flags */
+/* Open FILE and return a new file descriptor for it, or -1 on error.
+   OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
+   the third argument is taken as a `mode_t', the mode of the created file.  */
+extern int open (__const char *__file, int __oflag, ...) __THROW;
+extern int __open (__const char *__file, int __oflag, ...) __THROW;
 
-#ifdef __MINT__
-#define F_GETLK		5	/* Get file lock */
-#define F_SETLK		6	/* Set file lock */
-#define F_SETLKW	7	/* Get lock, wait if busy */
+/* Create and open FILE, with mode MODE.
+   This takes an `int' MODE argument because that is
+   what `mode_t' will be widened to.  */
+extern int creat (__const char *__file, __mode_t __mode) __THROW;
+extern int __creat (__const char *__file, __mode_t __mode) __THROW;
 
-struct flock {
-	short l_type;
-#define F_RDLCK		O_RDONLY
-#define F_WRLCK		O_WRONLY
-#define F_UNLCK		3
-	short l_whence;
-	long l_start;
-	long l_len;
-	short l_pid;
-};
-#endif /* __MINT__ */
-
-/* Mask for close-on-exec bit in the flags retrieved/set by F_GETFD/F_SETFD */
-#define FD_CLOEXEC 0x01
-
-/* smallest valid gemdos handle */
-/* note handle is only word (16 bit) negative, not long negative,
-   and since Fopen etc are declared as returning long in osbind.h
-   the sign-extension will not happen -- thanks ers
-*/
-#ifdef __MSHORT__
-#define __SMALLEST_VALID_HANDLE (-3)
-#else
-#define __SMALLEST_VALID_HANDLE (0)
-#endif
-
-__EXTERN int	creat	__PROTO((const char *, unsigned short));
-__EXTERN int	fcntl	__PROTO((int f, int cmd, ...));
-__EXTERN int	open	__PROTO((const char *, int, ...));
-
-#ifdef __MINT__
-# if defined (__USE_MISC) && !defined (F_LOCK)
+#if !defined F_LOCK && (defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \
+					       && !defined __USE_POSIX))
 /* NOTE: These declarations also appear in <unistd.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */
@@ -106,14 +84,25 @@ __EXTERN int	open	__PROTO((const char *, int, ...));
    LEN is always relative to the current file position.
    The CMD argument is one of the following.  */
 
-/* flock() commands */
-#  define F_ULOCK	0	/* unlock */
-#  define F_LOCK	1	/* lock */
-#  define F_TLOCK	2	/* test and lock (non-blocking) */
-#  define F_TEST	3	/* test */
-__EXTERN int		lockf	__PROTO((int, int, long));
-# endif
-#endif /* __MINT__ */
+# define F_ULOCK 0	/* Unlock a previously locked region.  */
+# define F_LOCK  1	/* Lock a region for exclusive use.  */
+# define F_TLOCK 2	/* Test and lock a region for exclusive use.  */
+# define F_TEST  3	/* Test a region for other processes locks.  */
+
+extern int lockf (int __fd, int __cmd, __off_t __len) __THROW;
+extern int __lockf (int __fd, int __cmd, __off_t __len) __THROW;
+#endif
+
+#ifdef __USE_XOPEN2K
+#ifndef __MINT__
+/* Advice the system about the expected behaviour of the application with
+   respect to the file associated with FD.  */
+extern int posix_fadvise (int __fd, __off_t __offset, size_t __len,
+			  int __advise) __THROW;
+/* Reserve storage for the data of the file associated with FD.  */
+extern int posix_fallocate (int __fd, __off_t __offset, size_t __len) __THROW;
+#endif
+#endif
 
 __END_DECLS
 

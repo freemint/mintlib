@@ -5,6 +5,7 @@
 | will be preserved across a vfork() system call.
 |
 	.globl	_vfork
+	.globl	___vfork
 	.globl	___mint		| MiNT version kept here
 	.lcomm	L_vfsav, 128
 	.text
@@ -21,6 +22,7 @@
 # endif
 
 _vfork:
+___vfork:
 	movel	sp@+, a1	| save return address; this is important!
 #ifdef __MSHORT__
 	tstw	Mint

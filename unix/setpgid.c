@@ -1,5 +1,5 @@
 /*  src/setpgid.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,22 +8,18 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
-#include <unistd.h>
-#include <mintbind.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
+
 #include "lib.h"
 
-__EXTERN int __bsd_setpgrp __PROTO ((int, int));
+int __bsd_setpgrp (int, int);
 
 int
-setpgid(pid, pgid)
-     pid_t pid, pgid;
+__setpgid (pid_t pid, pid_t pgid)
 {
-  return (__bsd_setpgrp ((int) pid, (int) pgid));
+	return __bsd_setpgrp ((int) pid, (int) pgid);
 }
+weak_alias (__setpgid, setpgid)

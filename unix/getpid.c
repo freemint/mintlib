@@ -1,23 +1,23 @@
-#include <osbind.h>
+
+#include <errno.h>
 #include <unistd.h>
 #include <mint/basepage.h>
 #include <mint/mintbind.h>
-#include <errno.h>
 
 int
 __getpid (void)
 {
-  	int r;
-  	static short have_getpid = 1;
-  
-  	if (have_getpid) {
-  		r = (int)Pgetpid();
+	static short have_getpid = 1;
+
+	if (have_getpid) {
+		long r;
+		
+		r = Pgetpid ();
 		if (r == -ENOSYS)
 			have_getpid = 0;
 		else
-			return r;
+			return (int) r;
 	}
-	return ((int) ( ((long)_base) >> 8 ));
+	return ((int) (((long) _base) >> 8 ));
 }
-
 weak_alias (__getpid, getpid)

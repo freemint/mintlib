@@ -7,15 +7,15 @@
 #include <process.h>
 #include <unistd.h>
 
-#ifdef __STDC__
-int execl(const char *path, ...)
-#else
-int execl(path)
-	char	*path;
-#endif
+int
+execl(const char *path, ...)
 {
 	va_list args;
+	int r;
 
-	va_start(args, path);
-	return execve (path, (char **)args, NULL);
+	va_start (args, path);
+	r = __execve (path, (char **) args, NULL);
+	va_end (args);
+
+	return r;
 }

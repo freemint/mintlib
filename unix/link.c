@@ -15,7 +15,7 @@
  */
 
 int
-__link(const char *_old, const char *_new)
+__link (const char *_old, const char *_new)
 {
 	long r;
 	char oldbuf[PATH_MAX], newbuf[PATH_MAX];
@@ -26,18 +26,18 @@ __link(const char *_old, const char *_new)
 	  {
 	    old = oldbuf;
 	    new = newbuf;
-	    _unx2dos(_old, old, sizeof (oldbuf));
-	    _unx2dos(_new, new, sizeof (newbuf));
+	    _unx2dos (_old, old, sizeof (oldbuf));
+	    _unx2dos (_new, new, sizeof (newbuf));
 	  }
 	  
 	r = Flink(old, new);
 	if (r < 0 && r != -ENOSYS) {
-		struct xattr sb;
+		struct stat sb;
 
 		if ((r == -ENOTDIR)) {
-			if (_enoent(Fxattr(1, old, &sb) ? old : new))
+			if (_enoent (Fstat (old, &sb, 1, 0) ? old : new))
 				r = -ENOENT;
-		} else if ((r == -EACCES) && (!Fxattr(1, new, &sb)))
+		} else if ((r == -EACCES) && (!Fstat (new, &sb, 1, 0)))
 			r = -EEXIST;
 		__set_errno ((int) -r);
 		return -1;

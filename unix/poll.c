@@ -27,11 +27,11 @@
    Returns the number of file descriptors with events, zero if timed out,
    or -1 for errors.  */
 
-#include <sys/poll.h>
 #include <errno.h>
-#include <mintbind.h>
-#include <sys/time.h>
 #include <limits.h>
+#include <mint/mintbind.h>
+#include <sys/poll.h>
+#include <sys/time.h>
 
 int
 __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)

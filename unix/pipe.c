@@ -3,10 +3,9 @@
  * works only under MiNT
  */
 
-#include <osbind.h>
 #include <errno.h>
-#include <mintbind.h>
 #include <unistd.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 int
@@ -29,5 +28,4 @@ __pipe (int *fd)
 		__open_stat[__OPEN_INDEX(fd[1])].status = FH_UNKNOWN;
 	return 0;
 }
-
 weak_alias (__pipe, pipe)

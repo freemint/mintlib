@@ -8,19 +8,12 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\timeb.h>
-# include <sys\time.h>
-#else
-# include <sys/timeb.h>
-# include <sys/time.h>
-#endif
-
-#include <time.h>
+#include <sys/timeb.h>
+#include <sys/time.h>
 #include "time/tzstruct.h"
 
 int
-ftime (struct timeb* timebuf)
+ftime (struct timeb *timebuf)
 {
   struct timeval tv;
   struct timezone tz;

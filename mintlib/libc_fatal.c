@@ -16,8 +16,6 @@
    This function should write MESSAGE out in the most reliable way.
    It is called in situations like internal stdio lossage.  */
 
-__EXTERN ssize_t __write __PROTO ((int desc, void* buf, size_t len));
-
 extern char* program_invocation_name;
 
 void

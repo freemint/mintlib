@@ -1,5 +1,5 @@
 /*  time.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,23 +8,19 @@
     understand and accept it fully.
 */
 
-#include <time.h>
-
-#ifdef __TURBOC__
-# include <sys/time.h>
-#else
-# include <sys/time.h>
-#endif
+#include <sys/time.h>
 
 time_t 
-time (time_t* buf)
+__time (time_t *buf)
 {
-  struct timeval now;
-  
-  if (gettimeofday (&now, NULL) != 0)
-    return ((time_t) -1);
-  
-  if (buf)
-    *buf = now.tv_sec;
-  return now.tv_sec;
+	struct timeval now;
+
+	if (__gettimeofday (&now, NULL) != 0)
+		return ((time_t) -1);
+
+	if (buf)
+		*buf = now.tv_sec;
+
+	return now.tv_sec;
 }
+weak_alias (__time, time)

@@ -1,16 +1,11 @@
 /* soft link routines */
 
-#include <mintbind.h>
 #include <errno.h>
-#include <string.h>
 #include <limits.h>
+#include <string.h>
 #include <unistd.h>
-
-#ifdef __TURBOC__
-# include <sys\stat.h>
-#else
-# include <sys/stat.h>
-#endif
+#include <mint/mintbind.h>
+#include <sys/stat.h>
 
 #include "lib.h"
 
@@ -22,27 +17,27 @@
  */
 
 int
-__readlink (const char *unxname, char *buf, int siz)
+__readlink (const char *unxname, char *buf, size_t siz)
 {
 	long r;
 	size_t l;
 	char filenamebuf[PATH_MAX];
 	char linkto[PATH_MAX+1];
-	char* filename = unxname;
+	const char *filename = unxname;
 	
 	if (!__libc_unix_names)
 	  {
 	    filename = filenamebuf;
-	    _unx2dos(unxname, filename, sizeof (filenamebuf));
+	    _unx2dos(unxname, filenamebuf, sizeof (filenamebuf));
 	  }
 	r = Freadlink(PATH_MAX, linkto, filename);
 	if (r < 0) {
 		if (r == -EACCES) {
-			struct xattr sb;
+			struct stat sb;
 
 			/* UNIX gives EINVAL, not EACCES, on non-links */
-			if ((Fxattr(1, filename, &sb) == 0)
-			    && (((mode_t) sb.st_mode & S_IFMT) != S_IFLNK)) {
+			if ((Fstat (filename, &sb, 1, 0) == 0)
+			    && ((sb.st_mode & S_IFMT) != S_IFLNK)) {
 				r = -EINVAL;
 			}
 		}
@@ -65,5 +60,4 @@ __readlink (const char *unxname, char *buf, int siz)
 	strncpy(buf, filenamebuf, siz);
 	return (int) l;
 }
-
 weak_alias (__readlink, readlink)

@@ -10,13 +10,12 @@
 #include "lib.h"
 
 unsigned int
-__alarm(secs)
-	unsigned secs;
+__alarm (unsigned secs)
 {
-	long r;
 	static short have_talarm = 1;
 
 	if (have_talarm) {
+		long r;
 #ifndef __MSHORT__
 		if (secs > ((unsigned int) (LONG_MAX/1000)))
 			secs = ((unsigned int) (LONG_MAX/1000));

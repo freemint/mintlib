@@ -1,24 +1,23 @@
 /* based upon Dale Schumacher's dLibs library */
 /* extensively modified by ers */
 
-#include <mintbind.h>
+#include <mint/mintbind.h>
 #include <limits.h>
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 #include <sys/ioctl.h>
 #include <sys/stat.h>
-
 #include <errno.h>
 #include <stdarg.h>
 #include <device.h>
+
+#include "lib.h"
+
 #ifndef PIPE_RDEV
 #define PIPE_RDEV 0x7e00
 #endif
-
-#include "lib.h"
 
 /*
  * the MiNT kernel uses 0x08 for O_APPEND. For
@@ -27,22 +26,7 @@
  * but adjust the file masks here.
  */
 
-int __current_umask = -1;
-extern int __mint;
-
-static void _get_umask __PROTO((void));
-
-/*
- * function to set the initial value of __current_umask
- */
-
-static void
-_get_umask()
-{
-  __current_umask = Pumask (0);
-  if (__current_umask < 0)
-    __current_umask = 0;
-}
+mode_t __current_umask = -1;
 
 /* Try to open the file NAME with FLAGS.  If the OS returns EACCES check
    if we are the super-user and then try to temporarily change the 
@@ -75,11 +59,8 @@ failsafe_Fopen (const char* name, int flags)
  *       (see also unistd.h)
  */
 
-#ifdef __STDC__
-int __open_v (const char *_filename, int iomode, va_list argp)
-#else
-int __open_v (cosnt char* _filename, int iomode, unsigned long argp)
-#endif
+int
+__open_v (const char *_filename, int iomode, va_list argp)
 {
 	int rv;
 	int modemask;			/* which bits get passed to the OS? */
@@ -94,11 +75,7 @@ int __open_v (cosnt char* _filename, int iomode, unsigned long argp)
 	    	return -1;
 	}	
 	if (iomode & O_CREAT) {
-#ifdef __STDC__
 	    	pmode = va_arg (argp, unsigned int);
-#else
-	    	pmode = (unsigned int) argp;
-#endif
 	}
 
 
@@ -107,12 +84,15 @@ int __open_v (cosnt char* _filename, int iomode, unsigned long argp)
 	    	_unx2dos(_filename, filename, sizeof (filenamebuf));
 	}
 
-/* use the umask() setting to get the right permissions */
-	if (__current_umask == -1)
-		_get_umask();
+	/* use the umask() setting to get the right permissions */
+	if (__current_umask == -1) {
+		__current_umask = Pumask (0);
+		if (__current_umask < 0)
+			 __current_umask = 0;
+	}
 	pmode &= ~__current_umask;
 
-/* set the file access modes correctly */
+	/* set the file access modes correctly */
 	iomode = iomode & ~O_SHMODE;
 
 	if (__mint >= 9) {
@@ -132,10 +112,10 @@ int __open_v (cosnt char* _filename, int iomode, unsigned long argp)
 	}
 	
 	rv = __quickstat (filename, &sb, 0);
-	/* The code used to call Fxattr.  Emulate this here.  */
+	/* The code used to call Fstat.  Emulate this here.  */
 	if (rv != 0)
 		rv = -errno;
-		
+	
 	if (rv == 0)		/* file exists */
 	{
 		if (S_ISDIR (sb.st_mode)) {
@@ -340,27 +320,16 @@ noent:
 	return(rv);
 }
 
-#ifdef __STDC__
-int __open (const char *_filename, int iomode, ...)
-#else
-int __open (_filename, iomode, pmode)
-	const char *_filename;
-	int iomode;
-	unsigned pmode;
-#endif
+int
+__open (const char *_filename, int iomode, ...)
 {
-#ifdef __STDC__
-  va_list args;
-  int retval;
+	va_list args;
+	int retval;
 
-  va_start (args, iomode);
-  retval = __open_v (_filename, iomode, args);
-  va_end (args);
-    
-  return retval;
-#else
-  retval = __open_v (_filename, iomode, (unsigned long) pmode);
-#endif
+	va_start (args, iomode);
+	retval = __open_v (_filename, iomode, args);
+	va_end (args);
+
+	return retval;
 }
-
 weak_alias (__open, open)

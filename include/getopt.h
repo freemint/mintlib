@@ -143,4 +143,7 @@ extern int _getopt_internal ();
 
 __END_DECLS
 
+/* Make sure we later can get all the definitions and declarations.  */
+#undef __need_getopt
+
 #endif /* _GETOPT_H */

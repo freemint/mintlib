@@ -65,13 +65,6 @@ __EXTERN void _console_write_byte __PROTO((int, int));
 __EXTERN int _text_read __PROTO((int, char *, int));
 __EXTERN int _text_write __PROTO((int, const char *, int));
 
-__EXTERN int getdtablesize __PROTO((void));
-
-__EXTERN int sync __PROTO((void));
-__EXTERN int __sync __PROTO((void));
-__EXTERN int fsync __PROTO((int));
-__EXTERN int __fsync __PROTO((int));
-
 __END_DECLS
 
 #endif /* _SUPPORT_H */

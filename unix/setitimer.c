@@ -1,5 +1,5 @@
 /*  getitimer.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,14 +8,9 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\time.h>
-#else
-# include <sys/time.h>
-#endif
-
-#include <mintbind.h>
 #include <errno.h>
+#include <sys/time.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 

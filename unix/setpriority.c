@@ -1,5 +1,5 @@
 /*  setpriority.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,25 +8,18 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\resource.h>
-#else
-# include <sys/resource.h>
-#endif
-
-#include <mintbind.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/resource.h>
+#include <mint/mintbind.h>
 
 static int initialized = 0;
 static int have_Psetpriority = 1;
 static int have_Prenice = 1;
 static int have_Pnice = 1;
 
-int __setpriority (class, id, priority)
-  enum __priority_which class;
-  int id;
-  int priority;
+int
+__setpriority (enum __priority_which class, int id, int priority)
 {
   int saved_priority;
   int increment;
@@ -120,5 +113,4 @@ int __setpriority (class, id, priority)
   __set_errno (ENOSYS);  
   return -1;
 }
-
 weak_alias (__setpriority, setpriority)

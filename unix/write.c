@@ -7,23 +7,14 @@
  * being caught
  */
 
-#include <osbind.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\stat.h>
-# include <sys\types.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-#endif
-
-#include <mintbind.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 extern sighandler_t _sig_handler[]; /* TOS fakes for signal handling */
@@ -89,5 +80,4 @@ __write (int fd, const void *buf, size_t size)
 
 	return r;
 }
-
 weak_alias (__write, write)

@@ -1,5 +1,5 @@
 /*  gettimeofday.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,22 +8,13 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\time.h>
-#else
-# include <sys/time.h>
-#endif
-
-#include <time.h>
-#include <string.h>
 #include <errno.h>
-
-#include <mintbind.h>
+#include <string.h>
+#include <sys/time.h>
+#include <mint/mintbind.h>
 
 int 
-__gettimeofday (tp, tzp)
-     struct timeval* tp;
-     struct timezone* tzp;
+__gettimeofday (struct timeval *tp, struct timezone *tzp)
 {
   unsigned short tos_time;
   unsigned short tos_date;

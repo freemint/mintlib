@@ -9,33 +9,23 @@
  *
  */
  
-#include <utime.h>
-#include <limits.h>
-#include <time.h>
-#include <errno.h>
-#include <osbind.h>
-#include <mintbind.h>
-#include <assert.h>
-#include <unistd.h>
 #include <alloca.h>
+#include <assert.h>
+#include <errno.h>
+#include <limits.h>
 #include <string.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
+#include <time.h>
+#include <unistd.h>
+#include <utime.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 
 int
-__utime (_filename, _tset)
-      const char *_filename;
-      const struct utimbuf *_tset;
+__utime (const char *_filename, const struct utimbuf *_tset)
 {
 	char filenamebuf[PATH_MAX];
 	char* filename = (char*) _filename;
@@ -87,13 +77,13 @@ __utime (_filename, _tset)
 		if (fh == -ENOENT) {
 			size_t len = strlen (filename) + 10;
 			char* fn = alloca (len);
-		    	struct xattr sb;
+		    	struct stat sb;
 		    
 			_dos2unx (_filename, fn, len);
 		    	if (fn[0] == '/' && strrchr (fn, '/') == fn
-		        	&& Fxattr (1, filename, &sb) == 0
-				&& S_ISLNK ((mode_t) sb.st_mode)
-				&& Fxattr (0, filename, &sb) == 0) {
+		        	&& Fstat (filename, &sb, 1, 0) == 0
+				&& S_ISLNK (sb.st_mode)
+				&& Fstat (filename, &sb, 0, 0) == 0) {
 					/* What should we do now?  Fake success 
 					   or change the stamp of the target 
 					   of the link instead?  Faking success

@@ -3,23 +3,15 @@
  * Eric R. Smith and placed in the public domain.
  */
 
-#include <fcntl.h>
-#include <osbind.h>
 #include <errno.h>
-
-#ifdef __TURBOC__
-# include <sys\ioctl.h>
-# include <sys\types.h>
-#else
-# include <sys/ioctl.h>
-# include <sys/types.h>
-#endif
-
-#include <signal.h>
-#include <unistd.h>
-#include <support.h>
-#include <mintbind.h>
+#include <fcntl.h>
 #include <limits.h>
+#include <signal.h>
+#include <support.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 #define CTRL(x) (x & 0x1f)
@@ -233,5 +225,4 @@ again:
 
 	return r;
 }
-
 weak_alias (__read, read)

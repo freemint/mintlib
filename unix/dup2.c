@@ -3,16 +3,15 @@
 /* will have to be adjusted at some time ++jrb */
 /* use with caution, TOS 1.4 still has double re-direction bug! */
 
-#include <stddef.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <mintbind.h>
+#include <fcntl.h>
+#include <stddef.h>
 #include <unistd.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 int
-__dup2(handle1, handle2)
-	int handle1, handle2;
+__dup2 (int handle1, int handle2)
 {
 	int rv;
 	long flags;

@@ -6,18 +6,12 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-
-#ifdef __TURBOC__
-# include <sys\file.h>
-#else
-# include <sys/file.h>
-#endif
+#include <sys/file.h>
 
 #include "lib.h"
 
 int
-__flock(fd, op)
-	int fd, op;
+__flock (int fd, int op)
 {
 	int cmd;
 	int retval;
@@ -30,7 +24,7 @@ __flock(fd, op)
 		__set_errno (EINVAL);
 		return -1;
 	}
-	retval = _do_lock(fd, cmd, 0L, 0);
+	retval = __do_lock(fd, cmd, 0L, 0);
 	if (retval == -ELOCKED && (op & LOCK_NB))
 	  {
 	    __set_errno (EWOULDBLOCK);
@@ -38,5 +32,4 @@ __flock(fd, op)
 	  }
 	return retval;
 }
-
 weak_alias (__flock, flock)

@@ -544,12 +544,13 @@ __extension__								\
 #define Dchroot(dir)						\
 		trap_1_wl(0x14a, (long)(dir))
 #define Fstat64(flag, name, stat)					\
-		trap_1_wwll(0x14b, (short)(flag), (long) name, (long) (stat))
-#define Fseek64() \
-		trap_1_wllwwl(0x14c)
+		trap_1_wwll(0x14b, (short)(flag), (long)(name), (long)(stat))
+#define Fseek64(high, low, fh, how, newpos) \
+		trap_1_wllwwl(0x14c, (long)(high), (long)(low), (short)(fh), \
+		(short)(how), (long)(newpos))
 #define Dsetkey(major, minor, key, cipher)				\
-		trap_1_wlllw(0x14d, (long)(major), (long)(minor), (long) (key),\
-		(short) cipher)
+		trap_1_wlllw(0x14d, (long)(major), (long)(minor), (long)(key), \
+		(short)(cipher))
 #define Psetreuid(rid, eid)   \
 		(int)trap_1_www(0x14e, (short)(rid), (short)(eid))
 #define Psetregid(rid, eid)   \
@@ -579,7 +580,8 @@ __extension__								\
 		trap_1_wwll(0x15b,(short)(fh),(long)(iovp),(long)(iovcnt))
 #define Freadv(fh, iovp, iovcnt) \
 		trap_1_wwll(0x15c,(short)(fh),(long)(iovp),(long)(iovcnt))
-/* 0x15d */
+#define Ffstat64(fh, stat) \
+		trap_1_wwl(0x15d,(short)(fh),(long)(stat))
 #define Psysctl(name, namelen, old, oldlenp, new, newlen) \
 		trap_1_wllllll(0x15e,(long)(name),(long)(namelen),(long)(old),(long)(oldlenp),(long)(new),(long)(newlen))
 #define Pemulation(which, op, a1, a2, a3, a4, a5, a6, a7) \

@@ -216,32 +216,57 @@ typedef __off64_t off64_t;
 #  define off64_t off64_t
 # endif
 
+# ifndef __useconds_t_defined
+typedef __useconds_t useconds_t;
+#  define __useconds_t_defined
+# endif
+
 # ifndef pid_t
 typedef __pid_t pid_t;
 #  define pid_t pid_t
 # endif
 #endif	/* X/Open */
 
-#ifdef __USE_UNIX98
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 # ifndef intptr_t
 typedef __intptr_t intptr_t;
 #  define intptr_t intptr_t
 # endif
 #endif	/* Unix98 */
 
-/* file access stuff */
-#ifndef F_OK
-# define	F_OK			0
-# define	X_OK			1
-# define	W_OK			2
-# define	R_OK			4
+#if defined __USE_BSD || defined __USE_XOPEN
+# ifndef __socklen_t_defined
+typedef __socklen_t socklen_t;
+#  define __socklen_t_defined
+# endif
 #endif
 
+/* Values for the second argument to access.
+   These may be OR'd together.  */
+#ifndef F_OK
+# define R_OK		4	/* Test for read permission.  */
+# define W_OK		2	/* Test for write permission.  */
+# define X_OK		1	/* Test for execute permission.  */
+# define F_OK		0	/* Test for existence.  */
+#endif
+
+/* Test for access to NAME using the real UID and real GID.  */
+extern int access (__const char *__name, int __type) __THROW;
+extern int __access (__const char *__name, int __type) __THROW;
+
+#ifdef __USE_GNU
+/* Test for access to NAME using the effective UID and GID
+   (as normal file operations use).  */
+extern int euidaccess (__const char *__name, int __type) __THROW;
+extern int __euidaccess (__const char *__name, int __type) __THROW;
+#endif
+
+
+/* Values for the WHENCE argument to lseek.  */
 #ifndef SEEK_SET
-/* lseek() origins */
-#define	SEEK_SET	0		/* from beginning of file */
-#define	SEEK_CUR	1		/* from current location */
-#define	SEEK_END	2		/* from end of file */
+# define SEEK_SET	0	/* Seek from beginning of file.  */
+# define SEEK_CUR	1	/* Seek from current position.  */
+# define SEEK_END	2	/* Seek from end of file.  */
 #endif
 
 #if defined __USE_BSD && !defined L_SET
@@ -251,28 +276,666 @@ typedef __intptr_t intptr_t;
 # define L_XTND		SEEK_END
 #endif
 
-/* sysconf() values */
-#define _SC_LAST	-1	/* max limit # for sysconf - NOT POSIX */
-#define _SC_MEMR_MAX	0	/* memory regions per process - NOT POSIX */
-#define _SC_ARG_MAX	1	/* max length of cmdln - NOT quite POSIX */
-#define _SC_OPEN_MAX	2	/* max # of open files per process - POSIX */
-#define _SC_NGROUPS_MAX	3	/* max # supp gids - POSIX */
-#define _SC_CHILD_MAX	4	/* max # processes/user - NOT quite POSIX */
 
-/* pathconf() values */
-#define _PC_LAST	-1	/* max limit # for pathconf - POSIX (!?) */
-#define _PC_IOPEN_MAX	0	/* internal limit on open files - NOT POSIX */
-#define _PC_LINK_MAX	1	/* max # of links - POSIX */
-#define _PC_PATH_MAX	2	/* max len of a full pathname - POSIX */
-#define _PC_NAME_MAX	3	/* max len of individual name - POSIX */
-#define _PC_PIPE_BUF	4	/* bytes written atomically to fifo - POSIX */
-#define _PC_NO_TRUNC	5	/* filename truncation - POSIX */
-#ifdef __MINT__
-#  define _MINT_PC_NAME_CASE 6  /* case-insensitive file-names */
+/* Move FD's file position to OFFSET bytes from the
+   beginning of the file (if WHENCE is SEEK_SET),
+   the current position (if WHENCE is SEEK_CUR),
+   or the end of the file (if WHENCE is SEEK_END).
+   Return the new file position.  */
+extern off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
+extern off_t __lseek (int __fd, __off_t __offset, int __whence) __THROW;
+
+/* Close the file descriptor FD.  */
+extern int close (int __fd) __THROW;
+extern int __close (int __fd) __THROW;
+
+/* Read NBYTES into BUF from FD.  Return the
+   number read, -1 for errors or 0 for EOF.  */
+extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __THROW;
+extern ssize_t __read (int __fd, void *__buf, size_t __nbytes) __THROW;
+
+/* Write N bytes of BUF to FD.  Return the number written, or -1.  */
+extern ssize_t write (int __fd, __const void *__buf, size_t __n) __THROW;
+extern ssize_t __write (int __fd, __const void *__buf, size_t __n) __THROW;
+
+#ifdef __USE_UNIX98
+/* Read NBYTES into BUF from FD at the given position OFFSET without
+   changing the file pointer.  Return the number read, -1 for errors
+   or 0 for EOF.  */
+extern ssize_t pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+     __THROW;
+extern ssize_t __pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+     __THROW;
+/* Write N bytes of BUF to FD at the given position OFFSET without
+   changing the file pointer.  Return the number written, or -1.  */
+extern ssize_t pwrite (int __fd, __const void *__buf, size_t __n,
+		       __off_t __offset) __THROW;
+extern ssize_t __pwrite (int __fd, __const void *__buf, size_t __n,
+		         __off_t __offset) __THROW;
 #endif
 
-#ifdef __MINT__
-# if defined (__USE_MISC) && !defined (F_LOCK)
+/* Create a one-way communication channel (pipe).
+   If successful, two file descriptors are stored in PIPEDES;
+   bytes written on PIPEDES[1] can be read from PIPEDES[0].
+   Returns 0 if successful, -1 if not.  */
+extern int pipe (int __pipedes[2]) __THROW;
+extern int __pipe (int __pipedes[2]) __THROW;
+
+/* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
+   If SECONDS is zero, any currently scheduled alarm will be cancelled.
+   The function returns the number of seconds remaining until the last
+   alarm scheduled would have signaled, or zero if there wasn't one.
+   There is no return value to indicate an error, but you can set `errno'
+   to 0 and check its value after calling `alarm', and this might tell you.
+   The signal may come late due to processor scheduling.  */
+extern unsigned int alarm (unsigned int __seconds) __THROW;
+extern unsigned int __alarm (unsigned int __seconds) __THROW;
+
+/* Make the process sleep for SECONDS seconds, or until a signal arrives
+   and is not ignored.  The function returns the number of seconds less
+   than SECONDS which it actually slept (thus zero if it slept the full time).
+   If a signal handler does a `longjmp' or modifies the handling of the
+   SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
+   signal afterwards is undefined.  There is no return value to indicate
+   error, but if `sleep' returns SECONDS, it probably didn't work.  */
+extern unsigned int sleep (unsigned int __seconds) __THROW;
+extern unsigned int __sleep (unsigned int __seconds) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#ifndef __MINT__
+/* Set an alarm to go off (generating a SIGALRM signal) in VALUE
+   microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
+   timer is reset to go off every INTERVAL microseconds thereafter.
+   Returns the number of microseconds remaining before the alarm.  */
+extern __useconds_t ualarm (__useconds_t __value, __useconds_t __interval)
+     __THROW;
+#endif
+
+/* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
+   or ignored.  */
+#ifndef __MINT__
+extern int usleep (__useconds_t __useconds) __THROW;
+#else
+extern void usleep (unsigned long) __THROW;
+#endif
+#endif
+
+
+/* Suspend the process until a signal arrives.
+   This always returns -1 and sets `errno' to EINTR.  */
+extern int pause (void) __THROW;
+extern int __pause (void) __THROW;
+
+
+/* Change the owner and group of FILE.  */
+extern int chown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
+extern int __chown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Change the owner and group of the file that FD is open on.  */
+extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
+extern int __fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
+
+
+#ifndef __MINT__
+/* Change owner and group of FILE, if it is a symbolic
+   link the ownership of the symbolic link is changed.  */
+extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
+extern int __lchown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
+#endif
+
+#endif /* Use BSD || X/Open Unix.  */
+
+/* Change the process's working directory to PATH.  */
+extern int chdir (__const char *__path) __THROW;
+extern int __chdir (__const char *__path) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#ifndef __MINT__
+/* Change the process's working directory to the one FD is open on.  */
+extern int fchdir (int __fd) __THROW;
+extern int __fchdir (int __fd) __THROW;
+#endif
+#endif
+
+/* Get the pathname of the current working directory,
+   and put it in SIZE bytes of BUF.  Returns NULL if the
+   directory couldn't be determined or SIZE was too small.
+   If successful, returns BUF.  In GNU, if BUF is NULL,
+   an array is allocated with `malloc'; the array is SIZE
+   bytes long, unless SIZE == 0, in which case it is as
+   big as necessary.  */
+extern char *getcwd (char *__buf, size_t __size) __THROW;
+extern char *__getcwd (char *__buf, size_t __size) __THROW;
+
+#ifdef	__USE_GNU
+/* Return a malloc'd string containing the current directory name.
+   If the environment variable `PWD' is set, and its value is correct,
+   that value is used.  */
+extern char *get_current_dir_name (void) __THROW;
+#endif
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Put the absolute pathname of the current working directory in BUF.
+   If successful, return BUF.  If not, put an error message in
+   BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
+extern char *getwd (char *__buf) __THROW;
+#endif
+
+
+/* Duplicate FD, returning a new file descriptor on the same file.  */
+extern int dup (int __fd) __THROW;
+extern int __dup (int __fd) __THROW;
+
+/* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
+extern int dup2 (int __fd, int __fd2) __THROW;
+extern int __dup2 (int __fd, int __fd2) __THROW;
+
+/* NULL-terminated array of "NAME=VALUE" environment variables.  */
+extern char **__environ;
+#ifdef __USE_GNU
+extern char **environ;
+#endif
+
+
+/* Replace the current process, executing PATH with arguments ARGV and
+   environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
+extern int execve (__const char *__path, char *__const __argv[],
+		   char *__const __envp[]) __THROW;
+extern int __execve (__const char *__path, char *__const __argv[],
+		     char *__const __envp[]) __THROW;
+
+#ifdef __USE_GNU
+#ifndef __MINT__
+/* Execute the file FD refers to, overlaying the running program image.
+   ARGV and ENVP are passed to the new program, as for `execve'.  */
+extern int fexecve (int __fd, char *__const __argv[], char *__const __envp[])
+     __THROW;
+#endif
+#endif
+
+
+/* Execute PATH with arguments ARGV and environment from `environ'.  */
+extern int execv (__const char *__path, char *__const __argv[]) __THROW;
+
+/* Execute PATH with all arguments after PATH until a NULL pointer,
+   and the argument after that for environment.  */
+extern int execle (__const char *__path, ...) __THROW;
+
+/* Execute PATH with all arguments after PATH until
+   a NULL pointer and environment from `environ'.  */
+extern int execl (__const char *__path, ...) __THROW;
+
+/* Execute FILE, searching in the `PATH' environment variable if it contains
+   no slashes, with arguments ARGV and environment from `environ'.  */
+extern int execvp (__const char *__file, char *__const __argv[]) __THROW;
+
+/* Execute FILE, searching in the `PATH' environment variable if
+   it contains no slashes, with all arguments after FILE until a
+   NULL pointer and environment from `environ'.  */
+extern int execlp (__const char *__file, ...) __THROW;
+
+
+#if defined __USE_MISC || defined __USE_XOPEN
+/* Add INC to priority of the current process.  */
+extern int nice (int __inc) __THROW;
+extern int __nice (int __inc) __THROW;
+#endif
+
+
+/* Terminate program execution with the low-order 8 bits of STATUS.  */
+extern void _exit (int __status) __attribute__ ((__noreturn__));
+
+
+/* Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
+   the `_SC_*' symbols for the NAME argument to `sysconf';
+   and the `_CS_*' symbols for the NAME argument to `confstr'.  */
+#include <bits/confname.h>
+
+/* Get file-specific configuration information about PATH.  */
+extern long int pathconf (__const char *__path, int __name) __THROW;
+extern long int __pathconf (__const char *__path, int __name) __THROW;
+
+/* Get file-specific configuration about descriptor FD.  */
+extern long int fpathconf (int __fd, int __name) __THROW;
+extern long int __fpathconf (int __fd, int __name) __THROW;
+
+/* Get the value of the system variable NAME.  */
+extern long int sysconf (int __name) __THROW __attribute__ ((__const__));
+extern long int __sysconf (int __name) __THROW __attribute__ ((__const__));
+
+#ifdef	__USE_POSIX2
+/* Get the value of the string-valued system variable NAME.  */
+extern size_t confstr (int __name, char *__buf, size_t __len) __THROW;
+#endif
+
+
+/* Get the process ID of the calling process.  */
+extern __pid_t getpid (void) __THROW;
+extern __pid_t __getpid (void) __THROW;
+
+/* Get the process ID of the calling process's parent.  */
+extern __pid_t getppid (void) __THROW;
+extern __pid_t __getppid (void) __THROW;
+
+
+extern int __bsd_getpgrp (int) __THROW;
+extern int __bsd_setpgrp (int, int) __THROW;
+
+/* Get the process group ID of the calling process.
+   This function is different on old BSD. */
+#ifndef __FAVOR_BSD
+extern __pid_t getpgrp (void) __THROW;
+extern __pid_t __getpgrp (void) __THROW;
+#else
+# define getpgrp __bsd_getpgrp
+#endif
+
+/* Get the process group ID of process PID.  */
+extern __pid_t __getpgid (__pid_t __pid) __THROW;
+#ifdef __USE_XOPEN_EXTENDED
+extern __pid_t getpgid (__pid_t __pid) __THROW;
+#endif
+
+
+/* Set the process group ID of the process matching PID to PGID.
+   If PID is zero, the current process's process group ID is set.
+   If PGID is zero, the process ID of the process is used.  */
+extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
+extern int __setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
+
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Both System V and BSD have `setpgrp' functions, but with different
+   calling conventions.  The BSD function is the same as POSIX.1 `setpgid'
+   (above).  The System V function takes no arguments and puts the calling
+   process in its on group like `setpgid (0, 0)'.
+
+   New programs should always use `setpgid' instead.
+
+   The default in GNU is to provide the System V function.  The BSD
+   function is available under -D_BSD_SOURCE.  */
+
+# ifndef __FAVOR_BSD
+
+/* Set the process group ID of the calling process to its own PID.
+   This is exactly the same as `setpgid (0, 0)'.  */
+extern int setpgrp (void) __THROW;
+extern int __setpgrp (void) __THROW;
+
+# else
+
+#  define setpgrp __bsd_setpgrp
+
+# endif	/* Favor BSD.  */
+#endif	/* Use SVID or BSD.  */
+
+/* Create a new session with the calling process as its leader.
+   The process group IDs of the session and the calling process
+   are set to the process ID of the calling process, which is returned.  */
+extern __pid_t setsid (void) __THROW;
+extern __pid_t __setsid (void) __THROW;
+
+#ifdef __USE_XOPEN_EXTENDED
+/* Return the session ID of the given process.  */
+extern __pid_t getsid (__pid_t __pid) __THROW;
+extern __pid_t __getsid (__pid_t __pid) __THROW;
+#endif
+
+/* Get the real user ID of the calling process.  */
+extern __uid_t getuid (void) __THROW;
+extern __uid_t __getuid (void) __THROW;
+
+/* Get the effective user ID of the calling process.  */
+extern __uid_t geteuid (void) __THROW;
+extern __uid_t __geteuid (void) __THROW;
+
+/* Get the real group ID of the calling process.  */
+extern __gid_t getgid (void) __THROW;
+extern __gid_t __getgid (void) __THROW;
+
+/* Get the effective group ID of the calling process.  */
+extern __gid_t getegid (void) __THROW;
+extern __gid_t __getegid (void) __THROW;
+
+/* If SIZE is zero, return the number of supplementary groups
+   the calling process is in.  Otherwise, fill in the group IDs
+   of its supplementary groups in LIST and return the number written.  */
+extern int getgroups (int __size, __gid_t __list[]) __THROW;
+extern int __getgroups (int __size, __gid_t __list[]) __THROW;
+
+#ifdef	__USE_GNU
+/* Return nonzero iff the calling process is in group GID.  */
+extern int group_member (__gid_t __gid) __THROW;
+extern int __group_member (__gid_t __gid) __THROW;
+#endif
+
+/* Set the user ID of the calling process to UID.
+   If the calling process is the super-user, set the real
+   and effective user IDs, and the saved set-user-ID to UID;
+   if not, the effective user ID is set to UID.  */
+extern int setuid (__uid_t __uid) __THROW;
+extern int __setuid (__uid_t __uid) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Set the real user ID of the calling process to RUID,
+   and the effective user ID of the calling process to EUID.  */
+extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW;
+extern int __setreuid (__uid_t __ruid, __uid_t __euid) __THROW;
+#endif
+
+#if defined __USE_BSD || defined __USE_XOPEN2K
+/* Set the effective user ID of the calling process to UID.  */
+extern int seteuid (__uid_t __uid) __THROW;
+extern int __seteuid (__uid_t __uid) __THROW;
+#endif /* Use BSD.  */
+
+/* Set the group ID of the calling process to GID.
+   If the calling process is the super-user, set the real
+   and effective group IDs, and the saved set-group-ID to GID;
+   if not, the effective group ID is set to GID.  */
+extern int setgid (__gid_t __gid) __THROW;
+extern int __setgid (__gid_t __gid) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Set the real group ID of the calling process to RGID,
+   and the effective group ID of the calling process to EGID.  */
+extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW;
+extern int __setregid (__gid_t __rgid, __gid_t __egid) __THROW;
+#endif
+
+#if defined __USE_BSD || defined __USE_XOPEN2K
+/* Set the effective group ID of the calling process to GID.  */
+extern int setegid (__gid_t __gid) __THROW;
+extern int __setegid (__gid_t __gid) __THROW;
+#endif /* Use BSD.  */
+
+
+/* Clone the calling process, creating an exact copy.
+   Return -1 for errors, 0 to the new process,
+   and the process ID of the new process to the old process.  */
+extern __pid_t fork (void) __THROW;
+extern __pid_t __fork (void) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Clone the calling process, but without copying the whole address space.
+   The calling process is suspended until the new process exits or is
+   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
+   and the process ID of the new process to the old process.  */
+extern __pid_t vfork (void) __THROW;
+#endif /* Use BSD. */
+
+
+/* Return the pathname of the terminal FD is open on, or NULL on errors.
+   The returned storage is good only until the next call to this function.  */
+extern char *ttyname (int __fd) __THROW;
+
+/* Store at most BUFLEN characters of the pathname of the terminal FD is
+   open on in BUF.  Return 0 on success, otherwise an error number.  */
+extern int ttyname_r (int __fd, char *__buf, size_t __buflen) __THROW;
+
+/* Return 1 if FD is a valid descriptor associated
+   with a terminal, zero if not.  */
+extern int isatty (int __fd) __THROW;
+extern int __isatty (int __fd) __THROW;
+
+#if defined __USE_BSD \
+    || (defined __USE_XOPEN_EXTENDED && !defined __USE_UNIX98)
+#ifndef __MINT__
+/* Return the index into the active-logins file (utmp) for
+   the controlling terminal.  */
+extern int ttyslot (void) __THROW;
+#endif
+#endif
+
+
+/* Make a link to FROM named TO.  */
+extern int link (__const char *__from, __const char *__to) __THROW;
+extern int __link (__const char *__from, __const char *__to) __THROW;
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+/* Make a symbolic link to FROM named TO.  */
+extern int symlink (__const char *__from, __const char *__to) __THROW;
+extern int __symlink (__const char *__from, __const char *__to) __THROW;
+
+/* Read the contents of the symbolic link PATH into no more than
+   LEN bytes of BUF.  The contents are not null-terminated.
+   Returns the number of characters read, or -1 for errors.  */
+extern int readlink (__const char *__restrict __path, char *__restrict __buf,
+		     size_t __len) __THROW;
+extern int __readlink (__const char *__restrict __path, char *__restrict __buf,
+		     size_t __len) __THROW;
+#endif /* Use BSD.  */
+
+/* Remove the link NAME.  */
+extern int unlink (__const char *__name) __THROW;
+extern int __unlink (__const char *__name) __THROW;
+
+/* Remove the directory PATH.  */
+extern int rmdir (__const char *__path) __THROW;
+extern int __rmdir (__const char *__path) __THROW;
+
+
+/* Return the foreground process group ID of FD.  */
+extern __pid_t tcgetpgrp (int __fd) __THROW;
+
+/* Set the foreground process group ID of FD set PGRP_ID.  */
+extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
+
+
+/* Return the login name of the user.  */
+extern char *getlogin (void) __THROW;
+#if defined __USE_REENTRANT || defined __USE_UNIX98
+#ifndef __MINT__
+/* Return at most NAME_LEN characters of the login name of the user in NAME.
+   If it cannot be determined or some other error occurred, return the error
+   code.  Otherwise return 0.  */
+extern int getlogin_r (char *__name, size_t __name_len) __THROW;
+#endif
+#endif
+
+#ifdef	__USE_BSD
+#ifndef __MINT__
+/* Set the login name returned by `getlogin'.  */
+extern int setlogin (__const char *__name) __THROW;
+#endif
+#endif
+
+
+#ifdef _AVOID_GPL
+
+/* If the license of your software does not meet the requirements of 
+   GNU General Public License you cannot use the more sophisticated GNU
+   versions of the getopt functions.  Define _AVOID_GPL in this case.
+   Then your program will get linked against the original MiNTLib
+   versions.  */
+
+# define getopt __getopt_old
+# define optind __optind_old
+# define opterr __opterr_old
+# define optopt __optopt_old
+# define optarg __optarg_old
+
+extern int getopt (int, char * const *, const char *) __THROW;
+
+extern int optind;
+extern int opterr;
+extern int optopt;
+extern char *optarg;
+
+#else
+
+#ifdef	__USE_POSIX2
+/* Get definitions and prototypes for functions to process the
+   arguments in ARGV (ARGC of them, minus the program name) for
+   options given in OPTS.  */
+# define __need_getopt
+# include <getopt.h>
+#endif
+
+#endif
+
+
+#if defined __USE_BSD || defined __USE_XOPEN2K
+/* Put the name of the current host in no more than LEN bytes of NAME.
+   The result is null-terminated if LEN is large enough for the full
+   name and the terminator.  */
+extern int gethostname (char *__name, size_t __len) __THROW;
+#endif
+
+
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
+/* Set the name of the current host to NAME, which is LEN bytes long.
+   This call is restricted to the super-user.  */
+extern int sethostname (__const char *__name, size_t __len) __THROW;
+
+#ifndef __MINT__
+/* Set the current machine's Internet number to ID.
+   This call is restricted to the super-user.  */
+extern int sethostid (long int __id) __THROW;
+#endif
+
+
+/* Get and set the NIS (aka YP) domain name, if any.
+   Called just like `gethostname' and `sethostname'.
+   The NIS domain name is usually the empty string when not using NIS.  */
+extern int getdomainname (char *__name, size_t __len) __THROW;
+extern int setdomainname (__const char *__name, size_t __len) __THROW;
+
+
+#ifndef __MINT__
+/* Revoke access permissions to all processes currently communicating
+   with the control terminal, and then send a SIGHUP signal to the process
+   group of the control terminal.  */
+extern int vhangup (void) __THROW;
+
+/* Revoke the access of all descriptors currently open on FILE.  */
+extern int revoke (__const char *__file) __THROW;
+
+
+/* Enable statistical profiling, writing samples of the PC into at most
+   SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
+   is enabled, the system examines the user PC and increments
+   SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
+   disable profiling.  Returns zero on success, -1 on error.  */
+extern int profil (unsigned short int *__sample_buffer, size_t __size,
+		   size_t __offset, unsigned int __scale) __THROW;
+
+
+/* Turn accounting on if NAME is an existing file.  The system will then write
+   a record for each process as it terminates, to this file.  If NAME is NULL,
+   turn accounting off.  This call is restricted to the super-user.  */
+extern int acct (__const char *__name) __THROW;
+#endif
+
+
+/* Successive calls return the shells listed in `/etc/shells'.  */
+extern char *getusershell (void) __THROW;
+extern void endusershell (void) __THROW; /* Discard cached info.  */
+extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
+
+
+/* Put the program in the background, and dissociate from the controlling
+   terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
+   redirects stdin, stdout, and stderr to /dev/null.  */
+extern int daemon (int __nochdir, int __noclose) __THROW;
+#endif /* Use BSD || X/Open.  */
+
+
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
+/* Make PATH be the root directory (the starting point for absolute paths).
+   This call is restricted to the super-user.  */
+extern int chroot (__const char *__path) __THROW;
+extern int __chroot (__const char *__path) __THROW;
+
+/* Prompt with PROMPT and read a string from the terminal without echoing.
+   Uses /dev/tty if possible; otherwise stderr and stdin.  */
+extern char *getpass (__const char *__prompt) __THROW;
+#endif /* Use BSD || X/Open.  */
+
+
+#if defined __USE_BSD || defined __USE_XOPEN
+/* Make all changes done to FD actually appear on disk.  */
+extern int fsync (int __fd) __THROW;
+extern int __fsync (int __fd) __THROW;
+#endif /* Use BSD || X/Open.  */
+
+
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+
+/* Return the current machine's Internet number.  */
+extern long int gethostid (void) __THROW;
+
+/* Make all changes done to all files actually appear on disk.  */
+extern void sync (void) __THROW;
+extern void __sync (void) __THROW;
+
+
+/* Return the number of bytes in a page.  This is the system's page size,
+   which is not necessarily the same as the hardware page size.  */
+extern int getpagesize (void)  __THROW __attribute__ ((__const__));
+
+
+/* Truncate FILE to LENGTH bytes.  */
+extern int truncate (__const char *__file, __off_t __length) __THROW;
+extern int __truncate (__const char *__file, __off_t __length) __THROW;
+
+/* Truncate the file FD is open on to LENGTH bytes.  */
+extern int ftruncate (int __fd, __off_t __length) __THROW;
+extern int __ftruncate (int __fd, __off_t __length) __THROW;
+
+
+/* Return the maximum number of file descriptors
+   the current process could possibly have.  */
+extern int getdtablesize (void) __THROW;
+
+#endif /* Use BSD || X/Open Unix.  */
+
+
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+
+/* Set the end of accessible data space (aka "the break") to ADDR.
+   Returns zero on success and -1 for errors (with errno set).  */
+extern int brk (void *__addr) __THROW;
+
+/* Increase or decrease the end of accessible data space by DELTA bytes.
+   If successful, returns the address the previous end of data space
+   (i.e. the beginning of the new space, if DELTA > 0);
+   returns (void *) -1 for errors (with errno set).  */
+extern void *sbrk (size_t __delta) __THROW;
+extern void *__sbrk (size_t __delta) __THROW;
+#endif
+
+
+#ifdef __USE_MISC
+/* Invoke `system call' number SYSNO, passing it the remaining arguments.
+   This is completely system-dependent, and not often useful.
+
+   In Unix, `syscall' sets `errno' for all errors and most calls return -1
+   for errors; in many systems you cannot pass arguments or get return
+   values for all system calls (`pipe', `fork', and `getppid' typically
+   among them).
+
+   In Mach, all system calls take normal arguments and always return an
+   error code (zero for success).  */
+#ifdef __MSHORT__
+/* Hm, syscall() must return int, but some of the functions it calls
+   actually return long or even unsigned long.  What should we do?
+   Using -mshort is not portable and so we declare syscall() in a
+   non-portable way here.  */
+extern long int syscall	(int, ...) __THROW;
+#else
+/* extern long int syscall (long int __sysno, ...) __THROW; */
+extern int syscall (int, ...) __THROW;
+#endif
+
+#endif	/* Use misc.  */
+
+
+#if (defined __USE_MISC || defined __USE_XOPEN_EXTENDED) && !defined F_LOCK
 /* NOTE: These declarations also appear in <fcntl.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */
@@ -281,222 +944,71 @@ typedef __intptr_t intptr_t;
    LEN is always relative to the current file position.
    The CMD argument is one of the following.  */
 
-/* flock() commands */
-#  define F_ULOCK	0	/* unlock */
-#  define F_LOCK	1	/* lock */
-#  define F_TLOCK	2	/* test and lock (non-blocking) */
-#  define F_TEST	3	/* test */
-__EXTERN int		lockf	__PROTO((int, int, long));
-# endif
-#endif /* __MINT__ */
+# define F_ULOCK 0	/* Unlock a previously locked region.  */
+# define F_LOCK  1	/* Lock a region for exclusive use.  */
+# define F_TLOCK 2	/* Test and lock a region for exclusive use.  */
+# define F_TEST  3	/* Test a region for other processes locks.  */
 
-/* If the license of your software does not meet the requirements of 
-   GNU General Public License you cannot use the more sophisticated GNU
-   versions of the getopt functions.  Define _AVOID_GPL in this case.
-   Then your program will get linked against the original MiNTLib
-   versions.  */
-#ifdef _AVOID_GPL
-# define getopt __getopt_old
-# define optind __optind_old
-# define opterr __opterr_old
-# define optopt __optopt_old
-# define optarg __optarg_old
-#endif
+extern int lockf (int __fd, int __cmd, __off_t __len) __THROW;
+#endif /* Use misc and F_LOCK not already defined.  */
 
-__EXTERN __EXITING _exit	__PROTO((int)) __NORETURN;
-__EXTERN int	access	__PROTO((const char *, int));
-__EXTERN unsigned alarm	__PROTO((unsigned));
-__EXTERN int	chdir	__PROTO((const char *));
-__EXTERN int	chown	__PROTO((const char *, int, int));
-__EXTERN int	close	__PROTO((int));
-__EXTERN int	dup	__PROTO((int));
-__EXTERN int	dup2	__PROTO((int, int));
-__EXTERN int	execl	__PROTO((const char *, ...));
-__EXTERN int	execle	__PROTO((const char *, ...));
-__EXTERN int	execlp	__PROTO((const char *, ...));
-__EXTERN int	execv	__PROTO((const char *, char *const *));
-__EXTERN int	execve	__PROTO((const char *, char *const *, char *const *));
-__EXTERN int	execvp	__PROTO((const char *, char *const *));
-__EXTERN int	fork	__PROTO((void));
-__EXTERN char *	getcwd	__PROTO((char *, int));
-__EXTERN __gid_t	getegid	__PROTO((void));
-__EXTERN __uid_t	geteuid	__PROTO((void));
-__EXTERN __gid_t	getgid	__PROTO((void));
-__EXTERN int	getgroups __PROTO((int, __gid_t *));
-__EXTERN char *	getlogin __PROTO((void));
-__EXTERN int	getpid	__PROTO((void));
-__EXTERN int	getppid	__PROTO((void));
-__EXTERN __uid_t	getuid	__PROTO((void));
-__EXTERN int	isatty	__PROTO((int));
-__EXTERN int	link	__PROTO((const char *oldname, const char *newname));
-__EXTERN __off_t	lseek	__PROTO((int, long, int));
-__EXTERN int	pause	__PROTO((void));
-__EXTERN int	pipe	__PROTO((int *));
-__EXTERN long	pathconf __PROTO((const char *, int));
-__EXTERN int	rmdir	__PROTO((const char *));
-__EXTERN ssize_t read	__PROTO((int, void *, size_t));
-__EXTERN int	setgid	__PROTO((int));
-__EXTERN int	setuid	__PROTO((int));
-__EXTERN unsigned sleep	__PROTO((unsigned int));
-__EXTERN long	sysconf	__PROTO((int));
-
-/* Return the pathname of the terminal FD is open on, or NULL on
-   errors.  The returned storage is good only until the next call
-   to the function.  */
-__EXTERN char*	ttyname	__PROTO((int __fd));
-
-/* Store at most BUFLEN characters of the pathname of the terminal FD
-   is open on in BUF.  Return 0 on success, otherwise an error number.  */
-__EXTERN int ttyname_r __PROTO((int __fd, char* __buf, size_t __buflen));
- 
-__EXTERN int	unlink	__PROTO((const char *));
-__EXTERN ssize_t write __PROTO((int, const void *, size_t));
-
-#if defined (__USE_BSD) || defined (__USE_XOPEN)
-/* Make PATH be the root directory (the starting point for absolute
-   paths).  This call is restricted to the super-user.
-   NOTE: This call does NOT change the current directory!  */
-__EXTERN int	chroot  __PROTO((const char* __path));
-
-/* Put the name of the current host in no more than LEN bytes of
-   NAME.  The result is null-terminated if LEN is large enough for
-   the full name and the terminator.  */
-__EXTERN int	gethostname __PROTO((char *__buf, size_t __len));
-
-/* Set the name of the current host to NAME, which is LEN bytes long.
-   This call is restricted to the super-user.  This is a stub function
-   that will always return -1 and set errno to ENOSYS.  */
-__EXTERN int    sethostname __PROTO((const char *__buf, size_t __len));
-
-/* Get and set the NIS (aka YP) domain name, if any.  Called just like
-   `gethostname'.  The NIS domain is usually the empty string when not
-   using NIS.  Setting the domainn name is currently not supported
-   under MiNT.  */
-__EXTERN int getdomainname __PROTO((char* __name, size_t __len));
-__EXTERN int setdomainname __PROTO((char* __name, size_t __len));
-
-
-/* Make all changes done to FD actually appear on disk.  */
-__EXTERN int fsync __PROTO ((int __fd));
-
-/* Successive calls return the shells listed in `/etc/shells'.  */
-__EXTERN char* getusershell __PROTO ((void));
-__EXTERN void endusershell __PROTO ((void));  /* Discard cached info.  */
-__EXTERN void setusershell __PROTO ((void));  /* Rewind and re-read the 
-                                                 file.  */
-
-/* Prompt with PROMPT and read a string from the terminal without
-   echoing.  Uses /dev/tty if possible; otherwise stderr and stdin.  */
-__EXTERN char *	getpass	__PROTO((const char *__prompt));
-
-/* Put the program in the background, and dissociate from the controlling
-   terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
-   redirects stdin, stdout, and stderr to `/dev/null'.  */
-__EXTERN int daemon __PROTO ((int __nochdir, int __noclose));
-#endif
-
-#if defined (__USE_BSD) || defined (__USE_XOPEN_EXTENDED)
-
-/* Make all changes done to all files acutally appear on disk.  */
-__EXTERN int sync __PROTO ((void));
-
-/* Return the number of bytes in a page.  This is the system's page size,
-   which is not necessarily the same as the hardware page size.  */
-__EXTERN int getpagesize __PROTO((void));
-
-/* Truncate FILE to LENGTH bytes.  */
-__EXTERN int truncate __PROTO ((const char* __file, __off_t __length));
-
-/* Truncate the file FD is open on to LENGTH bytes.  */
-__EXTERN int ftruncate __PROTO ((int fd, __off_t __length));
-
-/* Return the maximum number of file descriptors the current process
-   could possible have.  */
-__EXTERN int    getdtablesize __PROTO ((void));
-#endif
-
-__EXTERN int	__bsd_getpgrp __PROTO((int));
-__EXTERN int	__bsd_setpgrp __PROTO((int, int));
-
-__EXTERN int	getloadavg __PROTO((double *, int));  /* Should it be here?  */
-
-__EXTERN char *	getwd	__PROTO((char *));
-__EXTERN int	getopt	__PROTO((int, char * const *, const char *));
-__EXTERN char *	initstate __PROTO((unsigned int __seed, char *__arg_state, 
-                                   int __n));
-
-__EXTERN void	psignal	__PROTO((int, const char *));
-__EXTERN long 	random	__PROTO((void));
-__EXTERN long	_read	__PROTO((int, void *, unsigned long));
-__EXTERN int	readlink __PROTO((const char *__filename, char *__linkto, int __siz));
-__EXTERN int	__readlink __PROTO((const char *__filename, char *__linkto, int __siz));
-__EXTERN void *	sbrk	__PROTO((size_t));
-__EXTERN void *	_sbrk	__PROTO((long));
-__EXTERN int	setegid	__PROTO((int));
-__EXTERN int	seteuid	__PROTO((int));
-__EXTERN int	setregid __PROTO((int, int));
-__EXTERN int	setreuid __PROTO((int, int));
-__EXTERN char *	setstate __PROTO((char *arg_state));
-__EXTERN void	srandom	__PROTO((unsigned int seed));
-
-__EXTERN int	symlink __PROTO((const char *oldname, const char *newname));
-
-#ifdef __MSHORT__
-/* Hm, syscall() must return int, but some of the functions it calls
-   actually return long or even unsigned long.  What should we do?
-   Using -mshort is not portable and so we declare syscall() in a
-   non-portable way here.  */
-__EXTERN long	syscall	__PROTO((int, ...));
-#else
-__EXTERN int	syscall __PROTO((int, ...));
-#endif
-
-__EXTERN long	tell	__PROTO((int));
-__EXTERN void	usleep	__PROTO((unsigned long));
-__EXTERN int	vfork	__PROTO((void));
-__EXTERN long	_write	__PROTO((int, const void *, unsigned long));
-
-#ifdef __SOZOBON__
-#define lsbrk _sbrk	/* backwards compatibility, don't use */
-#endif
-
-#ifndef __FAVOR_BSD
-__EXTERN __pid_t getpgrp __PROTO ((void));
-__EXTERN int	setpgrp	__PROTO ((void));
-#else /* Favor BSD.  */
-# define getpgrp __bsd_getpgrp
-# define setpgrp __bsd_setpgrp
-#endif
-
-__EXTERN int	setpgid __PROTO((__pid_t, __pid_t));
-__EXTERN __pid_t	setsid __PROTO((void));
-__EXTERN __pid_t	tcgetpgrp	__PROTO((int fd));
-__EXTERN int	tcsetpgrp	__PROTO((int fd, __pid_t pgrp));
-
-extern int optind;
-extern int opterr;
-extern char* optarg;
-extern int optopt;
-
-#if defined (__USE_BSD) || defined (__USE_XOPEN_EXTENDED)
-/* Change the owner and group of the file that FD is open on.  */
-__EXTERN int fchown __PROTO ((int __fd, __uid_t __owner, __gid_t __group));
-
-#if 0
-/* Change owner and group of FILE, if it is a symbolic link link the
-   ownership of the symbolic link ischanged.  */
-__EXTERN int lchown __PROTO ((const char* __file, __uid_t __owner,
-                              __gid_t __group));
-#endif
-#endif
 
 #ifdef __USE_GNU
-
+#ifdef __MINT__
 /* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
    set to EINTR.  Because EINTR is fake with MiNT this is a stubs macro
    but we provide to allow writing portable code.  */
-
 #define TEMP_FAILURE_RETRY(expression) expression
+#else
+/* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
+   set to EINTR.  */
+# define TEMP_FAILURE_RETRY(expression) \
+  (__extension__							      \
+    ({ long int __result;						      \
+       do __result = (long int) (expression);				      \
+       while (__result == -1L && errno == EINTR);			      \
+       __result; }))
+#endif
+#endif
+
+#if defined __USE_POSIX199309 || defined __USE_UNIX98
+#ifndef __MINT__
+/* Synchronize at least the data part of a file with the underlying
+   media.  */
+extern int fdatasync (int __fildes) __THROW;
+#endif
+#endif /* Use POSIX199309 */
+
+
+/* XPG4.2 specifies that prototypes for the encryption functions must
+   be defined here.  */
+#ifdef	__USE_XOPEN
+/* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
+extern char *crypt (__const char *__key, __const char *__salt) __THROW;
+
+/* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
+   block in place.  */
+extern void encrypt (char *__block, int __edflag) __THROW;
+
+
+/* Swab pairs bytes in the first N bytes of the area pointed to by
+   FROM and copy the result to TO.  The value of TO must not be in the
+   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
+   is without partner.  */
+extern void swab (__const void *__restrict __from, void *__restrict __to,
+		  ssize_t __n) __THROW;
+#endif
+
+
+/* The Single Unix specification demands this prototype to be here.
+   It is also found in <stdio.h>.  */
+#ifdef __USE_XOPEN
+/* Return the name of the controlling terminal.  */
+extern char *ctermid (char *__s) __THROW;
+#endif
+
+
+#ifdef __USE_GNU
 
 /* This variable is set nonzero at startup if the process's effective IDs
    differ from its real IDs, or it is otherwise indicated that extra
@@ -505,14 +1017,18 @@ extern int __libc_enable_secure;
 
 #endif
 
-#ifdef	__USE_XOPEN
-/* Swab pairs bytes in the first N bytes of the area pointed to by
-   FROM and copy the result to TO.  The value of TO must not be in the
-   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
-   is without partner.  */
-extern void swab (__const void *__restrict __from, void *__restrict __to,
-		  ssize_t __n) __THROW;
-#endif
+
+__EXTERN int	getloadavg __PROTO((double *, int));  /* Should it be here?  */
+
+__EXTERN char *	initstate __PROTO((unsigned int __seed, char *__arg_state, int __n));
+__EXTERN char *	setstate __PROTO((char *arg_state));
+
+__EXTERN long 	random	__PROTO((void));
+__EXTERN void	srandom	__PROTO((unsigned int seed));
+
+__EXTERN void	psignal	__PROTO((int, const char *));
+__EXTERN long	tell	__PROTO((int));
+
 
 __END_DECLS
 

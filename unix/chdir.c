@@ -1,12 +1,12 @@
 
-#include <errno.h>
-#include <osbind.h>
-#include <stddef.h>
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 #include <limits.h>
-#include <unistd.h>
+#include <stddef.h>
 #include <string.h>
+#include <unistd.h>
+#include <mint/osbind.h>
 #include "lib.h"
 
 /***************************************************************

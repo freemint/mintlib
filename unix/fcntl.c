@@ -4,23 +4,18 @@
  */
 
 #include <errno.h>
-#include <mintbind.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 
-#ifdef __STDC__
-int __fcntl_v (int fd, int cmd, va_list args)
-#else
-int __fcntl_v (fd, cmd)
-int f;
-int cmd;
-#endif
+int
+__fcntl_v (int fd, int cmd, va_list args)
 {
 	long r;
 
-	r = Fcntl(fd, va_arg(args, void *), cmd);
+	r = Fcntl(fd, va_arg (args, void *), cmd);
 	if (r == -ELOCKED)
 		r = -EACCES;
 #ifndef __PURE_MINT_SUPPORT__
@@ -52,25 +47,16 @@ int cmd;
 	return (int) r;
 }
 
-#ifdef __STDC__
-int __fcntl (int desc, int cmd, ...)
-#else
-int __fcntl (int desc, cmd)
-	const char *_filename;
-	int cmd;
-#endif
+int
+__fcntl (int desc, int cmd, ...)
 {
-#ifdef __STDC__
-  va_list args;
-  int retval;
+	va_list args;
+	int retval;
 
-  va_start (args, cmd);
-  retval = __fcntl_v (desc, cmd, args);
-  va_end (args);
-    
-  return retval;
-#else
-  retval = __fcntl_v (desc, cmd);
-#endif
+	va_start (args, cmd);
+	retval = __fcntl_v (desc, cmd, args);
+	va_end (args);
+
+	return retval;
 }
 weak_alias (__fcntl, fcntl)

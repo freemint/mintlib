@@ -16,9 +16,6 @@
 #include "lib.h"
 
 
-extern void *__malloc __P ((size_t __n));
-extern void __free __P ((void* __param));
-
 extern void __mallocChunkSize __P ((size_t __siz));
 extern void __malloczero __P ((int __yes));
 
@@ -88,7 +85,7 @@ __malloc (size_t n)
 	      page_size = getpagesize ();
 	    sz = (sz + page_size - 1) & -page_size;
 	  }
-	q = (struct mem_chunk * )_sbrk(sz);
+	q = (struct mem_chunk * ) __sbrk (sz);
 
 	if (((long)q) == -1) 		/* can't alloc any more? */
 		return(NULL);

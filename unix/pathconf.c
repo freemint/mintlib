@@ -7,10 +7,10 @@
  * TOS programs get the correct values back. (But who uses TOS? :-)
  */
 
-#include <unistd.h>
-#include <mintbind.h>
 #include <errno.h>
 #include <limits.h>
+#include <unistd.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 #define UNLIMITED	(0x7fffffffL)

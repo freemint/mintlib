@@ -23,6 +23,7 @@ SRCFILES = \
 	ctype.c \
 	cuserid.c \
 	div.c \
+	do_fstat.c \
 	do_lock.c \
 	do_stat.c \
 	dostime.c \

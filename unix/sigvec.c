@@ -7,12 +7,9 @@
 #include <signal.h>
 #include <errno.h>
 
-extern int errno;
 
 int
-sigvec (sig, sv, osv)
-	int sig;
-	struct sigvec *sv, *osv;
+__sigvec (int sig, struct sigvec *sv, struct sigvec *osv)
 {
 	struct sigaction sa, osa;
 	int i, r;
@@ -46,10 +43,10 @@ sigvec (sig, sv, osv)
 	}
 	return r;
 }
+weak_alias (__sigvec, sigvec)
 
 int
-siginterrupt (sig, fail)
-	int sig, fail;
+__siginterrupt (int sig, int fail)
 {
 	if (fail)
 	  {
@@ -58,3 +55,4 @@ siginterrupt (sig, fail)
 	  }
 	return 0;
 }
+weak_alias (__siginterrupt, siginterrupt)

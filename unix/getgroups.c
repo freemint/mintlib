@@ -15,20 +15,15 @@
  *    switch to for your real user.
  */
 
-#include <stdio.h>
-#include <string.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
 #include <errno.h>
-#include <unistd.h>
 #include <grp.h>
 #include <pwd.h>
-#include <mintbind.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
+
 #ifdef TEST
 #include <stdlib.h> /* for calloc() */
 #endif
@@ -100,11 +95,9 @@ __getgroups (int gsetlen, gid_t *grpset)
   endgrent();
   return numgroups;
 }
-
 weak_alias (__getgroups, getgroups)
 
 #ifdef TEST
-
 int
 main(void)
 {
@@ -147,5 +140,4 @@ main(void)
 
   return 0;
 }
-
 #endif

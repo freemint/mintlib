@@ -1,5 +1,5 @@
 /*  src/getpgrp.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,25 +8,22 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
-
-#include <unistd.h>
-#include <mintbind.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <mintbind.h>
+
 #include "lib.h"
 
 pid_t
-getpgrp()
+__getpgrp (void)
 {
-  int retval;
   static short have_pgrp = 1;
 	
   if (have_pgrp) 
     {
+      int retval;
+
       retval = Pgetpgrp ();
       if (retval == -ENOSYS)
         have_pgrp = 0;
@@ -40,3 +37,4 @@ getpgrp()
     }
   return 0;
 }
+weak_alias (__getpgrp, getpgrp)

@@ -8,11 +8,8 @@
 #include "lib.h"
 
 int
-lockf(fd, cmd, size)
-	int fd;
-	int cmd;
-	long size;
+__lockf (int fd, int cmd, long size)
 {
-	return _do_lock(fd, cmd, size, 1);
+	return __do_lock (fd, cmd, size, 1);
 }
-
+weak_alias (__lockf, lockf)

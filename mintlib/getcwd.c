@@ -24,7 +24,7 @@ extern char _rootdir;	/* in main.c: user's preferred root directory */
 #endif
 
 char *
-__getcwd(char *buf, int size)
+__getcwd (char *buf, size_t size)
 {
 	const int len = (size > 0 ? size : PATH_MAX) + 16;
 	char _path[len]; /* XXX non ANSI */

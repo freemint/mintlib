@@ -17,7 +17,7 @@
 #include <stdlib.h>            /* for NULL                  */
 
 long int
-gethostid (void)
+__gethostid (void)
 {
   /* temporary space for uname() response */
   struct utsname uts_name;
@@ -35,3 +35,4 @@ gethostid (void)
   /* return IP address if there is one, else error */
   return hp ? htonl(*(u_long *)hp->h_addr) : INADDR_NONE;
 }
+weak_alias (__gethostid, gethostid)

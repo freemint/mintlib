@@ -17,29 +17,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
  
-/* Modified by Guido Flohr <gufl0000@stud.uni-sb.de> for MiNTLib.  */
+/* Modified by Guido Flohr <guido@freemint.de> for MiNTLib.  */
 
+#include <errno.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <limits.h>
-
-#ifdef __TURBOC__
-# include <sys\param.h>
-# include <sys\stat.h>
-#else
-# include <sys/param.h>
-# include <sys/stat.h>
-#endif
-#include <errno.h>
+#include <sys/param.h>
+#include <sys/stat.h>
 
 #ifdef __MINT__
 # define __lxstat(version, file, buf) __lstat(file, buf)
 # define _STAT_VER
-
-__EXTERN int __lstat __PROTO ((const char*, struct stat*));
-__EXTERN char* __getcwd __PROTO ((char*, int));
-__EXTERN void* __mempcpy __PROTO ((void*, const void*, size_t));
 #endif
 
 /* Return the canonical absolute name of file NAME.  A canonical name

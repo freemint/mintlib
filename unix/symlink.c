@@ -1,16 +1,12 @@
 /* soft link routines */
 
-#include <mintbind.h>
 #include <errno.h>
-#include <string.h>
 #include <limits.h>
+#include <string.h>
 #include <unistd.h>
 
-#ifdef __TURBOC__
-# include <sys\stat.h>
-#else
-# include <sys/stat.h>
-#endif
+#include <sys/stat.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 
@@ -21,13 +17,12 @@
  */
 
 int
-__symlink(old, new)
-	const char *old, *new;
+__symlink (const char *old, const char *new)
 {
 	char linknamebuf[PATH_MAX];
 	char pathbuf[PATH_MAX];
-	char* linkname;
-	char* path = (char*) new;
+	char *linkname;
+	char *path = (char *) new;
 	long r;
 
 	/* Sigh, for compatibility reasons we have to store links in
@@ -35,25 +30,23 @@ __symlink(old, new)
 	linkname = linknamebuf;
 	_unx2dos(old, linkname, sizeof (linknamebuf));
 	
-	if (!__libc_unix_names)
-	  {
-	    path = pathbuf;
-	    _unx2dos(new, pathbuf, sizeof (pathbuf));
-	  }
+	if (!__libc_unix_names) {
+		path = pathbuf;
+		_unx2dos(new, pathbuf, sizeof (pathbuf));
+	}
 	
 	r = Fsymlink(linkname, path);
 	if (r) {
-		struct xattr sb;
+		struct stat sb;
 
 		if ((r == -ENOTDIR)) {
 			if (_enoent(path))
 				r = -ENOENT;
-		} else if ((r == -EACCES) && (!Fxattr(1, path, &sb)))
+		} else if ((r == -EACCES) && (!Fstat (path, &sb, 1, 0)))
 			r = -EEXIST;
 		__set_errno (-r);
 		return -1;
 	}
 	return (int) r;
 }
-
 weak_alias (__symlink, symlink)

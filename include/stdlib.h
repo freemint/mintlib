@@ -177,9 +177,13 @@ __EXTERN int __drand48_iterate __PROTO ((unsigned short int __xsubi[3],
 #endif	/* Use SVID or X/Open.  */
 
 __EXTERN void *malloc __P ((size_t __n));
+__EXTERN void *__malloc __P ((size_t __n));
 __EXTERN void free __P ((void* __param));
+__EXTERN void __free __P ((void* __param));
 __EXTERN void *realloc __P ((void* __r, size_t __n));
+__EXTERN void *__realloc __P ((void* __r, size_t __n));
 __EXTERN void *calloc __P ((size_t __n, size_t __s));
+__EXTERN void *__calloc __P ((size_t __n, size_t __s));
 
 #if defined __USE_GNU || defined __USE_BSD || defined __USE_MISC
 # include <alloca.h>
@@ -188,8 +192,8 @@ __EXTERN void *calloc __P ((size_t __n, size_t __s));
 #ifndef __STRICT_ANSI__
 
 # ifdef atarist
-    __EXTERN void _malloczero __P ((int __yes));
-    __EXTERN void _mallocChunkSize __P ((size_t __siz));
+__EXTERN void _malloczero __P ((int __yes));
+__EXTERN void _mallocChunkSize __P ((size_t __siz));
 # endif
 
 #endif /* __STRICT_ANSI__ */

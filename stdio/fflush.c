@@ -43,5 +43,4 @@ fflush (stream)
 
   return __flshfp (stream, EOF);
 }
-
 weak_alias(fflush, fflush_unlocked)

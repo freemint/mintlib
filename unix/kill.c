@@ -1,11 +1,10 @@
 /* kill() for MiNT */
 
-#include <stdlib.h>
 #include <errno.h>
-#include <osbind.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
 
 #include "lib.h"
 
@@ -22,8 +21,7 @@ static short _have_pkill = 1;
 extern int __mint;
 
 int
-__kill(pid, sig)
-	int pid, sig;
+__kill (int pid, int sig)
 {
 	long r = 0;
 	sighandler_t hndle;
@@ -75,5 +73,4 @@ __kill(pid, sig)
 
 	return 0;
 }
-
 weak_alias (__kill, kill)

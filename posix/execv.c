@@ -7,10 +7,7 @@
 #include <unistd.h>
 
 int
-execv(path, argv)
-	const char *path;
-	char *const *argv;
+execv (const char *path, char *const *argv)
 {
-	return execve (path, argv, NULL);
+	return __execve (path, argv, NULL);
 }
-

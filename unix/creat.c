@@ -1,5 +1,5 @@
 /*  src/creat.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -12,10 +12,8 @@
 #include "lib.h"
 
 int
-__creat(name, mode)
-     const char *name;
-     unsigned short mode;
+__creat (const char *file, mode_t mode)
 {
-  return open (name, O_WRONLY | O_CREAT | O_TRUNC, mode);
+	return open (file, O_WRONLY|O_CREAT|O_TRUNC, mode);
 }
 weak_alias (__creat, creat)

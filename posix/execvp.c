@@ -1,5 +1,5 @@
 /*  src/execvp.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -18,23 +18,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-static char const *const extensions[] = { 
+static char const *const extensions[] =
+{ 
   "",
   ".ttp", 
   ".prg", 
   ".tos", 
   ".app", 
   ".gtp", 
-  NULL };
+  NULL
+};
 static char const *const mint_ext[] = { "", NULL };
 
 extern int __mint;
 
-#ifdef __STDC__
-int execvp (const char *file, char *const *argv)
-#else
-int execvp (file, argv) char *file; char **argv;
-#endif
+int
+execvp (const char *file, char *const *argv)
 {
   	char const* const* exts = __mint == 0 ? extensions : mint_ext;
   	char const* const* ext;
@@ -52,7 +51,7 @@ int execvp (file, argv) char *file; char **argv;
   	
   	/* Don't search if filename already contains a directory.  */
   	if (strchr (file, '/') != NULL || strchr (file, '\\') != NULL)
-  		return execve (file, argv, (char**) NULL);
+  		return __execve (file, argv, (char **) NULL);
   	
 	path = getenv ("PATH");
 	if (path == NULL && __mint == 0)
@@ -99,7 +98,7 @@ int execvp (file, argv) char *file; char **argv;
 			
 			/* Try to execute this name.  If it works, execve
 			   will not return.  */
-			execve (name, argv, NULL);
+			__execve (name, argv, NULL);
 			
 			switch (errno) {
 			case EACCES:

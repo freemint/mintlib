@@ -37,13 +37,6 @@ extern __io_seek_fn __stdio_seek;
 extern __io_close_fn __stdio_close;
 extern __io_fileno_fn __stdio_fileno;
 
-__EXTERN ssize_t __read	__PROTO ((int, void*, size_t));
-__EXTERN off_t __lseek __PROTO ((int, long, int));
-__EXTERN ssize_t __write __PROTO ((int, const void*, size_t));
-__EXTERN int __close __PROTO ((int));
-__EXTERN int __open __PROTO ((const char*, int, ...));
-__EXTERN int __dup2 __PROTO ((int, int));
-
 /* Read N bytes into BUF from COOKIE.  */
 ssize_t
 __stdio_read (void *cookie, char *buf, size_t n)

@@ -1,13 +1,10 @@
-#ifdef __TURBOC__
-#include <sys\types.h>
-#else
-#include <sys/types.h>
-#endif
+
 #include <grp.h>
 #include <limits.h>
 #include <string.h>
 #include <errno.h>
-#include <mintbind.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
 
 int
 __initgroups (user, group)
@@ -40,5 +37,4 @@ __initgroups (user, group)
     }
   return 0;
 }
-
 weak_alias (__initgroups, initgroups)

@@ -1,5 +1,5 @@
 /*  nice.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,19 +8,14 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\resource.h>
-#else
-# include <sys/resource.h>
-#endif
-
 #include <errno.h>
-#include <mintbind.h>
+#include <mint/mintbind.h>
+#include <sys/resource.h>
 
 #include "lib.h"
 
-int __nice (increment)
-     int increment;
+int
+__nice (int increment)
 {
   /* Actually the return value of this function is not meaningful.
    * Yet many programs expect that it returns the current priority,
@@ -43,5 +38,4 @@ int __nice (increment)
   int saved_priority = getpriority (PRIO_PROCESS, 0);
   return setpriority (PRIO_PROCESS, 0, saved_priority + increment);
 }
-
 weak_alias (__nice, nice)

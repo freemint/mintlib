@@ -100,7 +100,7 @@ chroot			int	ptr
 fchmod			int	int long
 fchown			int	int long long
 fpathconf		long	int int
-getdtabl		int
+getdtablesize		int
 gethostid		long
 getpagesize		int
 getpgrp			int

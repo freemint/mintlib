@@ -1,9 +1,9 @@
 
+#include <errno.h>
 #include <stdio.h>
-#include <mintbind.h>
 #include <support.h>
 #include <unistd.h>
-#include <errno.h>
+#include <mint/mintbind.h>
 
 int
 __getdtablesize (void)

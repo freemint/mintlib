@@ -71,9 +71,17 @@ typedef __uint32_t __id_t;	/* General type for IDs.  */
 typedef __int32_t __daddr_t;	/* The type of a disk address.  */
 typedef char* __caddr_t;
 typedef __int32_t __time_t;
+typedef unsigned int __useconds_t;
+typedef long int __suseconds_t;
 typedef __int32_t __swblk_t;	/* Type of a swap block maybe?  */
 typedef __int32_t __key_t;	/* Type of an IPC key */
 
+/* Clock ID used in clock and timer functions.  */
+typedef int __clockid_t;
+
+/* Timer ID returned by `timer_create'.  */
+typedef int __timer_t;
+
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;
 
@@ -115,6 +123,9 @@ typedef struct
 /* XXX Used in `struct shmid_ds'.  */
 typedef __uint16_t __ipc_pid_t;
 
+
+/* Type to represent block size.  */
+typedef unsigned int __blksize_t;
 
 /* Types from the Large File Support interface.  */
 

@@ -1,17 +1,12 @@
 /* killpg() for MiNT */
 
-#include <stdlib.h>
 #include <errno.h>
-#include <osbind.h>
 #include <signal.h>
-#include <unistd.h>
-#include <mintbind.h>
 
 #include "lib.h"
 
 int
-__killpg(pgrp, sig)
-	int pgrp, sig;
+__killpg (int pgrp, int sig)
 {
 	if (pgrp < 0) {
 		__set_errno (ESRCH);
@@ -19,5 +14,4 @@ __killpg(pgrp, sig)
 	}
 	return kill (-pgrp, sig);
 }
-
 weak_alias (__killpg, killpg)

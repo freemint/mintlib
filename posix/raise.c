@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <signal.h>
 
-int __getpid (void);
-
 int
 raise (sig)
      int sig;

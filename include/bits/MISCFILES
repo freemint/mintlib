@@ -4,7 +4,9 @@
 MISCFILES = MISCFILES \
 	\
 	byteswap.h \
+	confname.h \
 	dirent.h \
+	fcntl.h \
 	in.h \
 	ipc.h \
 	libc-lock.h \
@@ -26,6 +28,7 @@ MISCFILES = MISCFILES \
 	sigstack.h \
 	sockaddr.h \
 	socket.h \
+	stat.h \
 	statfs.h \
 	stdio_lim.h \
 	string.h \

@@ -14,11 +14,8 @@
 #include <errno.h>
 #include "lib.h"
 
-__EXTERN char* __getcwd __PROTO ((char* buf, int size));
-__EXTERN char* __strerror_r __PROTO ((int errnum, char* buf, size_t buflen));
-
 char*
-getwd (char* buf)
+getwd (char *buf)
 {
 	char mybuf[PATH_MAX];
   

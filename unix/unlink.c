@@ -8,18 +8,17 @@
     understand and accept it fully.
 */
 
-#include <unistd.h>
-#include <stdio.h>
 #include <errno.h>
-#include <osbind.h>
 #include <limits.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <mint/osbind.h>
 #include <sys/stat.h>
 
 #include "lib.h"
 
 int
-__unlink (filename)
-     const char* filename;
+__unlink (const char *filename)
 {
   char dosnamebuf[PATH_MAX];
   int retval;
@@ -54,5 +53,4 @@ __unlink (filename)
     }
   return 0;
 }
-
 weak_alias (__unlink, unlink)

@@ -8,18 +8,21 @@
     understand and accept it fully.
 */
 
-#include <unistd.h>
 #include <errno.h>
-#include <mintbind.h>
+#include <unistd.h>
+#include <mint/mintbind.h>
 
 /* This call used to emulate chroot() by calling chdir() instead.
    This doesn't make any sense to me since chroot() actually doesn't
    change the current directory.  */
-int __chroot (const char* path)
+int
+__chroot (const char *path)
 {
-	int retval = Dchroot (path);
-	if (retval < 0) {
-		__set_errno (retval);
+	int r;
+
+	r = Dchroot (path);
+	if (r < 0) {
+		__set_errno (-r);
 		return -1;
 	}
   	return 0;

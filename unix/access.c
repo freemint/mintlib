@@ -1,26 +1,19 @@
 /* access() emulation; relies heavily on stat() */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
-#include <limits.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
 #include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "lib.h"
 
 extern int __mint;
 
 int
-__access(path, mode)
-	const char *path;
-	int mode;
+__access (const char *path, int mode)
 {
 	struct stat sb;
 	gid_t groups[NGROUPS_MAX];
@@ -33,9 +26,9 @@ __access(path, mode)
 
 	if (getuid() == 0) return 0; /* super user can access anything */
 
-/* somewhat crufty code -- relies on R_OK, etc. matching the bits in the
-   file mode, but what the heck, we can do this
- */
+	/* somewhat crufty code -- relies on R_OK, etc. matching the bits in the
+	 * file mode, but what the heck, we can do this
+	 */
 	if (__mint < 9 || ( getuid() == sb.st_uid ) ) {
 		if ( ((sb.st_mode >> 6) & mode) == mode )
 			return 0;

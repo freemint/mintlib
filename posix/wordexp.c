@@ -25,38 +25,20 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <pwd.h>
-#ifdef __TURBOC__
-# include <sys\types.h>
-#else
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 #include <string.h>
 #include <glob.h>
 #include <ctype.h>
-#ifdef __TURBOC__
-# include <sys\time.h>
-# include <sys\types.h>
-# include <sys\wait.h>
-#else
-# include <sys/time.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-#endif
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include <unistd.h>
 #include <fcntl.h>
-#ifdef __TURBOC__
-# include <sys\stat.h>
-#else
-# include <sys/stat.h>
-#endif
+#include <sys\stat.h>
 #include <paths.h>
 #include <errno.h>
-#ifdef __TURBOC__
-# include <sys\param.h>
-#else
-# include <sys/param.h>
-#endif
+#include <sys\param.h>
 #include <stdio.h>
 #include <fnmatch.h>
 
@@ -77,19 +59,8 @@ __EXTERN int __getpwuid_r __P ((uid_t uid, struct passwd* result_buf,
 __EXTERN int __getpwnam_r __P ((const char* __name, 
                                 struct passwd* result_buf, char* buffer,
                                 size_t buflen, struct passwd** result));
-__EXTERN int __pipe __P ((int*));
-__EXTERN int __execve __P ((const char*, char* const*, char* const*));
-__EXTERN int __getpid __P ((void));
-__EXTERN ssize_t __read __P ((int, void*, size_t));
-__EXTERN int __open __P ((const char*, int));
-__EXTERN void* __mempcpy __P ((void* __dest, const void* __src, size_t __n));
-__EXTERN uid_t __getuid __P ((void));
 __EXTERN char* __strndup __P ((const char* src, size_t n));
 #endif
-
-__EXTERN int __fork __P ((void));
-__EXTERN int __close __P ((int));
-__EXTERN int __dup2 __P ((int, int));
 
 #ifndef _PATH_BSHELL
 # define _PATH_BSHELL "/bin/sh"

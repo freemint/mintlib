@@ -1,5 +1,5 @@
 /*  src/execlp.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -16,15 +16,15 @@
    first.
 */
 
-#ifdef __STDC__
-int execlp (const char *name, ...)
-#else
-int execlp (name)
-     char* name;
-#endif
+int
+execlp (const char *name, ...)
 {
-  va_list args;
+	va_list args;
+	int r;
 
-  va_start (args, name);
-  return execvp (name, (char **)args);
+	va_start (args, name);
+	r = __execve (name, (char **) args, NULL);
+	va_end (args);
+
+	return r;
 }

@@ -3,11 +3,8 @@
 /* 5/2/92 sb -- modified for Heat-n-Serve C to accomodate its 16-bit size_t */
 /* 5/5/92 sb -- calloc() gets its own file to reduce library drag */
 
-#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
-
-extern void *__malloc __P ((size_t __n));
-extern void *__calloc __P ((size_t __n, size_t __s));
 
 void *
 __calloc (size_t n, size_t sz)

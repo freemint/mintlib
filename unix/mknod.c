@@ -3,20 +3,13 @@
  * using symlinks to /pipe and some kludges in open()...
  */
 
-#include <errno.h>
-#include <support.h>
-
-#ifdef __TURBOC__
-# include <sys\stat.h>
-# include <sys\types.h>
-#else
-# include <sys/stat.h>
-# include <sys/types.h>
-#endif
-
-#include <limits.h>
-#include <mintbind.h>
 #include <device.h>
+#include <errno.h>
+#include <limits.h>
+#include <support.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <mint/mintbind.h>
 #include "lib.h"
 
 #define MFS_MKNOD 0x10f
@@ -26,10 +19,7 @@
 #endif
 
 int
-mknod(path, mode, dev)
-	const char *path;
-	mode_t mode;
-        dev_t dev;
+__mknod (const char *path, mode_t mode, dev_t dev)
 {
 	long err;
 	char pathbuf[PATH_MAX];
@@ -74,12 +64,12 @@ mknod(path, mode, dev)
 
 		err = Fsymlink(linkf, _path);
 		if (err) {
-			struct xattr sb;
+			struct stat sb;
 
 			if ((err == -ENOTDIR)) {
 				if (_enoent(_path))
 					err = -ENOENT;
-			} else if ((err == -EACCES) && (!Fxattr(1, _path, &sb)))
+			} else if ((err == -EACCES) && (!Fstat (_path, &sb, 1, 0)))
 				err = -EEXIST;
 			__set_errno (-err);
 			return -1;
@@ -89,3 +79,4 @@ mknod(path, mode, dev)
 	__set_errno (-err);
 	return -1;
 }
+weak_alias (__mknod, mknod)

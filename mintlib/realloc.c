@@ -11,10 +11,6 @@
 #include <unistd.h>
 #include "lib.h"
 
-extern void *__malloc __P ((size_t __n));
-extern void __free __P ((void* __param));
-extern void *__realloc __P ((void* __r, size_t __n));
-
 
 void *
 __realloc (void *_r, size_t n)

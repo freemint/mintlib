@@ -1,5 +1,5 @@
 /*  remove.c -- MiNTLib.
-    Copyright (C) 1999, 2000 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999, 2000 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -12,8 +12,6 @@
 #include <stdio.h>
 #include <errno.h>
 
-__EXTERN int __unlink __PROTO((const char *));
-
 int
 remove (filename)
      const char* filename;
@@ -21,7 +19,7 @@ remove (filename)
         int saved_errno = errno;
 
         /* First try rmdir().  */
-        if (rmdir (filename) == 0) {
+        if (__rmdir (filename) == 0) {
                 return 0;
         }
 

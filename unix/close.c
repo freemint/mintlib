@@ -3,10 +3,10 @@
  * domain
  */
 
-#include <osbind.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include <mint/osbind.h>
 #include "lib.h"
 
 int

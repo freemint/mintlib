@@ -20,73 +20,59 @@
  * size_t -- big sigh!
  */
 
-#include <stddef.h>
-#include <osbind.h>
-#include <unistd.h>
 #include <errno.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <mint/osbind.h>
 
 extern void *_heapbase;
 extern long _stksize;
 extern short _split_mem;
 
-static void *HeapAlloc __PROTO((unsigned long sz));
-
-static void * HeapAlloc( sz )
-unsigned long sz ;
+static void *
+HeapAlloc (unsigned long sz)
 {
-    char slush [64];
-    register void *sp;
-    
-    sp = (void *)slush;
-    sz = (sz + 7) & ~((unsigned long)7L); /* round up request size next octet */
+	char slush [64];
+	register void *sp;
+	
+	sp = (void *)slush;
+	sz = (sz + 7) & ~((unsigned long) 7L); /* round up request size next octet */
 
-    if ( sp < (void *)((char *)_heapbase + sz) )
-    {
-	return NULL;
-    }
-    sp = _heapbase;
-    _heapbase = (void *)((char *)_heapbase + sz);
-    _stksize -= (long)sz;
-    
-    return( sp );
+	if (sp < (void *)((char *) _heapbase + sz))
+		return NULL;
+
+	sp = _heapbase;
+	_heapbase = (void *)((char *)_heapbase + sz);
+	_stksize -= (long) sz;
+
+	return sp;
 }
-
-#ifdef __GNUC__
-asm(".stabs \"_sbrk\",5,0,0,__sbrk"); /* dept of clean tricks */
-#endif
 
 /* provided for compilers with sizeof(int) == 2 */
-void *_sbrk(n)
-long n;
+void *
+__sbrk (size_t n)
 {
-  void *rval;
+	void *rval;
 
-  if((!_split_mem) && (_heapbase != NULL))
-  {
-      if(n) rval = HeapAlloc(n);
-      else  rval = _heapbase;
-  }
-  else
-  {
-      rval = (void *) Malloc(n);
-  }
-  if (rval == NULL)
-  {
-      if(_split_mem)
-      {  /* now switch over to own heap for further requests, including this one */
-	  _split_mem = 0;
-	  return _sbrk(n);
-      }
-      __set_errno (ENOMEM);
-      rval = (void *)(-1L);
-  }
-  return rval;
-}
+	if ((!_split_mem) && (_heapbase != NULL)) {
+		if (n) rval = HeapAlloc (n);
+		else rval = _heapbase;
+	}
+	else {
+		rval = (void *) Malloc (n);
+	}
 
-#ifndef __GNUC__
-void *sbrk(x)
-size_t x;
-{
-	return _sbrk((long)x);
+	if (rval == NULL) {
+		if(_split_mem) { 
+			/* now switch over to own heap for further requests,
+			 * including this one */
+			_split_mem = 0;
+			return __sbrk (n);
+		}
+
+		__set_errno (ENOMEM);
+		rval = (void *)(-1L);
+	}
+	return rval;
 }
-#endif
+weak_alias (__sbrk, sbrk)

@@ -1,5 +1,5 @@
 /*  src/setsid.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,18 +8,12 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\ioctl.h>
-#else
-# include <sys/types.h>
-# include <sys/ioctl.h>
-#endif
-
-#include <unistd.h>
-#include <mintbind.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <mint/mintbind.h>
 
 pid_t
 __setsid (void)

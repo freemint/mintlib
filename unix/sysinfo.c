@@ -1,5 +1,5 @@
 /*  sysinfo.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,27 +8,19 @@
     understand and accept it fully.
 */
 
-#ifdef __TURBOC__
-# include <sys\systeminfo.h>
-# include <sys\utsname.h>
-# include <sys\param.h>
-# include <sys\cookie.h>
-#else
-# include <sys/systeminfo.h>
-# include <sys/utsname.h>
-# include <sys/param.h>
-# include <sys/cookie.h>
-#endif
-
-#include <mintbind.h>
-#include <osbind.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-extern unsigned long __mint;
+#include <sys/systeminfo.h>
+#include <sys/utsname.h>
+#include <sys/param.h>
+#include <sys/cookie.h>
+#include <mint/mintbind.h>
+
+#include "lib.h"
 
 /* In case you still haven't got the prototype in stdlib.h where
    it belongs.  */ 
@@ -40,26 +32,24 @@ static void fast_strncpy __PROTO ((char* to, char* from, long bytes));
 /* Prototypes for sub-functions.  */
 
 /* Standard (more or less).  */
-static int si_sysname __PROTO ((char* buf, long bufsize));
-static int si_hostname __PROTO ((char* buf, long bufsize));
-static int si_set_hostname __PROTO ((char* buf, long bufsize));
-static int si_release __PROTO ((char* buf, long bufsize));
-static int si_version __PROTO ((char* buf, long bufsize));
-static int si_architecture __PROTO ((char* buf, long bufsize));
-static int si_isalist __PROTO ((char* buf, long bufsize));
-static int si_platform __PROTO ((char* buf, long bufsize));
-static int si_hw_provider __PROTO ((char* buf, long bufsize));
+static int si_sysname (char *buf, long bufsize);
+static int si_hostname (char *buf, long bufsize);
+static int si_set_hostname (char *buf, long bufsize);
+static int si_release (char *buf, long bufsize);
+static int si_version (char *buf, long bufsize);
+static int si_architecture (char *buf, long bufsize);
+static int si_isalist (char *buf, long bufsize);
+static int si_platform (char *buf, long bufsize);
+static int si_hw_provider (char *buf, long bufsize);
 
 /* Interface to Ssystem.  */
-static int mint_kernel_build_date __PROTO ((char* buf, long bufsize));
-static int mint_kernel_build_time __PROTO ((char* buf, long bufsize));
-static int mint_get_clock_mode __PROTO ((char* buf, long bufsize));
-static int mint_set_clock_mode __PROTO ((char* buf, long bufsize));
+static int mint_kernel_build_date (char *buf, long bufsize);
+static int mint_kernel_build_time (char *buf, long bufsize);
+static int mint_get_clock_mode (char *buf, long bufsize);
+static int mint_set_clock_mode (char *buf, long bufsize);
 
-int sysinfo (command, buf, bufsize)
-  enum __sysinfo_command command;
-  char* buf;
-  long bufsize;
+int
+__sysinfo (enum __sysinfo_command command, char *buf, long bufsize)
 {
   int retval = -1;
   
@@ -115,6 +105,7 @@ int sysinfo (command, buf, bufsize)
   }
   return retval;
 }
+weak_alias (__sysinfo, sysinfo)
 
 /* Like strncpy but don't pad with nulls.  */
 static void

@@ -16,9 +16,7 @@
 #include "time/tzstruct.h"
 
 int 
-__settimeofday (tp, tzp)
-  const struct timeval* tp;
-  const struct timezone* tzp;
+__settimeofday (const struct timeval *tp, const struct timezone *tzp)
 {
   int retval = 0;
   static int have_Tsettimeofday = 1;
@@ -84,5 +82,4 @@ __settimeofday (tp, tzp)
     
   return 0;
 }
-
 weak_alias (__settimeofday, settimeofday)

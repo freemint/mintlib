@@ -33,12 +33,8 @@
    polled descriptors, we simply mark that descriptor as ready for reading,
    writing or urgent reading so that the caller will get informed.  */
 int
-__select (nfds, readfds, writefds, exceptfds, timeout)
-	     int nfds;
-	     fd_set* readfds;
-	     fd_set* writefds;
-	     fd_set* exceptfds;
-	     struct timeval* timeout;
+__select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	  struct timeval *timeout)
 {
 	struct pollfd* pfds;
 	int i;

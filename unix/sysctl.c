@@ -23,9 +23,10 @@ __sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
           const void *new, unsigned long newlen)
 {
 	static int __have_sysctl = 1;
-	int ret;
 
 	if (__have_sysctl) {
+		int ret;
+
 		ret = Psysctl (name, namelen, old, oldlenp, new, newlen);
 		if (ret < 0) {
 			if (ret == -ENOSYS)

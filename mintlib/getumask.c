@@ -11,19 +11,19 @@
 #include <sys/stat.h>
 #include <mintbind.h>
 
-extern int __current_umask;
+extern mode_t __current_umask;
 
 mode_t
-__getumask ()
+__getumask (void)
 {
-  /* The only possible failure for Pumask is ENOSYS.  */
-  mode_t old_umask = Pumask (0);
-  
-  if (old_umask >= 0)
-  	(void) Pumask (old_umask);
-  else
-  	old_umask = __current_umask;
+	/* The only possible failure for Pumask is ENOSYS.  */
+	mode_t old_umask = Pumask (0);
 
-  return old_umask;
+	if (old_umask >= 0)
+		(void) Pumask (old_umask);
+	else
+		old_umask = __current_umask;
+
+	return old_umask;
 }
 weak_alias (__getumask, getumask)

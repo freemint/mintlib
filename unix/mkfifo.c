@@ -2,26 +2,17 @@
 /* No, it never works. In fact it is pure nonsense!  
    (Personal opinion of Guido Flohr).  */
 
-#include <mintbind.h>
 #include <errno.h>
-#include <support.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\stat.h>
-#else
-# include <sys/types.h>
-# include <sys/stat.h>
-#endif
-
 #include <limits.h>
+#include <support.h>
 #include <unistd.h>
+#include <mint/mintbind.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "lib.h"
 
 int
-mkfifo(_path, mode)
-	const char *_path;
-	mode_t mode;
+__mkfifo (const char *_path, mode_t mode)
 {
 	static unsigned long timelast;
 	char pathbuf[PATH_MAX], linkf[30] = "u:\\pipe\\n$", *s, c;
@@ -90,15 +81,16 @@ mkfifo(_path, mode)
 		return -1;
 	}
 	if (r) {
-		struct xattr sb;
+		struct stat sb;
 
 		if ((r == -ENOTDIR)) {
 			if (_enoent(path))
 				r = -ENOENT;
-		} else if ((r == -EACCES) && (!Fxattr(1, path, &sb)))
+		} else if ((r == -EACCES) && (!Fstat (path, &sb, 1, 0)))
 			r = -EEXIST;
 		__set_errno (-r);
 		return -1;
 	}
 	return (int) r;
 }
+weak_alias (__mkfifo, mkfifo)

@@ -55,13 +55,7 @@
 # include "door/door.h"
 #endif
 
-int __close (int fd);
-uid_t __geteuid (void);
-uid_t __getuid (void);
-int __setreuid (int ruid, int euid);
-int __getpid (void);
 int __getpeername (int fd, struct sockaddr *addr, socklen_t *addrlen);
-int __fcntl (int desc, int cmd, ...);
 
 #define KEY_TIMEOUT	5	/* per-try timeout in seconds */
 #define KEY_NRETRY	12	/* number of retries */

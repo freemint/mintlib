@@ -12,25 +12,16 @@ Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
 */
 
-#include <compiler.h>
-#include <limits.h>
 #include <errno.h>
-#include <mintbind.h>
-
-#ifdef __TURBOC__
-# include <sys\types.h>
-# include <sys\ioctl.h>
-#else
-# include <sys/types.h>
-# include <sys/ioctl.h>
-#endif
+#include <limits.h>
+#include <mint/mintbind.h>
+#include <sys/types.h>
+#include <sys/ioctl.h>
 
 #include "lib.h"
 
 int
-__truncate (_filename, length)
-     const char *_filename;
-     off_t length;
+__truncate (const char *_filename, off_t length)
 {
   int fh, res;
   char filenamebuf[PATH_MAX];
@@ -84,5 +75,4 @@ __truncate (_filename, length)
     }
   return 0;
 }
-
 weak_alias (__truncate, truncate)

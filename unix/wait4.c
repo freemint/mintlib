@@ -1,5 +1,5 @@
 /*  wait4.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <gufl0000@stud.uni-sb.de>
+    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -8,32 +8,21 @@
     understand and accept it fully.
 */
 
-#include <signal.h>
 #include <errno.h>
+#include <signal.h>
 #include <string.h>
-#include <mintbind.h>
-
-#ifdef __TURBOC__
-# include <sys\wait.h>
-# include <sys\types.h>
-# include <sys\resource.h>
-#else
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/resource.h>
-#endif
-
-static short have_Pwaitpid = 1;
+#include <mint/mintbind.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/resource.h>
 
 extern long __waitval, __waittime;
+extern int __mint;
 
-pid_t __wait4 (pid, stat_loc, options, usage)
-  pid_t pid;
-  __WP stat_loc;
-  int options;
-  struct rusage* usage;
+pid_t
+__wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
 {
-  extern int __mint;
+  static short have_Pwaitpid = 1;
   long retval;
   long lusage[8];  /* For current MiNT versions 2 longs should 
                     * be enough.  The MiNTLib has 8 longs.
@@ -156,5 +145,4 @@ pid_t __wait4 (pid, stat_loc, options, usage)
   
   return child_pid;
 }
-
 weak_alias (__wait4, wait4)
