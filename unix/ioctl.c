@@ -29,12 +29,9 @@ extern struct ltchars __ltchars;
 int
 __ioctl (int fd, int cmd, void *arg)
 {
+	const int istty = isatty(fd);
 	long r;
-	int istty = isatty(fd);
-	struct sgttyb *sg = (struct sgttyb *) arg;
-	int null_fd;
-	long baud;
-
+	
 	if (istty) {
 	    switch (cmd) {
 		case TIOCGETD:
@@ -68,11 +65,7 @@ __ioctl (int fd, int cmd, void *arg)
 		case TIOCGWINSZ:
 			if (__mint < 9) {
 				struct winsize *win = (struct winsize *)arg;
-#ifndef __SOZOBON__
 				(void)linea0();
-#else /* __SOZOBON__ */
-				linea0();
-#endif /* __SOZOBON__ */
 				win->ws_row = V_CEL_MY + 1;
 				win->ws_col = V_CEL_MX + 1;
 				win->ws_xpixel = V_X_MAX;
@@ -83,6 +76,8 @@ __ioctl (int fd, int cmd, void *arg)
 #ifdef __MINT__
 		case TIOCNOTTY:
 			if (__mint) {
+				int null_fd;
+				
 				/* To be on the safe side, always reset
 				 * the isatty()-flags to "unknown" first
 				 */
@@ -94,8 +89,7 @@ __ioctl (int fd, int cmd, void *arg)
 				/* First try the generic kernel ioctl if
 				   already available.  */
 				r = Fcntl (fd, (long) arg, TIOCNOTTY);
-				if (r >= 0)
-				{
+				if (r >= 0) {
 					return 0;
 				}
 				else if (r != -ENOSYS && r != -EINVAL) {
@@ -107,9 +101,11 @@ __ioctl (int fd, int cmd, void *arg)
 					__set_errno (EBADF);
 					return -1;
 				}
+				
 				r = Fclose(-1);
 				if (r >= 0)
 					return 0;
+				
 				null_fd = (int) Fopen(/* __mint < 9 ? "V:\\null"
 						:*/ "U:\\dev\\null", O_RDWR);
 				(void) Fforce(-1, null_fd);
@@ -148,7 +144,7 @@ __ioctl (int fd, int cmd, void *arg)
 			break;
 	    }
 	}
-
+	
 	if (__mint) {
 	  
 	  /* first try the systemcall */
@@ -159,7 +155,8 @@ __ioctl (int fd, int cmd, void *arg)
 	  
 	  switch (cmd) {
 	    case TIOCCDTR:
-	      baud = 0;
+	    {
+	      long baud = 0;
 	      r = Fcntl(fd, &baud, TIOCOBAUD);
 	      if (r < 0) {
 	        __set_errno ((int) -r);
@@ -167,8 +164,10 @@ __ioctl (int fd, int cmd, void *arg)
 	      }
 	      return 0;
 	      break;
+	    }
 	    case TIOCSDTR:
-	      baud = -1;
+	    {
+	      long baud = -1;
 	      r = Fcntl(fd, &baud, TIOCOBAUD);
 	      if (r < 0) {
 	        __set_errno ((int) -r);
@@ -181,22 +180,16 @@ __ioctl (int fd, int cmd, void *arg)
 	      }
 	      return 0;
 	      break;
+	    }
 	    case TIOCMGET:
-/*
-	      if (__mint >= 0x10a)
-*/
-	      {
+	    {
                 char g;
-#ifdef __LATTICE__
-		void *ssp;
-#else
                 long ssp;
-#endif
                 short *mfp;
                 short m;
                 struct xattr sb;
                 long *msig;
-
+		
                 msig = (long *) arg;
                 r = Fcntl(fd, (long)&sb, FSTAT);
                 if (r < 0) {
@@ -225,27 +218,14 @@ __ioctl (int fd, int cmd, void *arg)
                 __set_errno (EINVAL);
                 return -1;
                 break;
-	      }
-	    case TIOCSETP:
-/*
-	      if (__mint <= 0x10a) {
-		r = Fcntl(fd, arg, cmd);
-		if (r != -ENOSYS)
-		  break;
-		cmd = TIOCSETN;
-	      }
-*/
-#if 0
-/* moved to the top */
-	      /*FALLTHRU*/
-	    default:
-	      r = Fcntl(fd, arg, cmd);
-	      break;
-#endif
 	    }
+	  }
 	}
-	else if (istty) {
+	else /* !__mint */ if (istty) {
+		struct sgttyb *sg = (struct sgttyb *) arg;
+		
 		r = 0;
+		
 		switch(cmd) {
 		case TIOCSETP:
 			fd = __OPEN_INDEX(fd);
@@ -285,11 +265,12 @@ __ioctl (int fd, int cmd, void *arg)
 	}
 	else
 		r = -EINVAL;
-
+	
 	if (r < 0) {
 		__set_errno ((int) -r);
 		return -1;
 	}
+	
 	return (int) r;
 }
 weak_alias (__ioctl, ioctl)
