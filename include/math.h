@@ -287,7 +287,9 @@ extern int matherr (struct exception *) __THROW;
 extern double cabs (COMPLEX) __THROW;
 extern COMPLEX cmult (COMPLEX, COMPLEX) __THROW;
 extern COMPLEX csqrt (COMPLEX) __THROW;
+#ifndef __GNUG__
 extern COMPLEX clog (COMPLEX) __THROW;
+#endif
 extern COMPLEX cacos (COMPLEX) __THROW;
 extern COMPLEX cadd (COMPLEX, COMPLEX) __THROW;
 extern COMPLEX casin (COMPLEX) __THROW;
