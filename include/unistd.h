@@ -364,13 +364,17 @@ __EXTERN int	chroot  __PROTO((const char* __path));
 __EXTERN int	gethostname __PROTO((char *__buf, size_t __len));
 
 /* Set the name of the current host to NAME, which is LEN bytes long.
-   This call is restricted to the super-user.  */
+   This call is restricted to the super-user.  This is a stub function
+   that will always return -1 and set errno to ENOSYS.  */
 __EXTERN int    sethostname __PROTO((const char *__buf, size_t __len));
 
-/* Get the NIS (aka YP) domain name, if any.  Called just like
+/* Get and set the NIS (aka YP) domain name, if any.  Called just like
    `gethostname'.  The NIS domain is usually the empty string when not
-   using NIS.  */
-__EXTERN int getdomainname __PROTO((char* __name, size_t LEN));
+   using NIS.  Setting the domainn name is currently not supported
+   under MiNT.  */
+__EXTERN int getdomainname __PROTO((char* __name, size_t __len));
+__EXTERN int setdomainname __PROTO((char* __name, size_t __len));
+
 
 /* Make all changes done to FD actually appear on disk.  */
 __EXTERN int fsync __PROTO ((int __fd));
