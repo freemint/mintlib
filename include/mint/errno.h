@@ -16,8 +16,6 @@
 #  include <features.h>
 # endif
 
-__BEGIN_DECLS
-
 /* See below.  */
 #define __KERNEL_NEG(c) c
 
@@ -755,11 +753,5 @@ __BEGIN_DECLS
 #define ETOOMANYREFS	__KERNEL_NEG(328)		/* Too many references.  */
 
 #define _NE_MAX		ETOOMANYREFS
-
-#ifndef __KERNEL__
-
-__END_DECLS
-
-#endif
 
 #endif /* _MINT_ERRNO_H */

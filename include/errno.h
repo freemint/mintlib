@@ -26,9 +26,9 @@
 
 #ifndef __KERNEL__
 
-__BEGIN_DECLS
-
 # ifndef __ASSEMBLER__
+
+__BEGIN_DECLS
 
 #ifdef errno
 # undef errno
@@ -50,9 +50,9 @@ extern char *program_invocation_name;
 extern char *program_invocation_short_name;
 # endif /* not __USE_GNU */
 
-#endif /* not __ASSEMBLER__ */
-
 __END_DECLS
+
+#endif /* not __ASSEMBLER__ */
 
 #endif /* not __KERNEL__ */
 
