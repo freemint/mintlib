@@ -27,6 +27,7 @@ __BEGIN_DECLS
 #define FIOEXCEPT	(('F'<< 8) | 5)
 #define FSTAT64		(('F'<< 8) | 6)		/* 1.15.4 extension, optional */
 #define FUTIME_UTC	(('F'<< 8) | 7)		/* 1.15.4 extension, optional */
+#define FIONBIO		(('F'<< 8) | 8)		/* just mintlib emulation */
 
 #define TIOCGPGRP	(('T'<< 8) | 6)
 #define TIOCSPGRP	(('T'<< 8) | 7)

@@ -272,7 +272,27 @@ __ioctl (int fd, int cmd, void *arg)
 	}
 	else
 		r = -EINVAL;
-	
+
+	if (r == -ENOSYS || r == -EINVAL)
+	switch (cmd) {
+	    case FIONBIO:
+	    {
+	      r = Fcntl (fd, F_GETFL, 0);
+	      if (r < 0) {
+	        __set_errno ((int) -r);
+		return -1;
+	      }
+	      r = Fcntl (fd, F_SETFL, *((int *)arg) ? (r | O_NDELAY) : (r & ~O_NDELAY) );
+	      if (r < 0) {
+	        __set_errno ((int) -r);
+		return -1;
+	      }
+	      return 0;
+	    }
+
+	    default:;
+	}
+
 	if (r < 0) {
 		__set_errno ((int) -r);
 		return -1;
