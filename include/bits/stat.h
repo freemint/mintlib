@@ -33,26 +33,26 @@ struct __st_mtim {
 	
 /* This is what Fstat wants and what we use in the library.  */
 struct stat {
-  dev_t st_dev;			/* Device.  */
-  ino_t  st_ino;		/* File serial number.  */
-  mode_t st_mode;	        /* File mode.  */
-  nlink_t st_nlink;		/* (Hard) link count.  */
-  uid_t st_uid;		        /* User ID of the file's owner.  */
-  gid_t st_gid;			/* Group ID of the file's group.  */
-  dev_t	st_rdev;		/* Device number, if device.  */
-  long  __st_high_atime;
-  time_t st_atime;		/* Time of last access, UTC.  */
+  __dev_t st_dev;		/* Device.  */
+  __ino_t st_ino;		/* File serial number.  */
+  __mode_t st_mode;		/* File mode.  */
+  __nlink_t st_nlink;		/* (Hard) link count.  */
+  __uid_t st_uid;		/* User ID of the file's owner.  */
+  __gid_t st_gid;		/* Group ID of the file's group.  */
+  __dev_t st_rdev;		/* Device number, if device.  */
+  long __st_high_atime;
+  __time_t st_atime;		/* Time of last access, UTC.  */
   struct __st_mtim st_atim;
-  long  __st_high_mtime;
-  time_t st_mtime;		/* Time of last access, UTC.  */
+  long __st_high_mtime;
+  __time_t st_mtime;		/* Time of last access, UTC.  */
   struct __st_mtim st_mtim;
-  long  __st_high_ctime;
-  time_t st_ctime;		/* Time of last status change, UTC.  */
+  long __st_high_ctime;
+  __time_t st_ctime;		/* Time of last status change, UTC.  */
   struct __st_mtim st_ctim;
   unsigned long __st_hi_size;	/* Upper 4 bytes of st_size.  */
-  off_t st_size;		/* File size, in bytes.  */
+  __off_t st_size;		/* File size, in bytes.  */
   unsigned long __st_hi_blocks; /* Upper 4 bytes of st_blocks.  */
-  off_t	st_blocks;		/* Number of 512-bytes blocks allocated.  */
+  __off_t st_blocks;		/* Number of 512-bytes blocks allocated.  */
   unsigned long int st_blksize;	/* Optimal blocksize for I/O.  */
   unsigned long	int st_flags;	/* User defined flags for file.  */
   unsigned long	int st_gen;	/* File generation number.  */
