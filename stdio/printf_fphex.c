@@ -41,21 +41,6 @@
 
 #ifdef __MINT__
 # define wchar_t char
-
-__inline int
-signbit (double d)
-{
-  union ieee754_double u;
-  u.d = d;
-  return (int) u.ieee.negative;
-}
-
-__EXTERN int __isnan __PROTO ((double));
-__EXTERN int __isnanf __PROTO ((float));
-__EXTERN int __isnanl __PROTO ((long double));
-__EXTERN int __isinf __PROTO ((double));
-__EXTERN int __isinff __PROTO ((float));
-__EXTERN int __isinfl __PROTO ((long double));
 #endif
 
 /* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */

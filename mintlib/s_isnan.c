@@ -27,5 +27,8 @@ __isnan (value)
   return ((u.ieee.exponent & 0x7ff) == 0x7ff && 
           ((u.ieee.mantissa0 & 0xfffff) != 0 || u.ieee.mantissa1 != 0));
 }
-
 weak_alias (__isnan, isnan)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__isnan, __isnanl)
+weak_alias (__isnanl, isnanl)
+#endif

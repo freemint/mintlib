@@ -58,77 +58,87 @@ __extension__ typedef struct {
 /* Shorthand for type of comparison functions.  */
 #ifndef __COMPAR_FN_T
 # define __COMPAR_FN_T
-typedef int (*__compar_fn_t) __PMT ((const void*, const void*));
+typedef int (*__compar_fn_t) (__const void*, __const void*);
 
 # ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
 # endif
 #endif
 
-__EXTERN double atof __P ((const char* __s));
-__EXTERN int atoi __P ((const char* __str));
-__EXTERN long atol __P ((const char* __str));
+/* Convert a string to a floating-point number.  */
+extern double atof (__const char *__nptr) __THROW;
+/* Convert a string to an integer.  */
+extern int atoi (__const char *__nptr) __THROW;
+/* Convert a string to a long integer.  */
+extern long int atol (__const char *__nptr) __THROW;
 
 #if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
 /* This function will be part of the standard C library in ISO C 9X.  */
-__EXTERN long long int atoll __PROTO ((const char* __nptr));
+extern long long int atoll (__const char *__nptr) __THROW;
 #endif
 
-/* Convert a string to a floating point number.  */
-__EXTERN double strtod __PROTO ((const char* __nptr, char** __endptr));
+/* Convert a string to a floating-point number.  */
+extern double strtod (__const char *__restrict __nptr,
+		      char **__restrict __endptr) __THROW;
 
-#ifdef __USE_ISOC9X
+#ifdef	__USE_ISOC9X
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
-__EXTERN float strtof __PROTO ((__const char* __nptr, char** __endptr));
-__EXTERN long double strtold __PROTO ((__const char* __nptr, char** __endptr));
+extern float strtof (__const char *__restrict __nptr,
+		     char **__restrict __endptr) __THROW;
+
+extern long double strtold (__const char *__restrict __nptr,
+			    char **__restrict __endptr) __THROW;
 #endif
 
-__EXTERN long int strtol __PROTO ((const char* __nptr, char** __endptr, 
-                                   int __base));
-__EXTERN unsigned long int strtoul __PROTO ((const char* __nptr, 
-                                             char** __endptr, int __base));
+/* Convert a string to a long integer.  */
+extern long int strtol (__const char *__restrict __nptr,
+			char **__restrict __endptr, int __base) __THROW;
+/* Convert a string to an unsigned long integer.  */
+extern unsigned long int strtoul (__const char *__restrict __nptr,
+				  char **__restrict __endptr, int __base)
+     __THROW;
 
 #if defined __GNUC__ && defined __USE_BSD
 /* Convert a string to a quadword integer.  */
-__EXTERN long long int strtoq __PROTO ((const char* __nptr, char** _endptr,
-                                        int __base));
+extern long long int strtoq (__const char* __nptr, char** _endptr,
+                                        int __base) __THROW;
 /* Convert a string to an unsigned quadword integer.  */
-__EXTERN long long int strtouq __PROTO ((const char* __nptr, char** _endptr,
-                                         int __base));
+extern long long int strtouq (__const char* __nptr, char** _endptr,
+                                         int __base) __THROW;
 #endif  /* GCC and use BSD.  */
 
 #if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
 /* These functions will be part of the standard C library in ISO C 9X.  */
 /* Convert a string to a quadword integer.  */
-__EXTERN long long int strtoll __PROTO ((const char* __nptr, char** _endptr,
-                                         int __base));
+extern long long int strtoll (__const char* __nptr, char** _endptr,
+                                         int __base) __THROW;
 /* Convert a string to an unsigned quadword integer.  */
-__EXTERN unsigned long long int strtoull __PROTO ((const char* __nptr, char** _endptr,
-                                                   int __base));
+extern unsigned long long int strtoull (__const char* __nptr, char** _endptr,
+                                                   int __base) __THROW;
 #endif
 
-__EXTERN void srand __P ((unsigned int __seed));
-__EXTERN int rand __P ((void));
+extern void srand (unsigned int __seed) __THROW;
+extern int rand (void) __THROW;
 
 #if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* System V style 48-bit random number generator functions.  */
 
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
-__EXTERN double drand48 __PROTO ((void));
-__EXTERN double erand48 __PROTO ((unsigned short int __xsubi[3]));
+extern double drand48 (void) __THROW;
+extern double erand48 (unsigned short int __xsubi[3]) __THROW;
 
 /* Return non-negative, long integer in [0,2^31).  */
-__EXTERN long lrand48 __PROTO ((void));
-__EXTERN long nrand48 __PROTO ((unsigned short int __xsubi[3]));
+extern long lrand48 (void) __THROW;
+extern long nrand48 (unsigned short int __xsubi[3]) __THROW;
 
 /* Return signed, long integers in [-2^31,2^31).  */
-__EXTERN long mrand48 __PROTO ((void));
-__EXTERN long jrand48 __PROTO ((unsigned short int __xsubi[3]));
+extern long mrand48 (void) __THROW;
+extern long jrand48 (unsigned short int __xsubi[3]) __THROW;
 
 /* Seed random number generator.  */
-__EXTERN void srand48 __PROTO ((long __seedval));
-__EXTERN unsigned short int *seed48 __PROTO ((unsigned short int __seed16v[3]));
-__EXTERN void lcong48 __PROTO ((unsigned short int __param[7]));
+extern void srand48 (long __seedval) __THROW;
+extern unsigned short int *seed48 (unsigned short int __seed16v[3]) __THROW;
+extern void lcong48 (unsigned short int __param[7]) __THROW;
 
 /* Data structure for communication with thread safe versions.  */
 struct drand48_data
@@ -142,48 +152,48 @@ struct drand48_data
 
 #ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
-__EXTERN int drand48_r __PROTO ((struct drand48_data *__buffer, 
-                                 double *__result));
-__EXTERN int erand48_r __PROTO ((unsigned short int __xsubi[3],
+extern int drand48_r (struct drand48_data *__buffer, 
+                                 double *__result) __THROW;
+extern int erand48_r (unsigned short int __xsubi[3],
 			         struct drand48_data *__buffer, 
-			         double *__result));
+			         double *__result) __THROW;
 
 /* Return non-negative, long integer in [0,2^31).  */
-__EXTERN int lrand48_r __PROTO ((struct drand48_data *__buffer, 
-                                 long *__result));
-__EXTERN int nrand48_r __PROTO ((unsigned short int __xsubi[3],
+extern int lrand48_r (struct drand48_data *__buffer, 
+                                 long *__result) __THROW;
+extern int nrand48_r (unsigned short int __xsubi[3],
 			         struct drand48_data *__buffer, 
-			         long *__result));
+			         long *__result) __THROW;
 
 /* Return signed, long integers in [-2^31,2^31).  */
-__EXTERN int mrand48_r __PROTO ((struct drand48_data *__buffer, 
-                                 long *__result));
-__EXTERN int jrand48_r __PROTO ((unsigned short int __xsubi[3],
+extern int mrand48_r (struct drand48_data *__buffer, 
+                                 long *__result) __THROW;
+extern int jrand48_r (unsigned short int __xsubi[3],
 			         struct drand48_data *__buffer, 
-			         long *__result));
+			         long *__result) __THROW;
 
 /* Seed random number generator.  */
-__EXTERN int srand48_r __PROTO ((long __seedval, 
-                                 struct drand48_data *__buffer));
-__EXTERN int seed48_r __PROTO ((unsigned short int __seed16v[3],
-			        struct drand48_data *__buffer));
-__EXTERN int lcong48_r __PROTO ((unsigned short int __param[7],
-			         struct drand48_data *__buffer));
+extern int srand48_r (long __seedval, 
+                                 struct drand48_data *__buffer) __THROW;
+extern int seed48_r (unsigned short int __seed16v[3],
+			        struct drand48_data *__buffer) __THROW;
+extern int lcong48_r (unsigned short int __param[7],
+			         struct drand48_data *__buffer) __THROW;
 #endif	/* Use misc.  */
 
 /* Internal function to compute next state of the generator.  */
-__EXTERN int __drand48_iterate __PROTO ((unsigned short int __xsubi[3],
-				         struct drand48_data *__buffer));
+extern int __drand48_iterate (unsigned short int __xsubi[3],
+				         struct drand48_data *__buffer) __THROW;
 #endif	/* Use SVID or X/Open.  */
 
-__EXTERN void *malloc __P ((size_t __n));
-__EXTERN void *__malloc __P ((size_t __n));
-__EXTERN void free __P ((void* __param));
-__EXTERN void __free __P ((void* __param));
-__EXTERN void *realloc __P ((void* __r, size_t __n));
-__EXTERN void *__realloc __P ((void* __r, size_t __n));
-__EXTERN void *calloc __P ((size_t __n, size_t __s));
-__EXTERN void *__calloc __P ((size_t __n, size_t __s));
+extern void *malloc (size_t __n) __THROW;
+extern void *__malloc (size_t __n) __THROW;
+extern void free (void* __param) __THROW;
+extern void __free (void* __param) __THROW;
+extern void *realloc (void* __r, size_t __n) __THROW;
+extern void *__realloc (void* __r, size_t __n) __THROW;
+extern void *calloc (size_t __n, size_t __s) __THROW;
+extern void *__calloc (size_t __n, size_t __s) __THROW;
 
 #if defined __USE_GNU || defined __USE_BSD || defined __USE_MISC
 # include <alloca.h>
@@ -192,84 +202,149 @@ __EXTERN void *__calloc __P ((size_t __n, size_t __s));
 #ifndef __STRICT_ANSI__
 
 # ifdef atarist
-__EXTERN void _malloczero __P ((int __yes));
-__EXTERN void _mallocChunkSize __P ((size_t __siz));
+extern void _malloczero (int __yes) __THROW;
+extern void _mallocChunkSize (size_t __siz) __THROW;
 # endif
 
 #endif /* __STRICT_ANSI__ */
 
-__EXTERN __EXITING abort __P ((void)) __NORETURN;
+extern __EXITING abort (void) __THROW __NORETURN;
 #if !(defined (__GNUG__) && __GNUG__ == 1)
   /* bug in g++ 1.39.0 -- cant digest proto */
-__EXTERN int atexit __P ((void (*)(void)));
+extern int atexit (void (*)(void)) __THROW;
 #endif
-__EXTERN __EXITING exit __P ((int)) __NORETURN;
+extern __EXITING exit (int) __THROW __NORETURN;
 
-__EXTERN char *getenv __P ((const char* __tag));
-__EXTERN int system __P ((const char* __s));
+extern char *getenv (__const char* __tag) __THROW;
+extern int system (__const char* __s) __THROW;
 
-__EXTERN void *bsearch __P ((const void* __key, const void* __base, 
+extern void *bsearch (__const void* __key, __const void* __base, 
                                 size_t __num, size_t __size, 
-                                __compar_fn_t __compar));
-__EXTERN void qsort __P ((void* __base, size_t __total_elems, 
+                                __compar_fn_t __compar) __THROW;
+extern void qsort (void* __base, size_t __total_elems, 
                              size_t __size, 
-                             __compar_fn_t __compar));
+                             __compar_fn_t __compar) __THROW;
 
-__EXTERN int abs __P ((int __x));
-__EXTERN long labs __P ((long __x));
+extern int abs (int __x) __THROW;
+extern long labs (long __x) __THROW;
 
 /* Return the `div_t', `ldiv_t' or `lldiv_t' representation
    of the value of NUMER over DENOM. */
 /* GCC may have built-ins for these someday.  */
-__EXTERN div_t div __P ((int __numer, int __denom)) __attribute__ ((__const__));
-__EXTERN ldiv_t ldiv __P ((long int __numer, long int __denom))
+extern div_t div (int __numer, int __denom) __THROW __attribute__ ((__const__));
+extern ldiv_t ldiv (long int __numer, long int __denom) __THROW
      __attribute__ ((__const__));
 #ifdef __USE_ISOC9X
-__extension__ __EXTERN lldiv_t lldiv __P ((long long int __numer,
-					   long long int __denom))
+__extension__ extern lldiv_t lldiv (long long int __numer,
+				   long long int __denom) __THROW
      __attribute__ ((__const__));
 #endif
 
-__EXTERN int mblen __P ((const char *, size_t));
-__EXTERN size_t mbstowcs __P ((wchar_t *, const char *, size_t));
-__EXTERN int mbtowc __P ((wchar_t *, const char *, size_t));
-__EXTERN size_t wcstombs __P ((char *, const wchar_t *, size_t));
-__EXTERN int wctomb __P ((char *, wchar_t));
+#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
+/* Convert floating point numbers to strings.  The returned values are
+   valid only until another call to the same function.  */
 
-__EXTERN wchar_t *wcscat __P ((wchar_t *, const wchar_t *));
-__EXTERN int wcscmp __P ((const wchar_t *, const wchar_t *));
-__EXTERN wchar_t *wcscpy __P ((wchar_t *, const wchar_t *));
-__EXTERN size_t wcslen __P ((const wchar_t *));
-__EXTERN wchar_t *wcsncat __P ((wchar_t *, const wchar_t *, size_t));
-__EXTERN int wcsncmp __P ((const wchar_t *, const wchar_t *, size_t));
-__EXTERN wchar_t *wcsncpy __P ((wchar_t *, const wchar_t *, size_t));
+/* Convert VALUE to a string with NDIGIT digits and return a pointer to
+   this.  Set *DECPT with the position of the decimal character and *SIGN
+   with the sign of the number.  */
+extern char *ecvt (double __value, int __ndigit, int *__restrict __decpt,
+		   int *__restrict __sign) __THROW;
+
+/* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
+   with the position of the decimal character and *SIGN with the sign of
+   the number.  */
+extern char *fcvt (double __value, int __ndigit, int *__restrict __decpt,
+		   int *__restrict __sign) __THROW;
+
+/* If possible convert VALUE to a string with NDIGIT significant digits.
+   Otherwise use exponential representation.  The resulting string will
+   be written to BUF.  */
+extern char *gcvt (double __value, int __ndigit, char *__buf) __THROW;
+
+
+# ifdef __USE_MISC
+/* Long double versions of above functions.  */
+extern char *qecvt (long double __value, int __ndigit,
+		    int *__restrict __decpt, int *__restrict __sign) __THROW;
+extern char *qfcvt (long double __value, int __ndigit,
+		    int *__restrict __decpt, int *__restrict __sign) __THROW;
+extern char *qgcvt (long double __value, int __ndigit, char *__buf) __THROW;
+
+
+/* Reentrant version of the functions above which provide their own
+   buffers.  */
+extern int ecvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		   int *__restrict __sign, char *__restrict __buf,
+		   size_t __len) __THROW;
+extern int fcvt_r (double __value, int __ndigit, int *__restrict __decpt,
+		   int *__restrict __sign, char *__restrict __buf,
+		   size_t __len) __THROW;
+
+extern int qecvt_r (long double __value, int __ndigit,
+		    int *__restrict __decpt, int *__restrict __sign,
+		    char *__restrict __buf, size_t __len) __THROW;
+extern int qfcvt_r (long double __value, int __ndigit,
+		    int *__restrict __decpt, int *__restrict __sign,
+		    char *__restrict __buf, size_t __len) __THROW;
+# endif	/* misc */
+#endif	/* use MISC || use X/Open Unix */
+
+
+/* Return the length of the multibyte character
+   in S, which is no longer than N.  */
+extern int mblen (__const char *__s, size_t __n) __THROW;
+/* Return the length of the given multibyte character,
+   putting its `wchar_t' representation in *PWC.  */
+extern int mbtowc (wchar_t *__restrict __pwc,
+		   __const char *__restrict __s, size_t __n) __THROW;
+/* Put the multibyte character represented
+   by WCHAR in S, returning its length.  */
+extern int wctomb (char *__s, wchar_t __wchar) __THROW;
+
+
+/* Convert a multibyte string to a wide char string.  */
+extern size_t mbstowcs (wchar_t *__restrict  __pwcs,
+			__const char *__restrict __s, size_t __n) __THROW;
+/* Convert a wide char string to multibyte string.  */
+extern size_t wcstombs (char *__restrict __s,
+			__const wchar_t *__restrict __pwcs, size_t __n)
+     __THROW;
+
+
+extern wchar_t *wcscat (wchar_t *, __const wchar_t *) __THROW;
+extern int wcscmp (__const wchar_t *, __const wchar_t *) __THROW;
+extern wchar_t *wcscpy (wchar_t *, __const wchar_t *) __THROW;
+extern size_t wcslen (__const wchar_t *) __THROW;
+extern wchar_t *wcsncat (wchar_t *, __const wchar_t *, size_t) __THROW;
+extern int wcsncmp (__const wchar_t *, __const wchar_t *, size_t) __THROW;
+extern wchar_t *wcsncpy (wchar_t *, __const wchar_t *, size_t) __THROW;
 
 /* This function is similar to the above but returns NULL if the
    programs is running with SUID or SGID enabled.  */
-__EXTERN char *__secure_getenv __PROTO ((const char *__name));
+extern char *__secure_getenv (__const char *__name) __THROW;
 
 #if defined(__USE_SVID) || defined(__USE_XOPEN)
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
-__EXTERN int putenv __PROTO ((const char *__string));
+extern int putenv (__const char *__string) __THROW;
 #endif
 
 #ifdef	__USE_BSD
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
-__EXTERN int setenv __PROTO ((const char *__name, const char *__value,
-			int __replace));
+extern int setenv (__const char *__name, __const char *__value,
+			int __replace) __THROW;
 
 /* Remove the variable NAME from the environment.  */
-__EXTERN void unsetenv __PROTO ((const char *__name));
+extern void unsetenv (__const char *__name) __THROW;
 #endif
 
 #ifdef __USE_MISC
 /* The `clearenv` was planned to be added to POSIX.1 but probably
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
-__EXTERN int clearenv __PROTO ((void));
+extern int clearenv (void) __THROW;
 #endif
 
 #if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
@@ -277,21 +352,21 @@ __EXTERN int clearenv __PROTO ((void));
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.
    Returns TEMPLATE, or a null pointer if it cannot get a unique file name.  */
-__EXTERN char *mktemp __PROTO ((char* __template));
+extern char *mktemp (char* __template) __THROW;
 
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.  */
-__EXTERN int mkstemp __PROTO ((char* __template));
+extern int mkstemp (char* __template) __THROW;
 #endif
 
 #ifdef __USE_GNU
 /* Return a malloc'd string containing the canonical absolute name of the
    named file.  The last file name component need not exist, and may be a
    symlink to a nonexistent file.  */
-__EXTERN char* canonicalize_file_name __P ((const char* __name));
+extern char* canonicalize_file_name (__const char* __name) __THROW;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -301,7 +376,7 @@ __EXTERN char* canonicalize_file_name __P ((const char* __name));
    name is PATH_MAX chars or more, returns null with `errno' set to
    ENAMETOOLONG; if the name fits in fewer then PATH_MAX chars, returns
    the name in RESOLVED.  */
-__EXTERN char* realpath __P ((const char* __name, char* __resolved));
+extern char* realpath (__const char* __name, char* __resolved) __THROW;
 #endif
 
 #if defined(__LATTICE__) && !defined(_NO_INLINE)

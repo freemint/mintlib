@@ -100,7 +100,6 @@
 # define __strtoull_internal(s, p, b, f) strtoull (s, p, b)
 # define __strncasecmp strncasecmp
 # define wchar_t char
-# include <nan.h>
 #endif
 
 #ifdef USE_WIDE_CHAR

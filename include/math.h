@@ -1,5 +1,5 @@
 #ifndef _MATH_H
-#define _MATH_H
+#define _MATH_H 1
 
 /************************************************************************
  *									*
@@ -38,19 +38,23 @@
  */
 
 
-#ifndef _COMPILER_H
-#include <compiler.h>
+#ifndef	_FEATURES_H
+# include <features.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+__BEGIN_DECLS
+
+/* Get machine-dependent HUGE_VAL value (returned on overflow).
+   On all IEEE754 machines, this is +Infinity.  */
+#include <bits/huge_val.h>
+
+/* Get machine-dependent NAN value (returned for some domain errors).  */
+#ifdef	 __USE_ISOC9X
+# include <bits/nan.h>
 #endif
+/* Get general and ISO C9X specific information.  */
+#include <bits/mathdef.h>
 
-#ifdef __TURBOC__
-
-#include <tcmath.h>
-
-#else
 
 #ifndef __STRICT_ANSI__
 /*
@@ -86,22 +90,45 @@ struct exception
 	double		arg2;	/* another arg */
 	double		retval; /* val to return */
 };
-
-#define M_LN2                0.69314718055994530942
-#define M_PI         3.14159265358979323846
-#define M_SQRT2              1.41421356237309504880
-#define M_E          2.7182818284590452354
-#define M_LOG2E              1.4426950408889634074
-#define M_LOG10E     0.43429448190325182765
-#define M_LN10               2.30258509299404568402
-#define M_PI_2               1.57079632679489661923
-#define M_PI_4               0.78539816339744830962
-#define M_1_PI               0.31830988618379067154
-#define M_2_PI               0.63661977236758134308
-#define M_2_SQRTPI   1.12837916709551257390
-#define M_SQRT1_2    0.70710678118654752440
-
 #endif /* __STRICT_ANSI__ */
+
+
+/* Some useful constants.  */
+#if defined __USE_BSD || defined __USE_XOPEN
+# define M_E		2.7182818284590452354	/* e */
+# define M_LOG2E	1.4426950408889634074	/* log_2 e */
+# define M_LOG10E	0.43429448190325182765	/* log_10 e */
+# define M_LN2		0.69314718055994530942	/* log_e 2 */
+# define M_LN10		2.30258509299404568402	/* log_e 10 */
+# define M_PI		3.14159265358979323846	/* pi */
+# define M_PI_2		1.57079632679489661923	/* pi/2 */
+# define M_PI_4		0.78539816339744830962	/* pi/4 */
+# define M_1_PI		0.31830988618379067154	/* 1/pi */
+# define M_2_PI		0.63661977236758134308	/* 2/pi */
+# define M_2_SQRTPI	1.12837916709551257390	/* 2/sqrt(pi) */
+# define M_SQRT2	1.41421356237309504880	/* sqrt(2) */
+# define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
+#endif
+
+/* The above constants are not adequate for computation using `long double's.
+   Therefore we provide as an extension constants with similar names as a
+   GNU extension.  Provide enough digits for the 128-bit IEEE quad.  */
+#ifdef __USE_GNU
+# define M_El		2.7182818284590452353602874713526625L  /* e */
+# define M_LOG2El	1.4426950408889634073599246810018922L  /* log_2 e */
+# define M_LOG10El	0.4342944819032518276511289189166051L  /* log_10 e */
+# define M_LN2l		0.6931471805599453094172321214581766L  /* log_e 2 */
+# define M_LN10l	2.3025850929940456840179914546843642L  /* log_e 10 */
+# define M_PIl		3.1415926535897932384626433832795029L  /* pi */
+# define M_PI_2l	1.5707963267948966192313216916397514L  /* pi/2 */
+# define M_PI_4l	0.7853981633974483096156608458198757L  /* pi/4 */
+# define M_1_PIl	0.3183098861837906715377675267450287L  /* 1/pi */
+# define M_2_PIl	0.6366197723675813430755350534900574L  /* 2/pi */
+# define M_2_SQRTPIl	1.1283791670955125738961589031215452L  /* 2/sqrt(pi) */
+# define M_SQRT2l	1.4142135623730950488016887242096981L  /* sqrt(2) */
+# define M_SQRT1_2l	0.7071067811865475244008443621048490L  /* 1/sqrt(2) */
+#endif
+
 
 extern const double _infinitydf;	/* in normdf.cpp */
 
@@ -112,10 +139,8 @@ extern const double _infinitydf;	/* in normdf.cpp */
 #  define _INLINE_MATH 0
 #endif
 
-#include <huge_val.h>
-
 #if _INLINE_MATH
-#  include <math-68881.h>
+# include <math-68881.h>
 #endif
 
 #define HUGE HUGE_VAL
@@ -130,106 +155,164 @@ extern const double _infinitydf;	/* in normdf.cpp */
 #endif
 
 #ifdef __USE_BSD
-__EXTERN int isnan __PROTO ((double));
-__EXTERN int isnanf __PROTO ((float));
-__EXTERN int isnanl __PROTO ((long double));
-__EXTERN int isinf __PROTO ((double));
-__EXTERN int isinff __PROTO ((float));
-__EXTERN int isinfl __PROTO ((long double));
+
+extern int finite(double) __THROW;
+extern int __finite(double) __THROW;
+extern int finitef(float) __THROW;
+extern int __finitef(float) __THROW;
+extern int finitel(long double) __THROW;
+extern int __finitel(long double) __THROW;
+
+extern int isinf (double) __THROW;
+extern int __isinf (double) __THROW;
+extern int isinff (float) __THROW;
+extern int __isinff (float) __THROW;
+extern int isinfl (long double) __THROW;
+extern int __isinfl (long double) __THROW;
+
+extern int isnan (double) __THROW;
+extern int __isnan (double) __THROW;
+extern int isnanf (float) __THROW;
+extern int __isnanf (float) __THROW;
+extern int isnanl (long double) __THROW;
+extern int __isnanl (long double) __THROW;
+
+extern int signbit (double) __THROW;
+extern int __signbit (double) __THROW;
+extern int signbitf (float) __THROW;
+extern int __signbitf (float) __THROW;
+extern int signbitl (long double) __THROW;
+extern int __signbitl (long double) __THROW;
+
 #endif
 
-#define isnan(x)                          \
-	(sizeof (x) == sizeof (float) ?   \
-	  __isnanf (x)                    \
-	: sizeof (x) == sizeof (double) ? \
-	  __isnan (x) : __isnanl (x))
+/* Return nonzero value if sign of X is negative.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  define signbit(x) \
+     (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
+# else
+#  define signbit(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __signbitf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __signbit (x) : __signbitl (x))
+# endif
 
-#define isinf(x)                          \
-	(sizeof (x) == sizeof (float) ?   \
-	  __isinff (x)                    \
-	: sizeof (x) == sizeof (double) ? \
-	  __isinf (x) : __isinfl (x))
+/* Return nonzero value if X is not +-Inf or NaN.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  define isfinite(x) \
+     (sizeof (x) == sizeof (float) ? __finitef (x) : __finite (x))
+# else
+#  define isfinite(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __finitef (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __finite (x) : __finitel (x))
+# endif
+
+/* Return nonzero value if X is a NaN.  We could use `fpclassify' but
+   we already have this functions `__isnan' and it is faster.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  define isnan(x) \
+     (sizeof (x) == sizeof (float) ? __isnanf (x) : __isnan (x))
+# else
+#  define isnan(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __isnanf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isnan (x) : __isnanl (x))
+# endif
+
+/* Return nonzero value is X is positive or negative infinity.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  define isinf(x) \
+     (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))
+# else
+#  define isinf(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __isinff (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isinf (x) : __isinfl (x))
+# endif
+
 
 #if !_INLINE_MATH
-__EXTERN double sin	__PROTO((double));
-__EXTERN double cos	__PROTO((double));
-__EXTERN double tan	__PROTO((double));
-__EXTERN double asin	__PROTO((double));
-__EXTERN double	acos	__PROTO((double));
-__EXTERN double atan	__PROTO((double));
-__EXTERN double atan2	__PROTO((double, double));
-__EXTERN double sinh	__PROTO((double));
-__EXTERN double cosh	__PROTO((double));
-__EXTERN double tanh	__PROTO((double));
-__EXTERN double atanh	__PROTO((double));
-__EXTERN double exp	__PROTO((double));
-__EXTERN double log	__PROTO((double));
-__EXTERN double log10	__PROTO((double));
-__EXTERN double sqrt	__PROTO((double));
-__EXTERN double hypot   __PROTO((double, double));
-__EXTERN double pow	__PROTO((double, double));
-__EXTERN double fabs	__PROTO((double));
-__EXTERN double ceil	__PROTO((double));
-__EXTERN double floor	__PROTO((double));
-__EXTERN double rint	__PROTO((double));
-__EXTERN double fmod	__PROTO((double, double));
+extern double sin (double) __THROW;
+extern double cos (double) __THROW;
+extern double tan (double) __THROW;
+extern double asin (double) __THROW;
+extern double acos (double) __THROW;
+extern double atan (double) __THROW;
+extern double atan2 (double, double) __THROW;
+extern double sinh (double) __THROW;
+extern double cosh (double) __THROW;
+extern double tanh (double) __THROW;
+extern double atanh (double) __THROW;
+extern double exp (double) __THROW;
+extern double log (double) __THROW;
+extern double log10 (double) __THROW;
+extern double sqrt (double) __THROW;
+extern double hypot (double, double) __THROW;
+extern double pow (double, double) __THROW;
+extern double fabs (double) __THROW;
+extern double ceil (double) __THROW;
+extern double floor (double) __THROW;
+extern double rint (double) __THROW;
+extern double fmod (double, double) __THROW;
 
-__EXTERN double ldexp	__PROTO((double, int));
-__EXTERN double frexp	__PROTO((double, int *));
-__EXTERN double modf	__PROTO((double, double *));
+extern double ldexp (double, int) __THROW;
+extern double frexp (double, int *) __THROW;
+extern double modf (double, double *) __THROW;
 #endif
 
-__EXTERN double acosh	__PROTO((double));
-__EXTERN double asinh	__PROTO((double));
+extern double acosh (double) __THROW;
+extern double asinh (double) __THROW;
 
 #ifndef __STRICT_ANSI__
 
 #if _INLINE_MATH
-#  define dabs(x) fabs(x)
+# define dabs(x) fabs(x)
 #else
-__EXTERN double dabs	__PROTO((double));
+extern double dabs (double) __THROW;
 #endif
 
-__EXTERN double copysign	__PROTO((double, double));
+extern double copysign (double, double) __THROW;
+
 #ifdef __cplusplus
-__EXTERN int matherr	__PROTO((struct __exception *));
+extern int matherr (struct __exception *) throw();
 #else
-__EXTERN int matherr	__PROTO((struct exception *));
+extern int matherr (struct exception *) __THROW;
 #endif
-__EXTERN double cabs	__PROTO((COMPLEX));
-__EXTERN COMPLEX cmult	__PROTO((COMPLEX, COMPLEX));
-__EXTERN COMPLEX csqrt	__PROTO((COMPLEX));
-#ifndef __GNUG__
-__EXTERN COMPLEX clog	__PROTO((COMPLEX));
-#endif
-__EXTERN COMPLEX cacos	__PROTO((COMPLEX));
-__EXTERN COMPLEX cadd	__PROTO((COMPLEX,COMPLEX));
-__EXTERN COMPLEX casin	__PROTO((COMPLEX));
-__EXTERN COMPLEX catan	__PROTO((COMPLEX));
-__EXTERN COMPLEX ccosh	__PROTO((COMPLEX));
-__EXTERN COMPLEX crcp	__PROTO((COMPLEX));
-__EXTERN COMPLEX csinh	__PROTO((COMPLEX));
-__EXTERN COMPLEX ctan	__PROTO((COMPLEX));
-__EXTERN COMPLEX ctanh	__PROTO((COMPLEX));
-__EXTERN COMPLEX cexp	__PROTO((COMPLEX));
-__EXTERN COMPLEX ccos	__PROTO((COMPLEX));
-__EXTERN COMPLEX csin	__PROTO((COMPLEX));
-__EXTERN COMPLEX cdiv	__PROTO((COMPLEX, COMPLEX));
-__EXTERN COMPLEX csubt	__PROTO((COMPLEX,COMPLEX));
 
-__EXTERN int pmlcfs	__PROTO((int, int));
-__EXTERN int pmlcnt	__PROTO((void));
-__EXTERN int pmlerr	__PROTO((int));
-__EXTERN int pmllim	__PROTO((int));
-__EXTERN int pmlsfs	__PROTO((int, int));
-__EXTERN double poly	__PROTO((int, double *, double));
+extern double cabs (COMPLEX) __THROW;
+extern COMPLEX cmult (COMPLEX, COMPLEX) __THROW;
+extern COMPLEX csqrt (COMPLEX) __THROW;
+extern COMPLEX clog (COMPLEX) __THROW;
+extern COMPLEX cacos (COMPLEX) __THROW;
+extern COMPLEX cadd (COMPLEX, COMPLEX) __THROW;
+extern COMPLEX casin (COMPLEX) __THROW;
+extern COMPLEX catan (COMPLEX) __THROW;
+extern COMPLEX ccosh (COMPLEX) __THROW;
+extern COMPLEX crcp (COMPLEX) __THROW;
+extern COMPLEX csinh (COMPLEX) __THROW;
+extern COMPLEX ctan (COMPLEX) __THROW;
+extern COMPLEX ctanh (COMPLEX) __THROW;
+extern COMPLEX cexp (COMPLEX) __THROW;
+extern COMPLEX ccos (COMPLEX) __THROW;
+extern COMPLEX csin (COMPLEX) __THROW;
+extern COMPLEX cdiv (COMPLEX, COMPLEX) __THROW;
+extern COMPLEX csubt (COMPLEX, COMPLEX) __THROW;
+
+extern int pmlcfs (int, int) __THROW;
+extern int pmlcnt (void) __THROW;
+extern int pmlerr (int) __THROW;
+extern int pmllim (int) __THROW;
+extern int pmlsfs (int, int) __THROW;
+extern double poly (int, double *, double) __THROW;
 
 #endif /* __STRICT_ANSI__ */
 
-#endif /* __TURBOC__ */
+__END_DECLS
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* _MATH_H */
+#endif /* math.h  */

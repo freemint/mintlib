@@ -74,12 +74,18 @@ SRCFILES = \
 	regsup.c \
 	rewinddi.c \
 	rtent.c \
+	s_finite.c \
+	s_finitef.c \
+	s_finitel.c \
 	s_isinf.c \
 	s_isinff.c \
 	s_isinfl.c \
 	s_isnan.c \
 	s_isnanf.c \
 	s_isnanl.c \
+	s_signbit.c \
+	s_signbitf.c \
+	s_signbitl.c \
 	setenv.c \
 	setjmp.S \
 	setlocale.c \

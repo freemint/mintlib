@@ -29,7 +29,7 @@ all-here:
 dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
-TESTS = dirname fdset tsearch
+TESTS = dirname efgcvt fdset tsearch
 
 LIBS-test-tsearch = -lm
 

@@ -30,5 +30,8 @@ __isinf (value)
   
   return 0;
 }
-
 weak_alias (__isinf, isinf)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__isinf, __isinfl)
+weak_alias (__isinfl, isinfl)
+#endif

@@ -4,5 +4,9 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES test-dirname.c \
-test-fdset.c test-tsearch.c
+SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES \
+	\
+	test-dirname.c \
+	test-efgcvt.c \
+	test-fdset.c \
+	test-tsearch.c

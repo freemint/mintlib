@@ -8,6 +8,8 @@ SRCFILES = \
 	daemon.c \
 	diraccess.c \
 	dirname.c \
+	efgcvt.c \
+	efgcvt_r.c \
 	err.c \
 	error.c \
 	getdirname.c \
@@ -21,6 +23,8 @@ SRCFILES = \
 	mkstemp.c \
 	mktemp.c \
 	obstack.c \
+	qefgcvt.c \
+	qefgcvt_r.c \
 	sa_len.c \
 	syslog.c \
 	tsearch.c

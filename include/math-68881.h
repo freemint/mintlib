@@ -38,9 +38,7 @@
 
 #include <errno.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 #ifndef HUGE_VAL
 #ifdef __sun__
@@ -596,8 +594,6 @@ modf (double x, double *ip)
   return x - temp;
 }
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* not __math_68881 */

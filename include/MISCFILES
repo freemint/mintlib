@@ -30,7 +30,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	gnu-ar.h \
 	gnu-out.h \
 	grp.h \
-	huge_val.h \
 	ieee754.h \
 	inttypes.h \
 	iovec.h \
@@ -47,7 +46,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	memory.h \
 	minimal.h \
 	mintbind.h \
-	nan.h \
 	netdb.h \
 	obstack.h \
 	osbind.h \
