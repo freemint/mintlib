@@ -6,9 +6,7 @@
 #include "bootparam_prot.h"
 
 bool_t
-xdr_bp_machine_name_t (xdrs, objp)
-	XDR *xdrs;
-	bp_machine_name_t *objp;
+xdr_bp_machine_name_t (XDR *xdrs, bp_machine_name_t *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_bp_machine_name_t (xdrs, objp)
 }
 
 bool_t
-xdr_bp_path_t (xdrs, objp)
-	XDR *xdrs;
-	bp_path_t *objp;
+xdr_bp_path_t (XDR *xdrs, bp_path_t *objp)
 {
 	register int32_t *buf;
 
@@ -30,9 +26,7 @@ xdr_bp_path_t (xdrs, objp)
 }
 
 bool_t
-xdr_bp_fileid_t (xdrs, objp)
-	XDR *xdrs;
-	bp_fileid_t *objp;
+xdr_bp_fileid_t (XDR *xdrs, bp_fileid_t *objp)
 {
 	register int32_t *buf;
 
@@ -42,9 +36,7 @@ xdr_bp_fileid_t (xdrs, objp)
 }
 
 bool_t
-xdr_ip_addr_t (xdrs, objp)
-	XDR *xdrs;
-	ip_addr_t *objp;
+xdr_ip_addr_t (XDR *xdrs, ip_addr_t *objp)
 {
 	register int32_t *buf;
 
@@ -60,9 +52,7 @@ xdr_ip_addr_t (xdrs, objp)
 }
 
 bool_t
-xdr_bp_address (xdrs, objp)
-	XDR *xdrs;
-	bp_address *objp;
+xdr_bp_address (XDR *xdrs, bp_address *objp)
 {
 	register int32_t *buf;
 
@@ -80,9 +70,7 @@ xdr_bp_address (xdrs, objp)
 }
 
 bool_t
-xdr_bp_whoami_arg (xdrs, objp)
-	XDR *xdrs;
-	bp_whoami_arg *objp;
+xdr_bp_whoami_arg (XDR *xdrs, bp_whoami_arg *objp)
 {
 	register int32_t *buf;
 
@@ -92,9 +80,7 @@ xdr_bp_whoami_arg (xdrs, objp)
 }
 
 bool_t
-xdr_bp_whoami_res (xdrs, objp)
-	XDR *xdrs;
-	bp_whoami_res *objp;
+xdr_bp_whoami_res (XDR *xdrs, bp_whoami_res *objp)
 {
 	register int32_t *buf;
 
@@ -108,9 +94,7 @@ xdr_bp_whoami_res (xdrs, objp)
 }
 
 bool_t
-xdr_bp_getfile_arg (xdrs, objp)
-	XDR *xdrs;
-	bp_getfile_arg *objp;
+xdr_bp_getfile_arg (XDR *xdrs, bp_getfile_arg *objp)
 {
 	register int32_t *buf;
 
@@ -122,9 +106,7 @@ xdr_bp_getfile_arg (xdrs, objp)
 }
 
 bool_t
-xdr_bp_getfile_res (xdrs, objp)
-	XDR *xdrs;
-	bp_getfile_res *objp;
+xdr_bp_getfile_res (XDR *xdrs, bp_getfile_res *objp)
 {
 	register int32_t *buf;
 

@@ -8,6 +8,11 @@
 
 #include <rpc/rpc.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define STRINGSIZE 1024
 
 typedef char *rexstring;
@@ -153,19 +158,57 @@ typedef struct rex_ttymode rex_ttymode;
 
 #define REXPROG 100017
 #define REXVERS 1
+
+#if defined(__STDC__) || defined(__cplusplus)
+#define REXPROC_START 1
+extern  rex_result * rexproc_start_1(rex_start *, CLIENT *);
+extern  rex_result * rexproc_start_1_svc(rex_start *, struct svc_req *);
+#define REXPROC_WAIT 2
+extern  rex_result * rexproc_wait_1(void *, CLIENT *);
+extern  rex_result * rexproc_wait_1_svc(void *, struct svc_req *);
+#define REXPROC_MODES 3
+extern  void * rexproc_modes_1(rex_ttymode *, CLIENT *);
+extern  void * rexproc_modes_1_svc(rex_ttymode *, struct svc_req *);
+#define REXPROC_WINCH 4
+extern  void * rexproc_winch_1(rex_ttysize *, CLIENT *);
+extern  void * rexproc_winch_1_svc(rex_ttysize *, struct svc_req *);
+#define REXPROC_SIGNAL 5
+extern  void * rexproc_signal_1(int *, CLIENT *);
+extern  void * rexproc_signal_1_svc(int *, struct svc_req *);
+extern int rexprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 #define REXPROC_START 1
 extern  rex_result * rexproc_start_1();
+extern  rex_result * rexproc_start_1_svc();
 #define REXPROC_WAIT 2
 extern  rex_result * rexproc_wait_1();
+extern  rex_result * rexproc_wait_1_svc();
 #define REXPROC_MODES 3
 extern  void * rexproc_modes_1();
+extern  void * rexproc_modes_1_svc();
 #define REXPROC_WINCH 4
 extern  void * rexproc_winch_1();
+extern  void * rexproc_winch_1_svc();
 #define REXPROC_SIGNAL 5
 extern  void * rexproc_signal_1();
+extern  void * rexproc_signal_1_svc();
 extern int rexprog_1_freeresult ();
+#endif /* K&R C */
 
 /* the xdr functions */
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_rexstring (XDR *, rexstring*);
+extern  bool_t xdr_rex_start (XDR *, rex_start*);
+extern  bool_t xdr_rex_result (XDR *, rex_result*);
+extern  bool_t xdr_sgttyb (XDR *, sgttyb*);
+extern  bool_t xdr_tchars (XDR *, tchars*);
+extern  bool_t xdr_ltchars (XDR *, ltchars*);
+extern  bool_t xdr_rex_ttysize (XDR *, rex_ttysize*);
+extern  bool_t xdr_rex_ttymode (XDR *, rex_ttymode*);
+
+#else /* K&R C */
 extern bool_t xdr_rexstring ();
 extern bool_t xdr_rex_start ();
 extern bool_t xdr_rex_result ();
@@ -174,5 +217,11 @@ extern bool_t xdr_tchars ();
 extern bool_t xdr_ltchars ();
 extern bool_t xdr_rex_ttysize ();
 extern bool_t xdr_rex_ttymode ();
+
+#endif /* K&R C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_REX_H_RPCGEN */

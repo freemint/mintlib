@@ -8,6 +8,11 @@
 
 #include <rpc/rpc.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -128,36 +133,117 @@ typedef struct key_netstres key_netstres;
 
 #define KEY_PROG 100029
 #define KEY_VERS 1
+
+#if defined(__STDC__) || defined(__cplusplus)
+#define KEY_SET 1
+extern  keystatus * key_set_1(char *, CLIENT *);
+extern  keystatus * key_set_1_svc(char *, struct svc_req *);
+#define KEY_ENCRYPT 2
+extern  cryptkeyres * key_encrypt_1(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres * key_encrypt_1_svc(cryptkeyarg *, struct svc_req *);
+#define KEY_DECRYPT 3
+extern  cryptkeyres * key_decrypt_1(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres * key_decrypt_1_svc(cryptkeyarg *, struct svc_req *);
+#define KEY_GEN 4
+extern  des_block * key_gen_1(void *, CLIENT *);
+extern  des_block * key_gen_1_svc(void *, struct svc_req *);
+#define KEY_GETCRED 5
+extern  getcredres * key_getcred_1(netnamestr *, CLIENT *);
+extern  getcredres * key_getcred_1_svc(netnamestr *, struct svc_req *);
+extern int key_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 #define KEY_SET 1
 extern  keystatus * key_set_1();
+extern  keystatus * key_set_1_svc();
 #define KEY_ENCRYPT 2
 extern  cryptkeyres * key_encrypt_1();
+extern  cryptkeyres * key_encrypt_1_svc();
 #define KEY_DECRYPT 3
 extern  cryptkeyres * key_decrypt_1();
+extern  cryptkeyres * key_decrypt_1_svc();
 #define KEY_GEN 4
 extern  des_block * key_gen_1();
+extern  des_block * key_gen_1_svc();
 #define KEY_GETCRED 5
 extern  getcredres * key_getcred_1();
+extern  getcredres * key_getcred_1_svc();
 extern int key_prog_1_freeresult ();
+#endif /* K&R C */
 #define KEY_VERS2 2
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  keystatus * key_set_2(char *, CLIENT *);
+extern  keystatus * key_set_2_svc(char *, struct svc_req *);
+extern  cryptkeyres * key_encrypt_2(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres * key_encrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern  cryptkeyres * key_decrypt_2(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres * key_decrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern  des_block * key_gen_2(void *, CLIENT *);
+extern  des_block * key_gen_2_svc(void *, struct svc_req *);
+extern  getcredres * key_getcred_2(netnamestr *, CLIENT *);
+extern  getcredres * key_getcred_2_svc(netnamestr *, struct svc_req *);
+#define KEY_ENCRYPT_PK 6
+extern  cryptkeyres * key_encrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern  cryptkeyres * key_encrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+#define KEY_DECRYPT_PK 7
+extern  cryptkeyres * key_decrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern  cryptkeyres * key_decrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+#define KEY_NET_PUT 8
+extern  keystatus * key_net_put_2(key_netstarg *, CLIENT *);
+extern  keystatus * key_net_put_2_svc(key_netstarg *, struct svc_req *);
+#define KEY_NET_GET 9
+extern  key_netstres * key_net_get_2(void *, CLIENT *);
+extern  key_netstres * key_net_get_2_svc(void *, struct svc_req *);
+#define KEY_GET_CONV 10
+extern  cryptkeyres * key_get_conv_2(char *, CLIENT *);
+extern  cryptkeyres * key_get_conv_2_svc(char *, struct svc_req *);
+extern int key_prog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 extern  keystatus * key_set_2();
+extern  keystatus * key_set_2_svc();
 extern  cryptkeyres * key_encrypt_2();
+extern  cryptkeyres * key_encrypt_2_svc();
 extern  cryptkeyres * key_decrypt_2();
+extern  cryptkeyres * key_decrypt_2_svc();
 extern  des_block * key_gen_2();
+extern  des_block * key_gen_2_svc();
 extern  getcredres * key_getcred_2();
+extern  getcredres * key_getcred_2_svc();
 #define KEY_ENCRYPT_PK 6
 extern  cryptkeyres * key_encrypt_pk_2();
+extern  cryptkeyres * key_encrypt_pk_2_svc();
 #define KEY_DECRYPT_PK 7
 extern  cryptkeyres * key_decrypt_pk_2();
+extern  cryptkeyres * key_decrypt_pk_2_svc();
 #define KEY_NET_PUT 8
 extern  keystatus * key_net_put_2();
+extern  keystatus * key_net_put_2_svc();
 #define KEY_NET_GET 9
 extern  key_netstres * key_net_get_2();
+extern  key_netstres * key_net_get_2_svc();
 #define KEY_GET_CONV 10
 extern  cryptkeyres * key_get_conv_2();
+extern  cryptkeyres * key_get_conv_2_svc();
 extern int key_prog_2_freeresult ();
+#endif /* K&R C */
 
 /* the xdr functions */
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_keystatus (XDR *, keystatus*);
+extern  bool_t xdr_keybuf (XDR *, keybuf);
+extern  bool_t xdr_netnamestr (XDR *, netnamestr*);
+extern  bool_t xdr_cryptkeyarg (XDR *, cryptkeyarg*);
+extern  bool_t xdr_cryptkeyarg2 (XDR *, cryptkeyarg2*);
+extern  bool_t xdr_cryptkeyres (XDR *, cryptkeyres*);
+extern  bool_t xdr_unixcred (XDR *, unixcred*);
+extern  bool_t xdr_getcredres (XDR *, getcredres*);
+extern  bool_t xdr_key_netstarg (XDR *, key_netstarg*);
+extern  bool_t xdr_key_netstres (XDR *, key_netstres*);
+
+#else /* K&R C */
 extern bool_t xdr_keystatus ();
 extern bool_t xdr_keybuf ();
 extern bool_t xdr_netnamestr ();
@@ -168,5 +254,11 @@ extern bool_t xdr_unixcred ();
 extern bool_t xdr_getcredres ();
 extern bool_t xdr_key_netstarg ();
 extern bool_t xdr_key_netstres ();
+
+#endif /* K&R C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_KEY_PROT_H_RPCGEN */

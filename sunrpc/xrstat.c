@@ -6,9 +6,7 @@
 #include "rstat.h"
 
 bool_t
-xdr_rstat_timeval (xdrs, objp)
-	XDR *xdrs;
-	rstat_timeval *objp;
+xdr_rstat_timeval (XDR *xdrs, rstat_timeval *objp)
 {
 	register int32_t *buf;
 
@@ -20,9 +18,7 @@ xdr_rstat_timeval (xdrs, objp)
 }
 
 bool_t
-xdr_statstime (xdrs, objp)
-	XDR *xdrs;
-	statstime *objp;
+xdr_statstime (XDR *xdrs, statstime *objp)
 {
 	register int32_t *buf;
 
@@ -221,9 +217,7 @@ xdr_statstime (xdrs, objp)
 }
 
 bool_t
-xdr_statsswtch (xdrs, objp)
-	XDR *xdrs;
-	statsswtch *objp;
+xdr_statsswtch (XDR *xdrs, statsswtch *objp)
 {
 	register int32_t *buf;
 
@@ -416,9 +410,7 @@ xdr_statsswtch (xdrs, objp)
 }
 
 bool_t
-xdr_stats (xdrs, objp)
-	XDR *xdrs;
-	stats *objp;
+xdr_stats (XDR *xdrs, stats *objp)
 {
 	register int32_t *buf;
 

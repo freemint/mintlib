@@ -45,9 +45,7 @@
  */
 
 bool_t
-xdr_keystatus (xdrs, objp)
-	XDR *xdrs;
-	keystatus *objp;
+xdr_keystatus (XDR *xdrs, keystatus *objp)
 {
 	register int32_t *buf;
 
@@ -57,9 +55,7 @@ xdr_keystatus (xdrs, objp)
 }
 
 bool_t
-xdr_keybuf (xdrs, objp)
-	XDR *xdrs;
-	keybuf objp;
+xdr_keybuf (XDR *xdrs, keybuf objp)
 {
 	register int32_t *buf;
 
@@ -69,9 +65,7 @@ xdr_keybuf (xdrs, objp)
 }
 
 bool_t
-xdr_netnamestr (xdrs, objp)
-	XDR *xdrs;
-	netnamestr *objp;
+xdr_netnamestr (XDR *xdrs, netnamestr *objp)
 {
 	register int32_t *buf;
 
@@ -81,9 +75,7 @@ xdr_netnamestr (xdrs, objp)
 }
 
 bool_t
-xdr_cryptkeyarg (xdrs, objp)
-	XDR *xdrs;
-	cryptkeyarg *objp;
+xdr_cryptkeyarg (XDR *xdrs, cryptkeyarg *objp)
 {
 	register int32_t *buf;
 
@@ -95,9 +87,7 @@ xdr_cryptkeyarg (xdrs, objp)
 }
 
 bool_t
-xdr_cryptkeyarg2 (xdrs, objp)
-	XDR *xdrs;
-	cryptkeyarg2 *objp;
+xdr_cryptkeyarg2 (XDR *xdrs, cryptkeyarg2 *objp)
 {
 	register int32_t *buf;
 
@@ -111,9 +101,7 @@ xdr_cryptkeyarg2 (xdrs, objp)
 }
 
 bool_t
-xdr_cryptkeyres (xdrs, objp)
-	XDR *xdrs;
-	cryptkeyres *objp;
+xdr_cryptkeyres (XDR *xdrs, cryptkeyres *objp)
 {
 	register int32_t *buf;
 
@@ -124,14 +112,14 @@ xdr_cryptkeyres (xdrs, objp)
 		 if (!xdr_des_block (xdrs, &objp->cryptkeyres_u.deskey))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_unixcred (xdrs, objp)
-	XDR *xdrs;
-	unixcred *objp;
+xdr_unixcred (XDR *xdrs, unixcred *objp)
 {
 	register int32_t *buf;
 
@@ -146,9 +134,7 @@ xdr_unixcred (xdrs, objp)
 }
 
 bool_t
-xdr_getcredres (xdrs, objp)
-	XDR *xdrs;
-	getcredres *objp;
+xdr_getcredres (XDR *xdrs, getcredres *objp)
 {
 	register int32_t *buf;
 
@@ -159,14 +145,14 @@ xdr_getcredres (xdrs, objp)
 		 if (!xdr_unixcred (xdrs, &objp->getcredres_u.cred))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_key_netstarg (xdrs, objp)
-	XDR *xdrs;
-	key_netstarg *objp;
+xdr_key_netstarg (XDR *xdrs, key_netstarg *objp)
 {
 	register int32_t *buf;
 
@@ -180,9 +166,7 @@ xdr_key_netstarg (xdrs, objp)
 }
 
 bool_t
-xdr_key_netstres (xdrs, objp)
-	XDR *xdrs;
-	key_netstres *objp;
+xdr_key_netstres (XDR *xdrs, key_netstres *objp)
 {
 	register int32_t *buf;
 
@@ -192,6 +176,8 @@ xdr_key_netstres (xdrs, objp)
 	case KEY_SUCCESS:
 		 if (!xdr_key_netstarg (xdrs, &objp->key_netstres_u.knet))
 			 return FALSE;
+		break;
+	default:
 		break;
 	}
 	return TRUE;

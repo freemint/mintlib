@@ -6,9 +6,7 @@
 #include "sm_inter.h"
 
 bool_t
-xdr_sm_name (xdrs, objp)
-	XDR *xdrs;
-	sm_name *objp;
+xdr_sm_name (XDR *xdrs, sm_name *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_sm_name (xdrs, objp)
 }
 
 bool_t
-xdr_my_id (xdrs, objp)
-	XDR *xdrs;
-	my_id *objp;
+xdr_my_id (XDR *xdrs, my_id *objp)
 {
 	register int32_t *buf;
 
@@ -36,9 +32,7 @@ xdr_my_id (xdrs, objp)
 }
 
 bool_t
-xdr_mon_id (xdrs, objp)
-	XDR *xdrs;
-	mon_id *objp;
+xdr_mon_id (XDR *xdrs, mon_id *objp)
 {
 	register int32_t *buf;
 
@@ -50,9 +44,7 @@ xdr_mon_id (xdrs, objp)
 }
 
 bool_t
-xdr_mon (xdrs, objp)
-	XDR *xdrs;
-	mon *objp;
+xdr_mon (XDR *xdrs, mon *objp)
 {
 	register int32_t *buf;
 
@@ -65,9 +57,7 @@ xdr_mon (xdrs, objp)
 }
 
 bool_t
-xdr_sm_stat (xdrs, objp)
-	XDR *xdrs;
-	sm_stat *objp;
+xdr_sm_stat (XDR *xdrs, sm_stat *objp)
 {
 	register int32_t *buf;
 
@@ -77,9 +67,7 @@ xdr_sm_stat (xdrs, objp)
 }
 
 bool_t
-xdr_res (xdrs, objp)
-	XDR *xdrs;
-	res *objp;
+xdr_res (XDR *xdrs, res *objp)
 {
 	register int32_t *buf;
 
@@ -89,9 +77,7 @@ xdr_res (xdrs, objp)
 }
 
 bool_t
-xdr_sm_stat_res (xdrs, objp)
-	XDR *xdrs;
-	sm_stat_res *objp;
+xdr_sm_stat_res (XDR *xdrs, sm_stat_res *objp)
 {
 	register int32_t *buf;
 
@@ -103,9 +89,7 @@ xdr_sm_stat_res (xdrs, objp)
 }
 
 bool_t
-xdr_status (xdrs, objp)
-	XDR *xdrs;
-	status *objp;
+xdr_status (XDR *xdrs, status *objp)
 {
 	register int32_t *buf;
 

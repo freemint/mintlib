@@ -6,9 +6,7 @@
 #include "yppasswd.h"
 
 bool_t
-xdr_passwd (xdrs, objp)
-	XDR *xdrs;
-	passwd *objp;
+xdr_passwd (XDR *xdrs, passwd *objp)
 {
 	register int32_t *buf;
 
@@ -30,9 +28,7 @@ xdr_passwd (xdrs, objp)
 }
 
 bool_t
-xdr_yppasswd (xdrs, objp)
-	XDR *xdrs;
-	yppasswd *objp;
+xdr_yppasswd (XDR *xdrs, yppasswd *objp)
 {
 	register int32_t *buf;
 

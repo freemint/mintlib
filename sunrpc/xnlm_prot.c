@@ -6,9 +6,7 @@
 #include "nlm_prot.h"
 
 bool_t
-xdr_nlm_stats (xdrs, objp)
-	XDR *xdrs;
-	nlm_stats *objp;
+xdr_nlm_stats (XDR *xdrs, nlm_stats *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_nlm_stats (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_holder (xdrs, objp)
-	XDR *xdrs;
-	nlm_holder *objp;
+xdr_nlm_holder (XDR *xdrs, nlm_holder *objp)
 {
 	register int32_t *buf;
 
@@ -38,9 +34,7 @@ xdr_nlm_holder (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_testrply (xdrs, objp)
-	XDR *xdrs;
-	nlm_testrply *objp;
+xdr_nlm_testrply (XDR *xdrs, nlm_testrply *objp)
 {
 	register int32_t *buf;
 
@@ -51,14 +45,14 @@ xdr_nlm_testrply (xdrs, objp)
 		 if (!xdr_nlm_holder (xdrs, &objp->nlm_testrply_u.holder))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_nlm_stat (xdrs, objp)
-	XDR *xdrs;
-	nlm_stat *objp;
+xdr_nlm_stat (XDR *xdrs, nlm_stat *objp)
 {
 	register int32_t *buf;
 
@@ -68,9 +62,7 @@ xdr_nlm_stat (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_res (xdrs, objp)
-	XDR *xdrs;
-	nlm_res *objp;
+xdr_nlm_res (XDR *xdrs, nlm_res *objp)
 {
 	register int32_t *buf;
 
@@ -82,9 +74,7 @@ xdr_nlm_res (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_testres (xdrs, objp)
-	XDR *xdrs;
-	nlm_testres *objp;
+xdr_nlm_testres (XDR *xdrs, nlm_testres *objp)
 {
 	register int32_t *buf;
 
@@ -96,9 +86,7 @@ xdr_nlm_testres (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_lock (xdrs, objp)
-	XDR *xdrs;
-	nlm_lock *objp;
+xdr_nlm_lock (XDR *xdrs, nlm_lock *objp)
 {
 	register int32_t *buf;
 
@@ -118,9 +106,7 @@ xdr_nlm_lock (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_lockargs (xdrs, objp)
-	XDR *xdrs;
-	nlm_lockargs *objp;
+xdr_nlm_lockargs (XDR *xdrs, nlm_lockargs *objp)
 {
 	register int32_t *buf;
 
@@ -140,9 +126,7 @@ xdr_nlm_lockargs (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_cancargs (xdrs, objp)
-	XDR *xdrs;
-	nlm_cancargs *objp;
+xdr_nlm_cancargs (XDR *xdrs, nlm_cancargs *objp)
 {
 	register int32_t *buf;
 
@@ -158,9 +142,7 @@ xdr_nlm_cancargs (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_testargs (xdrs, objp)
-	XDR *xdrs;
-	nlm_testargs *objp;
+xdr_nlm_testargs (XDR *xdrs, nlm_testargs *objp)
 {
 	register int32_t *buf;
 
@@ -174,9 +156,7 @@ xdr_nlm_testargs (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_unlockargs (xdrs, objp)
-	XDR *xdrs;
-	nlm_unlockargs *objp;
+xdr_nlm_unlockargs (XDR *xdrs, nlm_unlockargs *objp)
 {
 	register int32_t *buf;
 
@@ -188,9 +168,7 @@ xdr_nlm_unlockargs (xdrs, objp)
 }
 
 bool_t
-xdr_fsh_mode (xdrs, objp)
-	XDR *xdrs;
-	fsh_mode *objp;
+xdr_fsh_mode (XDR *xdrs, fsh_mode *objp)
 {
 	register int32_t *buf;
 
@@ -200,9 +178,7 @@ xdr_fsh_mode (xdrs, objp)
 }
 
 bool_t
-xdr_fsh_access (xdrs, objp)
-	XDR *xdrs;
-	fsh_access *objp;
+xdr_fsh_access (XDR *xdrs, fsh_access *objp)
 {
 	register int32_t *buf;
 
@@ -212,9 +188,7 @@ xdr_fsh_access (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_share (xdrs, objp)
-	XDR *xdrs;
-	nlm_share *objp;
+xdr_nlm_share (XDR *xdrs, nlm_share *objp)
 {
 	register int32_t *buf;
 
@@ -232,9 +206,7 @@ xdr_nlm_share (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_shareargs (xdrs, objp)
-	XDR *xdrs;
-	nlm_shareargs *objp;
+xdr_nlm_shareargs (XDR *xdrs, nlm_shareargs *objp)
 {
 	register int32_t *buf;
 
@@ -248,9 +220,7 @@ xdr_nlm_shareargs (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_shareres (xdrs, objp)
-	XDR *xdrs;
-	nlm_shareres *objp;
+xdr_nlm_shareres (XDR *xdrs, nlm_shareres *objp)
 {
 	register int32_t *buf;
 
@@ -264,9 +234,7 @@ xdr_nlm_shareres (xdrs, objp)
 }
 
 bool_t
-xdr_nlm_notify (xdrs, objp)
-	XDR *xdrs;
-	nlm_notify *objp;
+xdr_nlm_notify (XDR *xdrs, nlm_notify *objp)
 {
 	register int32_t *buf;
 

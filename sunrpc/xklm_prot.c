@@ -6,9 +6,7 @@
 #include "klm_prot.h"
 
 bool_t
-xdr_klm_stats (xdrs, objp)
-	XDR *xdrs;
-	klm_stats *objp;
+xdr_klm_stats (XDR *xdrs, klm_stats *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_klm_stats (xdrs, objp)
 }
 
 bool_t
-xdr_klm_lock (xdrs, objp)
-	XDR *xdrs;
-	klm_lock *objp;
+xdr_klm_lock (XDR *xdrs, klm_lock *objp)
 {
 	register int32_t *buf;
 
@@ -38,9 +34,7 @@ xdr_klm_lock (xdrs, objp)
 }
 
 bool_t
-xdr_klm_holder (xdrs, objp)
-	XDR *xdrs;
-	klm_holder *objp;
+xdr_klm_holder (XDR *xdrs, klm_holder *objp)
 {
 	register int32_t *buf;
 
@@ -95,9 +89,7 @@ xdr_klm_holder (xdrs, objp)
 }
 
 bool_t
-xdr_klm_stat (xdrs, objp)
-	XDR *xdrs;
-	klm_stat *objp;
+xdr_klm_stat (XDR *xdrs, klm_stat *objp)
 {
 	register int32_t *buf;
 
@@ -107,9 +99,7 @@ xdr_klm_stat (xdrs, objp)
 }
 
 bool_t
-xdr_klm_testrply (xdrs, objp)
-	XDR *xdrs;
-	klm_testrply *objp;
+xdr_klm_testrply (XDR *xdrs, klm_testrply *objp)
 {
 	register int32_t *buf;
 
@@ -120,14 +110,14 @@ xdr_klm_testrply (xdrs, objp)
 		 if (!xdr_klm_holder (xdrs, &objp->klm_testrply_u.holder))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_klm_lockargs (xdrs, objp)
-	XDR *xdrs;
-	klm_lockargs *objp;
+xdr_klm_lockargs (XDR *xdrs, klm_lockargs *objp)
 {
 	register int32_t *buf;
 
@@ -141,9 +131,7 @@ xdr_klm_lockargs (xdrs, objp)
 }
 
 bool_t
-xdr_klm_testargs (xdrs, objp)
-	XDR *xdrs;
-	klm_testargs *objp;
+xdr_klm_testargs (XDR *xdrs, klm_testargs *objp)
 {
 	register int32_t *buf;
 
@@ -155,9 +143,7 @@ xdr_klm_testargs (xdrs, objp)
 }
 
 bool_t
-xdr_klm_unlockargs (xdrs, objp)
-	XDR *xdrs;
-	klm_unlockargs *objp;
+xdr_klm_unlockargs (XDR *xdrs, klm_unlockargs *objp)
 {
 	register int32_t *buf;
 

@@ -6,9 +6,7 @@
 #include "spray.h"
 
 bool_t
-xdr_spraytimeval (xdrs, objp)
-	XDR *xdrs;
-	spraytimeval *objp;
+xdr_spraytimeval (XDR *xdrs, spraytimeval *objp)
 {
 	register int32_t *buf;
 
@@ -20,9 +18,7 @@ xdr_spraytimeval (xdrs, objp)
 }
 
 bool_t
-xdr_spraycumul (xdrs, objp)
-	XDR *xdrs;
-	spraycumul *objp;
+xdr_spraycumul (XDR *xdrs, spraycumul *objp)
 {
 	register int32_t *buf;
 
@@ -34,9 +30,7 @@ xdr_spraycumul (xdrs, objp)
 }
 
 bool_t
-xdr_sprayarr (xdrs, objp)
-	XDR *xdrs;
-	sprayarr *objp;
+xdr_sprayarr (XDR *xdrs, sprayarr *objp)
 {
 	register int32_t *buf;
 

@@ -138,7 +138,7 @@ write_most (const char *infile /* our name */ , int netflag, int nomain)
   if (nomain)
     return;
 
-#ifdef __GNU_LIBRARY__
+#if defined (__GNU_LIBRARY__) || defined (__MINT__)
   if (Cflag)
     f_print (fout, "\nint\nmain (int argc, char **argv)\n");
   else

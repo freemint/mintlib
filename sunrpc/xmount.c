@@ -6,9 +6,7 @@
 #include "mount.h"
 
 bool_t
-xdr_fhandle (xdrs, objp)
-	XDR *xdrs;
-	fhandle objp;
+xdr_fhandle (XDR *xdrs, fhandle objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_fhandle (xdrs, objp)
 }
 
 bool_t
-xdr_fhstatus (xdrs, objp)
-	XDR *xdrs;
-	fhstatus *objp;
+xdr_fhstatus (XDR *xdrs, fhstatus *objp)
 {
 	register int32_t *buf;
 
@@ -31,14 +27,14 @@ xdr_fhstatus (xdrs, objp)
 		 if (!xdr_fhandle (xdrs, objp->fhstatus_u.fhs_fhandle))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_dirpath (xdrs, objp)
-	XDR *xdrs;
-	dirpath *objp;
+xdr_dirpath (XDR *xdrs, dirpath *objp)
 {
 	register int32_t *buf;
 
@@ -48,9 +44,7 @@ xdr_dirpath (xdrs, objp)
 }
 
 bool_t
-xdr_name (xdrs, objp)
-	XDR *xdrs;
-	name *objp;
+xdr_name (XDR *xdrs, name *objp)
 {
 	register int32_t *buf;
 
@@ -60,9 +54,7 @@ xdr_name (xdrs, objp)
 }
 
 bool_t
-xdr_mountlist (xdrs, objp)
-	XDR *xdrs;
-	mountlist *objp;
+xdr_mountlist (XDR *xdrs, mountlist *objp)
 {
 	register int32_t *buf;
 
@@ -72,9 +64,7 @@ xdr_mountlist (xdrs, objp)
 }
 
 bool_t
-xdr_mountbody (xdrs, objp)
-	XDR *xdrs;
-	mountbody *objp;
+xdr_mountbody (XDR *xdrs, mountbody *objp)
 {
 	register int32_t *buf;
 
@@ -88,9 +78,7 @@ xdr_mountbody (xdrs, objp)
 }
 
 bool_t
-xdr_groups (xdrs, objp)
-	XDR *xdrs;
-	groups *objp;
+xdr_groups (XDR *xdrs, groups *objp)
 {
 	register int32_t *buf;
 
@@ -100,9 +88,7 @@ xdr_groups (xdrs, objp)
 }
 
 bool_t
-xdr_groupnode (xdrs, objp)
-	XDR *xdrs;
-	groupnode *objp;
+xdr_groupnode (XDR *xdrs, groupnode *objp)
 {
 	register int32_t *buf;
 
@@ -114,9 +100,7 @@ xdr_groupnode (xdrs, objp)
 }
 
 bool_t
-xdr_exports (xdrs, objp)
-	XDR *xdrs;
-	exports *objp;
+xdr_exports (XDR *xdrs, exports *objp)
 {
 	register int32_t *buf;
 
@@ -126,9 +110,7 @@ xdr_exports (xdrs, objp)
 }
 
 bool_t
-xdr_exportnode (xdrs, objp)
-	XDR *xdrs;
-	exportnode *objp;
+xdr_exportnode (XDR *xdrs, exportnode *objp)
 {
 	register int32_t *buf;
 

@@ -6,9 +6,7 @@
 #include "rex.h"
 
 bool_t
-xdr_rexstring (xdrs, objp)
-	XDR *xdrs;
-	rexstring *objp;
+xdr_rexstring (XDR *xdrs, rexstring *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_rexstring (xdrs, objp)
 }
 
 bool_t
-xdr_rex_start (xdrs, objp)
-	XDR *xdrs;
-	rex_start *objp;
+xdr_rex_start (XDR *xdrs, rex_start *objp)
 {
 	register int32_t *buf;
 
@@ -111,9 +107,7 @@ xdr_rex_start (xdrs, objp)
 }
 
 bool_t
-xdr_rex_result (xdrs, objp)
-	XDR *xdrs;
-	rex_result *objp;
+xdr_rex_result (XDR *xdrs, rex_result *objp)
 {
 	register int32_t *buf;
 
@@ -125,9 +119,7 @@ xdr_rex_result (xdrs, objp)
 }
 
 bool_t
-xdr_sgttyb (xdrs, objp)
-	XDR *xdrs;
-	sgttyb *objp;
+xdr_sgttyb (XDR *xdrs, sgttyb *objp)
 {
 	register int32_t *buf;
 
@@ -142,9 +134,7 @@ xdr_sgttyb (xdrs, objp)
 }
 
 bool_t
-xdr_tchars (xdrs, objp)
-	XDR *xdrs;
-	tchars *objp;
+xdr_tchars (XDR *xdrs, tchars *objp)
 {
 	register int32_t *buf;
 
@@ -157,9 +147,7 @@ xdr_tchars (xdrs, objp)
 }
 
 bool_t
-xdr_ltchars (xdrs, objp)
-	XDR *xdrs;
-	ltchars *objp;
+xdr_ltchars (XDR *xdrs, ltchars *objp)
 {
 	register int32_t *buf;
 
@@ -174,9 +162,7 @@ xdr_ltchars (xdrs, objp)
 }
 
 bool_t
-xdr_rex_ttysize (xdrs, objp)
-	XDR *xdrs;
-	rex_ttysize *objp;
+xdr_rex_ttysize (XDR *xdrs, rex_ttysize *objp)
 {
 	register int32_t *buf;
 
@@ -188,9 +174,7 @@ xdr_rex_ttysize (xdrs, objp)
 }
 
 bool_t
-xdr_rex_ttymode (xdrs, objp)
-	XDR *xdrs;
-	rex_ttymode *objp;
+xdr_rex_ttymode (XDR *xdrs, rex_ttymode *objp)
 {
 	register int32_t *buf;
 

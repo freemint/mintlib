@@ -6,9 +6,7 @@
 #include "nfs_prot.h"
 
 bool_t
-xdr_nfsstat (xdrs, objp)
-	XDR *xdrs;
-	nfsstat *objp;
+xdr_nfsstat (XDR *xdrs, nfsstat *objp)
 {
 	register int32_t *buf;
 
@@ -18,9 +16,7 @@ xdr_nfsstat (xdrs, objp)
 }
 
 bool_t
-xdr_ftype (xdrs, objp)
-	XDR *xdrs;
-	ftype *objp;
+xdr_ftype (XDR *xdrs, ftype *objp)
 {
 	register int32_t *buf;
 
@@ -30,9 +26,7 @@ xdr_ftype (xdrs, objp)
 }
 
 bool_t
-xdr_nfs_fh (xdrs, objp)
-	XDR *xdrs;
-	nfs_fh *objp;
+xdr_nfs_fh (XDR *xdrs, nfs_fh *objp)
 {
 	register int32_t *buf;
 
@@ -43,9 +37,7 @@ xdr_nfs_fh (xdrs, objp)
 }
 
 bool_t
-xdr_nfstime (xdrs, objp)
-	XDR *xdrs;
-	nfstime *objp;
+xdr_nfstime (XDR *xdrs, nfstime *objp)
 {
 	register int32_t *buf;
 
@@ -57,9 +49,7 @@ xdr_nfstime (xdrs, objp)
 }
 
 bool_t
-xdr_fattr (xdrs, objp)
-	XDR *xdrs;
-	fattr *objp;
+xdr_fattr (XDR *xdrs, fattr *objp)
 {
 	register int32_t *buf;
 
@@ -188,9 +178,7 @@ xdr_fattr (xdrs, objp)
 }
 
 bool_t
-xdr_sattr (xdrs, objp)
-	XDR *xdrs;
-	sattr *objp;
+xdr_sattr (XDR *xdrs, sattr *objp)
 {
 	register int32_t *buf;
 
@@ -259,9 +247,7 @@ xdr_sattr (xdrs, objp)
 }
 
 bool_t
-xdr_filename (xdrs, objp)
-	XDR *xdrs;
-	filename *objp;
+xdr_filename (XDR *xdrs, filename *objp)
 {
 	register int32_t *buf;
 
@@ -271,9 +257,7 @@ xdr_filename (xdrs, objp)
 }
 
 bool_t
-xdr_nfspath (xdrs, objp)
-	XDR *xdrs;
-	nfspath *objp;
+xdr_nfspath (XDR *xdrs, nfspath *objp)
 {
 	register int32_t *buf;
 
@@ -283,9 +267,7 @@ xdr_nfspath (xdrs, objp)
 }
 
 bool_t
-xdr_attrstat (xdrs, objp)
-	XDR *xdrs;
-	attrstat *objp;
+xdr_attrstat (XDR *xdrs, attrstat *objp)
 {
 	register int32_t *buf;
 
@@ -296,14 +278,14 @@ xdr_attrstat (xdrs, objp)
 		 if (!xdr_fattr (xdrs, &objp->attrstat_u.attributes))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_sattrargs (xdrs, objp)
-	XDR *xdrs;
-	sattrargs *objp;
+xdr_sattrargs (XDR *xdrs, sattrargs *objp)
 {
 	register int32_t *buf;
 
@@ -315,9 +297,7 @@ xdr_sattrargs (xdrs, objp)
 }
 
 bool_t
-xdr_diropargs (xdrs, objp)
-	XDR *xdrs;
-	diropargs *objp;
+xdr_diropargs (XDR *xdrs, diropargs *objp)
 {
 	register int32_t *buf;
 
@@ -329,9 +309,7 @@ xdr_diropargs (xdrs, objp)
 }
 
 bool_t
-xdr_diropokres (xdrs, objp)
-	XDR *xdrs;
-	diropokres *objp;
+xdr_diropokres (XDR *xdrs, diropokres *objp)
 {
 	register int32_t *buf;
 
@@ -343,9 +321,7 @@ xdr_diropokres (xdrs, objp)
 }
 
 bool_t
-xdr_diropres (xdrs, objp)
-	XDR *xdrs;
-	diropres *objp;
+xdr_diropres (XDR *xdrs, diropres *objp)
 {
 	register int32_t *buf;
 
@@ -356,14 +332,14 @@ xdr_diropres (xdrs, objp)
 		 if (!xdr_diropokres (xdrs, &objp->diropres_u.diropres))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_readlinkres (xdrs, objp)
-	XDR *xdrs;
-	readlinkres *objp;
+xdr_readlinkres (XDR *xdrs, readlinkres *objp)
 {
 	register int32_t *buf;
 
@@ -374,14 +350,14 @@ xdr_readlinkres (xdrs, objp)
 		 if (!xdr_nfspath (xdrs, &objp->readlinkres_u.data))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_readargs (xdrs, objp)
-	XDR *xdrs;
-	readargs *objp;
+xdr_readargs (XDR *xdrs, readargs *objp)
 {
 	register int32_t *buf;
 
@@ -397,9 +373,7 @@ xdr_readargs (xdrs, objp)
 }
 
 bool_t
-xdr_readokres (xdrs, objp)
-	XDR *xdrs;
-	readokres *objp;
+xdr_readokres (XDR *xdrs, readokres *objp)
 {
 	register int32_t *buf;
 
@@ -411,9 +385,7 @@ xdr_readokres (xdrs, objp)
 }
 
 bool_t
-xdr_readres (xdrs, objp)
-	XDR *xdrs;
-	readres *objp;
+xdr_readres (XDR *xdrs, readres *objp)
 {
 	register int32_t *buf;
 
@@ -424,14 +396,14 @@ xdr_readres (xdrs, objp)
 		 if (!xdr_readokres (xdrs, &objp->readres_u.reply))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_writeargs (xdrs, objp)
-	XDR *xdrs;
-	writeargs *objp;
+xdr_writeargs (XDR *xdrs, writeargs *objp)
 {
 	register int32_t *buf;
 
@@ -492,9 +464,7 @@ xdr_writeargs (xdrs, objp)
 }
 
 bool_t
-xdr_createargs (xdrs, objp)
-	XDR *xdrs;
-	createargs *objp;
+xdr_createargs (XDR *xdrs, createargs *objp)
 {
 	register int32_t *buf;
 
@@ -506,9 +476,7 @@ xdr_createargs (xdrs, objp)
 }
 
 bool_t
-xdr_renameargs (xdrs, objp)
-	XDR *xdrs;
-	renameargs *objp;
+xdr_renameargs (XDR *xdrs, renameargs *objp)
 {
 	register int32_t *buf;
 
@@ -520,9 +488,7 @@ xdr_renameargs (xdrs, objp)
 }
 
 bool_t
-xdr_linkargs (xdrs, objp)
-	XDR *xdrs;
-	linkargs *objp;
+xdr_linkargs (XDR *xdrs, linkargs *objp)
 {
 	register int32_t *buf;
 
@@ -534,9 +500,7 @@ xdr_linkargs (xdrs, objp)
 }
 
 bool_t
-xdr_symlinkargs (xdrs, objp)
-	XDR *xdrs;
-	symlinkargs *objp;
+xdr_symlinkargs (XDR *xdrs, symlinkargs *objp)
 {
 	register int32_t *buf;
 
@@ -550,9 +514,7 @@ xdr_symlinkargs (xdrs, objp)
 }
 
 bool_t
-xdr_nfscookie (xdrs, objp)
-	XDR *xdrs;
-	nfscookie objp;
+xdr_nfscookie (XDR *xdrs, nfscookie objp)
 {
 	register int32_t *buf;
 
@@ -562,9 +524,7 @@ xdr_nfscookie (xdrs, objp)
 }
 
 bool_t
-xdr_readdirargs (xdrs, objp)
-	XDR *xdrs;
-	readdirargs *objp;
+xdr_readdirargs (XDR *xdrs, readdirargs *objp)
 {
 	register int32_t *buf;
 
@@ -578,9 +538,7 @@ xdr_readdirargs (xdrs, objp)
 }
 
 bool_t
-xdr_entry (xdrs, objp)
-	XDR *xdrs;
-	entry *objp;
+xdr_entry (XDR *xdrs, entry *objp)
 {
 	register int32_t *buf;
 
@@ -596,9 +554,7 @@ xdr_entry (xdrs, objp)
 }
 
 bool_t
-xdr_dirlist (xdrs, objp)
-	XDR *xdrs;
-	dirlist *objp;
+xdr_dirlist (XDR *xdrs, dirlist *objp)
 {
 	register int32_t *buf;
 
@@ -610,9 +566,7 @@ xdr_dirlist (xdrs, objp)
 }
 
 bool_t
-xdr_readdirres (xdrs, objp)
-	XDR *xdrs;
-	readdirres *objp;
+xdr_readdirres (XDR *xdrs, readdirres *objp)
 {
 	register int32_t *buf;
 
@@ -623,14 +577,14 @@ xdr_readdirres (xdrs, objp)
 		 if (!xdr_dirlist (xdrs, &objp->readdirres_u.reply))
 			 return FALSE;
 		break;
+	default:
+		break;
 	}
 	return TRUE;
 }
 
 bool_t
-xdr_statfsokres (xdrs, objp)
-	XDR *xdrs;
-	statfsokres *objp;
+xdr_statfsokres (XDR *xdrs, statfsokres *objp)
 {
 	register int32_t *buf;
 
@@ -693,9 +647,7 @@ xdr_statfsokres (xdrs, objp)
 }
 
 bool_t
-xdr_statfsres (xdrs, objp)
-	XDR *xdrs;
-	statfsres *objp;
+xdr_statfsres (XDR *xdrs, statfsres *objp)
 {
 	register int32_t *buf;
 
@@ -705,6 +657,8 @@ xdr_statfsres (xdrs, objp)
 	case NFS_OK:
 		 if (!xdr_statfsokres (xdrs, &objp->statfsres_u.reply))
 			 return FALSE;
+		break;
+	default:
 		break;
 	}
 	return TRUE;

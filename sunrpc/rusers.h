@@ -8,6 +8,11 @@
 
 #include <rpc/rpc.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Find out about remote users
  */
@@ -97,16 +102,46 @@ extern bool_t xdr_utmpidlearr (XDR *xdrs, struct utmpidlearr *objp) __THROW;
 
 #define RUSERSPROG 100002
 #define RUSERSVERS_3 3
+
+#if defined(__STDC__) || defined(__cplusplus)
+#define RUSERSPROC_NUM 1
+extern  int * rusersproc_num_3(void *, CLIENT *);
+extern  int * rusersproc_num_3_svc(void *, struct svc_req *);
+#define RUSERSPROC_NAMES 2
+extern  utmp_array * rusersproc_names_3(void *, CLIENT *);
+extern  utmp_array * rusersproc_names_3_svc(void *, struct svc_req *);
+#define RUSERSPROC_ALLNAMES 3
+extern  utmp_array * rusersproc_allnames_3(void *, CLIENT *);
+extern  utmp_array * rusersproc_allnames_3_svc(void *, struct svc_req *);
+extern int rusersprog_3_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 #define RUSERSPROC_NUM 1
 extern  int * rusersproc_num_3();
+extern  int * rusersproc_num_3_svc();
 #define RUSERSPROC_NAMES 2
 extern  utmp_array * rusersproc_names_3();
+extern  utmp_array * rusersproc_names_3_svc();
 #define RUSERSPROC_ALLNAMES 3
 extern  utmp_array * rusersproc_allnames_3();
+extern  utmp_array * rusersproc_allnames_3_svc();
 extern int rusersprog_3_freeresult ();
+#endif /* K&R C */
 
 /* the xdr functions */
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_rusers_utmp (XDR *, rusers_utmp*);
+extern  bool_t xdr_utmp_array (XDR *, utmp_array*);
+
+#else /* K&R C */
 extern bool_t xdr_rusers_utmp ();
 extern bool_t xdr_utmp_array ();
+
+#endif /* K&R C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_RUSERS_H_RPCGEN */

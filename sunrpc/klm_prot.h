@@ -8,6 +8,11 @@
 
 #include <rpc/rpc.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LM_MAXSTRLEN 1024
 
 enum klm_stats {
@@ -68,17 +73,51 @@ typedef struct klm_unlockargs klm_unlockargs;
 
 #define KLM_PROG 100020
 #define KLM_VERS 1
+
+#if defined(__STDC__) || defined(__cplusplus)
+#define KLM_TEST 1
+extern  klm_testrply * klm_test_1(struct klm_testargs *, CLIENT *);
+extern  klm_testrply * klm_test_1_svc(struct klm_testargs *, struct svc_req *);
+#define KLM_LOCK 2
+extern  klm_stat * klm_lock_1(struct klm_lockargs *, CLIENT *);
+extern  klm_stat * klm_lock_1_svc(struct klm_lockargs *, struct svc_req *);
+#define KLM_CANCEL 3
+extern  klm_stat * klm_cancel_1(struct klm_lockargs *, CLIENT *);
+extern  klm_stat * klm_cancel_1_svc(struct klm_lockargs *, struct svc_req *);
+#define KLM_UNLOCK 4
+extern  klm_stat * klm_unlock_1(struct klm_unlockargs *, CLIENT *);
+extern  klm_stat * klm_unlock_1_svc(struct klm_unlockargs *, struct svc_req *);
+extern int klm_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 #define KLM_TEST 1
 extern  klm_testrply * klm_test_1();
+extern  klm_testrply * klm_test_1_svc();
 #define KLM_LOCK 2
 extern  klm_stat * klm_lock_1();
+extern  klm_stat * klm_lock_1_svc();
 #define KLM_CANCEL 3
 extern  klm_stat * klm_cancel_1();
+extern  klm_stat * klm_cancel_1_svc();
 #define KLM_UNLOCK 4
 extern  klm_stat * klm_unlock_1();
+extern  klm_stat * klm_unlock_1_svc();
 extern int klm_prog_1_freeresult ();
+#endif /* K&R C */
 
 /* the xdr functions */
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_klm_stats (XDR *, klm_stats*);
+extern  bool_t xdr_klm_lock (XDR *, klm_lock*);
+extern  bool_t xdr_klm_holder (XDR *, klm_holder*);
+extern  bool_t xdr_klm_stat (XDR *, klm_stat*);
+extern  bool_t xdr_klm_testrply (XDR *, klm_testrply*);
+extern  bool_t xdr_klm_lockargs (XDR *, klm_lockargs*);
+extern  bool_t xdr_klm_testargs (XDR *, klm_testargs*);
+extern  bool_t xdr_klm_unlockargs (XDR *, klm_unlockargs*);
+
+#else /* K&R C */
 extern bool_t xdr_klm_stats ();
 extern bool_t xdr_klm_lock ();
 extern bool_t xdr_klm_holder ();
@@ -87,5 +126,11 @@ extern bool_t xdr_klm_testrply ();
 extern bool_t xdr_klm_lockargs ();
 extern bool_t xdr_klm_testargs ();
 extern bool_t xdr_klm_unlockargs ();
+
+#endif /* K&R C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_KLM_PROT_H_RPCGEN */

@@ -9,9 +9,7 @@
  */
 
 bool_t
-xdr_rusers_utmp (xdrs, objp)
-	XDR *xdrs;
-	rusers_utmp *objp;
+xdr_rusers_utmp (XDR *xdrs, rusers_utmp *objp)
 {
 	register int32_t *buf;
 
@@ -31,9 +29,7 @@ xdr_rusers_utmp (xdrs, objp)
 }
 
 bool_t
-xdr_utmp_array (xdrs, objp)
-	XDR *xdrs;
-	utmp_array *objp;
+xdr_utmp_array (XDR *xdrs, utmp_array *objp)
 {
 	register int32_t *buf;
 

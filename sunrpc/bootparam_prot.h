@@ -8,6 +8,11 @@
 
 #include <rpc/rpc.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <rpc/types.h>
 #include <sys/time.h>
 #include <sys/errno.h>
@@ -66,13 +71,40 @@ typedef struct bp_getfile_res bp_getfile_res;
 
 #define BOOTPARAMPROG 100026
 #define BOOTPARAMVERS 1
+
+#if defined(__STDC__) || defined(__cplusplus)
+#define BOOTPARAMPROC_WHOAMI 1
+extern  bp_whoami_res * bootparamproc_whoami_1(bp_whoami_arg *, CLIENT *);
+extern  bp_whoami_res * bootparamproc_whoami_1_svc(bp_whoami_arg *, struct svc_req *);
+#define BOOTPARAMPROC_GETFILE 2
+extern  bp_getfile_res * bootparamproc_getfile_1(bp_getfile_arg *, CLIENT *);
+extern  bp_getfile_res * bootparamproc_getfile_1_svc(bp_getfile_arg *, struct svc_req *);
+extern int bootparamprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
+#else /* K&R C */
 #define BOOTPARAMPROC_WHOAMI 1
 extern  bp_whoami_res * bootparamproc_whoami_1();
+extern  bp_whoami_res * bootparamproc_whoami_1_svc();
 #define BOOTPARAMPROC_GETFILE 2
 extern  bp_getfile_res * bootparamproc_getfile_1();
+extern  bp_getfile_res * bootparamproc_getfile_1_svc();
 extern int bootparamprog_1_freeresult ();
+#endif /* K&R C */
 
 /* the xdr functions */
+
+#if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_bp_machine_name_t (XDR *, bp_machine_name_t*);
+extern  bool_t xdr_bp_path_t (XDR *, bp_path_t*);
+extern  bool_t xdr_bp_fileid_t (XDR *, bp_fileid_t*);
+extern  bool_t xdr_ip_addr_t (XDR *, ip_addr_t*);
+extern  bool_t xdr_bp_address (XDR *, bp_address*);
+extern  bool_t xdr_bp_whoami_arg (XDR *, bp_whoami_arg*);
+extern  bool_t xdr_bp_whoami_res (XDR *, bp_whoami_res*);
+extern  bool_t xdr_bp_getfile_arg (XDR *, bp_getfile_arg*);
+extern  bool_t xdr_bp_getfile_res (XDR *, bp_getfile_res*);
+
+#else /* K&R C */
 extern bool_t xdr_bp_machine_name_t ();
 extern bool_t xdr_bp_path_t ();
 extern bool_t xdr_bp_fileid_t ();
@@ -82,5 +114,11 @@ extern bool_t xdr_bp_whoami_arg ();
 extern bool_t xdr_bp_whoami_res ();
 extern bool_t xdr_bp_getfile_arg ();
 extern bool_t xdr_bp_getfile_res ();
+
+#endif /* K&R C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_BOOTPARAM_PROT_H_RPCGEN */

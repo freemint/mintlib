@@ -6,9 +6,7 @@
 #include "rquota.h"
 
 bool_t
-xdr_getquota_args (xdrs, objp)
-	XDR *xdrs;
-	getquota_args *objp;
+xdr_getquota_args (XDR *xdrs, getquota_args *objp)
 {
 	register int32_t *buf;
 
@@ -20,9 +18,7 @@ xdr_getquota_args (xdrs, objp)
 }
 
 bool_t
-xdr_rquota (xdrs, objp)
-	XDR *xdrs;
-	rquota *objp;
+xdr_rquota (XDR *xdrs, rquota *objp)
 {
 	register int32_t *buf;
 
@@ -125,9 +121,7 @@ xdr_rquota (xdrs, objp)
 }
 
 bool_t
-xdr_gqr_status (xdrs, objp)
-	XDR *xdrs;
-	gqr_status *objp;
+xdr_gqr_status (XDR *xdrs, gqr_status *objp)
 {
 	register int32_t *buf;
 
@@ -137,9 +131,7 @@ xdr_gqr_status (xdrs, objp)
 }
 
 bool_t
-xdr_getquota_rslt (xdrs, objp)
-	XDR *xdrs;
-	getquota_rslt *objp;
+xdr_getquota_rslt (XDR *xdrs, getquota_rslt *objp)
 {
 	register int32_t *buf;
 
