@@ -1,4 +1,4 @@
 # This file gets included by the Makefile in this directory to determine
 # the files that should go both into binary and source distributions.
 
-MISCFILES = MISCFILES dcntl.h errno.h iflink.h random.h ssystem.h
+MISCFILES = MISCFILES dcntl.h errno.h iflink.h ptrace.h random.h ssystem.h
