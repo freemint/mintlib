@@ -415,12 +415,6 @@ __EXTERN int ftruncate __PROTO ((int fd, __off_t __length));
 __EXTERN int    getdtablesize __PROTO ((void));
 #endif
 
-/* Swab pairs bytes in the first N bytes of the area pointed to by
-   FROM and copy the result to TO.  The value of TO must not be in the
-   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
-   is without partner.  */
-__EXTERN void swab __PROTO ((const char* __from, char* __to, ssize_t));
-
 __EXTERN int	__bsd_getpgrp __PROTO((int));
 __EXTERN int	__bsd_setpgrp __PROTO((int, int));
 
@@ -511,8 +505,15 @@ extern int __libc_enable_secure;
 
 #endif
 
-#if defined(__cplusplus)
-}
+#ifdef	__USE_XOPEN
+/* Swab pairs bytes in the first N bytes of the area pointed to by
+   FROM and copy the result to TO.  The value of TO must not be in the
+   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
+   is without partner.  */
+extern void swab (__const void *__restrict __from, void *__restrict __to,
+		  ssize_t __n) __THROW;
 #endif
+
+__END_DECLS
 
 #endif /* _UNISTD_H */
