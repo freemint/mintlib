@@ -170,9 +170,22 @@ typedef struct {
 
 /* Structure returned by Keytbl() */
 typedef struct {
-    void *unshift;	/* pointer to unshifted keys */
-    void *shift;	/* pointer to shifted keys */
-    void *caps;		/* pointer to capslock keys */
+    char *unshift;	/* pointer to unshifted keys */
+    char *shift;	/* pointer to shifted keys */
+    char *caps;		/* pointer to capslock keys */
+
+    /* Entries below available
+     * when _AKP cookie is present.
+     */
+    char *alt;		/* pointers to alt translation tables */
+    char *altshift;
+    char *altcaps;
+
+   /* Entry below is available
+    * on MilanTOS and as of FreeMiNT 1.16.1
+    */
+    char *altgr;
+
 } _KEYTAB;
 
 /* Structure used by Prtblk() */
