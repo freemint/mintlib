@@ -1,5 +1,5 @@
 # include/Makefile -- MiNTLib.
-# Copyright (C) 1999, 2000 Guido Flohr <guido@freemint.de>
+# Copyright (C) 1999, 2000, 2001 Guido Flohr <guido@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -14,7 +14,7 @@ top_srcdir = ..
 csrcdir = $(top_srcdir)/mintlib
 subdir = include
 
-SUBDIRS = arpa bits mint net netinet protocols sys
+SUBDIRS = arpa bits mint net netinet protocols rpc rpcsvc sys
 
 default: all
 

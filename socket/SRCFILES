@@ -16,6 +16,7 @@ SRCFILES = \
 	getproto.c \
 	getprotoent.c \
 	getprotoname.c \
+	getrpcent.c \
 	getservbyname.c \
 	getservbyport.c \
 	getservent.c \
@@ -33,7 +34,8 @@ SRCFILES = \
 	inet_network.c \
 	inet_ntoa.c \
 	listen.c \
-	rcmd.c recv.c \
+	rcmd.c \
+	recv.c \
 	recvfrom.c \
 	recvmsg.c \
 	readv.c \

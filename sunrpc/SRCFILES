@@ -1,0 +1,75 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = \
+	auth_des.c \
+	auth_none.c \
+	auth_unix.c \
+	authdes_prot.c \
+	authuxprot.c \
+	bindrsvprt.c \
+	clnt_gen.c \
+	clnt_perr.c \
+	clnt_raw.c \
+	clnt_simp.c \
+	clnt_tcp.c \
+	clnt_udp.c \
+	clnt_unix.c \
+	create_xid.c \
+	des_crypt.c \
+	des_impl.c \
+	des_soft.c \
+	get_myaddr.c \
+	getrpcport.c \
+	key_call.c \
+	key_prot.c \
+	openchild.c \
+	pm_getmaps.c \
+	pm_getport.c \
+	pmap_clnt.c \
+	pmap_prot.c \
+	pmap_prot2.c \
+	pmap_rmt.c \
+	rpc_cmsg.c \
+	rpc_common.c \
+	rpc_dtable.c \
+	rpc_prot.c \
+	rtime.c \
+	svc.c \
+	svc_auth.c \
+	svc_authux.c \
+	svc_raw.c \
+	svc_run.c \
+	svc_simple.c \
+	svc_tcp.c \
+	svc_udp.c \
+	svc_unix.c \
+	svcauth_des.c \
+	xcrypt.c \
+	xdr.c \
+	xdr_array.c \
+	xdr_float.c \
+	xdr_intXX_t.c \
+	xdr_mem.c \
+	xdr_rec.c \
+	xdr_ref.c \
+	xdr_sizeof.c \
+	xdr_stdio.c
+# not yet
+#	netname.c \
+#	publickey.c \
+
+RPCGEN_SRCFILES = \
+	rpc_clntout.c \
+	rpc_cout.c \
+	rpc_hout.c \
+	rpc_main.c \
+	rpc_parse.c \
+	rpc_sample.c \
+	rpc_scan.c \
+	rpc_svcout.c \
+	rpc_tblout.c \
+	rpc_util.c

@@ -1,0 +1,22 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go both into binary and source distributions.
+
+MISCFILES = MISCFILES \
+	\
+	auth.h \
+	auth_des.h \
+	auth_unix.h \
+	clnt.h \
+	des_crypt.h \
+	key_prot.h \
+	netdb.h \
+	pmap_clnt.h \
+	pmap_prot.h \
+	pmap_rmt.h \
+	rpc.h \
+	rpc_des.h \
+	rpc_msg.h \
+	svc.h \
+	svc_auth.h \
+	types.h \
+	xdr.h
