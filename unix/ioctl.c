@@ -126,12 +126,19 @@ __ioctl (int fd, int cmd, void *arg)
 				__open_stat[__OPEN_INDEX(fd)].status =
 					FH_UNKNOWN;
 
-				r = Fcntl (fd, (long) arg, TIOCSCTTY);
-				if (r >= 0)
-					return 0;
-				else if (r != -ENOSYS && r != -EINVAL) {
-					__set_errno (-r);
-					return -1;
+				if (__mint >= 0x110)
+				{
+					/* The kernel ioctl() is broken in
+					 * kernels < 1.16, so don't try it with
+					 * these */
+					r = Fcntl (fd, (long) arg, TIOCSCTTY);
+
+					if (r >= 0)
+						return 0;
+					else if (r != -ENOSYS && r != -EINVAL) {
+						__set_errno (-r);
+						return -1;
+					}
 				}
 				
 				/* Try to emulate it.  In this case the
