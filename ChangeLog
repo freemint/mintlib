@@ -1,3 +1,93 @@
+2004-07-12 Monday 08:18  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars, mintlib.spec:
+
+	Bumped version to 0.57.5 for new release.
+	
+2004-07-09 Friday 08:15  Frank Naumann <fnaumann@freemint.de>
+
+	* socket/SRCFILES:
+
+	Add newly imported functions to the build list so they are compiled and
+	added to the socket library.
+	
+2004-07-08 Thursday 20:30  Frank Naumann <fnaumann@freemint.de>
+
+	* socket/inet_net_ntop.c, socket/inet_net_pton.c,
+	socket/inet_neta.c, socket/inet_ntop.c, socket/inet_pton.c,
+	socket/nsap_addr.c, include/string.h, include/arpa/inet.h,
+	include/arpa/nameser.h:
+
+	Added from GNU libc with minor modifications:
+	- inet_net_ntop
+	- inet_net_pton
+	- inet_neta
+	- inet_ntop
+	- inet_pton
+	- nsap_addr
+	
+2004-06-22 Tuesday 12:25  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Use better defaults for prefix and toolprefix if CROSS=yes.
+	
+2004-05-25 Tuesday 22:34  Ralph Lowinski <altf4@freemint.de>
+
+	* unix/chdir.c:
+
+	avoid mapping of U:\xyz to /u/xyz, the correct form is /xyz
+	
+2004-04-07 Wednesday 13:49  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/falcon.h:
+
+	Synchronized with FreeMiNT CVS version.
+	
+2004-02-20 Friday 22:03  Frank Naumann <fnaumann@freemint.de>
+
+	* unix/chdir.c:
+
+	Replaced directly access __malloc/__free by the weak_alias malloc/free to
+	be consistent with the rest of the library.
+	
+2004-02-10 Tuesday 23:04  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/execlp.c:
+
+	It's execvp and not __execvp!
+	
+2004-02-10 Tuesday 22:57  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/execlp.c:
+
+	Bad bugfix, execlp is mapped to execvp and not execve.
+	
+2004-01-30 Friday 20:27  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/cookie.h:
+
+	Added new cookies [contributed by Patrice Mandin].
+	
+2004-01-29 Thursday 09:38  Frank Naumann <fnaumann@freemint.de>
+
+	* lib020/Makefile, README.1st, checkrules:
+
+	Removed -m68881 flag, not needed here.
+	
+2004-01-29 Thursday 09:36  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/syscalls.list:
+
+	Removed wrong chown16 entry added by standa. This file have nothing todo
+	with the system call bindings.
+	
+2004-01-22 Thursday 22:52  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
 2004-01-22 Thursday 22:47  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars:
