@@ -301,7 +301,7 @@ noent:
 	/* fix the case `isatty() called before and not closed thru close()' */
 	if (__OPEN_INDEX(rv) < __NHANDLES) {
 		__open_stat[__OPEN_INDEX(rv)].status = FH_UNKNOWN;
-		__open_stat[__OPEN_INDEX(rv)].check_eagain = -1;
+		__open_stat[__OPEN_INDEX(rv)].check_eagain = 0;
 	}
  	/* Important side effect:  isatty(rv) sets up flags under TOS */
 	if (isatty(rv) && (!(iomode & O_NOCTTY)) && (!(isatty(-1)))) {
@@ -316,7 +316,7 @@ noent:
               || ((Pgetpgrp() == Pgetpid())
                   && (Fcntl(rv, &fcbuf, TIOCGPGRP) >= 0)
                   && (fcbuf == 0))) {
-            (void) Fforce(-1, rv);	/* new controlling tty */
+	    ioctl(rv, TIOCSCTTY, 0);	/* new controlling tty */
             __open_stat[__OPEN_INDEX(-1)] = __open_stat[__OPEN_INDEX(rv)];
 	  }
 	}

@@ -114,21 +114,21 @@ __read (int fd, void *buf, size_t size)
 			register int checkit = 1;
 			
 			if (handle < __NHANDLES) {
-				if (__open_stat[handle].check_eagain < 0) {
+				if (__open_stat[handle].check_eagain == 0) {
 					struct stat s;
 					int saved_errno = errno;
 					if (__do_fstat (fd, &s, 0) == 0) {
 						if (S_ISREG (s.st_mode)
 						    || S_ISDIR (s.st_mode)
 						    || S_ISLNK (s.st_mode))
-							__open_stat[handle].check_eagain = checkit = 0;
+							__open_stat[handle].check_eagain = checkit = 1;
 						else
-							__open_stat[handle].check_eagain = 1;
+							__open_stat[handle].check_eagain = 2;
 					}
 					__set_errno (saved_errno);
 				}
 				else
-					checkit = __open_stat[handle].check_eagain;
+					checkit = __open_stat[handle].check_eagain - 1;
 			}
 			
 			if (checkit)

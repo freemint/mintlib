@@ -16,7 +16,7 @@
 #include <grp.h>
 
 static char const *grpfile = "/etc/group";  /* default group file */
-static FILE *fp;
+static FILE *fp = NULL;
 
 static struct group curentry;   /* static data to return */
 

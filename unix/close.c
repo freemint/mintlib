@@ -20,7 +20,7 @@ __close (int fd)
 		return -1;
 	}
 	fd = __OPEN_INDEX(fd);
-	if (fd >= 0 && fd < __NHANDLES) {
+	if (fd < __NHANDLES) {
 		__open_stat[fd].status = FH_UNKNOWN;
 		__open_stat[fd].flags = 0;
 	}
