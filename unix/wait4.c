@@ -70,7 +70,7 @@ __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
     /* Previous kernel versions had been confused by programs that
        terminate with bogus exit codes (i. e. more than 8 bits). 
        We try our best to fix that here.  */
-    if (__mint < 0x110)
+    if (__mint < 0x10f)
       {
         if ((retval & 0x7f) == 0x7f)
           {
