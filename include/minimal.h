@@ -34,7 +34,7 @@ void _main (long argc, char **argv, char **environ);
 void __main (void);
 
 
-void _init_signal (vodi) { }
+void _init_signal (void) { }
 
 __EXITING exit (int status) { __exit(status); }
 
