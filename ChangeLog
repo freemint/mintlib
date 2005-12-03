@@ -1,3 +1,113 @@
+2005-12-03 Saturday 11:29  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Bumped version to 0.57.6 for new release.
+	
+2005-03-01 Tuesday 23:33  Standa Opichal <opichals@seznam.cz>
+
+	* include/bits/socket.h, socket/readv.c, socket/res_send.c,
+	socket/sendmsg.c, socket/writev.c:
+
+	bits/socket.h update
+	- msghdr msg_accrights -> msg_control (change towards a UNIX98 compatibility).
+	- cmsghdr structure and related macros added (CMSG_*).
+	- Several missing SO_* constants added.
+	- SCM_CREDENTIALS essentials added (kernel implementation is missing atm).
+	
+2005-03-01 Tuesday 23:25  Standa Opichal <opichals@seznam.cz>
+
+	* include/sys/ioctl.h, unix/ioctl.c:
+
+	FIOBIO emulation via Fcntl(F_GETFL,F_SETFL).
+	
+2004-11-09 Tuesday 17:15  Gerhard Stoll <Gerhard_Stoll@b.maus.de>
+
+	* include/mint/ssystem.h:
+
+	 Add defines from the freemint/ssystem.h
+	
+2004-10-21 Thursday 08:39  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/ostruct.h:
+
+	Corrected DOSTIME types to unsigned.
+	
+2004-09-15 Wednesday 08:49  Frank Naumann <fnaumann@freemint.de>
+
+	* include/compiler.h, include/mint/falcon.h, include/mint/linea.h,
+	include/mint/mintbind.h, include/mint/osbind.h, mintlib/linea.c,
+	stdio/sprintf.c, stdio/sscanf.c, string/strsignal.c, tz/stack.c,
+	tz/tzinit.c, unix/sigpause.c:
+
+	Changes and warning fixes for gcc 3.3 compatibility (contributed
+	by Philipp Donze).
+	
+2004-09-15 Wednesday 07:23  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile:
+
+	Don't complain on make clean if the files to be removed don't exist.
+	
+2004-09-15 Wednesday 07:13  Frank Naumann <fnaumann@freemint.de>
+
+	* sunrpc/: bootparam_prot.h, key_prot.h, klm_prot.h, mount.h,
+	nfs_prot.h, nlm_prot.h, rex.h, rpc_main.c, rpc_svcout.c, rquota.h,
+	rstat.h, rusers.h, sm_inter.h, spray.h, xbootparam_prot.c,
+	xkey_prot.c, xklm_prot.c, xmount.c, xnfs_prot.c, xnlm_prot.c,
+	xrex.c, xrquota.c, xrstat.c, xrusers.c, xsm_inter.c, xspray.c,
+	xyppasswd.c, yppasswd.h:
+
+	Updated rpcgen and the corresponding generated files.
+	
+2004-09-14 Tuesday 21:18  Frank Naumann <fnaumann@freemint.de>
+
+	* Makefile:
+
+	Remove some more generated files on clean.
+	
+2004-09-14 Tuesday 12:32  Frank Naumann <fnaumann@freemint.de>
+
+	* include/getopt.h, include/mint/cookie.h, mintlib/setenv.c,
+	posix/getopt.c, posix/glob.c, stdlib/exit.c, sunrpc/rpc_cout.c,
+	unix/sigpause.c, unix/wait4.c:
+
+	Some minor corrections and warning bugfixes.
+	
+2004-09-09 Thursday 07:25  Gerhard Stoll <Gerhard_Stoll@b.maus.de>
+
+	* include/mint/cookie.h:
+
+	Add some cookies
+	
+2004-09-06 Monday 05:16  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars:
+
+	Don't run header cleanup on cross compilation (as default).
+	
+2004-09-01 Wednesday 13:51  Konrad M. Kokoszkiewicz <draco@obta.uw.edu.pl>
+
+	* include/mint/ostruct.h:
+
+	Types of pointers in struct _KEYTAB changed from void* to char*
+	(as these are char pointers). Might it be advisable to change them
+	to const char *?
+	
+	Also added _AKP vectors.
+	
+2004-08-04 Wednesday 14:59  Frank Naumann <fnaumann@freemint.de>
+
+	* include/math.h:
+
+	Avoid conflict with gcc header if dabs is defined.
+	
+2004-07-12 Monday 08:36  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
 2004-07-12 Monday 08:18  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars, mintlib.spec:
