@@ -1,6 +1,7 @@
 /* $Id$ */
 
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <mint/mintbind.h>
@@ -20,6 +21,7 @@ _enoent (const char *path)
 	register const char *s;
 	long oldmask;
 	int dir_seen = 0;
+	char *tmp = NULL;
 
 	if (!path)
 		return 0;
@@ -33,16 +35,26 @@ _enoent (const char *path)
 		if (*s == '\\' || *s == '/') {
 			struct stat st;
 			long r;
-			int saved = *s;
 
 			dir_seen = 1;
 
-			*s = '\0';
-			r = __sys_stat (path, &st, 0, 0);
-			*s = saved;
+			if (!tmp)
+			{
+				tmp = malloc(s - path + 1);
+				if (!tmp)
+					return 0;
+
+				strncpy(tmp, path, s - path);
+			}
+
+			tmp[s - path] = '\0';
+			r = __sys_stat (tmp, &st, 0, 0);
 
 			if (r == -ENOSYS 
 			    || (r == 0 && ((st.st_mode & S_IFMT) != S_IFDIR))) {
+				if (tmp)
+					free(tmp);
+
 				(void) Psigsetmask (oldmask);
 
 				/* Either we don't have Fstat or existing
@@ -52,6 +64,9 @@ _enoent (const char *path)
 			}
 		}
 	}
+
+	if (tmp)
+		free(tmp);
 
 	(void) Psigsetmask (oldmask);
 	return dir_seen; /* should have been ENOENT */
