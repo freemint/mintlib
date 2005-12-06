@@ -1,20 +1,20 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifndef	_SYS_CDEFS_H
 # define _SYS_CDEFS_H 1
@@ -39,32 +39,40 @@
 
 /* GCC can always grok prototypes.  For C++ programs we add throw()
    to help it optimize the function calls.  But this works only with
-   gcc 2.8.x and egcs.  */
-# if defined __cplusplus && __GNUC_PREREQ (2,8)
-#  define __THROW	throw ()
+   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
+   as non-throwing using a function attribute since programs can use
+   the -fexceptions options for C code as well.  */
+# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
+#  define __THROW	__attribute__ ((__nothrow__))
+#  define __NTH(fct)	__attribute__ ((__nothrow__)) fct
 # else
-#  define __THROW
+#  if defined __cplusplus && __GNUC_PREREQ (2,8)
+#   define __THROW	throw ()
+#   define __NTH(fct)	fct throw ()
+#  else
+#   define __THROW
+#   define __NTH(fct)	fct
+#  endif
 # endif
-# define __P(args)	args __THROW
-# define __PROTO(args)	args __THROW
-/* This macro will be used for functions which might take C++ callback
-   functions.  */
-# define __PMT(args)	args
 
 #else	/* Not GCC.  */
 
 # define __inline		/* No inline functions.  */
 
 # define __THROW
-# define __P(args)	args
-# define __PROTO(args)	args
-# define __PMT(args)	args
+# define __NTH(fct)	fct
 
 # define __const	const
 # define __signed	signed
 # define __volatile	volatile
 
 #endif	/* GCC.  */
+
+/* These two macros are not used in glibc anymore.  They are kept here
+   only because some other projects expect the macros to be defined.  */
+#define __P(args)	args
+#define __PROTO(args)	args
+#define __PMT(args)	args
 
 /* For these things, GCC behaves the ANSI way normally,
    and the non-ANSI way under -traditional.  */
@@ -87,12 +95,42 @@
 #endif
 
 
+/* The standard library needs the functions from the ISO C90 standard
+   in the std namespace.  At the same time we want to be safe for
+   future changes and we include the ISO C99 code in the non-standard
+   namespace __c99.  The C++ wrapper header take case of adding the
+   definitions to the global namespace.  */
+#if defined __cplusplus && defined _GLIBCPP_USE_NAMESPACES
+# define __BEGIN_NAMESPACE_STD	namespace std {
+# define __END_NAMESPACE_STD	}
+# define __USING_NAMESPACE_STD(name) using std::name;
+# define __BEGIN_NAMESPACE_C99	namespace __c99 {
+# define __END_NAMESPACE_C99	}
+# define __USING_NAMESPACE_C99(name) using __c99::name;
+#else
+/* For compatibility we do not add the declarations into any
+   namespace.  They will end up in the global namespace which is what
+   old code expects.  */
+# define __BEGIN_NAMESPACE_STD
+# define __END_NAMESPACE_STD
+# define __USING_NAMESPACE_STD(name)
+# define __BEGIN_NAMESPACE_C99
+# define __END_NAMESPACE_C99
+# define __USING_NAMESPACE_C99(name)
+#endif
+
+
 /* Support for bounded pointers.  */
 #ifndef __BOUNDED_POINTERS__
 # define __bounded	/* nothing */
 # define __unbounded	/* nothing */
 # define __ptrvalue	/* nothing */
 #endif
+
+
+/* Fortify support.  */
+#define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
+#define __bos0(ptr) __builtin_object_size (ptr, 0)
 
 
 /* Support for flexible arrays.  */
@@ -121,11 +159,18 @@
    semantics, but it's the best we can do).
 
    Example:
-   int __REDIRECT(setpgrp, __P((__pid_t pid, __pid_t pgrp)), setpgid); */
+   int __REDIRECT(setpgrp, (__pid_t pid, __pid_t pgrp), setpgid); */
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
 # define __REDIRECT(name, proto, alias) name proto __asm__ (__ASMNAME (#alias))
+# ifdef __cplusplus
+#  define __REDIRECT_NTH(name, proto, alias) \
+     name proto __THROW __asm__ (__ASMNAME (#alias))
+# else
+#  define __REDIRECT_NTH(name, proto, alias) \
+     name proto __asm__ (__ASMNAME (#alias)) __THROW
+# endif
 # define __ASMNAME(cname)  __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
 # define __ASMNAME2(prefix, cname) __STRING (prefix) cname
 
@@ -173,6 +218,13 @@
 # define __attribute_noinline__ /* Ignore */
 #endif
 
+/* gcc allows marking deprecated functions.  */
+#if __GNUC_PREREQ (3,2)
+# define __attribute_deprecated__ __attribute__ ((__deprecated__))
+#else
+# define __attribute_deprecated__ /* Ignore */
+#endif
+
 /* At some point during the gcc 2.8 development the `format_arg' attribute
    for functions was introduced.  We don't want to use it unconditionally
    (although this would be possible) since it generates warnings.
@@ -194,6 +246,14 @@
   __attribute__ ((__format__ (__strfmon__, a, b)))
 #else
 # define __attribute_format_strfmon__(a,b) /* Ignore */
+#endif
+
+/* The nonull function attribute allows to mark pointer parameters which
+   must not be NULL.  */
+#if __GNUC_PREREQ (3,3)
+# define __nonnull(params) __attribute__ ((__nonnull__ params))
+#else
+# define __nonnull(params)
 #endif
 
 /* It is possible to compile containing GCC extensions even if GCC is
