@@ -49,7 +49,7 @@
 #endif
 
 #ifdef __MINT__
-__EXTERN void __bzero PARAMS ((void*, size_t));
+extern void __bzero PARAMS ((void*, size_t));
 #endif
 
 #define WIDE_CHAR_SUPPORT (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
@@ -176,11 +176,11 @@ char *realloc ();
 #include <regex.h>
 
 #ifdef __MINT__
-__EXTERN int __re_search_2
+extern int __re_search_2
   _RE_ARGS ((struct re_pattern_buffer *buffer, const char *string1,
              int length1, const char *string2, int length2,
              int start, int range, struct re_registers *regs, int stop));
-__EXTERN void* __mempcpy _RE_ARGS ((void* __dest, const void* __src, size_t __n));
+extern void* __mempcpy _RE_ARGS ((void* __dest, const void* __src, size_t __n));
 #endif
 
 /* isalpha etc. are used for the character classes.  */

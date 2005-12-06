@@ -16,8 +16,8 @@ struct utimbuf {			/* type for times() call */
 	time_t	modtime;
 };
 
-__EXTERN int utime __PROTO((const char *path, const struct utimbuf *times));
-__EXTERN int __utime __PROTO((const char *path, const struct utimbuf *times));
+extern int utime (const char *path, const struct utimbuf *times);
+extern int __utime (const char *path, const struct utimbuf *times);
 
 __END_DECLS
 

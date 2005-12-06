@@ -15,15 +15,15 @@
  * we previously established
  */
 
-void __CDECL _trampoline __PROTO((long, long));
+void __CDECL _trampoline (long, long);
 
 /* the argument is on the stack */
 void __CDECL _trampoline(sig, code)
 	long sig, code;
 {
-	void (*func) __PROTO ((int, int));
+	void (*func) (int, int);
 
-	func = (void (*) __PROTO ((int, int))) _sig_handler[sig];
+	func = (void (*) (int, int)) _sig_handler[sig];
 
 /* note: func should never be SIG_IGN or SIG_DFL; if it is, something
  * really bad happened and we want to crash anyway!

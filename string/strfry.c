@@ -24,9 +24,8 @@
 #include <time.h>
 
 #ifdef __MINT__
-__EXTERN char* __initstate __PROTO ((unsigned int __seed, char *__arg_state, 
-                                     int __n));
-__EXTERN long __random __PROTO ((void));
+extern char* __initstate (unsigned int __seed, char *__arg_state, int __n);
+extern long __random (void);
 #endif
 
 char *

@@ -13,9 +13,6 @@
    range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
    is without partner.  */
 
-/*void
-swab __PROTO((const char* __from, char* __to, ssize_t __n));
-*/
 #include <unistd.h>
 
 void

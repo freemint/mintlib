@@ -19,8 +19,8 @@
 #include "lib.h"
 
 /* In diraccess.c.  */
-__EXTERN const char* __get_tmpdir __PROTO ((const char*, int try_tmpdir));
-__EXTERN int __exists __PROTO ((const char* pathname));
+extern const char* __get_tmpdir (const char*, int try_tmpdir);
+extern int __exists (const char* pathname);
 
 extern const char __tmp_letters[62];
 

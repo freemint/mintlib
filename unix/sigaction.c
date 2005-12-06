@@ -9,10 +9,10 @@
 
 
 #ifdef __MSHORT__
-typedef void __CDECL (*__KerSigfunc) __PROTO((long, long));
-__EXTERN void __CDECL _trampoline __PROTO((long sig, long code));
+typedef void __CDECL (*__KerSigfunc) (long, long);
+extern void __CDECL _trampoline (long sig, long code);
 #else
-typedef void __CDECL (*__KerSigfunc) __PROTO((int));
+typedef void __CDECL (*__KerSigfunc) (int);
 #endif
 
 int

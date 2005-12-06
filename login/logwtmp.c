@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <utmp.h>
 
-__EXTERN int gettimeofday __PROTO ((struct timeval*, struct timezone*));
+extern int gettimeofday (struct timeval*, struct timezone*);
 
 void
 logwtmp (const char *line, const char *name, const char *host)

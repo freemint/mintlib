@@ -117,26 +117,31 @@ extern void herror (__const char *__str) __THROW;
 extern __const char *hstrerror (int __err_num) __THROW;
 
 
-__EXTERN void			endhostent	__PROTO((void));
-__EXTERN void			endnetent	__PROTO((void));
-__EXTERN void			endprotoent	__PROTO((void));
-__EXTERN void			endservent	__PROTO((void));
-__EXTERN struct hostent		*gethostbyaddr	__PROTO((const char *, int, int));
-__EXTERN struct hostent		*gethostbyname	__PROTO((const char *));
-__EXTERN struct hostent 	*gethostent	__PROTO((void));
-__EXTERN struct netent		*getnetbyaddr	__PROTO((long, int));
-__EXTERN struct netent		*getnetbyname	__PROTO((const char *));
-__EXTERN struct netent		*getnetent	__PROTO((void));
-__EXTERN struct protoent	*getprotobyname __PROTO((const char *));
-__EXTERN struct protoent	*getprotobynumber __PROTO((int));
-__EXTERN struct protoent	*getprotoent	__PROTO((void));
-__EXTERN struct servent		*getservbyname	__PROTO((const char *, const char *));
-__EXTERN struct servent		*getservbyport	__PROTO((int, const char *));
-__EXTERN struct servent		*getservent	__PROTO((void));
-__EXTERN void			sethostent	__PROTO((int));
-__EXTERN void			setnetent	__PROTO((int));
-__EXTERN void			setprotoent	__PROTO((int));
-__EXTERN void			setservent	__PROTO((int));
+extern void endhostent (void);
+extern void endnetent (void);
+extern void endprotoent (void);
+extern void endservent (void);
+
+extern struct hostent *gethostbyaddr (const char *, int, int);
+extern struct hostent *gethostbyname (const char *);
+extern struct hostent *gethostent (void);
+
+extern struct netent *getnetbyaddr (long, int);
+extern struct netent *getnetbyname (const char *);
+extern struct netent *getnetent (void);
+
+extern struct protoent *getprotobyname  (const char *);
+extern struct protoent *getprotobynumber (int);
+extern struct protoent *getprotoent (void);
+
+extern struct servent *getservbyname (const char *, const char *);
+extern struct servent *getservbyport (int, const char *);
+extern struct servent *getservent (void);
+
+extern void sethostent (int);
+extern void setnetent (int);
+extern void setprotoent (int);
+extern void setservent (int);
 
 __END_DECLS
 

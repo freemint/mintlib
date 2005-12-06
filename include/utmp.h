@@ -68,54 +68,54 @@ __BEGIN_DECLS
 
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */
-__EXTERN int login_tty __P ((int __fd));
+extern int login_tty (int __fd);
 
 /* Write the given entry into utmp and wtmp.  */
-__EXTERN void login __P ((const struct utmp *__entry));
+extern void login (const struct utmp *__entry);
 
 /* Write the utmp entry to say the user on UT_LINE has logged out.  */
-__EXTERN int logout __P ((const char *__ut_line));
+extern int logout (const char *__ut_line);
 
 /* Append to wtmp an entry for the current time and the given info.  */
-__EXTERN void logwtmp __P ((const char *__ut_line, const char *__ut_name,
-			  const char *__ut_host));
+extern void logwtmp (const char *__ut_line, const char *__ut_name,
+		     const char *__ut_host);
 
 /* Append entry UTMP to the wtmp-like file WTMP_FILE.  */
-__EXTERN void updwtmp __P ((const char *__wtmp_file,
-			  const struct utmp *__utmp));
+extern void updwtmp (const char *__wtmp_file,
+		     const struct utmp *__utmp);
 
 /* Change name of the utmp file to be examined.  */
-__EXTERN int utmpname __P ((const char *__file));
+extern int utmpname (const char *__file);
 
 /* Read next entry from a utmp-like file.  */
-__EXTERN struct utmp *getutent __P ((void));
+extern struct utmp *getutent (void);
 
 /* Reset the input stream to the beginning of the file.  */
-__EXTERN void __setutent __P ((void));
-__EXTERN void setutent __P ((void));
+extern void __setutent (void);
+extern void setutent (void);
 
 /* Close the current open file.  */
-__EXTERN void endutent __P ((void));
+extern void endutent (void);
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_type matching ID->ut_type.  */
-__EXTERN struct utmp *getutid __P ((const struct utmp *__id));
+extern struct utmp *getutid (const struct utmp *__id);
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_line matching LINE->ut_line.  */
-__EXTERN struct utmp *getutline __P ((const struct utmp *__line));
+extern struct utmp *getutline (const struct utmp *__line);
 
 /* Write out entry pointed to by UTMP_PTR into the utmp file.  */
-__EXTERN struct utmp *pututline __P ((const struct utmp *__utmp_ptr));
+extern struct utmp *pututline (const struct utmp *__utmp_ptr);
 
 
 #ifdef	__USE_MISC
 /* Reentrant versions of the file for handling utmp files.  */
-__EXTERN int getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
-__EXTERN int getutid_r __P ((const struct utmp *__id, struct utmp *__buffer,
-			   struct utmp **__result));
-__EXTERN int getutline_r __P ((const struct utmp *__line,
-			     struct utmp *__buffer, struct utmp **__result));
+extern int getutent_r (struct utmp *__buffer, struct utmp **__result);
+extern int getutid_r (const struct utmp *__id, struct utmp *__buffer,
+		      struct utmp **__result);
+extern int getutline_r (const struct utmp *__line,
+			struct utmp *__buffer, struct utmp **__result);
 
 #endif	/* Use misc.  */
 
@@ -174,10 +174,11 @@ struct utmp {
 
 __BEGIN_DECLS
 
-__EXTERN void _write_utmp __PROTO((const char *__line, const char *__name,
-					const char *__host, unsigned long __time));
-__EXTERN void _write_wtmp __PROTO((const char *__line, const char *__name,
-					const char *__host, unsigned long __time));
+extern void _write_utmp (const char *__line, const char *__name,
+			 const char *__host, unsigned long __time);
+extern void _write_wtmp (const char *__line, const char *__name,
+			 const char *__host, unsigned long __time);
+
 __END_DECLS
 
 #endif /* !_OLD_UTMP_H */

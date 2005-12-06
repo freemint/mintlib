@@ -12,11 +12,11 @@
 #include <errno.h>
 #include <stdio.h>
 
-__EXTERN int __getpwuid_r __PROTO ((uid_t uid, struct passwd* resultbuf,
-                                    char* buffer, size_t buflen,
-                                    struct passwd** result));
+extern int __getpwuid_r (uid_t uid, struct passwd* resultbuf,
+                         char* buffer, size_t buflen,
+                         struct passwd** result);
 
-int __getpw __PROTO ((uid_t uid, char* buf));
+int __getpw (uid_t uid, char* buf);
 
 int
 __getpw (uid_t uid, char* buf)

@@ -292,16 +292,16 @@ extern char *alloca ();
 #ifdef __MINT__
 #include "lib.h"
 # define stat(name, sb) __quickstat (name, sb, 0)
-__EXTERN void* __mempcpy __PROTO ((void* __dest, const void* src, size_t n));
-__EXTERN int __getpwnam_r __PROTO ((const char* __name, 
-				    struct passwd* __resultbuf,
-			            char* __buffer, size_t __buflen,
-			            struct passwd** __result));
-__EXTERN char* __strdup __PROTO ((const char* s));
-__EXTERN int __glob_pattern_p __PROTO ((const char* pattern, int quote));
-__EXTERN DIR* __opendir __PROTO ((const char* dirname));
-__EXTERN int __closedir	__PROTO ((DIR* dirp));
-__EXTERN int __stat __PROTO ((const char*, struct stat*));
+extern void* __mempcpy (void* __dest, const void* src, size_t n);
+extern int __getpwnam_r (const char* __name, 
+			 struct passwd* __resultbuf,
+			 char* __buffer, size_t __buflen,
+			 struct passwd** __result);
+extern char* __strdup (const char* s);
+extern int __glob_pattern_p (const char* pattern, int quote);
+extern DIR* __opendir (const char* dirname);
+extern int __closedir	(DIR* dirp);
+extern int __stat (const char*, struct stat*);
 
 #include <ctype.h>  /* For _toupper.  */
 #endif

@@ -15,7 +15,7 @@
 struct _dispatch
 {
   void* call;
-  long (*wrap) __PROTO ((int opcode, va_list args));
+  long (*wrap) (int opcode, va_list args);
 };
 
 typedef int(*func) ();

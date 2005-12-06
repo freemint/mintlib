@@ -79,7 +79,7 @@ typedef struct
 } __io_mode;
 #endif
 
-#if 0
+#if 1
 #define STDIN_MODE	{ 1, 0, 0, 0, 0, 0, 0 }
 #define STDOUT_MODE	{ 0, 1, 0, 0, 1, 0, 1 }
 #define STDERR_MODE	{ 0, 1, 0, 0, 0, 0, 0 }

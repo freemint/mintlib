@@ -284,27 +284,6 @@ extern int matherr (struct __exception *) throw();
 extern int matherr (struct exception *) __THROW;
 #endif
 
-extern double cabs (COMPLEX) __THROW;
-extern COMPLEX cmult (COMPLEX, COMPLEX) __THROW;
-extern COMPLEX csqrt (COMPLEX) __THROW;
-#ifndef __GNUG__
-extern COMPLEX clog (COMPLEX) __THROW;
-#endif
-extern COMPLEX cacos (COMPLEX) __THROW;
-extern COMPLEX cadd (COMPLEX, COMPLEX) __THROW;
-extern COMPLEX casin (COMPLEX) __THROW;
-extern COMPLEX catan (COMPLEX) __THROW;
-extern COMPLEX ccosh (COMPLEX) __THROW;
-extern COMPLEX crcp (COMPLEX) __THROW;
-extern COMPLEX csinh (COMPLEX) __THROW;
-extern COMPLEX ctan (COMPLEX) __THROW;
-extern COMPLEX ctanh (COMPLEX) __THROW;
-extern COMPLEX cexp (COMPLEX) __THROW;
-extern COMPLEX ccos (COMPLEX) __THROW;
-extern COMPLEX csin (COMPLEX) __THROW;
-extern COMPLEX cdiv (COMPLEX, COMPLEX) __THROW;
-extern COMPLEX csubt (COMPLEX, COMPLEX) __THROW;
-
 extern int pmlcfs (int, int) __THROW;
 extern int pmlcnt (void) __THROW;
 extern int pmlerr (int) __THROW;
@@ -315,6 +294,5 @@ extern double poly (int, double *, double) __THROW;
 #endif /* __STRICT_ANSI__ */
 
 __END_DECLS
-
 
 #endif /* math.h  */

@@ -164,9 +164,9 @@ typedef struct argentry {
 	char	string[1];
 } Argentry;
 
-static Argentry *_argalloc __PROTO((const char *s));
-static void _argfree __PROTO((Argentry *p));
-static Argentry *_parseargs __PROTO((const char *s));
+static Argentry *_argalloc (const char *s);
+static void _argfree (Argentry *p);
+static Argentry *_parseargs (const char *s);
 
 /* allocate an Argentry that will hold the string "s" */
 

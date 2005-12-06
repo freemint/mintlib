@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-__EXTERN int	__fcntl	__PROTO((int f, int cmd, ...));
+extern int __fcntl (int f, int cmd, ...);
 
 /* Defined in fopen.c.  */
 extern int __getmode (const char *mode, __io_mode *mptr);

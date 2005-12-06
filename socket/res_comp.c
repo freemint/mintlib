@@ -45,8 +45,8 @@ static char sccsid[] = "@(#)res_comp.c	6.22 (Berkeley) 3/19/91";
 #include <resolv.h>
 #include <stdio.h>
 
-static int dn_find __PROTO ((u_char *exp_dn, u_char *msg, 
-                             u_char **dnptrs, u_char **lastdnptr));
+static int dn_find (u_char *exp_dn, u_char *msg, 
+                    u_char **dnptrs, u_char **lastdnptr);
 
 /*
  * Expand compressed domain name 'comp_dn' to full domain name.

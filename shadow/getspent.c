@@ -12,8 +12,8 @@
 #include <errno.h>
 #include <stddef.h>
 
-__EXTERN int __getspent_r __PROTO ((struct spwd* resultbuf, char* buffer,
-                                    size_t buflen, struct spwd** result));
+extern int __getspent_r (struct spwd* resultbuf, char* buffer,
+                         size_t buflen, struct spwd** result);
 
 static struct spwd spwd;
 static char buffer[1024];

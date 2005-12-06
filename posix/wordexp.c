@@ -53,13 +53,13 @@
 #include <assert.h>
 
 #ifdef __MINT__
-__EXTERN int __getpwuid_r __P ((uid_t uid, struct passwd* result_buf,
-                                char* buffer, size_t buflen,
-                                struct passwd** result));
-__EXTERN int __getpwnam_r __P ((const char* __name, 
-                                struct passwd* result_buf, char* buffer,
-                                size_t buflen, struct passwd** result));
-__EXTERN char* __strndup __P ((const char* src, size_t n));
+extern int __getpwuid_r (uid_t uid, struct passwd* result_buf,
+                         char* buffer, size_t buflen,
+                         struct passwd** result);
+extern int __getpwnam_r (const char* __name, 
+                         struct passwd* result_buf, char* buffer,
+                         size_t buflen, struct passwd** result);
+extern char* __strndup (const char* src, size_t n);
 #endif
 
 #ifndef _PATH_BSHELL

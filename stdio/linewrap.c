@@ -26,13 +26,13 @@
 
 void __line_wrap_output (FILE *, int);
 
+static int lwclose (void *cookie);
+static int lwfileno (void *cookie);
+
 /* Install our hooks into a stream.  */
 static inline void
 wrap_stream (FILE *stream, struct line_wrap_data *d)
 {
-  static __io_close_fn lwclose;
-  static __io_fileno_fn lwfileno;
-
   stream->__cookie = d;
   stream->__room_funcs.__output = &__line_wrap_output;
   stream->__io_funcs.__close = &lwclose;

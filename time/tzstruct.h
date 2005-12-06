@@ -111,14 +111,14 @@ extern const int __year_lengths[2];
 
 /* Prototypes for internal functions.  */
 
-__EXTERN void   __gmtsub __PROTO ((const time_t*, long, struct tm*));
-__EXTERN void   __localsub __PROTO ((const time_t*, long, 
-                                             struct tm*));
-__EXTERN void   __timesub __PROTO ((const time_t*, long,
-                    const struct state*, struct tm*));
-__EXTERN int    __tzload __PROTO ((const char*, struct state*));
-__EXTERN int    __tzparse __PROTO ((const char*, struct state*,
-                    long lastditch));
+extern void   __gmtsub (const time_t*, long, struct tm*);
+extern void   __localsub (const time_t*, long, 
+                                             struct tm*);
+extern void   __timesub (const time_t*, long,
+                    const struct state*, struct tm*);
+extern int    __tzload (const char*, struct state*);
+extern int    __tzparse (const char*, struct state*,
+                    long lastditch);
 
 extern struct state* __lclptr;
 extern struct state* __gmtptr;

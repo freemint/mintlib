@@ -15,7 +15,7 @@
 #include "lib.h"
 
 /* In diraccess.c.  */
-__EXTERN const char* __get_tmpdir __PROTO ((const char*, int try_tmpdir));
+extern const char* __get_tmpdir (const char*, int try_tmpdir);
 
 static char tmpnam_buffer[L_tmpnam];
 

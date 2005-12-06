@@ -12,9 +12,9 @@
 #include <errno.h>
 #include <string.h>
 
-__EXTERN int __getspnam_r __PROTO ((const char* name,
-                                    struct spwd* result_buf, char* buffer,
-                                    size_t buflen, struct spwd** result));
+extern int __getspnam_r (const char* name,
+                         struct spwd* result_buf, char* buffer,
+                         size_t buflen, struct spwd** result);
 
 static struct spwd spwd;
 static char buf[1024];

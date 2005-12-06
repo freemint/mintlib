@@ -18,9 +18,9 @@
 __BEGIN_DECLS
 
 /* Note:  Don't rely on the existence of this file.  It may vanish.  */
-__EXTERN void setrtent __PROTO ((void));
-__EXTERN void endrtent __PROTO ((void));
-__EXTERN struct rtentry* getrtent __PROTO ((void));
+extern void setrtent (void);
+extern void endrtent (void);
+extern struct rtentry* getrtent (void);
 
 __END_DECLS
 

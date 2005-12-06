@@ -12,8 +12,8 @@
 #include <unistd.h>
 
 /* Functions registered by user for calling at exit.  */
-typedef void (*ExitFn) __PROTO ((void));
-__EXTERN ExitFn *_at_exit;
+typedef void (*ExitFn) (void);
+extern ExitFn *_at_exit;
 extern int _num_at_exit;	/* Number of functions registered - 1.  */
 
 #ifdef OLD_CLOSE

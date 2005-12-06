@@ -18,7 +18,7 @@
 __BEGIN_DECLS
 
 /* Return directory part of PATH or "." if none is available.  */
-__EXTERN char* dirname __PROTO ((char *__path));
+extern char* dirname (char *__path);
 
 /* Return filename part of PATH.
    This is the weird XPG version of this function.  It sometimes will
@@ -28,7 +28,7 @@ __EXTERN char* dirname __PROTO ((char *__path));
 #ifdef basename
 # undef basename
 #endif
-__EXTERN char *__xpg_basename __P ((char *__path));
+extern char *__xpg_basename (char *__path);
 #define basename(path)	__xpg_basename (path)
 
 __END_DECLS

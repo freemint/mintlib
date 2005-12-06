@@ -21,8 +21,8 @@
 
 #include <stdlib.h>
 
-__EXTERN int __nrand48_r __PROTO ((unsigned short __xsubi[3],
-                                   struct drand48_data*, long int*));
+extern int __nrand48_r (unsigned short __xsubi[3],
+                        struct drand48_data*, long int*);
 
 int
 lrand48_r (buffer, result)

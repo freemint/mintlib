@@ -61,8 +61,8 @@
 
 static char const *const extensions[] = { "ttp", "prg", "tos", NULL };
 
-static int interpret_script __PROTO((int mode, const char *path, const char *,
-					char *const *argv, char *const *envp));
+static int interpret_script (int mode, const char *path, const char *,
+			     char *const *argv, char *const *envp);
 
 static int
 interpret_script(mode, path, _path, argv, envp)

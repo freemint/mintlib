@@ -20,7 +20,7 @@ static FILE *fp = NULL;
 
 static struct group curentry;   /* static data to return */
 
-static int nextent __PROTO((FILE *fp));
+static int nextent (FILE *fp);
 
 /* Rewind the group file to allow repeated searches */
 void setgrent()

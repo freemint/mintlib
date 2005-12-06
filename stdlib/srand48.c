@@ -24,7 +24,7 @@
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-__EXTERN int __srand48_r __PROTO ((long int, struct drand48_data*));
+extern int __srand48_r (long int, struct drand48_data*);
 
 void
 srand48 (seedval)

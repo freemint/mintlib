@@ -23,8 +23,8 @@ __BEGIN_DECLS
 
 #undef alloca
 
-__EXTERN void *__alloca __P ((size_t));
-__EXTERN void *alloca __P ((size_t));
+extern void *__alloca (size_t);
+extern void *alloca (size_t);
 
 #ifdef __GNUC__
 # define __alloca(X) __builtin_alloca (X)

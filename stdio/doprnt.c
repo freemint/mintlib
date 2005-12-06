@@ -14,7 +14,7 @@
 
 #define DOPRNT_BUFSIZE 1024
 
-typedef int putfunc __PROTO ((int c, FILE* stream));
+typedef int putfunc (int c, FILE* stream);
 
 static void doprnt_output __P ((FILE* ptr, int c));
 

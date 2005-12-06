@@ -24,7 +24,7 @@
 # define __vsscanf(s, f, a) _IO_vsscanf (s, f, a)
 #endif
 
-__EXTERN int __vsscanf __PROTO((const char*, const char*, __gnuc_va_list));
+extern int __vsscanf (const char*, const char*, __gnuc_va_list);
 
 /* Read formatted input from S, according to the format string FORMAT.  */
 /* VARARGS2 */

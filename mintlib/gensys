@@ -136,16 +136,16 @@ make_array ()
         }
       if (NF == 2) proto = proto "void"
       jumptable[structure] = "yep"
-      proto = proto "));"
+      proto = proto ");"
       
       if (need_stdarg == "yes")
         {
-          proto = "__EXTERN " rettype " __" $1 "_v __PROTO ((" proto
+          proto = "extern " rettype " __" $1 "_v (" proto
           structure = "  { __" $1 "_v, _sys_" structure  " },\n"
         }
       else
         {
-          proto = "__EXTERN " rettype " __" $1 " __PROTO ((" proto 
+          proto = "extern " rettype " __" $1 " (" proto 
           structure = "  { __" $1 ", _sys_" structure " },\n"
         }
       print proto
@@ -158,7 +158,7 @@ make_array ()
       
       for (f in jumptable)
         {
-          print "static long _sys_" f " __PROTO ((int opcode, va_list args));"
+          print "static long _sys_" f " (int opcode, va_list args);"
         }
       print
       print "static struct _dispatch funcs[] = \n{\n" array "};\n"
@@ -291,7 +291,7 @@ EOF
       else
         rettype = $2
         
-      printf "__EXTERN %s __%s%s __PROTO ((", rettype, call, need_stdargs == "yes" ? "_v" : ""
+      printf "extern %s __%s%s (", rettype, call, need_stdargs == "yes" ? "_v" : ""
       if (NF == 1)
         {
           printf "void"
@@ -315,7 +315,7 @@ EOF
               printf ", " 
             }
         }
-      printf "));\n\n"
+      printf ");\n\n"
       printf "%s %s (", rettype, call
       if (NF == 1)
         {

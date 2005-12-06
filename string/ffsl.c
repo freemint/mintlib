@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int __ffsl __PROTO ((long int bits));
+int __ffsl (long int bits);
 
 int 
 __ffsl (bits)

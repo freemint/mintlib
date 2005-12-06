@@ -24,8 +24,8 @@
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-__EXTERN long int __erand48_r __PROTO ((unsigned short int __xsub[3],
-                                        struct drand48_data*, double*));
+extern long int __erand48_r (unsigned short int __xsub[3],
+                             struct drand48_data*, double*);
 
 double
 erand48 (xsubi)

@@ -26,7 +26,7 @@
 
 #include "utmp-private.h"
 
-__EXTERN char* strdup __PROTO ((const char*));
+extern char* strdup (const char*);
 
 /* This is the default name.  */
 static const char default_file_name[] = _PATH_UTMP;
@@ -37,7 +37,7 @@ const char *__libc_utmp_file_name = (const char *) default_file_name;
 /* We have to use the lock in getutent_r.c.  */
 __libc_lock_define (extern, __libc_utmp_lock)
 
-__EXTERN char* __strdup __PROTO ((const char*));
+extern char* __strdup (const char*);
 
 int
 __utmpname (const char *file)

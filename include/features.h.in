@@ -120,6 +120,20 @@
 /* Always use ISO C things.  */
 #define	__USE_ANSI	1
 
+/* Convenience macros to test the versions of glibc and gcc.
+   Use them like this:
+   #if __GNUC_PREREQ (2,8)
+   ... code requiring gcc 2.8 or later ...
+   #endif
+   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
+   were not defined then.  */
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
+
 
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
 #if defined _BSD_SOURCE && \
@@ -284,20 +298,6 @@
 /* Turn on special MiNTLib features if not strict ANSI.  */
 #ifndef __STRICT_ANSI__
 # define __USE_MINTLIB
-#endif
-
-/* Convenience macros to test the versions of glibc and gcc.
-   Use them like this:
-   #if __GNUC_PREREQ (2,8)
-   ... code requiring gcc 2.8 or later ...
-   #endif
-   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
-   were not defined then.  */
-#if defined __GNUC__ && defined __GNUC_MINOR__
-# define __GNUC_PREREQ(maj, min) \
-	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
-#else
-# define __GNUC_PREREQ(maj, min) 0
 #endif
 
 #ifndef __MINT__

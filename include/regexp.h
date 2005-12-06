@@ -38,11 +38,11 @@ typedef struct regexp {
 } regexp;
 
 
-__EXTERN regexp *regcomp __PROTO((char *_exp));
-__EXTERN int 	regexec	__PROTO((regexp *_prog, char *_string, int _bolflag));
-__EXTERN void regsub	__PROTO((regexp *_prog, char *_source, char *_dest));
-__EXTERN void regerror	__PROTO((char const *_message));
-__EXTERN void regdump __PROTO((regexp *r));
+extern regexp *regcomp (char *_exp);
+extern int regexec (regexp *_prog, char *_string, int _bolflag);
+extern void regsub (regexp *_prog, char *_source, char *_dest);
+extern void regerror (char const *_message);
+extern void regdump (regexp *r);
 
 __END_DECLS
 

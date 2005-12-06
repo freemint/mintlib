@@ -54,11 +54,6 @@ failsafe_Fopen (const char* name, int flags)
 	return fd;
 }
 
-/* NOTE: we assume here that every compiler that can handle __PROTO
- *       is __STDC__ and can handle the >>...<< ellipsis
- *       (see also unistd.h)
- */
-
 int
 __open_v (const char *_filename, int iomode, va_list argp)
 {

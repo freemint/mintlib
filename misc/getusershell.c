@@ -29,7 +29,7 @@ static char sccsid[] = "@(#)getusershell.c	5.5 (Berkeley) 7/21/88";
 
 #define SHELLS "/etc/shells"
 
-static char** initshells __PROTO ((void));
+static char** initshells (void);
 
 /*
  * Do not add local shells here.  They should be added in /etc/shells

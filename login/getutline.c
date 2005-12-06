@@ -27,9 +27,9 @@
 /* Local buffer to store the result.  */
 static struct utmp buffer;
 
-__EXTERN int __getutline_r __P ((const struct utmp *__line,
-                                 struct utmp *__buffer, 
-                                 struct utmp **__result));
+extern int __getutline_r (const struct utmp *__line,
+                          struct utmp *__buffer, 
+                          struct utmp **__result);
 
 struct utmp *
 __getutline (const struct utmp *line)

@@ -22,7 +22,7 @@
 #include <sys/ipc.h>
 #include <sys/stat.h>
 
-__EXTERN int __stat(const char *path, struct stat *st);
+extern int __stat(const char *path, struct stat *st);
 
 key_t
 ftok (pathname, proj_id)

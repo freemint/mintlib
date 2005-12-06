@@ -6,10 +6,14 @@
 # include <features.h>
 #endif
 
-__EXTERN int	if_link		__PROTO ((char*, char*));
-__EXTERN int	if_getlnkflags	__PROTO ((char*, short*));
-__EXTERN int	if_setlnkflags	__PROTO ((char*, short));
-__EXTERN int	if_getifflags	__PROTO ((char*, short*));
-__EXTERN int	if_setifflags	__PROTO ((char*, short));
+__BEGIN_DECLS
+
+extern int	if_link		(char*, char*);
+extern int	if_getlnkflags	(char*, short*);
+extern int	if_setlnkflags	(char*, short);
+extern int	if_getifflags	(char*, short*);
+extern int	if_setifflags	(char*, short);
+
+__END_DECLS
 
 #endif /* mint/iflink.h */

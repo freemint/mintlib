@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 
-__EXTERN void* __memccpy __PROTO ((void*, const void*, int, size_t));
+extern void* __memccpy (void*, const void*, int, size_t);
 
 /* Reads characters from STREAM into S, until either a newline character
    is read, N - 1 characters have been read, or EOF is seen.  Returns

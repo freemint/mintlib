@@ -471,7 +471,7 @@ typedef struct {
                       /*          1-plane source  ->  n-plane dest           */
                       /*              Vdi writing modes (1-3)                */
                       /*                                                     */
- short(*_SEEDABORT) __PROTO((void));
+ short(*_SEEDABORT) (void);
 		      /* 118 Pointer to function returning int, which is     */
                       /*     called by the fill logic to allow the fill to   */
                       /*     be aborted. If the routine returns FALSE (0)    */
@@ -615,7 +615,7 @@ short max_cell_width; /* 52 Width of the widest cell character cell in face  */
 	 * overhead of processing a lineA exception. You must be in
 	 * supervisor mode to call any of the routines directly
 	 */
-typedef short(*FPTR) __PROTO((void));
+typedef short(*FPTR) (void);
 typedef FPTR *FUNCPTR; /* array of pointers to functions returning short */
 	
 	/*
@@ -753,7 +753,7 @@ extern __FONT  **__fonts;
 
 /* Array of pointers to the 16 line a functions returned
    by init (in register A2) only valid in ROM'ed TOS     */
-extern short  (**__funcs) __PROTO((void));
+extern short  (**__funcs) (void);
 
 	/* Functions */
 
@@ -973,22 +973,22 @@ extern short  (**__funcs) __PROTO((void));
 
 #else	/* __NO_INLINE__ */
 
-__EXTERN void linea0 __PROTO((void));
-__EXTERN void linea1 __PROTO((void));
-__EXTERN int linea2 __PROTO((void));
-__EXTERN void linea3 __PROTO((void));
-__EXTERN void linea4 __PROTO((void));
-__EXTERN void linea5 __PROTO((void));
-__EXTERN void linea6 __PROTO((void));
-__EXTERN void linea7 __PROTO((BBPB *P));
-__EXTERN void linea8 __PROTO((void));
-__EXTERN void linea9 __PROTO((void));
-__EXTERN void lineaa __PROTO((void));
-__EXTERN void lineab __PROTO((void));
-__EXTERN void lineac __PROTO((void *P));
-__EXTERN void linead __PROTO((int x, int y, SFORM *sd, void *ss));
-__EXTERN void lineae __PROTO((void));
-__EXTERN void lineaf __PROTO((void));
+extern void linea0 (void);
+extern void linea1 (void);
+extern int  linea2 (void);
+extern void linea3 (void);
+extern void linea4 (void);
+extern void linea5 (void);
+extern void linea6 (void);
+extern void linea7 (BBPB *P);
+extern void linea8 (void);
+extern void linea9 (void);
+extern void lineaa (void);
+extern void lineab (void);
+extern void lineac (void *P);
+extern void linead (int x, int y, SFORM *sd, void *ss);
+extern void lineae (void);
+extern void lineaf (void);
 
 #endif /* __GNUC_INLINE__ */
 

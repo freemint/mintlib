@@ -63,25 +63,25 @@ struct printf_info
    The function should return the number of characters written,
    or -1 for errors.  */
 
-typedef int printf_function __PROTO ((FILE *__stream,
-				      const struct printf_info *__info,
-				      const void *const *__args));
+typedef int printf_function (FILE *__stream,
+			     const struct printf_info *__info,
+			     const void *const *__args);
 
 /* Type of a printf specifier-arginfo function.
    INFO gives information about the format specification.
    N, ARGTYPES, and return value are as for printf_parse_format.  */
 
-typedef int printf_arginfo_function __PROTO ((const struct printf_info *__info,
-					      size_t __n,
-					      int *__argtypes));
+typedef int printf_arginfo_function (const struct printf_info *__info,
+				     size_t __n,
+				     int *__argtypes);
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be
    specified to determine how many arguments a SPEC conversion requires and
    what their types are.  */
 
-__EXTERN int register_printf_function __P ((int __spec, printf_function __func,
-					  printf_arginfo_function __arginfo));
+extern int register_printf_function (int __spec, printf_function __func,
+				     printf_arginfo_function __arginfo);
 
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
@@ -95,9 +95,9 @@ __EXTERN int register_printf_function __P ((int __spec, printf_function __func,
    array it is passed with the types of the arguments it wants, and return
    the number of arguments it wants.  */
 
-__EXTERN size_t parse_printf_format __PROTO ((const char * __fmt,
-					      size_t __n,
-					      int * __argtypes));
+extern size_t parse_printf_format (const char * __fmt,
+				   size_t __n,
+				   int * __argtypes);
 
 
 /* Codes returned by `parse_printf_format' for basic types.
@@ -134,14 +134,14 @@ enum
    of magnitude used for numbers ('k' for kilo, 'm' for mega etc).  If
    the format specifier is a uppercase character powers of 1000 are
    used.  Otherwise powers of 1024.  */
-__EXTERN int printf_size __PROTO ((FILE * __fp,
-			           const struct printf_info *__info,
-			           const void *const * __args));
+extern int printf_size (FILE * __fp,
+			const struct printf_info *__info,
+			const void *const * __args);
 
 /* This is the appropriate argument information function for `printf_size'.  */
-__EXTERN int printf_size_info __P ((const struct printf_info *
-				    __info, size_t __n,
-				    int * __argtypes));
+extern int printf_size_info (const struct printf_info *
+			     __info, size_t __n,
+			     int * __argtypes);
 
 
 __END_DECLS

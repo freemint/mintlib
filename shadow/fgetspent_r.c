@@ -16,8 +16,6 @@
 static char* space = "";
 
 /* Ignore \r before \n.  */
-static int my_getc __PROTO ((FILE* stream));
-
 static int my_getc (FILE* stream)
 {
   int retval = getc (stream);

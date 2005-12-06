@@ -23,10 +23,10 @@ static char sccsid[] = "@(#)random.c	5.5 (Berkeley) 7/6/88";
 #include <unistd.h>
 
 #ifdef __MINT__
-__EXTERN long __random __PROTO ((void));
-__EXTERN char* __setstate __PROTO ((char* arg_state));
-__EXTERN char* __initstate __PROTO ((unsigned seed, char* arg_state, int n));
-__EXTERN void __srandom __PROTO ((unsigned x));
+extern long __random (void);
+extern char* __setstate (char* arg_state);
+extern char* __initstate (unsigned seed, char* arg_state, int n);
+extern void __srandom (unsigned x);
 #endif
 
 /*

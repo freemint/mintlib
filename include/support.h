@@ -14,37 +14,37 @@
 
 __BEGIN_DECLS
 
-int	_unx2dos __PROTO((const char *, char *, size_t));
-int	_dos2unx __PROTO((const char *, char *, size_t));
+int	_unx2dos (const char *, char *, size_t);
+int	_dos2unx (const char *, char *, size_t);
 
-int	_path_dos2unx __PROTO((const char *, char *, size_t));
-int	_path_unx2dos __PROTO((const char *, char *, size_t));
+int	_path_dos2unx (const char *, char *, size_t);
+int	_path_unx2dos (const char *, char *, size_t);
 
-int	unx2dos __PROTO((const char *, char *));
-int	dos2unx __PROTO((const char *, char *));
+int	unx2dos (const char *, char *);
+int	dos2unx (const char *, char *);
 
 time_t	__dostime (time_t);
 time_t	__unixtime (unsigned int, unsigned int);
 
-char *	_buffindfile __PROTO((const char *, const char *,
-				char const *const *, char *));
+char *	_buffindfile (const char *, const char *,
+			char const *const *, char *);
 
-char *	_ultoa __PROTO((unsigned long, char *, int));
-char *	_ltoa __PROTO((long, char *, int));
-char *	_itoa __PROTO((unsigned long long int, char *, unsigned int, int));
+char *	_ultoa (unsigned long, char *, int);
+char *	_ltoa (long, char *, int);
+char *	_itoa (unsigned long long int, char *, unsigned int, int);
 
-__EXITING __exit __PROTO((long status)) __NORETURN;
-__EXITING _exit __PROTO((int)) __NORETURN;
+__EXITING __exit (long status) __NORETURN;
+__EXITING _exit (int) __NORETURN;
 
-long a64l __PROTO((const char *));
-char *l64a __PROTO((long));
+long a64l (const char *);
+char *l64a (long);
 
-long tfork __PROTO((int (*func)(long), long));
+long tfork (int (*func)(long), long);
 
-int _isctty __PROTO((int));
+int _isctty (int);
 
-int _console_read_byte __PROTO((int));
-void _console_write_byte __PROTO((int, int));
+int _console_read_byte (int);
+void _console_write_byte (int, int);
 
 __END_DECLS
 

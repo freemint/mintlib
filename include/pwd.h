@@ -57,51 +57,51 @@ struct passwd
   char    *pw_shell;   /* Login shell.  */
 };
 
-__EXTERN struct passwd	*getpwnam __P ((const char *));
-__EXTERN struct passwd	*getpwuid __P ((__uid_t));
+extern struct passwd	*getpwnam (const char *);
+extern struct passwd	*getpwuid (__uid_t);
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
-__EXTERN int		getpw		__P ((__uid_t, char *));
+extern int		getpw (__uid_t, char *);
 #endif
 
 #if defined (__USE_SVID) || defined (__USE_MISC) || defined (__USE_XOPEN_EXTENDED)
-__EXTERN void		setpwent	__P ((void));
-__EXTERN void		endpwent	__P ((void));
-__EXTERN struct passwd	*getpwent	__P ((void));
+extern void		setpwent (void);
+extern void		endpwent (void);
+extern struct passwd	*getpwent (void);
 #endif
 
 #ifdef __USE_BSD
 /* FIXME:  This is just a guess. Where does setpwfile belong?  */
-__EXTERN void		setpwfile	__P ((char *));
+extern void		setpwfile (char *);
 #endif
 
 #ifdef __USE_SVID
-__EXTERN struct passwd	*fgetpwent	__P ((FILE *));
-__EXTERN int		putpwent __P ((const struct passwd *, FILE *));
+extern struct passwd	*fgetpwent (FILE *);
+extern int		putpwent (const struct passwd *, FILE *);
 #endif
 
 # if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-__EXTERN int getpwent_r __PROTO ((struct passwd* __resultbuf, char* __buffer, 
-		                  size_t __buflen, struct passwd** __result));
+extern int getpwent_r (struct passwd* __resultbuf, char* __buffer, 
+		       size_t __buflen, struct passwd** __result);
 # endif
 
 #if defined __USE_POSIX || defined __USE_MISC
-__EXTERN int getpwuid_r __PROTO ((__uid_t __uid, struct passwd* __resultbuf, 
-                                  char* __buffer, size_t __buflen, 
-                                  struct passwd** __result));
+extern int getpwuid_r (__uid_t __uid, struct passwd* __resultbuf, 
+                       char* __buffer, size_t __buflen, 
+                       struct passwd** __result);
 
-__EXTERN int getpwnam_r __PROTO ((const char* __name, struct passwd* __resultbuf,
-			          char* __buffer, size_t __buflen,
-			          struct passwd** __result));
+extern int getpwnam_r (const char* __name, struct passwd* __resultbuf,
+		       char* __buffer, size_t __buflen,
+		       struct passwd** __result);
 #endif
 
 
 # ifdef	__USE_SVID
 /* Read an entry from STREAM.  This function is not standardized and
    probably never will.  */
-__EXTERN int fgetpwent_r __PROTO ((FILE* __stream, struct passwd* __resultbuf,
-			     char* __buffer, size_t __buflen,
-			     struct passwd** __result));
+extern int fgetpwent_r (FILE* __stream, struct passwd* __resultbuf,
+			char* __buffer, size_t __buflen,
+			struct passwd** __result);
 # endif
 
 __END_DECLS

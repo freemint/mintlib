@@ -12,8 +12,8 @@
 #include <errno.h>
 #include <stddef.h>
 
-__EXTERN int __getpwent_r __PROTO ((struct passwd* resultbuf, char* buffer,
-                                    size_t buflen, struct passwd** result));
+extern int __getpwent_r (struct passwd* resultbuf, char* buffer,
+                         size_t buflen, struct passwd** result);
 
 static struct passwd passwd;
 static char buffer[1024];

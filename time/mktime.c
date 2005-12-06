@@ -15,25 +15,23 @@
 
 #include "tzstruct.h"
 
-static int __increment_overflow __PROTO ((int*, long));
-static int __normalize_overflow __PROTO ((int*, int*, long));
-static time_t __time1 __PROTO ((struct tm*, 
-                                void (*) __PROTO ((const time_t*, 
-                                                   long, struct tm*)),
-                                long));
-static time_t __time2 __PROTO ((struct tm*,
-                                void (*) __PROTO ((const time_t*,
-                                long, struct tm*)),
-                                long offset, long *okayp));
-static time_t   __time2sub __PROTO ((struct tm*,
-                                     void (*) __PROTO ((const time_t*,
-                                     long, 
-                                     struct tm*)),
-                                     long, long*, long));
-static long __tmcomp __PROTO ((const struct tm*, const struct tm*));
+static int __increment_overflow (int*, long);
+static int __normalize_overflow (int*, int*, long);
+static time_t __time1 (struct tm*, 
+                       void (*) (const time_t*, long, struct tm*),
+                       long);
+static time_t __time2 (struct tm*,
+                       void (*) (const time_t*, long, struct tm*),
+                       long offset, long *okayp);
+static time_t __time2sub (struct tm*,
+                          void (*) (const time_t*, long, struct tm*),
+                          long, long*, long);
+static long __tmcomp (const struct tm*, const struct tm*);
 
-void __timesub(const time_t* timep, long offset, register const struct state* sp,
-               register struct tm* tmp)
+void
+__timesub(const time_t* timep, long offset,
+	  register const struct state* sp,
+          register struct tm* tmp)
 {
   const struct lsinfo* lp;
   long days;
@@ -182,7 +180,7 @@ static long __tmcomp(register const struct tm* atmp,
 }
 
 static time_t __time2sub(struct tm* tmp, 
-                         void (*funcp) __PROTO ((const time_t*, long, struct tm*)),
+                         void (*funcp) (const time_t*, long, struct tm*),
                          long offset, long* okayp, long do_norm_secs)
 {
   register const struct state*  sp;
@@ -341,7 +339,7 @@ label:
 }
 
 static time_t __time2(struct tm* tmp, 
-                      void (*funcp) __PROTO ((const time_t*, long, struct tm*)),
+                      void (*funcp) (const time_t*, long, struct tm*),
      		      long offset, long* okayp)
 {
   time_t  t;
@@ -354,7 +352,7 @@ static time_t __time2(struct tm* tmp,
 }
 
 static time_t __time1 (struct tm* tmp, 
-                       void (*funcp) __PROTO ((const time_t*, long, struct tm*)),
+                       void (*funcp) (const time_t*, long, struct tm*),
      		       long offset)
 {
   register time_t t;

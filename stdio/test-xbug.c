@@ -6,8 +6,8 @@
    - Find cat in $PATH and not only in /bin.  */
 char* catname = NULL;
 #define DEFAULT_CAT "/bin/cat"
-extern char* _buffindfile __PROTO ((const char* fname, char* fpath,
-                                    char* const *fext, char buf[]));
+extern char* _buffindfile (const char* fname, char* fpath,
+                           char* const *fext, char buf[]);
 #include <limits.h>
 char buf[PATH_MAX];
 

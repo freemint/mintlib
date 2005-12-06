@@ -15,8 +15,8 @@
 #include <mint/osbind.h>  /* For Random().  */
 #include <sys/types.h>
 
-__EXTERN int __diraccess __PROTO ((const char* dir));
-__EXTERN int __exists __PROTO ((const char* pathname));
+extern int __diraccess (const char* dir);
+extern int __exists (const char* pathname);
 extern const char __tmp_letters[62];
 
 char*

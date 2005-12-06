@@ -1079,7 +1079,7 @@ __extension__								\
        (long)trap_13_wwlwww((short)(0x04),(short)(rwflag),(long)(buf), \
 			     (short)(n),(short)(sector),(short)(d))
 #define	       Setexc(vnum,vptr) 				      \
-       (void (*) __PROTO((void)))trap_13_wwl((short)(0x05),(short)(vnum),(long)(vptr))
+       (void (*) (void))trap_13_wwl((short)(0x05),(short)(vnum),(long)(vptr))
 #define	       Tickcal()					       \
        (long)trap_13_w((short)(0x06))
 #define	       Getbpb(d)					       \

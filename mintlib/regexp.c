@@ -159,21 +159,21 @@ static long regsize;		/* Code size. */
 
 /* Forward declarations for regcomp()'s friends.
  */
-static char *reg __PROTO((int paren, int *flagp));
-static char *regbranch __PROTO((int *flagp));
-static char *regpiece __PROTO((int *flagp));
-static char *regatom __PROTO((int *flagp));
-static char *regnode __PROTO((int op));
-static void regc __PROTO((int b));
-static void reginsert __PROTO((int op, char *opnd));
-static void regtail __PROTO((char *p, char *val));
-static void regoptail __PROTO((char *p, char *val));
-static int regtry __PROTO((regexp *prog, char *string));
-static int regmatch __PROTO((char *prog));
-static size_t regrepeat __PROTO((char *p));
-static char *regnext __PROTO((char *p));
+static char *reg (int paren, int *flagp);
+static char *regbranch (int *flagp);
+static char *regpiece (int *flagp);
+static char *regatom (int *flagp);
+static char *regnode (int op);
+static void regc (int b);
+static void reginsert (int op, char *opnd);
+static void regtail (char *p, char *val);
+static void regoptail (char *p, char *val);
+static int regtry (regexp *prog, char *string);
+static int regmatch (char *prog);
+static size_t regrepeat (char *p);
+static char *regnext (char *p);
 #ifdef DEBUG
-static char *regprop __PROTO((char *op));
+static char *regprop (char *op);
 #endif
 
 /*

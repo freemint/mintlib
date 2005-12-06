@@ -12,9 +12,9 @@
 #include <errno.h>
 #include <string.h>
 
-__EXTERN int __getpwnam_r __PROTO ((const char* name,
-                                    struct passwd* result_buf, char* buffer,
-                                    size_t buflen, struct passwd** result));
+extern int __getpwnam_r (const char* name,
+                         struct passwd* result_buf, char* buffer,
+                         size_t buflen, struct passwd** result);
 
 static struct passwd passwd;
 static char buf[1024];

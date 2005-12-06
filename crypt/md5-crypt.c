@@ -39,13 +39,13 @@ static const char b64t[64] =
 
 /* Prototypes for local functions.  */
 #ifndef __MSHORT__
-__EXTERN char *__md5_crypt_r __P ((const char *key, const char *salt,
-				   char *buffer, int buflen));
+extern char *__md5_crypt_r (const char *key, const char *salt,
+			    char *buffer, int buflen);
 #else
-__EXTERN char *__md5_crypt_r __P ((const char *key, const char *salt,
-				   char *buffer, long int buflen));
+extern char *__md5_crypt_r (const char *key, const char *salt,
+			    char *buffer, long int buflen);
 #endif
-extern char *__md5_crypt __P ((const char *key, const char *salt));
+extern char *__md5_crypt (const char *key, const char *salt);
 
 
 /* This entry point is equivalent to the `crypt' function in Unix

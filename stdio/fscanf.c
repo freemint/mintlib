@@ -21,8 +21,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-__EXTERN int __vfscanf __PROTO ((FILE* __f, const char* __format, 
-                                 __gnuc_va_list));
+extern int __vfscanf (FILE* __f, const char* __format, __gnuc_va_list);
 
 /* Read formatted input from STREAM according to the format string FORMAT.  */
 /* VARARGS2 */

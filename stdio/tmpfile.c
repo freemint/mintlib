@@ -11,7 +11,7 @@
 
 #include "lib.h"
 
-static void delete_tmpfiles __PROTO((void));
+static void delete_tmpfiles (void);
 
 typedef struct {
 	char	*name;

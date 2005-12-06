@@ -23,8 +23,8 @@
 #include <shadow.h>
 #include <stdlib.h>
 
-__EXTERN int __fgetspent_r __PROTO ((FILE*, struct spwd*, char*, size_t,
-				     struct spwd**));
+extern int __fgetspent_r (FILE*, struct spwd*, char*, size_t,
+			  struct spwd**);
 
 /* A reasonable size for a buffer to start with.  */
 #define BUFLEN_SPWD 1024

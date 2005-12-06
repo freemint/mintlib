@@ -67,17 +67,17 @@
 __BEGIN_DECLS
 
 /* This prints an "Assertion failed" message and aborts.  */
-__EXTERN void __assert_fail __P ((const char *__assertion,
-				  const char *__file,
-				  unsigned int __line,
-				  const char *__function))
+extern void __assert_fail (const char *__assertion,
+			   const char *__file,
+			   unsigned int __line,
+			   const char *__function)
      __attribute__ ((__noreturn__));
 
 /* Likewise, but prints the error text for ERRNUM.  */
-__EXTERN void __assert_perror_fail __P ((int __errnum,
-				         const char *__file,
-				         unsigned int __line,
-				         const char *__function))
+extern void __assert_perror_fail (int __errnum,
+				  const char *__file,
+				  unsigned int __line,
+				  const char *__function)
      __attribute__ ((__noreturn__));
 
 __END_DECLS

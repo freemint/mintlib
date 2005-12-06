@@ -32,7 +32,7 @@
 #define TCSASOFT 0
 #endif
 
-__EXTERN ssize_t __getline __PROTO ((char**, size_t*, FILE*));
+extern ssize_t __getline (char**, size_t*, FILE*);
 
 char *
 getpass (prompt)

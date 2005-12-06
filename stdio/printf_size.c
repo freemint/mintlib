@@ -31,10 +31,10 @@
 #endif
 
 #ifdef __MINT__
-__EXTERN int __isnan __PROTO ((double));
-__EXTERN int __isnanl __PROTO ((long double));
-__EXTERN int __isinf __PROTO ((double));
-__EXTERN int __isinfl __PROTO ((long double));
+extern int __isnan (double);
+extern int __isnanl (long double);
+extern int __isinf (double);
+extern int __isinfl (long double);
 #endif
 
 /* This defines make it possible to use the same code for GNU C library and

@@ -26,8 +26,8 @@
 /* Local buffer to store the result.  */
 static struct utmp buffer;
 
-__EXTERN struct utmp* __getutent_r __PROTO ((struct utmp*, struct utmp**));
-__EXTERN struct utmp* __getutent __PROTO ((void));
+extern struct utmp* __getutent_r (struct utmp*, struct utmp**);
+extern struct utmp* __getutent (void);
 
 struct utmp *
 __getutent (void)

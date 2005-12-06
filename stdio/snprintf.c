@@ -24,8 +24,8 @@
 # define __vsnprintf(s, l, f, a) _IO_vsnprintf (s, l, f, a)
 #endif
 
-__EXTERN int __vsnprintf __PROTO((char*, __SIZE_TYPEDEF__,
-                                  const char*, __gnuc_va_list));
+extern int __vsnprintf (char*, __SIZE_TYPEDEF__,
+                        const char*, __gnuc_va_list);
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */

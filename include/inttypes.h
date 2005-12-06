@@ -308,14 +308,14 @@ __extension__ extern lldiv_t lldiv __P ((long long int __numer,
 
 /* Compute absolute value of N.  */
 extern __inline intmax_t
-imaxabs (intmax_t __n) __THROW
+imaxabs (intmax_t __n)
 {
   return llabs (__n);
 }
 
 /* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
 extern __inline imaxdiv_t
-imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
+imaxdiv (intmax_t __numer, intmax_t __denom)
 {
   return lldiv (__numer, __denom);
 }
@@ -330,7 +330,7 @@ extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
 # endif
 extern __inline intmax_t
 strtoimax (__const char *__restrict nptr, char **__restrict endptr,
-	   int base) __THROW
+	   int base)
 {
   return __strtoll_internal (nptr, endptr, base, 0);
 }
@@ -348,7 +348,7 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 # endif
 extern __inline uintmax_t
 strtoumax (__const char *__restrict nptr, char **__restrict endptr,
-	   int base) __THROW
+	   int base)
 {
   return __strtoull_internal (nptr, endptr, base, 0);
 }

@@ -7,22 +7,20 @@
 
 #ifndef _FTW_H
 #define _FTW_H
-	
-#ifdef __cplusplus
-extern "C" {
+
+#ifndef _FEATURES_H
+# include <features.h>
 #endif
+
+__BEGIN_DECLS
 
 #define FTW_F		0	/* A normal file			*/
 #define FTW_D		1	/* A directory				*/
 #define FTW_DNR		2	/* Something opendir(3) failed on	*/
 #define FTW_NS		3	/* Something stat(2) failed on		*/
 
+extern int ftw (char *path, int (*fn)(const char *, struct stat *, int), int param);
 
-__EXTERN int ftw
-    __PROTO((char *path, int (*fn)(const char *, struct stat *, int), int param));
-
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* _FTW_H */

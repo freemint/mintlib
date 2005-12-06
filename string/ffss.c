@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int __ffs_s __PROTO ((short int bits));
+int __ffs_s (short int bits);
 
 int 
 __ffss (bits)

@@ -31,9 +31,9 @@
 const char __tmp_letters[] = 
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-int __diraccess __PROTO ((const char*));
-const char* __get_tmpdir __PROTO ((const char*, int try_tmpdir));
-int __exists __PROTO ((const char*));
+int __diraccess (const char*);
+const char* __get_tmpdir (const char*, int try_tmpdir);
+int __exists (const char*);
 
 /* Get the name to use for a temporary directory.  */
 const char*

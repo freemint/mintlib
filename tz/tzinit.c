@@ -44,9 +44,9 @@ static const struct option long_options[] =
   { 0, 0, 0, 0 }
 };
 
-static void show_help __PROTO ((void));
-static void show_version __PROTO ((void));
-static void show_usage __PROTO ((void));
+static void show_help (void);
+static void show_version (void);
+static void show_usage (void);
 
 static int do_utc = 0;
 static int do_local = 0;

@@ -41,7 +41,7 @@ static char sccsid[] = "@(#)sethostent.c	6.9 (Berkeley) 3/19/91";
 #include <netdb.h>
 #include <resolv.h>
 
-__EXTERN void _res_close __PROTO ((void));
+extern void _res_close (void);
 
 void
 sethostent(stayopen)

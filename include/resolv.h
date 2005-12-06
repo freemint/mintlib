@@ -113,49 +113,45 @@ extern int h_errno;
 #define p_time		__p_time
 #define p_type		__p_type
 
-__EXTERN int	__dn_skipname	__PROTO((u_char *__comp_dn, u_char *__eom));
-__EXTERN void	__fp_query	__PROTO((char *, FILE *));
-__EXTERN char	*__hostalias	__PROTO((__const char *));
-__EXTERN void	__PROTOutlong	__PROTO((u_long, u_char *));
-__EXTERN void	__PROTOutshort	__PROTO((u_short, u_char *));
-__EXTERN char	*__PROTO_class	__PROTO((int));
-__EXTERN char	*__PROTO_time	__PROTO((u_long));
-__EXTERN char	*__PROTO_type	__PROTO((int));
+extern int	__dn_skipname	(u_char *__comp_dn, u_char *__eom);
+extern void	__fp_query	(char *, FILE *);
+extern char	*__hostalias	(__const char *);
+extern char	*__p_class	(int);
+extern char	*__p_time	(u_long);
+extern char	*__p_type	(int);
 
-#if 1
-__EXTERN void	__putshort	__PROTO((u_short s, u_char *));
-__EXTERN void	__putlong	__PROTO((u_long l, u_char *));
-#endif
+extern void	__putshort	(u_short, u_char *);
+extern void	__putlong	(u_long l, u_char *);
 
-__EXTERN int	dn_comp		__PROTO((u_char *__exp_dn, u_char *__comp_dn,
+extern int	dn_comp		(u_char *__exp_dn, u_char *__comp_dn,
 				int __length, u_char **__dnptrs,
-				u_char **__lastdnptr));
+				u_char **__lastdnptr);
 
-__EXTERN int	dn_expand	__PROTO((u_char *__msg, u_char *__eomorig,
+extern int	dn_expand	(u_char *__msg, u_char *__eomorig,
 				u_char *__comp_dn, u_char *__exp_dn,
-				int __length));
+				int __length);
 				
-__EXTERN int	res_init 	__PROTO((void));
+extern int	res_init 	(void);
 
-__EXTERN int	res_mkquery 	__PROTO((int __opval, __const char *__dname,
+extern int	res_mkquery 	(int __opval, __const char *__dname,
 				int __class, int __type, char *__data,
 				int __datalen, struct rrec *__newrr,
-				char *__buf, int __buflen));
+				char *__buf, int __buflen);
 				
-__EXTERN int	res_send 	__PROTO((__const char *__msg, int __msglen,
-				char *__answer, int __anslen));
+extern int	res_send 	(__const char *__msg, int __msglen,
+				char *__answer, int __anslen);
 
-__EXTERN int	res_query	__PROTO((__const char *__dname, int __class,
-				int __type, u_char *__answer, int __anslen));
+extern int	res_query	(__const char *__dname, int __class,
+				int __type, u_char *__answer, int __anslen);
 				
-__EXTERN int	res_search	__PROTO((char *__dname, int __class,
-				int __type, u_char *__answer, int __anslen));
+extern int	res_search	(char *__dname, int __class,
+				int __type, u_char *__answer, int __anslen);
 
-__EXTERN int	res_querydomain	__PROTO((char *__name, char *__domain,
+extern int	res_querydomain	(char *__name, char *__domain,
 				int __class, int __type, u_char *__answer,
-				int __anslen));
+				int __anslen);
 
-__EXTERN void	herror __PROTO((__const char *__s));
+extern void	herror		(__const char *__s);
 
 __END_DECLS
 

@@ -101,7 +101,7 @@ typedef struct _osheader
 {
     unsigned short	os_entry;   	 /* 0x00  BRA to reset handler	*/
     unsigned short	os_version; 	 /* 0x02  TOS version		*/
-    void		(*reseth) __PROTO((void)); /* 0x04 -> reset handler	*/
+    void		(*reseth) (void); /* 0x04 -> reset handler	*/
     struct _osheader	*os_beg;	 /* 0x08 -> base of OS		*/
     void		*os_end;	 /* 0x0c -> end of OS ram usage */
     char		*os_rsv1;	 /* 0x10 reserved		*/

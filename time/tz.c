@@ -51,15 +51,14 @@ const int __year_lengths[2] =
 
 static char wildabbr[] = "WILDABBR";
 
-static long   __detzcode __PROTO ((const char*));
-static const char*  __getzname __PROTO ((const char*));
-static const char*  __getnum __PROTO ((const char*, long*, long, long));
-static const char*  __getsecs __PROTO ((const char*, long*));
-static const char*  __getoffset __PROTO ((const char*, long*));
-static const char*  __getrule __PROTO ((const char*, struct rule*));
-static void   __settzname __PROTO ((void));
-static time_t __transtime __PROTO ((time_t, long, const struct rule*, 
-                                    long));
+static long   __detzcode (const char*);
+static const char*  __getzname (const char*);
+static const char*  __getnum (const char*, long*, long, long);
+static const char*  __getsecs (const char*, long*);
+static const char*  __getoffset (const char*, long*);
+static const char*  __getrule (const char*, struct rule*);
+static void   __settzname (void);
+static time_t __transtime (time_t, long, const struct rule*, long);
 
 static long
 __detzcode (const char * const codep)

@@ -37,10 +37,10 @@ struct _device {
 
 extern struct _device *__devices;
 
-__EXTERN void _install_device __PROTO((struct _device *d));
-__EXTERN struct _device *_dev_fd __PROTO((int fd));
-__EXTERN struct _device *_dev_dosname __PROTO((const char *dosnm));
-__EXTERN struct _device *_dev_unxname __PROTO((const char *unm));
+extern void _install_device (struct _device *d);
+extern struct _device *_dev_fd (int fd);
+extern struct _device *_dev_dosname (const char *dosnm);
+extern struct _device *_dev_unxname (const char *unm);
 
 __END_DECLS
 

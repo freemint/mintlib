@@ -14,7 +14,7 @@ typedef	struct			/* Old FILE structure */
 } OLDFILE;
 
 extern OLDFILE _iob[];
-__EXTERN int _filbuf __PROTO ((OLDFILE *));
+extern int _filbuf (OLDFILE *);
 
 #define _IOBIN 0x4
 #define oldstdin (&_iob[0])

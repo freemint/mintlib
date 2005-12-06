@@ -25,7 +25,7 @@
 #include <limits.h>
 #include <errno.h>
 
-__EXTERN void *__memccpy __PROTO ((void*, const void*, int, size_t));
+extern void *__memccpy (void*, const void*, int, size_t);
 
 /* Read up to (and including) a TERMINATOR from STREAM into *LINEPTR
    (and null-terminate it). *LINEPTR is a pointer returned from malloc (or

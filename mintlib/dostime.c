@@ -14,7 +14,7 @@
 
 #include "lib.h"
 
-time_t __dostime __PROTO((time_t t));
+time_t __dostime (time_t t);
 
 /* convert a Unix time into a DOS time. The longword returned contains
    the time word first, then the date word */
