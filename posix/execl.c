@@ -3,19 +3,10 @@
 	placed in the public domain
 */
 
-#include <stdarg.h>
-#include <process.h>
 #include <unistd.h>
 
 int
-execl(const char *path, ...)
+execl(const char *path, const char *arg, ...)
 {
-	va_list args;
-	int r;
-
-	va_start (args, path);
-	r = __execve (path, (char **) args, NULL);
-	va_end (args);
-
-	return r;
+	return __execve(path, (char **) &arg, NULL);
 }

@@ -457,24 +457,29 @@ extern int fexecve (int __fd, char *__const __argv[], char *__const __envp[])
 
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
-extern int execv (__const char *__path, char *__const __argv[]) __THROW;
+extern int execv (__const char *__path, char *__const __argv[])
+     __THROW __nonnull ((1));
 
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
-extern int execle (__const char *__path, ...) __THROW;
+extern int execle (__const char *__path, __const char *__arg, ...)
+     __THROW __nonnull ((1));
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
-extern int execl (__const char *__path, ...) __THROW;
+extern int execl (__const char *__path, __const char *__arg, ...)
+     __THROW __nonnull ((1));
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
-extern int execvp (__const char *__file, char *__const __argv[]) __THROW;
+extern int execvp (__const char *__file, char *__const __argv[])
+     __THROW __nonnull ((1));
 
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
-extern int execlp (__const char *__file, ...) __THROW;
+extern int execlp (__const char *__file, __const char *__arg, ...)
+     __THROW __nonnull ((1));
 
 
 #if defined __USE_MISC || defined __USE_XOPEN
@@ -494,8 +499,8 @@ extern void _exit (int __status) __attribute__ ((__noreturn__));
 #include <bits/confname.h>
 
 /* Get file-specific configuration information about PATH.  */
-extern long int pathconf (__const char *__path, int __name) __THROW;
-extern long int __pathconf (__const char *__path, int __name) __THROW;
+extern long int pathconf (__const char *__path, int __name) __THROW __nonnull ((1));
+extern long int __pathconf (__const char *__path, int __name) __THROW __nonnull ((1));
 
 /* Get file-specific configuration about descriptor FD.  */
 extern long int fpathconf (int __fd, int __name) __THROW;

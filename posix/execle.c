@@ -8,20 +8,16 @@
 #include <unistd.h>
 
 int
-execle (const char *path, ...)
+execle (const char *path, const char *arg, ...)
 {
-	va_list args;
-	char ***envp;
-	int r;
+	va_list ap;
+	char **envp;
 
-	va_start (args, path);
-
-	for (envp = (char ***) args ; *envp ; envp++)
+	va_start(ap, arg);
+	while ((va_arg(ap, char *)) != NULL)
 		;
+	envp = va_arg(ap, char **);
+	va_end(ap);
 
-	r = __execve (path, (char **) args, *(envp+1));
-
-	va_end (args);
-
-	return r;
+	return __execve(path, (char **) &arg, envp);
 }

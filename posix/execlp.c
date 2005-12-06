@@ -8,7 +8,6 @@
     understand and accept it fully.
 */
 
-#include <stdarg.h>
 #include <unistd.h>
 
 /* execlp: Try to execute a program on the default system
@@ -17,14 +16,7 @@
 */
 
 int
-execlp (const char *name, ...)
+execlp (const char *file, const char *arg, ...)
 {
-	va_list args;
-	int r;
-
-	va_start (args, name);
-	r = execvp (name, (char **) args);
-	va_end (args);
-
-	return r;
+	return execvp(file, (char **) &arg);
 }
