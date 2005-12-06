@@ -33,14 +33,18 @@
    December 1989, add parens around `&' in pow.
    November 1990, added alternate definition of HUGE_VAL for Sun.  */
 
+/* Changed by Jim Wilson:
+   September 1993, Use #undef before HUGE_VAL instead of #ifdef/#endif.  */
+
+/* Changed by Ian Lance Taylor:
+   September 1994, use extern inline instead of static inline.  */
+
 #ifndef __math_68881
 #define __math_68881
 
 #include <errno.h>
 
-__BEGIN_DECLS
-
-#ifndef HUGE_VAL
+#undef HUGE_VAL
 #ifdef __sun__
 /* The Sun assembler fails to handle the hex constant in the usual defn.  */
 #define HUGE_VAL							\
@@ -53,23 +57,14 @@ __BEGIN_DECLS
 ({									\
   double huge_val;							\
 									\
-  __asm ("fmove%.d %#0x7ff0000000000000,%0"	/* Infinity */		\
+  __asm ("fmove%.d #0x7ff0000000000000,%0"	/* Infinity */		\
 	 : "=f" (huge_val)						\
 	 : /* no inputs */);						\
   huge_val;								\
 })
 #endif
-#endif
 
-#if __GNUC__ > 2 || __GCC_MINOR__ >= 5
-#define __const_attribute __attribute ((const))
-#else
-#define __const_attribute
-#endif
-
-__inline static double
-sin (double x) __const_attribute;
-__inline static double
+__inline extern double
 sin (double x)
 {
   double value;
@@ -80,9 +75,7 @@ sin (double x)
   return value;
 }
 
-__inline static double
-cos (double x) __const_attribute;
-__inline static double
+__inline extern double
 cos (double x)
 {
   double value;
@@ -93,9 +86,7 @@ cos (double x)
   return value;
 }
 
-__inline static double
-tan (double x) __const_attribute;
-__inline static double
+__inline extern double
 tan (double x)
 {
   double value;
@@ -106,9 +97,7 @@ tan (double x)
   return value;
 }
 
-__inline static double
-asin (double x) __const_attribute;
-__inline static double
+__inline extern double
 asin (double x)
 {
   double value;
@@ -119,9 +108,7 @@ asin (double x)
   return value;
 }
 
-__inline static double
-acos (double x) __const_attribute;
-__inline static double
+__inline extern double
 acos (double x)
 {
   double value;
@@ -132,9 +119,7 @@ acos (double x)
   return value;
 }
 
-__inline static double
-atan (double x) __const_attribute;
-__inline static double
+__inline extern double
 atan (double x)
 {
   double value;
@@ -145,17 +130,15 @@ atan (double x)
   return value;
 }
 
-__inline static double
-atan2 (double y, double x) __const_attribute;
-__inline static double
+__inline extern double
 atan2 (double y, double x)
 {
   double pi, pi_over_2;
 
-  __asm ("fmovecr%.x %#0,%0"		/* extended precision pi */
+  __asm ("fmovecr%.x #0,%0"		/* extended precision pi */
 	 : "=f" (pi)
 	 : /* no inputs */ );
-  __asm ("fscale%.b %#-1,%0"		/* no loss of accuracy */
+  __asm ("fscale%.b #-1,%0"		/* no loss of accuracy */
 	 : "=f" (pi_over_2)
 	 : "0" (pi));
   if (x > 0)
@@ -195,7 +178,7 @@ atan2 (double y, double x)
 	      double value;
 
 	      errno = EDOM;
-	      __asm ("fmove%.d %#0x7fffffffffffffff,%0" 	/* quiet NaN */
+	      __asm ("fmove%.d #0x7fffffffffffffff,%0"	/* quiet NaN */
 		     : "=f" (value)
 		     : /* no inputs */);
 	      return value;
@@ -204,9 +187,7 @@ atan2 (double y, double x)
     }
 }
 
-__inline static double
-sinh (double x) __const_attribute;
-__inline static double
+__inline extern double
 sinh (double x)
 {
   double value;
@@ -217,9 +198,7 @@ sinh (double x)
   return value;
 }
 
-__inline static double
-cosh (double x) __const_attribute;
-__inline static double
+__inline extern double
 cosh (double x)
 {
   double value;
@@ -230,9 +209,7 @@ cosh (double x)
   return value;
 }
 
-__inline static double
-tanh (double x) __const_attribute;
-__inline static double
+__inline extern double
 tanh (double x)
 {
   double value;
@@ -243,9 +220,7 @@ tanh (double x)
   return value;
 }
 
-__inline static double
-atanh (double x) __const_attribute;
-__inline static double
+__inline extern double
 atanh (double x)
 {
   double value;
@@ -256,9 +231,7 @@ atanh (double x)
   return value;
 }
 
-__inline static double
-exp (double x) __const_attribute;
-__inline static double
+__inline extern double
 exp (double x)
 {
   double value;
@@ -269,9 +242,7 @@ exp (double x)
   return value;
 }
 
-__inline static double
-expm1 (double x) __const_attribute;
-__inline static double
+__inline extern double
 expm1 (double x)
 {
   double value;
@@ -282,9 +253,7 @@ expm1 (double x)
   return value;
 }
 
-__inline static double
-log (double x) __const_attribute;
-__inline static double
+__inline extern double
 log (double x)
 {
   double value;
@@ -295,9 +264,7 @@ log (double x)
   return value;
 }
 
-__inline static double
-log1p (double x) __const_attribute;
-__inline static double
+__inline extern double
 log1p (double x)
 {
   double value;
@@ -308,9 +275,7 @@ log1p (double x)
   return value;
 }
 
-__inline static double
-log10 (double x) __const_attribute;
-__inline static double
+__inline extern double
 log10 (double x)
 {
   double value;
@@ -321,9 +286,7 @@ log10 (double x)
   return value;
 }
 
-__inline static double
-sqrt (double x) __const_attribute;
-__inline static double
+__inline extern double
 sqrt (double x)
 {
   double value;
@@ -334,27 +297,14 @@ sqrt (double x)
   return value;
 }
 
-__inline static double
-hypot (const double x, const double y) __const_attribute;
-__inline static double
-hypot (const double x, const double y)
+__inline extern double
+hypot (double x, double y)
 {
-#if 0
   return sqrt (x*x + y*y);
-#else
-  double value;
-
-  __asm ("fsqrt%.x %1,%0"
-	 : "=f" (value)
-	 : "f" (x*x + y*y));
-  return value;
-#endif
 }
 
-__inline static double
-pow (const double x, const double y) __const_attribute;
-__inline static double
-pow (const double x, const double y)
+__inline extern double
+pow (double x, double y)
 {
   if (x > 0)
     return exp (y * log (x));
@@ -367,7 +317,7 @@ pow (const double x, const double y)
 	  double value;
 
 	  errno = EDOM;
-	  __asm ("fmove%.d %#0x7fffffffffffffff,%0"		/* quiet NaN */
+	  __asm ("fmove%.d #0x7fffffffffffffff,%0"		/* quiet NaN */
 		 : "=f" (value)
 		 : /* no inputs */);
 	  return value;
@@ -383,7 +333,7 @@ pow (const double x, const double y)
       if (y == temp)
         {
 	  int i = (int) y;
-	  
+
 	  if ((i & 1) == 0)			/* even */
 	    return exp (y * log (-x));
 	  else
@@ -394,7 +344,7 @@ pow (const double x, const double y)
 	  double value;
 
 	  errno = EDOM;
-	  __asm ("fmove%.d %#0x7fffffffffffffff,%0"		/* quiet NaN */
+	  __asm ("fmove%.d #0x7fffffffffffffff,%0"		/* quiet NaN */
 		 : "=f" (value)
 		 : /* no inputs */);
 	  return value;
@@ -402,9 +352,7 @@ pow (const double x, const double y)
     }
 }
 
-__inline static double
-fabs (double x) __const_attribute;
-__inline static double
+__inline extern double
 fabs (double x)
 {
   double value;
@@ -415,9 +363,7 @@ fabs (double x)
   return value;
 }
 
-__inline static double
-ceil (double x) __const_attribute;
-__inline static double
+__inline extern double
 ceil (double x)
 {
   int rounding_mode, round_up;
@@ -439,9 +385,7 @@ ceil (double x)
   return value;
 }
 
-__inline static double
-floor (double x) __const_attribute;
-__inline static double
+__inline extern double
 floor (double x)
 {
   int rounding_mode, round_down;
@@ -464,9 +408,7 @@ floor (double x)
   return value;
 }
 
-__inline static double
-rint (double x) __const_attribute;
-__inline static double
+__inline extern double
 rint (double x)
 {
   int rounding_mode, round_nearest;
@@ -488,9 +430,7 @@ rint (double x)
   return value;
 }
 
-__inline static double
-fmod (double x, double y) __const_attribute;
-__inline static double
+__inline extern double
 fmod (double x, double y)
 {
   double value;
@@ -502,9 +442,7 @@ fmod (double x, double y)
   return value;
 }
 
-__inline static double
-drem (double x, double y) __const_attribute;
-__inline static double
+__inline extern double
 drem (double x, double y)
 {
   double value;
@@ -516,9 +454,7 @@ drem (double x, double y)
   return value;
 }
 
-__inline static double
-scalb (double x, int n) __const_attribute;
-__inline static double
+__inline extern double
 scalb (double x, int n)
 {
   double value;
@@ -530,9 +466,7 @@ scalb (double x, int n)
   return value;
 }
 
-__inline static double
-logb (double x) __const_attribute;
-__inline static double
+__inline extern double
 logb (double x)
 {
   double exponent;
@@ -543,9 +477,7 @@ logb (double x)
   return exponent;
 }
 
-__inline static double
-ldexp (double x, int n) __const_attribute;
-__inline static double
+__inline extern double
 ldexp (double x, int n)
 {
   double value;
@@ -557,7 +489,7 @@ ldexp (double x, int n)
   return value;
 }
 
-__inline static double
+__inline extern double
 frexp (double x, int *exp)
 {
   double float_exponent;
@@ -565,7 +497,7 @@ frexp (double x, int *exp)
   double mantissa;
 
   __asm ("fgetexp%.x %1,%0"
-	 : "=f" (float_exponent) 	/* integer-valued float */
+	 : "=f" (float_exponent)	/* integer-valued float */
 	 : "f" (x));
   int_exponent = (int) float_exponent;
   __asm ("fgetman%.x %1,%0"
@@ -573,7 +505,7 @@ frexp (double x, int *exp)
 	 : "f" (x));
   if (mantissa != 0)
     {
-      __asm ("fscale%.b %#-1,%0"
+      __asm ("fscale%.b #-1,%0"
 	     : "=f" (mantissa)		/* mantissa /= 2.0 */
 	     : "0" (mantissa));
       int_exponent += 1;
@@ -582,7 +514,7 @@ frexp (double x, int *exp)
   return mantissa;
 }
 
-__inline static double
+__inline extern double
 modf (double x, double *ip)
 {
   double temp;
@@ -593,7 +525,5 @@ modf (double x, double *ip)
   *ip = temp;
   return x - temp;
 }
-
-__END_DECLS
 
 #endif /* not __math_68881 */
