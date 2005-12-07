@@ -291,7 +291,6 @@ extern char *alloca ();
 
 #ifdef __MINT__
 #include "lib.h"
-# define stat(name, sb) __quickstat (name, sb, 0)
 extern void* __mempcpy (void* __dest, const void* src, size_t n);
 extern int __getpwnam_r (const char* __name, 
 			 struct passwd* __resultbuf,
@@ -302,10 +301,11 @@ extern int __glob_pattern_p (const char* pattern, int quote);
 extern DIR* __opendir (const char* dirname);
 extern int __closedir	(DIR* dirp);
 extern int __stat (const char*, struct stat*);
+# define stat(name, sb) __quickstat (name, sb, 0)
 
 #include <ctype.h>  /* For _toupper.  */
 #endif
-
+
 static
 #if __GNUC__ - 0 >= 2
 inline
