@@ -22,7 +22,8 @@ include $(top_srcdir)/configvars
 
 default: all
 
-gen_objs = check.o generate.o list.o main.o pars.o scan.o traps.o
+gen_objs = check.o generate.o main.o pars.o scan.o traps.o
+gen_objs += syscallparser.c
 
 all-here: syscalls.stmp
 

@@ -1,10 +1,16 @@
 /*
+ * $Id$
+ * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
  * 
- * Copyright 2000, 2001, 2002 Frank Naumann <fnaumann@freemint.de>
+ * Copyright 2000-2005 Frank Naumann <fnaumann@freemint.de>
  * All rights reserved.
+ * 
+ * Please send suggestions, patches or bug reports to me or
+ * the MiNT mailing list.
+ * 
  * 
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,28 +26,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
- * 
- * begin:	2000-01-01
- * last change:	2000-03-07
- * 
- * Author:	Frank Naumann <fnaumann@freemint.de>
- * 
- * Please send suggestions, patches or bug reports to me or
- * the MiNT mailing list.
- * 
- * 
- * changes since last version:
- * 
- * known bugs:
- * 
- * todo:
- * 
- * optimizations:
- * 
  */
-
-#include "check.h"
 
 #include <stdlib.h>
 #include <string.h>
+
+#include "check.h"
 

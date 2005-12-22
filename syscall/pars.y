@@ -1,10 +1,16 @@
 /*
+ * $Id$
+ * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
  * 
- * Copyright 2000, 2001, 2002 Frank Naumann <fnaumann@freemint.de>
+ * Copyright 2000-2004 Frank Naumann <fnaumann@freemint.de>
  * All rights reserved.
+ * 
+ * Please send suggestions, patches or bug reports to me or
+ * the MiNT mailing list.
+ * 
  * 
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,24 +26,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
- * 
- * begin:	2000-01-01
- * last change:	2000-03-07
- * 
- * Author:	Frank Naumann <fnaumann@freemint.de>
- * 
- * Please send suggestions, patches or bug reports to me or
- * the MiNT mailing list.
- * 
- * 
- * changes since last version:
- * 
- * known bugs:
- * 
- * todo:
- * 
- * optimizations:
- * 
  */
 
 %{
@@ -45,10 +33,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "list.h"
-
-/* prototypes */
-void yyerror(char *s);
+#include "syscalldefs.h"
 
 /* from scanner */
 int yylex (void);
@@ -61,22 +46,40 @@ extern int errors;
 	if (!x) \
 	{ yyerror("out of memory"); YYERROR; }
 
-static void
-insert_string(char *dst, const char *src)
-{
-	char save[STRMAX];
-	int l;
-	
-	strcpy(save, dst);
-	strcpy(dst, src);
-	
-	l = strlen(dst);
-	dst[l++] = ' ';
-	strcpy(dst+l, save);
-}
 
-/* local variable */
-SYSTAB *tab = NULL;
+/* local things */
+
+struct systab *gemdos = NULL;
+struct systab *bios = NULL;
+struct systab *xbios = NULL;
+
+struct systab *systab = NULL;
+
+
+/* exported stuff */
+
+struct systab *gemdos_table(void) { return gemdos; }
+struct systab *bios_table(void) { return bios; }
+struct systab *xbios_table(void) { return xbios; }
+
+
+/* prototypes */
+
+static void yyerror(char *s);
+static void insert_string(char *dst, const char *src);
+
+static int resize_tab(struct systab *tab, int newsize);
+static int add_tab(struct systab *tab, int nr, const char *name, struct arg *p, int status);
+
+static void add_arg(struct arg **head, struct arg *t);
+static struct arg *make_arg(int type, const char *s);
+
+
+/* defaults */
+
+#define INITIAL_GEMDOS	100
+#define INITIAL_BIOS	100
+#define INITIAL_XBIOS	100
 
 %}
 
@@ -86,15 +89,13 @@ SYSTAB *tab = NULL;
 	long	value;
 	
 	/* nonterminals */
-	SYSTAB	*tab;
-	LIST	*list;
+	struct systab *tab;
+	struct arg *list;
 }
 
-%token	<ident>	_IDENT_DOS
+%token	<ident>	_IDENT_GEMDOS
 %token	<ident>	_IDENT_BIOS
 %token	<ident>	_IDENT_XBIOS
-%token	<ident>	_IDENT_RESERVED
-%token	<ident>	_IDENT_NULL
 %token	<ident>	_IDENT_MAX
 
 %token	<ident>	_IDENT_VOID
@@ -110,11 +111,16 @@ SYSTAB *tab = NULL;
 %token	<ident>	_IDENT_USHORT
 %token	<ident>	_IDENT_ULONG
 
+%token	<ident>	_IDENT_UNDEFINED
+%token	<ident>	_IDENT_UNSUPPORTED
+%token	<ident>	_IDENT_UNIMPLEMENTED
+%token	<ident>	_IDENT_PASSTHROUGH
+
 %token	<ident>	Identifier
 %token	<value>	Integer
 
 
-%type	<tab>	dos
+%type	<tab>	gemdos
 %type	<tab>	bios
 %type	<tab>	xbios
 
@@ -123,6 +129,7 @@ SYSTAB *tab = NULL;
 %type	<list>	simple_parameter
 %type	<list>	simple_type
 %type	<list>	type
+%type	<value>	status
 
 
 %start syscalls
@@ -130,68 +137,68 @@ SYSTAB *tab = NULL;
 %%
 
 syscalls
-:	dos bios xbios
+:	gemdos bios xbios
 	{
-		DOS = $1;
-		BIOS = $2;
-		XBIOS = $3;
+		gemdos = $1;
+		bios = $2;
+		xbios = $3;
 	}
 ;
 
-dos
+gemdos
 :	{
-		tab = malloc(sizeof(*tab));
-		OUT_OF_MEM(tab);
+		systab = malloc(sizeof(*systab));
+		OUT_OF_MEM(systab);
 		
-		bzero (tab, sizeof(*tab));
+		bzero(systab, sizeof(*systab));
 		
-		tab->size = INITIAL_DOS;
-		tab->table = malloc(tab->size * sizeof(*(tab->table)));
-		OUT_OF_MEM(tab->table);
+		systab->size = INITIAL_GEMDOS;
+		systab->table = malloc(systab->size * sizeof(*(systab->table)));
+		OUT_OF_MEM(systab->table);
 		
-		bzero (tab->table, tab->size * sizeof(*(tab->table)));
+		bzero(systab->table, systab->size * sizeof(*(systab->table)));
 	}
-	'[' _IDENT_DOS ']' definition_list
+	'[' _IDENT_GEMDOS ']' definition_list
 	{
-		$$ = tab;
+		$$ = systab;
 	}
 ;
 
 bios
 :	{
-		tab = malloc(sizeof(*tab));
-		OUT_OF_MEM(tab);
+		systab = malloc(sizeof(*systab));
+		OUT_OF_MEM(systab);
 		
-		bzero (tab, sizeof(*tab));
+		bzero(systab, sizeof(*systab));
 		
-		tab->size = INITIAL_BIOS;
-		tab->table = malloc(tab->size * sizeof(*(tab->table)));
-		OUT_OF_MEM(tab->table);
+		systab->size = INITIAL_BIOS;
+		systab->table = malloc(systab->size * sizeof(*(systab->table)));
+		OUT_OF_MEM(systab->table);
 		
-		bzero (tab->table, tab->size * sizeof(*(tab->table)));
+		bzero(systab->table, systab->size * sizeof(*(systab->table)));
 	}
 	'[' _IDENT_BIOS ']' definition_list
 	{
-		$$ = tab;
+		$$ = systab;
 	}
 ;
 
 xbios
 :	{
-		tab = malloc(sizeof(*tab));
-		OUT_OF_MEM(tab);
+		systab = malloc(sizeof(*systab));
+		OUT_OF_MEM(systab);
 		
-		bzero(tab, sizeof(*tab));
+		bzero(systab, sizeof(*systab));
 		
-		tab->size = INITIAL_XBIOS;
-		tab->table = malloc(tab->size * sizeof(*(tab->table)));
-		OUT_OF_MEM(tab->table);
+		systab->size = INITIAL_XBIOS;
+		systab->table = malloc(systab->size * sizeof(*(systab->table)));
+		OUT_OF_MEM(systab->table);
 		
-		bzero (tab->table, tab->size * sizeof(*(tab->table)));
+		bzero(systab->table, systab->size * sizeof(*(systab->table)));
 	}
 	'[' _IDENT_XBIOS ']' definition_list
 	{
-		$$ = tab;
+		$$ = systab;
 	}
 ;
 
@@ -203,41 +210,41 @@ definition_list
 ;
 
 definition
-:	Integer Identifier Identifier '(' parameter_list ')'
+:	Integer Identifier '(' parameter_list ')' status
 	{
-		if (tab->max && $1 >= tab->max)
+		if (systab->max && $1 >= systab->max)
 		{ yyerror("entry greater than MAX"); YYERROR; }
 		
-		if (add_tab(tab, $1, $2[0], $3, $5))
+		if (add_tab(systab, $1, $2, $4, $6))
 		{ yyerror("out of memory"); YYERROR; }
 	}
-|	Integer _IDENT_NULL
+|	Integer _IDENT_UNDEFINED
 	{
-		if (tab->max && $1 >= tab->max)
+		if (systab->max && $1 >= systab->max)
 		{ yyerror("entry greater than MAX"); YYERROR; }
 		
-		if (add_tab(tab, $1, 0, NULL, NULL))
+		if (add_tab(systab, $1, $2, NULL, SYSCALL_UNDEFINED))
 		{ yyerror("out of memory"); YYERROR; }
 	}
-|	Integer _IDENT_RESERVED
+|	Integer _IDENT_PASSTHROUGH
 	{
-		if (tab->max && $1 >= tab->max)
+		if (systab->max && $1 >= systab->max)
 		{ yyerror("entry greater than MAX"); YYERROR; }
 		
-		if (add_tab(tab, $1, 0, $2, NULL))
+		if (add_tab(systab, $1, $2, NULL, SYSCALL_PASSTHROUGH))
 		{ yyerror("out of memory"); YYERROR; }
 	}
 |	Integer _IDENT_MAX
 	{
-		if (tab->max)
+		if (systab->max)
 		{ yyerror("MAX already defined"); YYERROR; }
 		
-		tab->max = $1;
+		systab->max = $1;
 		
-		if (tab->maxused && tab->maxused >= tab->max)
+		if (systab->maxused && systab->maxused >= systab->max)
 		{ yyerror("there are entries greater than MAX"); YYERROR; }
 		
-		if (!resize_tab(tab, tab->max))
+		if (!resize_tab(systab, systab->max))
 		{ yyerror("out of memory"); YYERROR; }
 	}
 ;
@@ -256,16 +263,16 @@ parameter_list
 simple_parameter_list
 :	simple_parameter
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		$$ = l;
 	}
 |	simple_parameter_list ',' simple_parameter
 	{
-		LIST *head = $1;
-		LIST *l = $3;
+		struct arg *head = $1;
+		struct arg *l = $3;
 		
-		add_list(&(head->next), l);
+		add_arg(&(head->next), l);
 		
 		$$ = head;
 	}
@@ -274,7 +281,7 @@ simple_parameter_list
 simple_parameter
 :	simple_type Identifier
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		strcpy(l->name, $2);
 		
@@ -282,16 +289,26 @@ simple_parameter
 	}
 |	simple_type '*' Identifier
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		strcpy(l->name, $3);
 		l->flags |= FLAG_POINTER;
 		
 		$$ = l;
 	}
+|	simple_type '*' '*' Identifier
+	{
+		struct arg *l = $1;
+		
+		strcpy(l->name, $4);
+		l->flags |= FLAG_POINTER;
+		l->flags |= FLAG_POINTER2;
+		
+		$$ = l;
+	}
 |	simple_type Identifier '[' ']'
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		strcpy(l->name, $2);
 		l->flags |= FLAG_POINTER;
@@ -300,7 +317,7 @@ simple_parameter
 	}
 |	simple_type Identifier '[' Integer ']'
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		strcpy(l->name, $2);
 		l->flags |= FLAG_ARRAY;
@@ -313,13 +330,13 @@ simple_parameter
 simple_type
 :	type
 	{
-		LIST *l = $1;
+		struct arg *l = $1;
 		
 		$$ = l;
 	}
 |	_IDENT_CONST type
 	{
-		LIST *l = $2;
+		struct arg *l = $2;
 		
 		l->flags |= FLAG_CONST;
 		// insert_string(l->types, $1);
@@ -328,7 +345,7 @@ simple_type
 	}
 |	_IDENT_STRUCT type
 	{
-		LIST *l = $2;
+		struct arg *l = $2;
 		
 		l->flags |= FLAG_STRUCT;
 		insert_string(l->types, $1);
@@ -337,7 +354,7 @@ simple_type
 	}
 |	_IDENT_CONST _IDENT_STRUCT type
 	{
-		LIST *l = $3;
+		struct arg *l = $3;
 		
 		l->flags |= FLAG_CONST;
 		l->flags |= FLAG_STRUCT;
@@ -348,7 +365,7 @@ simple_type
 	}
 |	_IDENT_UNION type
 	{
-		LIST *l = $2;
+		struct arg *l = $2;
 		
 		l->flags |= FLAG_UNION;
 		insert_string(l->types, $1);
@@ -360,84 +377,103 @@ simple_type
 type
 :	_IDENT_CHAR
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_CHAR, $1);
+		l = make_arg(TYPE_CHAR, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_SHORT
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_SHORT, $1);
+		l = make_arg(TYPE_SHORT, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_LONG
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_LONG, $1);
+		l = make_arg(TYPE_LONG, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_UNSIGNED
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_UNSIGNED, $1);
+		l = make_arg(TYPE_UNSIGNED, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_UCHAR
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_UCHAR, $1);
+		l = make_arg(TYPE_UCHAR, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_USHORT
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_USHORT, $1);
+		l = make_arg(TYPE_USHORT, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_ULONG
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_ULONG, $1);
+		l = make_arg(TYPE_ULONG, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	_IDENT_VOID
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_VOID, $1);
+		l = make_arg(TYPE_VOID, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
 	}
 |	Identifier
 	{
-		LIST *l;
+		struct arg *l;
 		
-		l = make_list(TYPE_IDENT, $1);
+		l = make_arg(TYPE_IDENT, $1);
 		OUT_OF_MEM(l);
 		
 		$$ = l;
+	}
+;
+
+status
+:	/* regular */
+	{
+		$$ = SYSCALL_REGULAR;
+	}
+|	_IDENT_UNSUPPORTED
+	{
+		$$ = SYSCALL_UNSUPPORTED;
+	}
+|	_IDENT_UNIMPLEMENTED
+	{
+		$$ = SYSCALL_UNIMPLEMENTED;
+	}
+|	_IDENT_PASSTHROUGH
+	{
+		$$ = SYSCALL_PASSTHROUGH;
 	}
 ;
 
@@ -453,4 +489,103 @@ yyerror(char *s)
 		printf(" near token \"%s\"", yytext);
 	
 	printf("\n");
+}
+
+static void
+insert_string(char *dst, const char *src)
+{
+	char save[STRMAX];
+	int l;
+	
+	strcpy(save, dst);
+	strcpy(dst, src);
+	
+	l = strlen(dst);
+	dst[l++] = ' ';
+	strcpy(dst+l, save);
+}
+
+static int
+resize_tab(struct systab *tab, int newsize)
+{
+	if (newsize > tab->size)
+	{
+		struct syscall **newtable = malloc(newsize * sizeof(*newtable));
+		
+		if (newtable)
+		{
+			bzero(newtable, newsize * sizeof(*newtable));
+			memcpy(newtable, tab->table, tab->size * sizeof(*(tab->table)));
+			
+			free(tab->table);
+			tab->table = newtable;
+			tab->size = newsize;
+			
+			return 1;
+		}
+	}
+	else
+	{
+		tab->size = newsize;
+		
+		return 1;
+	}
+	
+	return 0;
+}
+
+static int
+add_tab(struct systab *tab, int nr, const char *name, struct arg *p, int status)
+{
+	struct syscall *call = NULL;
+	
+	if (tab->size <= nr)
+		if (!resize_tab(tab, nr + 100))
+			return 1;
+	
+	if (name)
+	{
+		call = malloc(sizeof(*call));
+		if (!call)
+			return 1;
+		
+		bzero(call, sizeof(*call));
+		
+		strcpy(call->name, name);
+		call->args = p;
+		call->status = status;
+	}
+	
+	tab->table[nr] = call;
+	
+	if (tab->maxused < nr)
+		tab->maxused = nr;
+	
+	return 0;
+}
+
+static void
+add_arg(struct arg **head, struct arg *t)
+{
+	while (*head)
+		head = &((*head)->next);
+	
+	t->next = NULL;
+	*head = t;
+}
+
+static struct arg *
+make_arg(int type, const char *s)
+{
+	struct arg *l = malloc(sizeof(*l));
+	
+	if (l)
+	{
+		bzero(l, sizeof(*l));
+		
+		if (s) strcpy(l->types, s);
+		l->type = type;
+	}
+	
+	return l;
 }

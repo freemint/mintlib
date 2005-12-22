@@ -1,10 +1,16 @@
 /*
+ * $Id$
+ * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
  * 
- * Copyright 2000, 2001, 2002 Frank Naumann <fnaumann@freemint.de>
+ * Copyright 2000-2004 Frank Naumann <fnaumann@freemint.de>
  * All rights reserved.
+ * 
+ * Please send suggestions, patches or bug reports to me or
+ * the MiNT mailing list.
+ * 
  * 
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,30 +26,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
- * 
- * begin:	2000-01-01
- * last change:	2000-03-07
- * 
- * Author:	Frank Naumann <fnaumann@freemint.de>
- * 
- * Please send suggestions, patches or bug reports to me or
- * the MiNT mailing list.
- * 
- * 
- * changes since last version:
- * 
- * known bugs:
- * 
- * todo:
- * 
- * optimizations:
- * 
  */
 
 %{
 
 #include <string.h>
-#include "list.h"
+#include "syscalldefs.h"
 #include "pars.h"
 
 int yylex (void);
@@ -77,10 +65,10 @@ space		[ \t\n]
 
 
 
-"DOS"	{
+"GEMDOS"	{
 	strncpy(yylval.ident, yytext, STRMAX);
 	yylval.ident[STRMAX] = '\0';
-	return _IDENT_DOS;
+	return _IDENT_GEMDOS;
 }
 
 "BIOS"	{
@@ -93,18 +81,6 @@ space		[ \t\n]
 	strncpy(yylval.ident, yytext, STRMAX);
 	yylval.ident[STRMAX] = '\0';
 	return _IDENT_XBIOS;
-}
-
-"NULL"	{
-	strncpy(yylval.ident, yytext, STRMAX);
-	yylval.ident[STRMAX] = '\0';
-	return _IDENT_NULL;
-}
-
-"RESERVED"	{
-	strncpy(yylval.ident, yytext, STRMAX);
-	yylval.ident[STRMAX] = '\0';
-	return _IDENT_RESERVED;
 }
 
 "MAX"	{
@@ -177,6 +153,30 @@ space		[ \t\n]
 	strncpy(yylval.ident, yytext, STRMAX);
 	yylval.ident[STRMAX] = '\0';
 	return _IDENT_ULONG;
+}
+
+"undefined"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_UNDEFINED;
+}
+
+"unsupported"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_UNSUPPORTED;
+}
+
+"unimplemented"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_UNIMPLEMENTED;
+}
+
+"passthrough"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_PASSTHROUGH;
 }
 
 {nonzerodigit}{digit}*	{
