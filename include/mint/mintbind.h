@@ -487,10 +487,10 @@ __extension__								\
 		(int)trap_1_ww(0x143, (short)(id))
 #define Psetegid(id)						\
 		(int)trap_1_ww(0x144, (short)(id))
-#define Psetauid(id)						\
-		(int)trap_1_ww(0x145, (short)(id))
 #define Pgetauid()						\
-		(int)trap_1_w(0x146)
+		(int)trap_1_w(0x145)
+#define Psetauid(id)						\
+		(int)trap_1_ww(0x146, (short)(id))
 #define Pgetgroups(gidsetlen, gidset)				\
 		trap_1_wwl(0x147, (short)(gidsetlen), (long)(gidset))
 #define Psetgroups(gidsetlen, gidset)				\
@@ -601,7 +601,7 @@ __extension__								\
 		trap_1_wlllll(0x17b,(long)(msqid),(long)(msgp),(long)(msgsz),(long)(msgtyp),(long)(msgflg))
 /* 0x17c */
 #define Maccess(addr,size,mode) \
-		trap_1_wllw (0x141, (long)(addr), (long)(size), (short)(mode))
+		trap_1_wllw (0x17d, (long)(addr), (long)(size), (short)(mode))
 /* 0x17e */
 /* 0x17f */
 #define Fchown16(name, uid, gid, follow_links) \
