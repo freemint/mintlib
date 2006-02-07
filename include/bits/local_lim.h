@@ -15,7 +15,7 @@
 #define CHILD_MAX 999
 #define OPEN_MAX 32
 #define LINK_MAX 32767
-#define MAX_CANON 64		/* Non conforming, should be 256.  */
+#define MAX_CANON 256
 
 /* For SVR3, this is 14.  For SVR4, it is 255, at least on ufs
    file systems, even though the System V limits.h incorrectly
@@ -23,7 +23,7 @@
    is harmless (it is a maximum).  */
 #define NAME_MAX 255
 
-#define PATH_MAX 128		/* Non-conforming, should be 1024.  */
+#define PATH_MAX 1024
 
 /* The gcc header depends on the macro __GNU_LIBRARY__ which is 
    not set for the MiNTLib.  */
