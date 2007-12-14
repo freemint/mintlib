@@ -35,10 +35,15 @@ fflush (stream)
       return lossage ? EOF : 0;
     }
 
-  if (!__validfp (stream) || !stream->__mode.__write)
+  if (!__validfp (stream))
     {
       __set_errno (EINVAL);
       return EOF;
+    }
+
+  if (stream->__mode.__read && !stream->__mode.__write)
+    {
+      return 0; /* no error on read only file */
     }
 
   return __flshfp (stream, EOF);
