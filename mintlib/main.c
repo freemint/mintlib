@@ -19,6 +19,7 @@
 #include <mint/ssystem.h>
 #include <mint/sysvars.h>
 #include <sys/param.h>
+#include <sys/stat.h>
 
 #include "lib.h"
 
@@ -32,7 +33,41 @@ extern int main (int, char **, char **);
 /* in defmode.c or defined by user */
 extern __io_mode __default_mode__;
 
-void __libc_main (long, char **, char **);
+/* Initialize a stream with the correct text or binary mode.  */
+static void
+init_stream_mode(FILE* stream)
+{
+	int fd;
+	struct stat st;
+	int result;
+	
+	/* By default, the standard streams use binary mode.
+	 * This is especially important for the pipes and the console.
+	 */
+	
+	__set_binmode(stream, 1);
+	
+	fd = fileno(stream);
+	if (fd < 0)
+		return;
+		
+	if (!__mint && isatty(fd))
+	{
+		/* The current implementation of the TOS console needs textmode.  */
+		__set_binmode(stream, 0);
+		return;
+	}
+	
+	result = fstat(fd, &st);
+	if (result < 0)
+		return;
+		
+	/* If the standard stream is redirected to a regular file,
+	 * use the mode requested by the user via the UNIXMODE variable.
+	 */
+	if (S_ISREG(st.st_mode))
+		__set_binmode(stream, __default_mode__.__binary);
+}
 
 void
 __libc_main (long _argc, char **_argv, char **_envp)
@@ -164,20 +199,16 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	setvbuf (stdin, NULL, _IOFBF, 0);
 	setvbuf (stdout, NULL, _IOLBF, 0);
 	setvbuf (stderr, NULL, _IONBF, 0);
-
-	/* Flag device streams.  */
-	if (isatty (0)) {
-		if (__mint) stdin->__mode.__binary = 1;
-	}
-	if (isatty (1)) {
-		if (__mint) stdout->__mode.__binary = 1;
-	} else {
+	
+	if (!isatty (1)) {
 		/* If redirected, make stdout fully buffered.  */
 		setvbuf (stdout, NULL, _IOFBF, 0);
 	}
-	if (isatty (2)) {
-		if (__mint) stderr->__mode.__binary = 1;
-	}
+	
+	/* Set the standard streams with the the correct text or binary mode.  */
+	init_stream_mode(stdin);
+	init_stream_mode(stdout);
+	init_stream_mode(stderr);
 
 #if 0
 /* used in limits.h, stdio.h */
