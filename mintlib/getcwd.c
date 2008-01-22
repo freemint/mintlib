@@ -24,20 +24,29 @@ This routine is in the public domain.
 char *
 __getcwd (char *buf, size_t size)
 {
-	const int len = (size > 0 ? size : PATH_MAX) + 16;
-	char _path[len]; /* XXX non ANSI */
-	char *path;
+	int len;
+	char *path, *_path;
 	char drv;
 	int buf_malloced = 0;
 	int r;
+
+	len = (size > 0 ? size : PATH_MAX) + 16;
+	_path = malloc(len);
+	if (!_path) {
+		__set_errno(ENOMEM);
+		return NULL;
+	}
 
 	if (!buf) {
 		if (size == 0)
 			size = PATH_MAX;
 		
 		buf = malloc (size);
-		if (!buf)
+		if (!buf) {
+			free(_path);
+			__set_errno(ENOMEM);
 			return NULL;
+		}
 		
 		buf_malloced = 1;
 	}
@@ -50,6 +59,7 @@ __getcwd (char *buf, size_t size)
 
 	r = (int) Dgetcwd(path, 0, len - 2);
 	if (r != 0 && r != -ENOSYS) {
+		free(_path);
 		if (buf_malloced)
 			free(buf);
 		__set_errno (-r);
@@ -64,12 +74,25 @@ __getcwd (char *buf, size_t size)
 			path[0] = '\\';
 			path[1] = '\0';
 		}
-		_dos2unx(path, buf, size);
+		r = _dos2unx(path, buf, size);
 	}
-	else
+	else {
 		/* convert DOS filename to unix */
-		_dos2unx(_path, buf, size);
+		r = _dos2unx(_path, buf, size);
+	}
+
+	/* dos2unx failed, probably ENAMETOOLONG, so abort now */
+	if (r == -1) {
+		const int saved_errno = errno;
+		free(_path);
+		if (buf_malloced)
+			free(buf);
+		__set_errno(saved_errno);
+		return NULL;
+	}
 	
+	free(_path);
+
 	if (buf_malloced) {
 		size_t len = strlen (buf) + 1;
 		void *newptr;

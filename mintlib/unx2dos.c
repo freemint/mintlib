@@ -1,5 +1,6 @@
 
 #include <ctype.h>
+#include <errno.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,11 +12,15 @@
 
 /*
  * returns 0 for ordinary files, 1 for special files (like /dev/tty)
+ *
+ * or returns -1 on error, such as ENAMETOOLONG
  */
 
 int
 _unx2dos(const char *unx, char *dos, size_t len)
 {
+	register int unx_length = strlen(unx);
+	register int count = 0;
 	const char *u;
 	char *d, c;
 
@@ -76,6 +81,7 @@ _unx2dos(const char *unx, char *dos, size_t len)
 	}
 
 	while( (c = *u++) != 0 ) {
+		count++;
 		if (c == '/')
 			c = '\\';
 #if 0
@@ -91,8 +97,14 @@ _unx2dos(const char *unx, char *dos, size_t len)
 #endif
 		*d++ = c;
 		len--;
-		if (len == 0)
+		if (len == 0) {
+			if (count < unx_length) {
+				__set_errno(ENAMETOOLONG);
+				*d = 0;
+				return -1;
+			}
 			break;
+		}
 	}
 	*d = 0;
 	return 0;
@@ -101,6 +113,8 @@ _unx2dos(const char *unx, char *dos, size_t len)
 int
 _dos2unx(const char *dos, char *unx, size_t len)
 {
+	register int dos_length = strlen(dos);
+	register int count = 0;
 	register char c;
 
 	len--;			/* for terminating NUL */
@@ -133,14 +147,21 @@ _dos2unx(const char *dos, char *unx, size_t len)
 	/* convert slashes
 	 */
 	while ( (c = *dos++) != 0) {
+		count++;
 		if (c == '\\')
 			c = '/';
 		else if (__mint < 7)
 			c = tolower(c);
 		*unx++ = c;
 		len--;
-		if (len == 0)
+		if (len == 0) {
+			if (count < dos_length) {
+				__set_errno(ENAMETOOLONG);
+				*unx = 0;
+				return -1;
+			}
 			break;
+		}
 	}
 	*unx = 0;
 	return 0;
