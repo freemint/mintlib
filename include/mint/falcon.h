@@ -146,29 +146,81 @@ __extension__								\
  * Video
  */
 
-/* Video mode codes */
+/* Bitmasks for Vsetmode() */
+#define BPS1			0x00
+#define BPS2			0x01
+#define BPS4			0x02
+#define BPS8			0x03
+#define BPS16			0x04
 
-#define	VERTFLAG	0x100	/* double-line on VGA, interlace on ST/TV */
-#define	STMODES		0x080	/* ST compatible */
-#define	OVERSCAN	0x040	/* Multiply X&Y rez by 1.2, ignored on VGA */
-#define	PAL		0x020	/* PAL if set, else NTSC */
-#define	VGA		0x010	/* VGA if set, else TV mode */
-#define	COL80		0x008	/* 80 column if set, else 40 column */
+#define COL80			0x08	/* 80 column if set, else 40 column */
+#define COL40			0x00
+
+#define VGA				0x10	/* VGA if set, else TV mode */
+#define TV				0x00
+
+#define PAL				0x20	/* PAL if set, else NTSC */
+#define NTSC			0x00
+
+#define OVERSCAN		0x40	/* Multiply X&Y rez by 1.2, ignored on VGA */
+
+#define STMODES			0x80	/* ST compatible */
+
+#define VERTFLAG		0x100	/* double-line on VGA, interlace on ST/TV */
+
+#define VM_INQUIRE		-1
+
 #define	NUMCOLS		7	/* Mask for number of bits per pixel */
-#define	BPS16		4
-#define	BPS8		3
-#define	BPS4		2
-#define	BPS2		1
-#define	BPS1		0
 
 /* VgetMonitor() return values */
 enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
+
+/* Values returned by VgetMonitor() */
+#define MON_MONO		0
+#define MON_COLOR		1
+#define MON_VGA			2
+#define MON_TV			3
 
 /* VsetSync flags - 0=internal, 1=external */
 
 #define	VID_CLOCK	1
 #define	VID_VSYNC	2
 #define	VID_HSYNC	4
+
+/* VsetSync() params */
+#define VCLK_EXTERNAL	0
+#define VCLK_EXTVSYNC	1
+#define VCLK_EXTHSYNC	2
+
+#define OVERLAY_ON		1
+#define OVERLAY_OFF		0
+
+/* Bitmasks for Dsp_RemoveInterrupts() */
+#define RTS_OFF			0x01
+#define RTR_OFF			0x02
+
+/* Dsp_Hf0() params */
+#define HF_CLEAR		0
+#define HF_SET			1
+#define HF_INQUIRE		-1
+
+/* Dsp_Hstat() bits */
+#define ICR_RXDF		0
+#define ICR_TXDE		1
+#define ICR_TRDY		2
+#define ICR_HF2			3
+#define ICR_HF3			4
+#define ICR_DMA			6
+#define ICR_HREQ		7
+
+/* Dsp_SetVectors() params */
+#define DSPSEND_NOTHING	0x00000000
+#define DSPSEND_ZERO	0xff000000
+
+/* Dsp_MultBlocks() params */
+#define BLOCK_LONG 0
+#define BLOCK_WORD 1
+#define BLOCK_UBYTE 2
 
 #define VsetScreen(lscrn,pscrn,rez,mode)					\
 	(void)trap_14_wllww((short)5,(long)(lscrn),(long)(pscrn),	\
@@ -199,13 +251,11 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 
 /* _SND cookie values */
 
-#define SND_PSG		0x01	/* Yamaha PSG */
-#define	SND_8BIT	0x02	/* 8 bit DMA stereo */
-#define	SND_16BIT	0x04	/* 16 bit CODEC */
-#define	SND_DSP		0x08	/* DSP */
-#define	SND_MATRIX	0x10	/* Connection Matrix */
-
-/* XXX Docs say Falcon shows 0x3f. What does bit 0x20 mean ??? */
+#define SND_PSG		0x01	/* GI Sound Chip (PSG) */
+#define	SND_8BIT	0x02	/* Stereo 8-bit Playback */
+#define	SND_DMAREC	0x04	/* DMA Record (w/XBIOS) */
+#define	SND_16BIT	0x08	/* 16-bit CODEC */
+#define	SND_DSP		0x10	/* DSP */
 
 /*
  * Sound data memory layout - samples are all signed values
@@ -339,6 +389,50 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define	SS_RTCLIP	0x10	/* Right channel is clipping */
 #define	SS_LTCLIP	0x20	/* Left channel is clipping */
 
+#define SS_ERROR	0xf
+
+
+/* Soundcmd() params */
+
+#define LEFT_MIC		0x00
+#define LEFT_PSG		0x02
+#define RIGHT_MIC		0x00
+#define RIGHT_PSG		0x01
+
+#define SND_INQUIRE		-1
+
+/* Value returned by Locksnd() */
+#define SNDLOCKED		-129
+
+/* Value returned by Unlocksnd() */
+#define SNDNOTLOCK		-128
+
+/* Setmode() modes */
+#define MODE_STEREO8	0
+#define MODE_STEREO16	1
+#define MODE_MONO		2
+
+/* Buffoper() modes */
+#define PLAY_ENABLE		0x01
+#define PLAY_REPEAT		0x02
+#define RECORD_ENABLE	0x04
+#define RECORD_REPEAT	0x08
+
+/* Dsptristate() params */
+#define DSP_TRISTATE	0
+#define DSP_ENABLE		1
+
+#define HANDSHAKE		0
+#define NO_SHAKE		1
+
+/* Structure used by Dsp_MultBlocks() */
+typedef struct
+{
+	short  blocktype;
+	long  blocksize;
+	void* blockaddr;
+} _DSPBLOCK;
+
 /* Structure used by Buffptr */
 
 typedef struct SndBufPtr {
@@ -347,7 +441,6 @@ typedef struct SndBufPtr {
 	long reserve1;
 	long reserve2;
 } SndBufPtr;
-
 
 #define Locksnd()							\
 	(long)trap_14_w((short)128)

@@ -52,11 +52,12 @@ struct __post_mortem_dump {
 			/* do a jmp 0x24L(a6) at end to go to system reset */
 
 /* mem */
-#define phystop		(((unsigned long *) 0x42eL)) /* physical top of ram */
+#define phystop		(((unsigned long *) 0x42eL)) /* physical top of st ram */
 #define _membot		(((unsigned long *) 0x432L)) /* bottom of avail     */
 #define _memtop		(((unsigned long *) 0x436L)) /* top    of avail     */
 #define MEMVAL2_MAGIC	0x237698AAL /* after suc. coldstart && memvalid     */
-#define memval2		(((unsigned long *) 0x43aL)) 
+#define memval2		(((unsigned long *) 0x43aL))
+#define ramtop		(((unsigned long *) 0x5a4L)) /* physical top of tt ram */
 
 /* floppy */
 #define flock		(((short *) 0x43eL)) /* lock usage of DMA   chip */
