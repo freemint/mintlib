@@ -79,11 +79,6 @@
 #define isspace(c) ((c) == ' '||(c) == '\t')
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
-#define MINFREE	(8L * 1024L)		/* free at least this much mem */
-					/* on top */
-#define MINKEEP (24L * 1024L)		/* keep at least this much mem */
-
-
 static long parseargs(BASEPAGE *);
 
 /*
@@ -197,6 +192,8 @@ _crtinit(void)
 
 notenough:
 	Cconws("Fatal error: insufficient memory\r\n");
+	Cconws("Hint: either decrease stack size using 'stack' command (not recomended)\r\n" \
+		   "      or increase TPA_INITIALMEM value in mint.cnf.\r\n");
 	Pterm(-1);
 }
 

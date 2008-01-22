@@ -63,8 +63,10 @@ skip0:	movl	a1@(16), __MBASE__
 __startprg:
 	movel	sp@(4), a0	| get basepage
 	movel	a0, Base	| save it
-	movel	a0@(4), d0	| get _base->p_hitpa
-	bclr	#0, d0		| round off
+	movel	a0@(0x18), d0	| get address of BSS segment
+	addl	a0@(0x1c), d0	| add length of BSS segment
+	addl	#1024, d0	| add length of early stack
+	andb	#0b11111100, d0	| align on long boundary
 	movel	d0, sp		| set stack (temporarily)
 	jmp	__crtinit	| in crtinit.c
 
