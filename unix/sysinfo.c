@@ -403,7 +403,8 @@ si_isalist (buf, bufsize)
 #define _PLATFORM_FALCON 3
 #define _PLATFORM_MILAN 4
 #define _PLATFORM_HADES 5
-#define _PLATFORM_CLONE 6
+#define _PLATFORM_ARANYM 6
+#define _PLATFORM_CLONE 7
 
 static char* platforms[] = {
   "atarist",
@@ -412,17 +413,20 @@ static char* platforms[] = {
   "falcon",
   "milan",
   "hades",
+  "aranym",
   "atariclone",
 };
 
 #define _HW_PROVIDER_ATARI 0
 #define _HW_PROVIDER_MILAN 1
 #define _HW_PROVIDER_HADES 2
-#define _HW_PROVIDER_UNKNOWN 3
+#define _HW_PROVIDER_ARANYM 3
+#define _HW_PROVIDER_UNKNOWN 4
 static char* hw_providers[] = {
   "atari",
   "milan",
   "hades",
+  "aranym",
   "unknown"
 };
 
@@ -470,6 +474,10 @@ si_platform (buf, bufsize)
         case 4:
           platform = platforms[_PLATFORM_MILAN];
           hw_provider = hw_providers[_HW_PROVIDER_MILAN];
+          break;
+        case 5:
+          platform = platforms[_PLATFORM_ARANYM];
+          hw_provider = hw_providers[_HW_PROVIDER_ARANYM];
           break;
         default:
           platform = platforms[_PLATFORM_CLONE];
