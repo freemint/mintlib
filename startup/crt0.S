@@ -6,6 +6,7 @@
 	.globl	__base		| BASEPAGE *, declared in globals.c
 	.globl	__heapbase	| void *
 	.globl	__stksize	| long, declared by user or in stksiz.c
+	.globl  _main		| for references
 
 |
 | externs to pull ident strings of all used libraries into the
