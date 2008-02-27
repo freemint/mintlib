@@ -5,12 +5,14 @@
 MISCFILES = MISCFILES \
 	\
 	basepage.h \
+	cdromio.h \
 	cookie.h \
 	dcntl.h \
 	errno.h \
 	falcon.h \
 	iflink.h \
 	linea.h \
+	metados.h \
 	mintbind.h \
 	mouse.h \
 	nfs.h \
