@@ -741,7 +741,7 @@ __gethostbyaddr (const char *addr, int len, int type)
 				      ((unsigned)addr[2] & 0xff),
 				      ((unsigned)addr[1] & 0xff),
 				      ((unsigned)addr[0] & 0xff));
-			n = res_query(qbuf, C_IN, T_PTR, (char *)&buf,
+			n = res_query(qbuf, C_IN, T_PTR, (u_char *)&buf,
 				      sizeof(buf));
 			if (n < 0) {
 #ifdef DEBUG

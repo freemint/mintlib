@@ -578,7 +578,7 @@ _des_crypt (char *buf, unsigned len, struct desparams *desp)
   out = (unsigned char *) buf;
   oiv = iv = (unsigned char *) desp->des_ivec;
 
-  des_set_key (desp->des_key, schedule);
+  des_set_key ((char*)desp->des_key, schedule);
 
   tin0 = tin1 = 0;		/* For GCC */
   if (desp->des_dir == ENCRYPT)

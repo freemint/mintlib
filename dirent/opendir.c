@@ -41,7 +41,7 @@ __opendir(const char *uname)
 	d = malloc(sizeof(DIR));
 	if (!d) {
 		__set_errno (ENOMEM);
-		return d;
+		return NULL;
 	}
 
 	if (!__libc_unix_names)
@@ -55,9 +55,9 @@ __opendir(const char *uname)
 		if ( (r & 0xff000000L) == 0xff000000L ) {
 			if ((r == -ENOTDIR) && (_enoent(name)))
 				r = -ENOENT;
-			__set_errno (-r);
 			free(d);
-			return 0;
+			__set_errno (-r);
+			return NULL;
 		}
 		else {
 			d->handle = r;

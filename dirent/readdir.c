@@ -19,7 +19,7 @@
 
 
 /* Important note: under Metados, some file systems can have opendir/readdir/
- * closdir, so we must not have a status variable for these ones.
+ * closedir, so we must not have a status variable for these ones.
  * Instead, check the directory struct if there was an opendir call.
  */
 
