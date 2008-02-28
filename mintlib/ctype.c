@@ -20,7 +20,7 @@
 		/* some code uses these as function pointers --  i   */
 		/* have seen code that does.			     */
 
-static int _myctype[UCHAR_MAX + 1] =
+static unsigned int _myctype[UCHAR_MAX + 1] =
 	{
 	0,						/* EOF */
 	_CTc, _CTc, _CTc, _CTc,				/* 0x00..0x03 */

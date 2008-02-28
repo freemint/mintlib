@@ -35,8 +35,6 @@ __sys_fstat (short fd, struct stat *st, int exact)
 
 			r = Fcntl (fd, &xattr, FSTAT);
 			if (r == 0) {
-				unsigned short *ptr;
-
 				__bzero (st, sizeof (*st));
 
 				st->st_dev = (dev_t) xattr.st_dev;
@@ -48,12 +46,13 @@ __sys_fstat (short fd, struct stat *st, int exact)
 				st->st_rdev = (dev_t) xattr.st_rdev;
 
 				if (exact) {
-					ptr = (unsigned short *) &xattr.st_mtime;
-					st->st_mtime = __unixtime (ptr[0], ptr[1]);
-					ptr = (unsigned short *) &xattr.st_atime;
-					st->st_atime = __unixtime (ptr[0], ptr[1]);
-					ptr = (unsigned short *) &xattr.st_ctime;
-					st->st_ctime = __unixtime (ptr[0], ptr[1]);
+					union { unsigned short s[2]; unsigned long l; } data;
+					data.l = xattr.st_mtime;
+					st->st_mtime = __unixtime (data.s[0], data.s[1]);
+					data.l = xattr.st_atime;
+					st->st_atime = __unixtime (data.s[0], data.s[1]);
+					data.l = xattr.st_ctime;
+					st->st_ctime = __unixtime (data.s[0], data.s[1]);
 				}
 
 				st->st_size = (off_t) xattr.st_size;
