@@ -1,4 +1,4 @@
-#include "lib.h"
+#include "stksiz.h"
 
 /* With GCC 4, zero initialised data ends up in the BSS. We don't want
  * that to happen for _stksiz so we declare it to MINKEEP which is what

@@ -153,10 +153,4 @@ int __do_lock(int fd, int cmd, long size, int whence);
 
 int __do_chown16 (const char *_name, uid_t uid, gid_t gid, int follow_links);
 
-
-/* definitions needed in mintlib/crtinit.c and mintlib/stksize.c */
-
-#define MINFREE	(8L * 1024L)		/* free at least this much mem on top */
-#define MINKEEP (64L * 1024L)		/* keep at least this much mem on stack */
-
 #endif /* _LIB_H */

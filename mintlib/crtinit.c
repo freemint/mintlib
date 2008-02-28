@@ -74,6 +74,7 @@
 #include <support.h>
 #include <string.h>
 #include "lib.h"
+#include "stksiz.h"
 
 
 #define isspace(c) ((c) == ' '||(c) == '\t')
