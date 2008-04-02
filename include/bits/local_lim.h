@@ -16,6 +16,7 @@
 #define OPEN_MAX 32
 #define LINK_MAX 32767
 #define MAX_CANON 256
+#define PIPE_BUF 1024
 
 /* For SVR3, this is 14.  For SVR4, it is 255, at least on ufs
    file systems, even though the System V limits.h incorrectly
