@@ -907,7 +907,7 @@ __setkey_r(__key, __data)
 {
   int i,j;
   unsigned char c;
-  unsigned char ktab[8];
+  char ktab[8];
 
   _ufc_setup_salt_r("..", __data); /* be sure we're initialized */
 
