@@ -67,6 +67,9 @@ fseek (stream, offset, whence)
       __set_errno (EINVAL);
       return EOF;
 
+    case SEEK_SET:
+      break;
+
     case SEEK_END:
       /* We don't know where the end of the file is,
 	 so seek to the position in the file the user asked
@@ -91,51 +94,9 @@ fseek (stream, offset, whence)
 	     relative to the end of the file.  */
 	  o = pos;
 	}
-
-      /* Fall through to try an absolute seek.  */
-
-    case SEEK_SET:
-      /* Make O be relative to the buffer.  */
-      o -= stream->__target;
-      /* Make O be relative to the current position in the buffer.  */
-      o -= stream->__bufp - stream->__buffer;
-
-      /* Fall through to see if we can do it by
-	 moving the pointer around in the buffer.  */
+      break;
 
     case SEEK_CUR:
-      /* If the offset is small enough, we can just
-	 move the pointer around in the buffer.  */
-
-#if 0	/* Why did I think this would ever work???  */
-      if (stream->__put_limit > stream->__buffer)
-	{
-	  /* We are writing.  */
-	  if (stream->__bufp + o >= stream->__buffer &&
-	      stream->__put_limit > stream->__bufp + o &&
-	      stream->__get_limit > stream->__bufp + o)
-	    {
-	      /* We have read all the data we will change soon.
-		 We can just move the pointer around.  */
-	      stream->__bufp += o;
-	      return 0;
-	    }
-	  else
-	    {
-	      /* Flush the buffer.  */
-	      if (__flshfp(stream, EOF) == EOF)
-		return EOF;
-	    }
-	} else
-#endif
-      if (o < 0 ?
-	  (-o <= stream->__bufp - stream->__buffer) :
-	  (o <= stream->__get_limit - stream->__bufp))
-	{
-	  stream->__bufp += o;
-	  return 0;
-	}
-
       /* Turn it into an absolute seek.  */
       o += stream->__bufp - stream->__buffer;
       o += stream->__target;
