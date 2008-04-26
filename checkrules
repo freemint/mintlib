@@ -18,8 +18,7 @@ type=
 cflags=
 
 CRT0 = $(top_srcdir)/startup/crt0.o
-libs = $(libs-$(@F)) $(top_srcdir)/lib$(type)/libsocket.a \
-$(top_srcdir)/lib$(type)/libc.a
+libs = $(libs-$(@F)) $(top_srcdir)/lib$(type)/libc.a
 LIBS = -lgcc $(LIBS-$(@F)) $(libs) -lgcc
 
 TESTPRGS = $(addprefix test-, $(TESTS))

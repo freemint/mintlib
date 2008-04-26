@@ -3,3 +3,4 @@ for MiNT.  It is based on the libsocket that was formerly included in
 the MiNTNet package, which was originally written by Kay Roemer and then
 later enhanced by Torsten Lang.
 
+This is now included in libc and libsocket is deprecated.

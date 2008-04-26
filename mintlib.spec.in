@@ -571,29 +571,24 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 %{_prefix}%{crossprefix}/lib/libc.a
 %{_prefix}%{crossprefix}/lib/libiio.a
 %{_prefix}%{crossprefix}/lib/librpcsvc.a
-%{_prefix}%{crossprefix}/lib/libsocket.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libc020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libsocket.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libsocket020.a
 
 %files debug
 %defattr(-,root,root)
 %{_prefix}%{crossprefix}/lib/libc_g.a
 %{_prefix}%{crossprefix}/lib/libiio_g.a
 %{_prefix}%{crossprefix}/lib/librpcsvc_g.a
-%{_prefix}%{crossprefix}/lib/libsocket_g.a
 
 %files profile
 %defattr(-,root,root)
 %{_prefix}%{crossprefix}/lib/libc_p.a
 %{_prefix}%{crossprefix}/lib/libiio_p.a
 %{_prefix}%{crossprefix}/lib/librpcsvc_p.a
-%{_prefix}%{crossprefix}/lib/libsocket_p.a
 
 
 %changelog

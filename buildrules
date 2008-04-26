@@ -18,10 +18,9 @@ endif
 
 libc := libc$(qualifier).a
 libiio := libiio$(qualifier).a
-libsocket := libsocket$(qualifier).a
 librpcsvc := librpcsvc$(qualifier).a
 
-LIBS := $(libc) $(libiio) $(libsocket) $(librpcsvc)
+LIBS := $(libc) $(libiio) $(librpcsvc)
 
 ifeq ($(USE_WEAK_SYMBOLS), yes)
 ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
@@ -156,7 +155,7 @@ OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
 LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) \
-  $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS)
+  $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS) $(SUNRPCOBJS) $(SOCKETOBJS)
 
 # All modules that reference vfprintf or vfscanf should be listed here.
 LIBIIO_ADDOBJS = err.o error.o doprnt.o dprintf.o fscanf.o scanf.o vscanf.o \
@@ -256,11 +255,6 @@ $(libc): $(LIBCOBJS)
 $(libiio): $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
 	rm -f $@
 	$(AR) cru $@ $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
-	$(RANLIB) $@
-
-$(libsocket): $(SOCKETOBJS) $(SUNRPCOBJS)
-	rm -f $@
-	$(AR) cru $@ $(SOCKETOBJS) $(SUNRPCOBJS)
 	$(RANLIB) $@
 
 $(librpcsvc): $(RPCSVCOBJS)
