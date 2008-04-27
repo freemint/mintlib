@@ -177,7 +177,7 @@ $(top_srcdir)/includepath: $(top_srcdir)/configvars
 	local= ; \
 	installdir=`$(CC) --print-search-dirs | awk '{ print $$2; exit; }'`; \
 	case $$installdir in /usr/local*) local=/local;; esac; \
-	echo "$${installdir}include -I/usr$$local/m68k-atari-mint/include" >$@
+	echo "$${installdir}include -I$${installdir}include-fixed -I/usr$$local/m68k-atari-mint/include" >$@
 	
 include $(top_srcdir)/bindist
 
