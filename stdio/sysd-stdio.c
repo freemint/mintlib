@@ -77,112 +77,87 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
   const long int fd = (long int) cookie;
 #endif
 
-#if 1
+  int save = errno;
+  ssize_t nread = 0;
+  char* bufptr = buf;
+  ssize_t read_bytes;
+  ssize_t i;
+  ssize_t skipped = 0;
+
+  if (n == 0)
+    {
+      return 0;
+    }
+
   if (n == 1)
     {
       /* short cut for reading 1 byte.  */
       /* unbuffered -> no conversion at all.  */
       return __read (fd, buf, 1);
     }
-  else
-    {
-  int save = errno;
-  ssize_t nread = 0;
-  char* bufptr = buf;
 
-  n--;
-  while (nread < n) 
+  /* The last read character may be \r.  */
+  /* In that case, we will need to read an additional character.  */
+  /* So read n-1 characters in order to keep room for that special case.  */
+  read_bytes = __read (fd, bufptr, n-1);
+  if (read_bytes < 0) 
     {
-      ssize_t read_bytes = __read (fd, bufptr, (int)(n - nread));
-      ssize_t i;
-      ssize_t skipped = 0;
-
-      if (read_bytes < 0) 
-        {
-          if (nread == 0)
-            return -1;
-          else
-            break;
-        }
-      else if (read_bytes == 0)
-        break;
-      
-      /* Now squeeze \r\n characters into \n.  */
-      read_bytes--;
-      for (i = 0; i < read_bytes; i++)
-        {
-          if (bufptr[i] == '\r')
-            {
-              if (bufptr[i+1] == '\n')
-                {
-                  skipped++;
-                  continue;
-                }
-            }
-          bufptr[i - skipped] = bufptr[i];
-        }
-      read_bytes -= skipped;
-      bufptr += read_bytes;
-      nread += read_bytes;
-      
-      /* handle last character */
-      if (bufptr[skipped] == '\r')
-        {
-          /* last character is a CR */
-          i = __read (fd, bufptr+skipped+1, 1);
-          if (i == 1)
-            {
-              if (bufptr[skipped+1] != '\n')
-                {
-                  bufptr[0] = bufptr[skipped];
-                  bufptr[1] = bufptr[skipped+1];
-                  
-                  bufptr += 1;
-                  nread += 1;
-                }
-              else
-                  bufptr[0] = '\n';
-            }
-          else
-            bufptr[0] = bufptr[skipped];
-        }
-      else
-          bufptr[0] = bufptr[skipped];
-      
-      bufptr++;
-      nread++;
+      return -1;
     }
-    
-    __set_errno (save);
-    return nread;
-      }
-#else
-/* new implementation from jens */
-
-/* Completly recoded, but I'm not really sure if it is a good idea.
- * But now it is working more compatible to the binary version
- * 'stdio_read' of it, and fgets is now working also on standard
- * TOS systems. fgetc is no longer skipping <CR> keys .... but I'm
- * not sure what may happen in other library functions.
- */
-	
-  int save = errno;
-  ssize_t read_bytes = __read (fd, buf, (int) (n));
-  ssize_t i;
-
-  if (read_bytes < 0)
-    return -1;
-
-  /* Now squeeze '\r' characters out of our buffer.  */
+  
+  if (read_bytes == 0)
+    {
+      __set_errno (save);
+      return 0;
+    }
+  
+  /* Now squeeze \r\n characters into \n.  */
+  read_bytes--;
   for (i = 0; i < read_bytes; i++)
     {
-      if (buf[i] == '\r')
-	buf[i] = '\n';
+      if (bufptr[i] == '\r')
+        {
+          if (bufptr[i+1] == '\n')
+            {
+              skipped++;
+              continue;
+            }
+        }
+      bufptr[i - skipped] = bufptr[i];
     }
-
+  read_bytes -= skipped;
+  bufptr += read_bytes;
+  nread += read_bytes;
+  
+  /* handle last character */
+  if (bufptr[skipped] == '\r')
+    {
+      /* last character is a CR */
+      i = __read (fd, bufptr+skipped+1, 1);
+      if (i == 1)
+        {
+          if (bufptr[skipped+1] != '\n')
+            {
+              bufptr[0] = bufptr[skipped];
+              bufptr[1] = bufptr[skipped+1];
+              
+              bufptr += 1;
+              nread += 1;
+            }
+          else
+              bufptr[0] = '\n';
+        }
+      else
+        bufptr[0] = bufptr[skipped];
+    }
+  else
+    bufptr[0] = bufptr[skipped];
+  
+  bufptr++;
+  nread++;
+    
   __set_errno (save);
-  return read_bytes;
-#endif
+  return nread;
 }
 
 /* Write N bytes from BUF to COOKIE.  */
