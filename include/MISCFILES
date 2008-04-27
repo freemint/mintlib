@@ -92,4 +92,5 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	values.h \
 	vt52.h \
 	wait.h \
+	wchar.h \
 	wordexp.h
