@@ -27,7 +27,7 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.57.5
+Version       : 0.57.6
 Release       : 1
 Group         : Base
 Copyright     : distributable
@@ -592,6 +592,20 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Sat Dec 03 2005 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.57.6 stable release
+
+* Wed Aug 04 2004 Frank Naumann <fnaumann@freemint.de>
+- recompiled against gcc update
+
+* Mon Jul 11 2004 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.57.5 stable release; this include all previous
+  fixes and some enhancements in socket library; look into the
+  ChangeLog for more details.
+
+* Fri Jan 23 2004 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.57.4 stable release
+
 * Fri Mar 14 2003 Frank Naumann <fnaumann@freemint.de>
 - updated to 0.57.3 stable release
 
