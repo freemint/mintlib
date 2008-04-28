@@ -23,7 +23,6 @@
 #include <printf.h>
 #include <stdint.h>
 #ifdef __MINT__
-# define UCHAR_T unsigned char
 # include <limits.h>
 #endif
 #include <stddef.h>
@@ -77,7 +76,7 @@ union printf_arg
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */
 static inline unsigned int
-read_int (const UCHAR_T * *pstr)
+read_int (const char * *pstr)
 {
   unsigned int retval = **pstr - L_('0');
 
@@ -134,11 +133,11 @@ extern printf_function **__printf_function_table;
    remains the highest argument index used.  */
 #ifndef __MINT__
 static inline size_t
-parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
+parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 		size_t *max_ref_arg, mbstate_t *ps)
 #else
 static inline size_t
-parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
+parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 		size_t *max_ref_arg)
 #endif
 {
@@ -160,7 +159,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   /* Test for positional argument.  */
   if (ISDIGIT (*format))
     {
-      const UCHAR_T *begin = format;
+      const char *begin = format;
 
       n = read_int (&format);
 
@@ -219,7 +218,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
     {
       /* The field width is given in an argument.
 	 A negative field width indicates left justification.  */
-      const UCHAR_T *begin = ++format;
+      const char *begin = ++format;
 
       if (ISDIGIT (*format))
 	{
@@ -256,7 +255,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
       if (*format == L_('*'))
 	{
 	  /* The precision is given in an argument.  */
-	  const UCHAR_T *begin = ++format;
+	  const char *begin = ++format;
 
 	  if (ISDIGIT (*format))
 	    {

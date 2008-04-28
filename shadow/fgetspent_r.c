@@ -35,6 +35,7 @@ int __fgetspent_r (FILE* stream, struct spwd* result_buf, char* buffer,
   char* write_crs = buffer;
   size_t bytes_used = 0;
   char** fields[11];
+  void *tmp;
   int numerical_error = 0;
   
   enum parse_state { init = 0, namp = 1, pwdp = 2, lstchg = 3, min = 4, 
@@ -52,13 +53,20 @@ int __fgetspent_r (FILE* stream, struct spwd* result_buf, char* buffer,
   fields[0] = NULL;
   fields[1] = &result_buf->sp_namp;
   fields[2] = &result_buf->sp_pwdp;
-  fields[3] = (char**) &result_buf->sp_lstchg;
-  fields[4] = (char**) &result_buf->sp_min;
-  fields[5] = (char**) &result_buf->sp_max;
-  fields[6] = (char**) &result_buf->sp_warn;
-  fields[7] = (char**) &result_buf->sp_inact;
-  fields[8] = (char**) &result_buf->sp_expire;
-  fields[9] = (char**) &result_buf->sp_flag;
+  tmp = &result_buf->sp_lstchg;
+  fields[3] = (char**) tmp;
+  tmp = &result_buf->sp_min;
+  fields[4] = (char**) tmp;
+  tmp = &result_buf->sp_max;
+  fields[5] = (char**) tmp;
+  tmp = &result_buf->sp_warn;
+  fields[6] = (char**) tmp;
+  tmp = &result_buf->sp_inact;
+  fields[7] = (char**) tmp;
+  tmp = &result_buf->sp_expire;
+  fields[8] = (char**) tmp;
+  tmp = &result_buf->sp_flag;
+  fields[9] = (char**) tmp;
   fields[10] = NULL;
   
   *result = NULL;

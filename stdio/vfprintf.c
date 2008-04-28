@@ -237,13 +237,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   int done;
 
   /* Current character in format string.  */
-  const UCHAR_T *f;
+  const CHAR_T *f;
 
   /* End of leading constant string.  */
-  const UCHAR_T *lead_str_end;
+  const CHAR_T *lead_str_end;
 
   /* Points to next format specifier.  */
-  const UCHAR_T *end_of_spec;
+  const CHAR_T *end_of_spec;
 
   /* Buffer intermediate results.  */
   char work_buffer[1000];
@@ -1200,8 +1200,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 #endif
 
   /* Write the literal text before the first format.  */
-  outstring ((const UCHAR_T *) format,
-	     lead_str_end - (const UCHAR_T *) format);
+  outstring ((const CHAR_T *) format,
+	     lead_str_end - (const CHAR_T *) format);
 
   /* If we only have to print a simple string, return now.  */
   if (*f == L_('\0'))
@@ -1302,7 +1302,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* Get width from argument.  */
     LABEL (width_asterics):
       {
-	const UCHAR_T *tmp;	/* Temporary value.  */
+	const CHAR_T *tmp;	/* Temporary value.  */
 
 	tmp = ++f;
 	if (ISDIGIT (*tmp) && read_int (&tmp) && *tmp == L_('$'))
@@ -1343,7 +1343,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       ++f;
       if (*f == L_('*'))
 	{
-	  const UCHAR_T *tmp;	/* Temporary value.  */
+	  const CHAR_T *tmp;	/* Temporary value.  */
 
 	  tmp = ++f;
 	  if (ISDIGIT (*tmp) && read_int (&tmp) > 0 && *tmp == L_('$'))

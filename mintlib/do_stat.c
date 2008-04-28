@@ -54,14 +54,13 @@ __sys_stat (const char *path, struct stat *st, int lflag, int exact)
 			st->st_rdev = (__dev_t) xattr.st_rdev;
 
 			if (exact) {
-				unsigned short *ptr;
-
-				ptr = (unsigned short *) &xattr.st_mtime;
-				st->st_mtime = __unixtime (ptr[0], ptr[1]);
-				ptr = (unsigned short *) &xattr.st_atime;
-				st->st_atime = __unixtime (ptr[0], ptr[1]);
-				ptr = (unsigned short *) &xattr.st_ctime;
-				st->st_ctime = __unixtime (ptr[0], ptr[1]);
+				union { unsigned short s[2]; unsigned long l; } data;
+				data.l = xattr.st_mtime;
+				st->st_mtime = __unixtime (data.s[0], data.s[1]);
+				data.l = xattr.st_atime;
+				st->st_atime = __unixtime (data.s[0], data.s[1]);
+				data.l = xattr.st_ctime;
+				st->st_ctime = __unixtime (data.s[0], data.s[1]);
 			}
 
 			st->st_size = (__off_t) xattr.st_size;

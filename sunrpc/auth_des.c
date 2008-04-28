@@ -107,7 +107,7 @@ authdes_create (const char *servername, u_int window,
   /* syncaddr   - optional addr of host to sync with */
   /* ckey       - optional conversation key to use */
 {
-  u_char pkey_data[1024];
+  char pkey_data[1024];
   netobj pkey;
 
   if (!getpublickey (servername, pkey_data))
@@ -236,7 +236,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
   des_block cryptbuf[2];
   des_block ivec;
   int status;
-  unsigned int len;
+  int32_t len;
   register int32_t *ixdr;
   struct timeval tval;
 
