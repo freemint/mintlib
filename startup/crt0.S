@@ -1,4 +1,8 @@
 |
+| $Id$
+|
+
+|
 | Initialization code; this is common to both 16 and 32 bit libraries,
 | so be careful!
 |
@@ -6,7 +10,7 @@
 	.globl	__base		| BASEPAGE *, declared in globals.c
 	.globl	__heapbase	| void *
 	.globl	__stksize	| long, declared by user or in stksiz.c
-	.globl  _main		| for references
+	.globl	_main		| for references
 
 |
 | externs to pull ident strings of all used libraries into the
@@ -64,10 +68,8 @@ skip0:	movl	a1@(16), __MBASE__
 __startprg:
 	movel	sp@(4), a0	| get basepage
 	movel	a0, Base	| save it
-	movel	a0@(0x18), d0	| get address of BSS segment
-	addl	a0@(0x1c), d0	| add length of BSS segment
-	addl	#65536, d0	| add length of early stack
-	andb	#0b11111100, d0	| align on long boundary
+	movel	a0@(4), d0	| get _base->p_hitpa
+	bclr	#0, d0		| round off
 	movel	d0, sp		| set stack (temporarily)
 	jmp	__crtinit	| in crtinit.c
 
