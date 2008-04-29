@@ -1,3 +1,338 @@
+2008-04-29 Tuesday 08:01  Frank Naumann <fnaumann@freemint.de>
+
+	* configvars, mintlib.spec, mintlib.spec.in:
+
+	Bumped version to 0.58.0 for new release.
+	
+2008-04-29 Tuesday 07:27  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/system.c:
+
+	GCC 4.x warning fix contributed by Vincent Riviere.
+	
+2008-04-29 Tuesday 07:26  Frank Naumann <fnaumann@freemint.de>
+
+	* socket/mintsock.h:
+
+	GCC 4.x warning fix contributed by Alan Hourihane.
+	
+2008-04-28 Monday 07:26  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: SRCFILES, ident_dummy_socketlib.c:
+
+	Removed no longer needed dummy Ident_socketlib symbol. The socket library
+	is now integrated into the libc and the symbol is always available.
+	
+2008-04-28 Monday 07:24  Frank Naumann <fnaumann@freemint.de>
+
+	* startup/crt0.S:
+
+	Changed back startup code to the previous stable behaviour. This need
+	further investigation before we change something on the startup code.
+	
+2008-04-28 Monday 07:18  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/do_stat.c, shadow/fgetspent_r.c, shadow/sgetspent_r.c,
+	stdio/printf-parse.h, stdio/vfprintf.c, sunrpc/auth_des.c:
+
+	GCC 4.x warning fixes contributed by Alan Hourihane.
+	
+2008-04-27 Sunday 17:03  Frank Naumann <fnaumann@freemint.de>
+
+	* buildrules:
+
+	Minor buildrules patch to compile with gcc 4.3.0. Contributed by
+	Vincent Riviere.
+	
+2008-04-27 Sunday 11:50  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/sysd-stdio.c:
+
+	gets() patch for TOS contributed by Vincent Riviere.
+	
+2008-04-27 Sunday 11:49  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: MISCFILES, wchar.h:
+
+	Added almost empty wchar.h to ease porting of applications that include
+	this header. Contributed by Alan Hourihane.
+	
+2008-04-27 Sunday 07:13  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib.spec:
+
+	Updated.
+	
+2008-04-26 Saturday 20:33  Frank Naumann <fnaumann@freemint.de>
+
+	* buildrules, checkrules, mintlib.spec, mintlib.spec.in,
+	lib/BINFILES, lib020/BINFILES, lib_g/BINFILES, lib_p/BINFILES,
+	socket/README:
+
+	Integrated libsocket into libc. Contributed by Alan Hourihane.
+	
+2008-04-02 Wednesday 06:45  Frank Naumann <fnaumann@freemint.de>
+
+	* include/glob.h:
+
+	If _FILE_OFFSET_BITS=64 then the declarations in include/glob.h get
+	changed to export to applications glob64/globfree64 which don't exist in
+	MiNTlib.
+	
+	Contributed by Alan Hourihane.
+	
+2008-04-02 Wednesday 06:44  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/fseek.c:
+
+	There's problems moving the buffer pointer around when using fseek in
+	MiNTlib.
+	
+	I've seen problems with ranlib (and ar) that causes this "fast" path to
+	fail and the patch attached resorts back to the absolute method all the
+	time to avoid these problems.
+	
+	Contributed by Alan Hourihane.
+	
+2008-04-02 Wednesday 06:43  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/local_lim.h:
+
+	PIPE_BUF should be defined in local_lim.h. Contributed by Alan Hourihane.
+	
+2008-04-02 Wednesday 06:42  Frank Naumann <fnaumann@freemint.de>
+
+	* crypt/crypt_util.c:
+
+	Warning fix for crypt_util.c. Contributed by Alan Hourihane.
+	
+2008-02-28 Thursday 18:32  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: ctype.c, do_fstat.c:
+
+	Fix some warnings. Contributed by Alan Hourihane.
+	
+2008-02-28 Thursday 18:30  Frank Naumann <fnaumann@freemint.de>
+
+	* rules:
+
+	Add rm -rf .deps to clean target. Contributed by Miro Kropacek.
+	
+2008-02-28 Thursday 18:29  Frank Naumann <fnaumann@freemint.de>
+
+	* startup/crt0.S:
+
+	Set premilitary stack to 64KB (instead of 1K). Contributed by Miro Kropacek.
+	
+2008-02-28 Thursday 18:26  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: EXTRAFILES, crtinit.c, lib.h, stksiz.c, stksiz.h:
+
+	Moved stacksize macros into separate header file so they are not part
+	of lib.h (that's included by the half of the mintlib). Contributed
+	by Miro Kropacek.
+	
+2008-02-27 Wednesday 12:30  Frank Naumann <fnaumann@freemint.de>
+
+	* crypt/des_impl.c, dirent/opendir.c, dirent/readdir.c,
+	socket/gethostnamadr.c:
+
+	Warning fixes and cleanup contributed by Alan Hourihane.
+	
+2008-02-27 Wednesday 09:45  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: features.h.in, stdio.h:
+
+	Warning fixes if compiling in C99 mode. Patch contributed by Alan Hourihane.
+	
+2008-02-27 Wednesday 09:41  Frank Naumann <fnaumann@freemint.de>
+
+	* startup/crt0.S:
+
+	Add main() to the global list so it's found in static libraries too. Patch
+	contributed by Alan Hourihane.
+	
+2008-02-27 Wednesday 09:35  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/: cdromio.h, metados.h, MISCFILES:
+
+	Added two new header cdromio.h and metados.h as suggested by Patrice Mandin.
+	
+2008-01-24 Thursday 19:06  Gerhard Stoll <Gerhard_Stoll@b.maus.de>
+
+	* unix/sysinfo.c:
+
+	Add ARAnyM to SI_PLATFORM and SI_HW_PROVIDER
+	
+2008-01-22 Tuesday 10:08  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/main.c:
+
+	Patch for pipes in shells - contributed by Vincent Riviere.
+	
+2008-01-22 Tuesday 10:06  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/: getcwd.c, unx2dos.c:
+
+	getcwd() with dynamic allocation - patch contributed by Alan Hourihane.
+	
+2008-01-22 Tuesday 09:55  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/crtinit.c, mintlib/lib.h, mintlib/stksiz.c,
+	startup/crt0.S:
+
+	_stksize set to MINKEEP, explict definition of temp stack size - patch
+	contributed by Miro Kropacek.
+	
+2008-01-22 Tuesday 09:36  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/: falcon.h, ostruct.h, sysvars.h:
+
+	Variables / structures from Atari Compendium - patch contributed by
+	Miro Kropacek.
+	
+2008-01-22 Tuesday 09:34  Frank Naumann <fnaumann@freemint.de>
+
+	* rules:
+
+	Remove also *.BAK and *.bak - patch contributed by Miro Kropacek.
+	
+2007-12-14 Friday 10:41  Frank Naumann <fnaumann@freemint.de>
+
+	* stdio/fflush.c:
+
+	fflush() on a read-only file is returned without any error (ide suggested
+	by Alan Hourihane).
+	
+2007-12-14 Friday 10:40  Frank Naumann <fnaumann@freemint.de>
+
+	* include/: assert.h, setjmp.h:
+
+	Two minor patches contributed by Vincent Riviere.
+	
+2006-02-07 Tuesday 15:56  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/local_lim.h:
+
+	Use conformant values for PATH_MAX, MAX_CANON (needs intensive testing).
+	
+2005-12-22 Thursday 09:37  Frank Naumann <fnaumann@freemint.de>
+
+	* syscall/: Makefile, check.c, check.h, generate.c, generate.h,
+	list.c, list.h, main.c, main.h, pars.y, scan.l, syscalldefs.h,
+	syscallparser.c, syscallparser.h, syscalls.master, traps.c,
+	traps.h:
+
+	Synchronized against freemint parser.
+	
+2005-12-22 Thursday 09:35  Frank Naumann <fnaumann@freemint.de>
+
+	* include/mint/mintbind.h:
+
+	Corrected bindings for Pgetauid/Psetauid/Maccess as recognized by Roger
+	Burrows.
+	
+2005-12-08 Thursday 09:10  Frank Naumann <fnaumann@freemint.de>
+
+	* posix/glob.c:
+
+	Overwrite the __stat macro definition instead stat. Avoid any macro
+	problems.
+	
+2005-12-07 Wednesday 23:44  Standa Opichal <opichals@seznam.cz>
+
+	* posix/glob.c:
+
+	Some gcc do not recognize the '#define stat(x,y) z' from '#define stat z'
+	and therefore causing this file to not compilable because of the
+	last forward function declaration before the #define stat line I have
+	moved it to.
+	
+2005-12-06 Tuesday 19:37  Frank Naumann <fnaumann@freemint.de>
+
+	* mintlib/enoent.c:
+
+	Don't write to const char * path argument, alloc some temporary space
+	and copy the path over if necessary.
+	
+2005-12-06 Tuesday 19:32  Frank Naumann <fnaumann@freemint.de>
+
+	* include/rpc/xdr.h:
+
+	Synchronized with recent glibc.
+	
+2005-12-06 Tuesday 19:27  Frank Naumann <fnaumann@freemint.de>
+
+	* crypt/md5-crypt.c, include/alloca.h, include/argz.h,
+	include/assert.h, include/compiler.h, include/device.h,
+	include/features.h.in, include/ftw.h, include/inttypes.h,
+	include/libgen.h, include/math.h, include/netdb.h,
+	include/printf.h, include/pty.h, include/pwd.h, include/regex.h,
+	include/regexp.h, include/resolv.h, include/rtent.h,
+	include/search.h, include/setjmp.h, include/stdio.h,
+	include/support.h, include/utime.h, include/utmp.h,
+	include/wordexp.h, include/bits/socket.h, include/mint/iflink.h,
+	include/mint/linea.h, include/mint/osbind.h,
+	include/mint/sysvars.h, include/mint/xbra.h, login/getutent.c,
+	login/getutid.c, login/getutline.c, login/logwtmp.c,
+	login/utmpname.c, mintlib/dostime.c, mintlib/gensys,
+	mintlib/globals.c, mintlib/regexp.c, mintlib/spawn.c,
+	mintlib/syscall.c, misc/diraccess.c, misc/getpass.c,
+	misc/getusershell.c, misc/mkstemp.c, misc/mktemp.c, posix/glob.c,
+	posix/regex.c, posix/system.c, posix/wordexp.c, pwdgrp/fgetpwent.c,
+	pwdgrp/fgetpwent_r.c, pwdgrp/getpw.c, pwdgrp/getpwent.c,
+	pwdgrp/getpwent_r.c, pwdgrp/getpwnam.c, pwdgrp/getpwuid.c,
+	pwdgrp/grp.c, shadow/fgetspent.c, shadow/fgetspent_r.c,
+	shadow/getspent.c, shadow/getspent_r.c, shadow/getspnam.c,
+	shadow/sgetspent.c, socket/res_comp.c, socket/sethostent.c,
+	stdio/doprnt.c, stdio/fdopen.c, stdio/fgets.c, stdio/fscanf.c,
+	stdio/getdelim.c, stdio/linewrap.c, stdio/linewrap.h,
+	stdio/printf_size.c, stdio/snprintf.c, stdio/sscanf.c,
+	stdio/tempnam.c, stdio/test-glue.c, stdio/test-popen.c,
+	stdio/test-xbug.c, stdio/tmpfile.c, stdio/tmpnam.c,
+	stdlib/bsearch.c, stdlib/drand48.c, stdlib/drand48_r.c,
+	stdlib/erand48.c, stdlib/exit.c, stdlib/jrand48.c,
+	stdlib/lcong48.c, stdlib/lrand48.c, stdlib/lrand48_r.c,
+	stdlib/mrand48.c, stdlib/mrand48_r.c, stdlib/msort.c,
+	stdlib/nrand48.c, stdlib/random.c, stdlib/seed48.c,
+	stdlib/srand48.c, string/ffsl.c, string/ffss.c, string/strfry.c,
+	string/swab.c, sysvipc/ftok.c, time/mktime.c, time/tz.c,
+	time/tzstruct.h, tz/tzinit.c, unix/open.c, unix/sigaction.c,
+	unix/signal.c:
+
+	Removed lot of obsolete __EXTERN and __PROTO macros. Also removed
+	__THROW on inline functions in the header files.
+	
+2005-12-06 Tuesday 19:22  Frank Naumann <fnaumann@freemint.de>
+
+	* include/bits/math-68881.h:
+
+	Updated to recent glibc version.
+	
+2005-12-06 Tuesday 19:08  Frank Naumann <fnaumann@freemint.de>
+
+	* include/unistd.h, posix/execl.c, posix/execle.c, posix/execlp.c:
+
+	Updated to be standard compliant.
+	
+2005-12-06 Tuesday 19:00  Frank Naumann <fnaumann@freemint.de>
+
+	* include/sys/cdefs.h:
+
+	Synchronized with recent glibc.
+	
+2005-12-06 Tuesday 18:50  Frank Naumann <fnaumann@freemint.de>
+
+	* time/strptime.c:
+
+	Added braces to avoid ambigous if else.
+	
+2005-12-03 Saturday 11:39  Frank Naumann <fnaumann@freemint.de>
+
+	* ChangeLog:
+
+	Updated.
+	
 2005-12-03 Saturday 11:29  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars:
