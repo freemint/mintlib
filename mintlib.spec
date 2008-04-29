@@ -27,14 +27,14 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.57.6
+Version       : 0.58.0
 Release       : 1
 Group         : Base
 Copyright     : distributable
 
 Packager      : Frank Naumann <fnaumann@freemint.de>
 Vendor        : Sparemint
-URL           : http://sparemint.atariforge.net/sparemint/misc/code/mintlib/
+URL           : http://sparemint.org/sparemint/misc/code/mintlib/
 
 %ifarch m68kmint
 BuildRequires : pdksh gawk
@@ -592,6 +592,10 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Tue Apr 29 2008 Frank Naumann <fnaumann@freemint.de>
+- updated to 0.58.0 stable release
+  Please note: the libsocket is now integrated into the libc.
+
 * Sat Dec 03 2005 Frank Naumann <fnaumann@freemint.de>
 - updated to 0.57.6 stable release
 
