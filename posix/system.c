@@ -334,8 +334,16 @@ int system_hack (s)
 
 	retval = spawnvp(P_WAIT, argv[0], argv);
 
-	if (*infile) (void)(Fforce(0,oldin), Fclose(oldin), Fclose(infd));
-	if (*outfile) (void)(Fforce(1,oldout), Fclose(oldout), Fclose(outfd));
+	if (*infile) {
+		(void)Fforce(0,oldin);
+		(void)Fclose(oldin);
+		(void)Fclose(infd);
+	}
+	if (*outfile) {
+		(void)Fforce(1,oldout);
+		(void)Fclose(oldout);
+		(void)Fclose(outfd);
+	}
 	free(argv);
 	_argfree(al);
 	return retval;
