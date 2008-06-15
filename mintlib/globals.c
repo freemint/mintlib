@@ -39,6 +39,8 @@ int __libc_unix_names = 0;
 
 int __has_no_ssystem;
 
+int __scriptable;
+
 BASEPAGE *_base;
 char **environ;
 long __libc_argc = 1;

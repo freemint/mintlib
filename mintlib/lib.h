@@ -32,6 +32,7 @@ extern int __mint;
 extern int __has_no_ssystem;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
+extern int __scriptable;
 
 extern int _pdomain;
 extern char _rootdir;

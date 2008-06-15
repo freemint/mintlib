@@ -84,6 +84,7 @@ __libc_main (long _argc, char **_argv, char **_envp)
 
 	__libc_enable_secure = 1;
 	__libc_unix_names = 0;
+	__scriptable = 0;
 
 	__has_no_ssystem = Ssystem (-1, NULL, NULL);
 	_starttime = get_sysvar (_hz_200);
@@ -119,7 +120,7 @@ __libc_main (long _argc, char **_argv, char **_envp)
      
 	/* initialize UNIXMODE stuff. Note that this library supports only
 	 * a few of the UNIXMODE variables, namely "b" (binary mode default)
-	 * and "r<c>" (default root directory).
+	 * and "r<c>" (default root directory). And "s" for scriptability.
 	 */
 #if 1
  	if (__libc_enable_secure) {
@@ -137,6 +138,8 @@ __libc_main (long _argc, char **_argv, char **_envp)
 				__default_mode__.__binary = 1;
 			else if (*s == 'r' && s[1])
 				_rootdir = *++s;
+			else if (*s == 's')
+				__scriptable = 1;
 			else if (*s == '.' && s[1])
 				s++;	/* ignore */
 			s++;

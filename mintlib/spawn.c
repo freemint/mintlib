@@ -485,9 +485,7 @@ need_more_core:
 		if (rval == -ENOEXEC) {
 			char	*umode;
 
-			 /* try to find UNIXMODE in environment */
-			if ((umode = getenv("UNIXMODE")) != NULL &&
-					strchr(umode, 's') != NULL ) {
+			if (__scriptable) {
 				(void)Mfree(env);
 				return interpret_script(mode, path, _path, _argv, _envp);
 			}
