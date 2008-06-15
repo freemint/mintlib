@@ -436,7 +436,7 @@ const mp_limb_t __tens[] =
 
 const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1] =
 {
-  { TENS_P0_IDX, TENS_P0_SIZE,		4,	     },
+  { TENS_P0_IDX, TENS_P0_SIZE,		4,	   0 },
   { TENS_P1_IDX, TENS_P1_SIZE,		7,	   4 },
   { TENS_P2_IDX, TENS_P2_SIZE,		14,	  10 },
   { TENS_P3_IDX, TENS_P3_SIZE,		27,	  24 },

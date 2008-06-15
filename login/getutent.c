@@ -26,8 +26,7 @@
 /* Local buffer to store the result.  */
 static struct utmp buffer;
 
-extern struct utmp* __getutent_r (struct utmp*, struct utmp**);
-extern struct utmp* __getutent (void);
+extern int __getutent_r (struct utmp *buffer, struct utmp **result);
 
 struct utmp *
 __getutent (void)

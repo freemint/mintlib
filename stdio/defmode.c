@@ -14,4 +14,4 @@
  */
 #include <stdio.h>
 
-__io_mode __default_mode__ = { 0 };
+__io_mode __default_mode__ = { 0, 0, 0, 0, 0, 0, 0 };

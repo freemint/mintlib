@@ -53,7 +53,7 @@ extern int __profile_frequency __P ((void));
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
-struct gmonparam _gmonparam = { GMON_PROF_OFF };
+struct gmonparam _gmonparam = { GMON_PROF_OFF, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0 };
 
 /*
  * See profil(2) where this is described:
