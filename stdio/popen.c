@@ -42,7 +42,7 @@ popen (const char *command, const char *type)
 
 	shell = getenv("SHELL");
 	if (!shell)
-		shell = "sh";
+		shell = "/bin/sh";
 
 	/* get space for the new pipe. If we can't get it then that's that */
 	p = (struct _pipe *) malloc(sizeof(struct _pipe));
