@@ -708,13 +708,32 @@ extern size_t fwrite_unlocked __P ((__const void *__restrict __ptr,
 				    FILE *__restrict __stream));
 #endif
 
-
 /* Seek to a certain position on STREAM.  */
 extern int fseek __P ((FILE *__stream, long int __off, int __whence));
 /* Return the current position of STREAM.  */
 extern long int ftell __P ((FILE *__stream));
 /* Rewind to the beginning of STREAM.  */
 extern void rewind __P ((FILE *__stream));
+
+/* The Single Unix Specification, Version 2, specifies an alternative,
+   more adequate interface for the two functions above which deal with
+   file offset.  `long int' is not the right type.  These definitions
+   are originally defined in the Large File Support API.  */
+
+#if defined __USE_LARGEFILE || defined __USE_XOPEN2K
+# ifndef __USE_FILE_OFFSET64
+/* Seek to a certain position on STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
+/* Return the current position of STREAM.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern __off_t ftello __P ((FILE *__stream));
+# endif
+#endif
 
 /* Get STREAM's position.  */
 extern int fgetpos __P ((FILE *__restrict __stream, fpos_t *__restrict __pos));

@@ -138,3 +138,13 @@ fseek (stream, offset, whence)
      which will move to the target file position before reading or writing.  */
   return 0;
 }
+
+/* Just use fseek for now */
+int
+fseeko (stream, offset, whence)
+     register FILE *stream;
+     off_t offset;
+     int whence;
+{
+  return fseek(stream, (long int)offset, whence);
+}

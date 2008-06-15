@@ -52,3 +52,11 @@ ftell (stream)
 
   return pos;
 }
+
+/* Just use ftell for now */
+off_t
+ftello (stream)
+     FILE *stream;
+{
+  return (off_t)ftell(stream);
+}
