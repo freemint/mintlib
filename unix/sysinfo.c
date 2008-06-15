@@ -221,7 +221,7 @@ si_release (buf, bufsize)
     unsigned long patch_level = 0;
     char betatag[2] = "";
     int gotcha = 0;
-    unsigned long ver = Ssystem (2, 0, 0);
+    long ver = Ssystem (2, 0, 0);
 
     if (ver == -ENOSYS) {
       /* This is actually a bug in Ssystem () because the return code
