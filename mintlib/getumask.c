@@ -16,7 +16,7 @@ mode_t
 __getumask (void)
 {
 	/* The only possible failure for Pumask is ENOSYS.  */
-	mode_t old_umask = Pumask (0);
+	int old_umask = Pumask (0);
 
 	if (old_umask >= 0)
 		(void) Pumask (old_umask);

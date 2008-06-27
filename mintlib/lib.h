@@ -69,7 +69,7 @@ extern long _sigpending;
 
 /* unix/open.c */
 
-extern mode_t __current_umask;
+extern int __current_umask;
 
 /* definitions needed in malloc.c and realloc.c */
 

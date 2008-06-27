@@ -72,7 +72,7 @@ typedef struct bitcmd {
 #define	CMD2_OBITS	0x08
 #define	CMD2_UBITS	0x10
 
-static BITCMD	*addcmd __P((BITCMD *, int, int, int, u_int));
+static BITCMD	*addcmd __P((BITCMD *, int, u_int, int, u_int));
 static void	 compress_mode __P((BITCMD *));
 #ifdef SETMODE_DEBUG
 static void	 dumpmode __P((BITCMD *));
@@ -178,11 +178,12 @@ void *
 setmode(p)
 	const char *p;
 {
-	int perm, who;
+	int perm;
+	unsigned int who;
 	char op, *ep;
 	BITCMD *set, *saveset, *endset;
 	sigset_t sigset, sigoset;
-	mode_t mask;
+	int mask;
 	int equalopdone = 0;	/* pacify gcc */
 	int permXbits, setlen;
 
@@ -350,7 +351,8 @@ apply:		if (!*p)
 static BITCMD *
 addcmd(set, op, who, oparg, mask)
 	BITCMD *set;
-	int oparg, who;
+	int oparg;
+	u_int who;
 	int op;
 	u_int mask;
 {

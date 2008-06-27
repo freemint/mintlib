@@ -26,7 +26,7 @@
  * but adjust the file masks here.
  */
 
-mode_t __current_umask = -1;
+int __current_umask = -1;
 
 /* Try to open the file NAME with FLAGS.  If the OS returns EACCES check
    if we are the super-user and then try to temporarily change the 
