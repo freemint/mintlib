@@ -1033,7 +1033,6 @@ extern char *setstate (char *arg_state) __THROW;
 extern long random (void) __THROW;
 extern void srandom (unsigned int seed) __THROW;
 
-extern void psignal (int, const char *) __THROW;
 extern long tell (int) __THROW;
 
 
