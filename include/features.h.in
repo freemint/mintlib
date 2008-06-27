@@ -63,6 +63,8 @@
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
+   __USE_XOPEN2K        Define XPG6 things.
+   __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
    __USE_BSD		Define 4.3BSD things.
@@ -155,8 +157,10 @@
 # define _XOPEN_SOURCE	500
 # undef	 _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
-# undef  _LARGEFILE64_SOURCE
-# define _LARGEFILE64_SOURCE 1
+# ifndef __MINT__ /* not yet */
+#  undef  _LARGEFILE64_SOURCE
+#  define _LARGEFILE64_SOURCE 1
+# endif
 # undef	 _BSD_SOURCE
 # define _BSD_SOURCE	1
 # undef	 _SVID_SOURCE
