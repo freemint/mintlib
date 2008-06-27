@@ -410,7 +410,7 @@ do_argc:
 	 */
 	if (null_list) {
 		char *s;
-		unsigned long idx;
+		long idx;
 
 		while (*null_list) {
 			s = null_list;

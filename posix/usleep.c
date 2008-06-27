@@ -19,7 +19,7 @@ clock_t _clock (void);
 void
 usleep (unsigned long usec)
 {
-	unsigned long stop;
+	long stop;
 	int r = -ENOSYS;
 
 	if (usec >= 1000)

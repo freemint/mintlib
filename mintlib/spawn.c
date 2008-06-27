@@ -483,8 +483,6 @@ need_more_core:
 	{
 #ifdef HASH_BANG
 		if (rval == -ENOEXEC) {
-			char	*umode;
-
 			if (__scriptable) {
 				(void)Mfree(env);
 				return interpret_script(mode, path, _path, _argv, _envp);

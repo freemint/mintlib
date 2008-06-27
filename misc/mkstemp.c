@@ -38,7 +38,7 @@ mkstemp (char* template)
 {
   size_t len;
   pid_t pid = getpid ();
-  int i0, i1, i2, j0, j1, j2;
+  unsigned int i0, i1, i2, j0, j1, j2;
   int saved_errno;
   
   if (template == NULL)

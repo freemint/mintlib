@@ -29,7 +29,7 @@ tempnam (const char* dir, const char* prefix)
 {
   static char buf[L_tmpnam];
   pid_t pid = getpid ();
-  int i0, i1, i2, j0, j1, j2;
+  unsigned int i0, i1, i2, j0, j1, j2;
   int saved_errno;
   size_t len;
   char* tmpdir = (char*) (dir == NULL || (strlen (dir) > L_tmpnam - 13) ? 

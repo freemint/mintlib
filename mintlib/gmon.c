@@ -79,14 +79,9 @@ __writev (int s, const struct iovec *iov, int niov)
 	int i;
 
 	for (i = 0; i < niov; i++) {
-		if (iov[i].iov_len >= 0) {
-			int r = __write (s, iov[i].iov_base, iov[i].iov_len);
-			if (r < 0) return r;
-			ret += r;
-		} else {
-			__set_errno (EINVAL);
-			return -1;
-		}
+		int r = __write (s, iov[i].iov_base, iov[i].iov_len);
+		if (r < 0) return r;
+		ret += r;
 	}
 	return ret;	
 }

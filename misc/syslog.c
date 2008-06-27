@@ -161,7 +161,7 @@ vsyslog(int pri, const char* fmt, va_list argp)
 			*b++ = c;
 			continue;
 		}
-		if ((unsigned)olderrno > _sys_nerr)
+		if (olderrno > _sys_nerr)
 			(void)sprintf(b, "error %d", olderrno);
 		else
 			strcpy(b, _sys_errlist[olderrno]);
@@ -186,6 +186,8 @@ vsyslog(int pri, const char* fmt, va_list argp)
 	if (!(LogStat & LOG_CONS))
 		return;
 
+	strcat(o, "\r");
+
 	/* output the message to the console */
 #if defined SYSV
 	pid = fork();
@@ -205,7 +207,6 @@ vsyslog(int pri, const char* fmt, va_list argp)
 		alarm(5);
 		fd = open(ctty, O_WRONLY);
 		alarm(0);
-		strcat(o, "\r");
 		o = index(outline, '>') + 1;
 		write(fd, o, c + 1 - (o - outline));
 		close(fd);
