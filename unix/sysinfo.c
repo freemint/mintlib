@@ -297,10 +297,18 @@ si_version (buf, bufsize)
 
 		if (Ssystem(-1, NULL, NULL))
 		{
-			save_stk = (void *) Super (NULL);
-			sysbase = *((long int**) 0x000004f2);
-			tosversion = *sysbase;
-			(void) Super ((void*) save_stk);
+			if (Super(1L) == 0L)
+			{
+				save_stk = (void *) Super (0L);
+				sysbase = *((long int**) 0x000004f2);
+				tosversion = *sysbase;
+				(void) Super ((void*) save_stk);
+			}
+			else
+			{
+				sysbase = *((long int**) 0x000004f2);
+				tosversion = *sysbase;
+			}
 		}
 		else
 		{

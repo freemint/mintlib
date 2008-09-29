@@ -65,9 +65,11 @@ typedef struct
 #define DEV_READY		-1
 #define DEV_BUSY		0
 
-/* Super() modes */
-#define SUP_SET			(void*)0
-#define SUP_INQUIRE		(void*)1
+/* Super() constants */
+#define SUP_SET			0L
+#define SUP_INQUIRE		1L
+#define SUP_USER		0L
+#define SUP_SUPER		-1L
 
 /* Fopen() modes */
 #define S_READ			0x00

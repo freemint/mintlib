@@ -10,18 +10,21 @@ long
 get_sysvar (void *var)
 {
 	if(__has_no_ssystem) {
-		long save_ssp;
 		long ret;
-
-    		save_ssp = (long) Super((void *) 0L);
+		
+		if (Super(1L) == 0L) {
+			long save_ssp = (long) Super((void *) 0L);
 
 		/* note: dont remove volatile, otherwise gcc will reorder these
 		 * statements and we get bombs */
     		ret = *((volatile long *)var);
 
     		(void)Super((void *) save_ssp);
+    	} else {
+    		ret = *((volatile long *)var);
+    	}
 
-    		return ret;
+    	return ret;
 	}
 	else
 		return Ssystem (S_GETLVAL, var, NULL);

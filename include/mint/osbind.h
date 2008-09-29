@@ -936,11 +936,11 @@ __extension__								\
 #define	       Cconout(c)					       \
        (void)trap_1_ww((short)(0x02),(short)(c))
 #define	       Cauxin()						       \
-       (long)trap_1_w((short)(0x03))
+       (short)trap_1_w((short)(0x03))
 #define	       Cauxout(c)					       \
        (void)trap_1_ww((short)(0x04),(short)(c))
 #define	       Cprnout(c)					       \
-       (void)trap_1_ww((short)(0x05),(short)(c))
+       (short)trap_1_ww((short)(0x05),(short)(c))
 #define	       Crawio(data)					       \
        (long)trap_1_ww((short)(0x06),(short)(data))
 #define	       Crawcin()					       \
@@ -948,7 +948,7 @@ __extension__								\
 #define	       Cnecin()						       \
        (long)trap_1_w((short)(0x08))
 #define	       Cconws(s)					       \
-       (void)trap_1_wl((short)(0x09),(long)(s))
+       (short)trap_1_wl((short)(0x09),(long)(s))
 #define	       Cconrs(buf)					       \
        (void)trap_1_wl((short)(0x0A),(long)(buf))
 #define	       Cconis()						       \

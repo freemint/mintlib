@@ -212,9 +212,13 @@ __ioctl (int fd, int cmd, void *arg)
                   *msig |= ((g & (1 << 4)) ? 0 : TIOCM_DTR);
                   mfp = ((short *) 0xfffffa00L);
 		  if (__has_no_ssystem) {
-                  	ssp = Super(0L);
-                  	m = *mfp & 0xff;
+		  		if (Super(1L) == 0L) {
+		  			ssp = Super(0L);
+                	m = *mfp & 0xff;
                   	Super(ssp);
+                } else {
+                	m = *mfp & 0xff;
+                }
 		  } else
 		  	m = (short)(Ssystem(S_TIOCMGET, (u_long)mfp, NULL));
                   *msig |= ((m & (1 << 1)) ? 0 : TIOCM_CAR);
