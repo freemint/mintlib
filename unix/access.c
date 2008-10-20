@@ -11,8 +11,9 @@
 #include "lib.h"
 
 int
-__access (const char *path, int mode)
+__access (const char *path, int imode)
 {
+	unsigned int mode = (unsigned int) imode;
 	struct stat sb;
 
 	if (__quickstat (path, &sb, 0) < 0)
