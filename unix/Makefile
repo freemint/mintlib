@@ -1,4 +1,4 @@
-# assert/Makefile -- MiNTLib.
+# unix/Makefile -- MiNTLib.
 # Copyright (C) 2000 Guido Flohr <guido@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
@@ -11,7 +11,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-subdir = assert
+subdir = unix
 
 SUBDIRS =
 
