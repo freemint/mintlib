@@ -34,7 +34,7 @@
 #include <strings.h>
 #include <fcntl.h>
 
-#ifndef HAVE_GNU_LD
+#ifndef __HAVE_GNU_LD
 #define _sys_nerr	sys_nerr
 #define _sys_errlist	sys_errlist
 #endif

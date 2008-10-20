@@ -23,7 +23,7 @@
    are recent versions of GNU ld and older versions of GNU ld only
    when compiled with gcc (so that we have at least strong aliases).  */
    
-#ifdef HAVE_GNU_LD
+#ifdef __HAVE_GNU_LD
 # define HAVE_WEAK_SYMBOLS
 #endif
 
@@ -48,11 +48,11 @@
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
-# ifdef HAVE_GNU_LD
+# ifdef __HAVE_GNU_LD
 #  define link_warning(symbol, msg)   \
   asm(".stabs \"" msg "\",30,0,0,0\n"  \
       ".stabs \"" "_" #symbol  "\",1,0,0,0\n");
-# endif  /* HAVE_GNU_LD */
+# endif  /* __HAVE_GNU_LD */
 
 # endif  /* !__GNUC__ */
 

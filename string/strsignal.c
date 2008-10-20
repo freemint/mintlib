@@ -28,7 +28,7 @@
 # define _(String) (String)
 #endif
 
-#ifndef	HAVE_GNU_LD
+#ifndef	__HAVE_GNU_LD
 #define	_sys_siglist	sys_siglist
 #endif
 

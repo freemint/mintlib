@@ -16,10 +16,10 @@
 #define __LINKER_TYPE __@LINKER_TYPE@
 
 #if __LINKER_TYPE == __GNU
-# define HAVE_GNU_LD
+# define __HAVE_GNU_LD
 #else 
 # if __LINKER_TYPE == __OLD_GNU
-#  define HAVE_OLDGNU_LD  /* Currently not used.  */
+#  define __HAVE_OLDGNU_LD  /* Currently not used.  */
 # else
 #   error Unknown linker.
 # endif
