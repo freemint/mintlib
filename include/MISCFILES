@@ -9,7 +9,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	_varargs_h \
 	alloca.h \
 	argz.h \
-	argp.h \
 	assert.h \
 	byteswap.h \
 	err.h \
