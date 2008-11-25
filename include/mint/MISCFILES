@@ -15,6 +15,7 @@ MISCFILES = MISCFILES \
 	metados.h \
 	mintbind.h \
 	mouse.h \
+	net.h \
 	nfs.h \
 	osbind.h \
 	ostruct.h \
