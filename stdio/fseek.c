@@ -133,9 +133,20 @@ fseek (stream, offset, whence)
       return EOF;
     }
 
-  /* Don't actually seek.  The next reading or writing operation
-     will force a call to the input or output room function,
-     which will move to the target file position before reading or writing.  */
+  {
+    fpos_t pos = stream->__target;
+
+    if ((*stream->__io_funcs.__seek) (stream->__cookie, &pos, SEEK_SET) < 0)
+    {
+      if (errno == ESPIPE)
+	stream->__io_funcs.__seek = NULL;
+      return EOF;
+    }
+  
+    stream->__offset = pos;
+  }
+
+
   return 0;
 }
 
