@@ -8,4 +8,8 @@
 #define __need_wint_t
 #include <stddef.h>
 
+#ifndef WEOF
+# define WEOF (0xffffffffu)
+#endif
+
 #endif /* _WCHAR_H */
