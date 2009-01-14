@@ -1959,8 +1959,6 @@ buffered_vfprintf (register FILE *s, const CHAR_T *format, va_list args)
   /* Now use buffer to print.  */
   result = vfprintf (s, format, args);
 
-  if (fflush (s) == EOF)
-    result = -1;
   s->__buffer = s->__bufp = s->__get_limit = s->__put_limit = NULL;
   s->__bufsize = 0;
 
