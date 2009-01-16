@@ -202,7 +202,7 @@ __stdio_text_write (void *cookie, const char *buf, size_t n)
   const long int fd = (long int) cookie;
 #endif
   register size_t written = 0;
-  ssize_t blocksize = 8192;
+  size_t blocksize = 8192;
   struct stat statbuf;
   int save = errno;
   char* chunk;
@@ -223,11 +223,11 @@ __stdio_text_write (void *cookie, const char *buf, size_t n)
   while (n > 0)
     {
       ssize_t count;
-      register ssize_t put;
-      register ssize_t got;
+      register size_t put;
+      register size_t got;
       char* writeptr = chunk;
-      ssize_t n1;
-      ssize_t limit = blocksize > n ? n : blocksize;
+      size_t n1;
+      size_t limit = blocksize > n ? n : blocksize;
       
       for (put = 0, got = 0; put < limit && got < n; put++, got++)
         {
@@ -275,7 +275,7 @@ __stdio_seek (void *cookie, fpos_t *pos, int whence)
   new = __lseek ((long int) cookie, (off_t) * pos, whence);
 #endif
   if (new < 0)
-    return 1;
+    return -1;
   *pos = (fpos_t) new;
   return 0;
 }
