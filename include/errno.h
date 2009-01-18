@@ -41,7 +41,7 @@ __BEGIN_DECLS
 
 extern int errno;
 
-# if defined(__USE_GNU) || defined(__MINT__)
+# if defined(__USE_GNU)
 
 /* The full and simple forms of the name with which the program was
    invoked.  These variables are set up automatically at startup based on
