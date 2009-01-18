@@ -31,13 +31,15 @@ _alarm (unsigned long secs)
 static void
 alarm_catch (long signum)
 {
+	(void) signum;
+
 	return;
 }
 
 unsigned int
 sleep (unsigned int n)
 {
-	unsigned long stop;
+	long stop;
 	long old_alarm_func;
 	long old_sigmask;
 	unsigned long alarm_sec;
@@ -76,7 +78,7 @@ sleep (unsigned int n)
 		(void) Syield();
 		/* Remask again after the Psignal() */
 		(void) Psigblock(~0L);
-		remain = ((long) stop - (long) _clock()) 
+		remain = (stop - _clock()) 
 			  / (long) CLOCKS_PER_SEC;
 		if (alarm_sec) {
 			/* Restore the original timer (or if it expired,
@@ -105,3 +107,4 @@ sleep (unsigned int n)
 	}
 	return 0;
 }
+weak_alias (__sleep, sleep)
