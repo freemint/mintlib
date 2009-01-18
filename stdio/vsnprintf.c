@@ -21,6 +21,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 static void __vsnprintf_output __P ((FILE *stream, int c));
 
@@ -42,26 +43,27 @@ __vsnprintf (char *s, size_t maxlen, const char *format, va_list arg)
   memset ((void *) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
   f.__mode.__write = 1;
-  /* The buffer size is one less than MAXLEN
-     so we have space for the null terminator.  */
   f.__bufp = f.__buffer = (char *) s;
-  f.__bufsize = maxlen - 1;
+  f.__bufsize = maxlen;
   f.__put_limit = f.__buffer + f.__bufsize;
   f.__get_limit = f.__buffer;
   /* After the buffer is full (MAXLEN characters have been written),
-     any more characters written will go to the bit bucket
-     and the error flag on the stream is set.  */
+     any more characters written will go to the last character in the
+     buffer, and we'll overwrite with the NULL terminator later. */
   f.__room_funcs.__output = __vsnprintf_output;
   f.__room_funcs.__input = __default_room_functions.__input;
   f.__io_funcs.__write = NULL;
   f.__seen = 1;
 
   done = vfprintf (&f, format, arg);
+
+  /* if the buffer overflowed we'll be at __put_limit, so decrement for null */
+  if (f.__bufp == f.__put_limit)
+    f.__bufp--;
+
   *f.__bufp = '\0';
 
-  /* Miniscule optimization: Simply return DONE because vfprintf will
-     check the error flag?  */
-  return ferror (&f) ? -1 : done;
+  return done;
 }
 weak_alias (__vsnprintf, vsnprintf)
 
@@ -71,5 +73,10 @@ weak_alias (__vsnprintf, vsnprintf)
 static
 void __vsnprintf_output (FILE* stream, int c)
 {
-  stream->__error = 1;
+  /* We use the last character as an overflow, as we end up writing the 
+   * \0 end terminator there anyway. The function will now be POSIX compliant
+   * and return the amount of data that would have been written.
+   */
+  if (stream->__bufp == stream->__put_limit)
+    stream->__bufp--;
 }
