@@ -49,6 +49,9 @@ __EXTERN void* memchr __P ((const void* __s, int __c, size_t __n));
    length limit.  */
 __EXTERN void* __rawmemchr __P ((const void* __s, int __c));
 __EXTERN void* rawmemchr __P ((const void* __s, int __c));
+
+/* Search N bytes of S for the final occurrence of C.  */
+__EXTERN void* memrchr __P ((const void *__s, int __c, size_t __n));
 #endif
 
 
@@ -118,6 +121,13 @@ __EXTERN char* strndup __P ((const char* __string, size_t __n));
 __EXTERN char* strchr __P ((const char* __s, int __c));
 /* Find the last occurrence of C in S.  */
 __EXTERN char* strrchr __P ((const char* __s, int __c));
+
+#ifdef __USE_GNU
+/* This function is similar to `strchr'.  But it returns a pointer to
+   the closing NUL byte in case C is not found in S.  */
+extern char *strchrnul (__const char *__s, int __c)
+     __THROW __attribute_pure__ __nonnull ((1));
+#endif
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */

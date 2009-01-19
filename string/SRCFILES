@@ -28,6 +28,7 @@ SRCFILES = \
 	memcmp.c \
 	memfrob.c \
 	mempcpy.c \
+	memrchr.c \
 	memset.S \
 	rawmemchr.c \
 	stpcpy.c \
@@ -36,6 +37,7 @@ SRCFILES = \
 	strcasestr.c \
 	strcat.c \
 	strchr.c \
+	strchrnul.c \
 	strcmp.c \
 	strcoll.c \
 	strcpy.c \
