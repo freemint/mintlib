@@ -13,9 +13,9 @@ const char *mbstr;
 size_t n;
 {
 	/* Locale test: no shift states. */
-	if(mbstr == NULL) return 0;
+	if(mbstr == NULL || *mbstr == '\0') return 0;
 	
-	if(*mbstr == '\0' || n == 0) return 0;
+	if(n == 0) return -1;
 	
 	/* There are no multibytesequences... */
 	return 1;
@@ -45,10 +45,11 @@ size_t n;
 	/* Locale test: no shift states. */
 	if(mbstr == NULL) return 0;
 	
-	if(*mbstr == '\0' || n == 0) return 0;
+	if(n == 0) return -1;
 	
-	if(wstr != NULL) *wstr = *mbstr;
-	return 1;
+	if(wstr) *wstr = *mbstr;
+
+	return (*mbstr != '\0');
 }
 
 
