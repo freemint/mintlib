@@ -37,7 +37,7 @@ __pread (int fd, void *buf, size_t nbyte, off_t offset)
   if (__lseek (fd, offset, SEEK_SET) == (off_t) -1)
     return -1;
 
-  /* Write out the data.  */
+  /* read the data.  */
   result = __read (fd, buf, nbyte);
 
   /* Now we have to restore the position.  If this fails we have to
