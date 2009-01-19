@@ -30,7 +30,7 @@ _ltoa(long n, char *buffer, int radix)
 		n = -n;
 	}
 	
-	_ultoa(n, p, radix);
+	_ultoa((unsigned long)n, p, radix);
 	
 	return buffer;
 }
