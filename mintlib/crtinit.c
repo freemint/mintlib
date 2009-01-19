@@ -192,8 +192,8 @@ _crtinit(void)
 	/* not reached normally */
 
 notenough:
-	Cconws("Fatal error: insufficient memory\r\n");
-	Cconws("Hint: either decrease stack size using 'stack' command (not recomended)\r\n" \
+	(void) Cconws("Fatal error: insufficient memory\r\n");
+	(void) Cconws("Hint: either decrease stack size using 'stack' command (not recomended)\r\n" \
 		   "      or increase TPA_INITIALMEM value in mint.cnf.\r\n");
 	Pterm(-1);
 }
