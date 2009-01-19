@@ -31,7 +31,7 @@ __getcwd (char *buf, size_t size)
 	int r;
 
 	len = (size > 0 ? size : PATH_MAX) + 16;
-	_path = malloc(len);
+	_path = (char *)malloc(len);
 	if (!_path) {
 		__set_errno(ENOMEM);
 		return NULL;
@@ -94,10 +94,10 @@ __getcwd (char *buf, size_t size)
 	free(_path);
 
 	if (buf_malloced) {
-		size_t len = strlen (buf) + 1;
+		size_t l = strlen (buf) + 1;
 		void *newptr;
 
-		newptr = realloc (buf, len);
+		newptr = realloc (buf, l);
 		if (newptr)
 			buf = newptr;
 	}
