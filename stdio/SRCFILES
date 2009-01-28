@@ -36,6 +36,7 @@ SRCFILES = \
 	ftell.c \
 	fungetc.c \
 	fwrite.c \
+	fxprintf.c \
 	getc.c \
 	getchar.c \
 	getdelim.c \
