@@ -15,7 +15,7 @@ __sigvec (int sig, struct sigvec *sv, struct sigvec *osv)
 	int i, r;
 	
 	if (sv) {
-		if (sv->sv_flags & (SV_ONSTACK|SV_INTERRUPT|SV_RESETHAND)) {
+		if (sv->sv_flags & (SV_ONSTACK|SV_INTERRUPT)) {
 			__set_errno (EINVAL);
 			return -1;
 		}

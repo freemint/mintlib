@@ -28,7 +28,8 @@
 #define SIG_UNBLOCK	1
 #define SIG_SETMASK	2
 
-#define SA_NOCLDSTOP   1       /* don't send SIGCHLD when they stop */
+#define SA_NOCLDSTOP   0x0001       /* don't send SIGCHLD when they stop */
+#define SA_RESETHAND   0x8000       /* Reset to SIG_DFL on entry to handler. */
 
 struct sigaction {
 	__sighandler_t 	sa_handler;	/* Pointer to signal handler.  */
