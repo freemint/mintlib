@@ -240,8 +240,8 @@ struct sigvec {
 };
   
 /* Bits in `sv_flags'.  */
-#define SV_ONSTACK   0x8000 /* Take the signal on the signal stack.  */
-#define SV_INTERRUPT 0x8000 /* Do not restart system calls.  */ 
+#define SV_ONSTACK   0x4000 /* Take the signal on the signal stack.  */
+#define SV_INTERRUPT 0x4000 /* Do not restart system calls.  */ 
 #define SV_RESETHAND 0x8000 /* Reset handler to SIG_DFL on receipt.  */
 
 #if 0
