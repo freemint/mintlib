@@ -1,0 +1,16 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = \
+	argp-ba.c \
+	argp-eexst.c \
+	argp-fmtstream.c \
+	argp-fs-xinl.c \
+	argp-help.c \
+	argp-parse.c \
+	argp-pv.c \
+	argp-pvh.c \
+	argp-xinl.c

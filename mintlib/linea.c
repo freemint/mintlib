@@ -171,7 +171,7 @@ void lineac(void *P)
 		.word   0xA00C" 
 	: 						  /* outputs */	
 	: "r"(P)					  /* inputs  */	
-	: "d0", "d1", "d2", "a0", "a1", "a2", "a6" /* clobbered regs */	
+	: "d0", "d1", "d2", "a0", "a1", "a2"              /* clobbered regs */	
 	);								
 }
 
@@ -187,7 +187,7 @@ void linead(int x, int y,  SFORM * sd, void *ss)
 		.word   0xA00D" 
 	: 						  /* outputs */	
 	: "r"((short)x), "r"((short)y), "r"(sd), "r"(ss)  /* inputs  */	
-	: "d0", "d1", "d2", "a0", "a1", "a2", "a6" /* clobbered regs */	
+	: "d0", "d1", "d2", "a0", "a1", "a2"              /* clobbered regs */	
 	);								
 }
 

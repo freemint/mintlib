@@ -42,6 +42,7 @@ $(INCLUDES) $(DEFS) $(DEFS-$(<F)) $(DEFS-$(DIRSTEM)))
 
 -include $(top_srcdir)/CFILES
 
+argpdir    := $(top_srcdir)/argp
 cryptdir   := $(top_srcdir)/crypt
 direntdir  := $(top_srcdir)/dirent
 gmpdir     := $(top_srcdir)/gmp
@@ -63,11 +64,12 @@ sysvipcdir := $(top_srcdir)/sysvipc
 termiosdir := $(top_srcdir)/termios
 timedir    := $(top_srcdir)/time
 unixdir    := $(top_srcdir)/unix
-srcdirs   := $(cryptdir) $(direntdir) $(gmpdir) $(logindir) $(mintlibdir) \
+srcdirs   := $(argpdir) $(cryptdir) $(direntdir) $(gmpdir) $(logindir) $(mintlibdir) \
   $(miscdir) $(posixdir) $(pwdgrpdir) $(shadowdir) $(signaldir) $(socketdir) \
   $(stdiiodir) $(stdiodir) $(stdlibdir) $(stringdir) $(sunrpcdir) \
   $(syscalldir) $(sysvipcdir) $(termiosdir) $(timedir) $(unixdir)
 
+ARGPSRCS    := $(addprefix $(argpdir)/,    $(ARGPCFILES))
 CRYPTSRCS   := $(addprefix $(cryptdir)/,   $(CRYPTCFILES))
 DIRENTSRCS  := $(addprefix $(direntdir)/,  $(DIRENTCFILES))
 GMPSRCS     := $(addprefix $(gmpdir)/,     $(GMPCFILES))
@@ -90,7 +92,7 @@ SYSVIPCSRCS := $(addprefix $(sysvipcdir)/, $(SYSVIPCCFILES))
 TERMIOSSRCS := $(addprefix $(termiosdir)/, $(TERMIOSCFILES))
 TIMESRCS    := $(addprefix $(timedir)/,    $(TIMECFILES))
 UNIXSRCS    := $(addprefix $(unixdir)/,    $(UNIXCFILES))
-SRCS := $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
+SRCS := $(ARGPSRCS) $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
   $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(RPCSVCSRCS) $(SHADOWSRCS) \
   $(SIGNALSRCS) $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) \
   $(STRINGSRCS) $(SUNRPCSRCS) $(SYSCALLSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) \
@@ -104,7 +106,7 @@ NOCFLAGS-gmon.c = -pg -fomit-frame-pointer
 NOCFLAGS-mcount.c = -pg -fomit-frame-pointer
 NOCFLAGS-profil-freq.c = -pg -fomit-frame-pointer
 NOCFLAGS-profil-posix.c = -pg -fomit-frame-pointer
-NOCFLAGS-linea.c = -pg -fomit-frame-pointer -O2 -O
+#NOCFLAGS-linea.c = -pg -fomit-frame-pointer -O2 -O
 #DEFS-vfscanf.c = -DNO_BUG_IN_ISO_C_CORRIGENDUM_1
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-ivfprintf.c = -Wno-uninitialized
@@ -126,6 +128,7 @@ DEFS-xnlm_prot.c= -Wno-unused
 DEFS-xrstat.c = -Wno-unused
 DEFS-xspray.c= -Wno-unused
 
+ARGPOBJS    := $(addsuffix .o, $(basename $(notdir $(ARGPSRCS))))
 CRYPTOBJS   := $(addsuffix .o, $(basename $(notdir $(CRYPTSRCS))))
 DIRENTOBJS  := $(addsuffix .o, $(basename $(notdir $(DIRENTSRCS))))
 GMPOBJS     := $(addsuffix .o, $(basename $(notdir $(GMPSRCS))))
@@ -148,12 +151,12 @@ SYSVIPCOBJS := $(addsuffix .o, $(basename $(notdir $(SYSVIPCSRCS))))
 TERMIOSOBJS := $(addsuffix .o, $(basename $(notdir $(TERMIOSSRCS))))
 TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
 UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
-OBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
+OBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
   $(SIGNALOBJS) $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) \
   $(STRINGOBJS) $(SUNRPCOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) \
   $(TIMEOBJS) $(UNIXOBJS)
-LIBCOBJS := $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
+LIBCOBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) \
   $(TERMIOSOBJS) $(TIMEOBJS) $(UNIXOBJS) $(SUNRPCOBJS) $(SOCKETOBJS)
@@ -193,7 +196,7 @@ uninstall-man:
 ifndef top_distdir    # Not needed when making distributions.
 
 # Copy SRCFILES from source directory here.
-$(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
+$(top_srcdir)/CFILES: $(argpdir)/SRCFILES $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
   $(gmpdir)/SRCFILES $(logindir)/SRCFILES $(mintlibdir)/SRCFILES \
   $(miscdir)/SRCFILES $(posixdir)/SRCFILES $(pwdgrpdir)/SRCFILES \
   $(shadowdir)/SRCFILES $(signaldir)/SRCFILES $(socketdir)/SRCFILES \
@@ -203,6 +206,7 @@ $(top_srcdir)/CFILES: $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
   $(timedir)/SRCFILES $(unixdir)/SRCFILES
 	rm -f $@
 	echo "# This file is a generated secondary file. Do not edit." >$@
+	sed -e 's,^SRCFILES *=,ARGPCFILES =,g' $(argpdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,CRYPTCFILES =,g' $(cryptdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,DIRENTCFILES =,g' $(direntdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,GMPCFILES =,g' $(gmpdir)/SRCFILES >>$@

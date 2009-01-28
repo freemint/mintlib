@@ -9,6 +9,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	_varargs_h \
 	alloca.h \
 	argz.h \
+	argp.h \
 	assert.h \
 	byteswap.h \
 	err.h \
@@ -26,6 +27,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	fnmatch.h \
 	ftw.h \
 	getopt.h \
+	getopt_int.h \
 	glob.h \
 	ar.h \
 	gnu-out.h \
