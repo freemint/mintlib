@@ -392,11 +392,9 @@ extern int chdir (__const char *__path) __THROW;
 extern int __chdir (__const char *__path) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-#ifndef __MINT__
 /* Change the process's working directory to the one FD is open on.  */
 extern int fchdir (int __fd) __THROW;
 extern int __fchdir (int __fd) __THROW;
-#endif
 #endif
 
 /* Get the pathname of the current working directory,

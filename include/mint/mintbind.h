@@ -606,6 +606,12 @@ __extension__								\
 /* 0x17f */
 #define Fchown16(name, uid, gid, follow_links) \
 		trap_1_wlwww(0x180, (long)(name), (short)(uid), (short)(gid), (short)follow_links)
+#define Fchdir(fh) \
+		trap_1_ww(0x181, (short)(fh))
+#define Ffdopendir(fh) \
+		trap_1_ww(0x182, (short)(fh))
+#define Fdirfd(handle) \
+		trap_1_wl(0x183, (long)(handle))
 
 __END_DECLS
 

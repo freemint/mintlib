@@ -69,6 +69,14 @@ typedef struct __dirstream DIR;
 extern DIR *__opendir (__const char *__name) __THROW;
 extern DIR *opendir (__const char *__name) __THROW;
 
+#ifdef __USE_GNU
+/* Same as opendir, but open the stream on the file descriptor FD.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern DIR *fdopendir (int __fd);
+#endif
+
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
 extern int __closedir (DIR *__dirp) __THROW;
@@ -103,6 +111,9 @@ extern long int telldir (DIR *__dirp) __THROW;
 #endif /* Use BSD or misc or xopen.  */
 
 #if defined __USE_BSD || defined __USE_MISC
+
+/* Return the file descriptor used by DIRP.  */
+extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 
 /* Scan the directory DIR, calling SELECTOR on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,

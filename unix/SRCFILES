@@ -18,6 +18,7 @@ SRCFILES = \
 	dup.c \
 	dup2.c \
 	execve.c \
+	fchdir.c \
 	fchmod.c \
 	fchown.c \
 	fcntl.c \
