@@ -37,7 +37,7 @@ alarm_catch (long signum)
 }
 
 unsigned int
-sleep (unsigned int n)
+__sleep (unsigned int n)
 {
 	long stop;
 	long old_alarm_func;
