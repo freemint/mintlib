@@ -179,10 +179,25 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	{
 		char linkf[40];
 		long l;
+
 noent:
 		if(iomode & O_CREAT) {
+			/* posix requirement for trailing slash check */
+			size_t len = strlen(filename);
+
+			if (len > 0 && filename[len - 1] == '/') {
+				__set_errno(EISDIR);
+				return -1;
+			}
+
+			if (len > 1 && filename[len - 1] == '\\' &&
+				       filename[len - 2] == '\\') {
+				__set_errno(EISDIR);
+				return -1;
+			}
+
 			if (__mint >= 9)
-			  rv = (int) failsafe_Fopen (filename, iomode & modemask);
+			    rv = (int) failsafe_Fopen (filename, iomode & modemask);
 			else {
 			    rv = (int)Fcreate(filename, 0x00);                             
 			    if (rv >= 0) {
