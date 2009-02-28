@@ -122,6 +122,9 @@ input (FILE *stream)
 static void
 init_obstream (FILE *stream, struct obstack *obstack)
 {
+  (void) obstack;
+
+  stream->__magic = _IOMAGIC;
   stream->__mode.__write = 1;
   stream->__mode.__read = 1;
 
