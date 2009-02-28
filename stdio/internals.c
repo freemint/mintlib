@@ -298,7 +298,7 @@ flushbuf (register FILE *fp, int c)
   buffer_written = fp->__bufp - fp->__buffer;
   to_write = (buffer_written == 0 ? 0 :
 	      fp->__get_limit > fp->__bufp ?
-	      fp->__get_limit - fp->__buffer :
+	      (size_t)(fp->__get_limit - fp->__buffer) :
 	      buffer_written);
 
   if (fp->__io_funcs.__write == NULL || (to_write == 0 && flush_only))
@@ -592,6 +592,10 @@ __flshfp (fp, c)
     return EOF;
   if (flush_only)
     return 0;
+
+  fp->__flags &= ~_IO_CURRENTLY_MASK;
+  fp->__flags |= _IO_CURRENTLY_PUTTING;
+
   return (unsigned char) c;
 }
 
@@ -677,6 +681,9 @@ __fillbf (fp)
       fp->__eof = 1;
       c = EOF;
     }
+
+  fp->__flags &= ~_IO_CURRENTLY_MASK;
+  fp->__flags |= _IO_CURRENTLY_GETTING;
 
   return c;
 }

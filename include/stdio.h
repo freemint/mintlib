@@ -200,6 +200,12 @@ struct __stdio_file
   unsigned int __seen:1;	/* This stream has been seen.  */
   unsigned int __ispipe:1;	/* Nonzero if opened by popen.  */
   struct __stdio_lock *__lock;	/* Pointer to associated lock.  */
+
+#define _IO_CURRENTLY_NONE	0x000000000
+#define _IO_CURRENTLY_PUTTING	0x000000001
+#define _IO_CURRENTLY_GETTING	0x000000002
+#define _IO_CURRENTLY_MASK	0x000000003
+  unsigned int __flags;		/* miscellaneous flags. */
 };
 
 
