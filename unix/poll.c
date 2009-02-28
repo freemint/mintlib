@@ -86,7 +86,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 				wfds |= (1L << (pfds[i].fd));
 		}
 
-		if (timeout == ~0) { /* Which is -1 as unsigned long.  */
+		if (timeout == -1UL) { 
 			retval = Fselect (0L, &rfds, &wfds, &xfds);
 		} else if (timeout == 0) {
 			retval = Fselect (1L, &rfds, &wfds, &xfds);
