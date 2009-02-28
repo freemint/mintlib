@@ -76,7 +76,7 @@ struct stat {
 #define __S_IFBLK	0060000	/* Block device.  */
 #define	__S_IFREG	0100000	/* Regular file.  */
 #define __S_IFIFO	0120000	/* FIFO.  */
-#define __S_IMEM	0140000
+#define __S_IFMEM	0140000 /* memory region or process */
 #define	__S_IFLNK	0160000	/* Symbolic link.  */
 
 
