@@ -86,8 +86,12 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	/* use the umask() setting to get the right permissions */
 	if (__current_umask == -1) {
 		__current_umask = Pumask (0);
+
 		if (__current_umask < 0)
 			 __current_umask = 0;
+
+		/* put back the old umask */
+		Pumask(__current_umask);
 	}
 	pmode &= ~__current_umask;
 
