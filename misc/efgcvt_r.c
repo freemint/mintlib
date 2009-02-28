@@ -61,8 +61,8 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  ssize_t n;
-  ssize_t i;
+  size_t n;
+  size_t i;
   int left;
 
   if (buf == NULL)
@@ -104,7 +104,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
 		  value);
   /* Check for a too small buffer.  */
-  if (n >= (ssize_t) len)
+  if (n >= len)
     return -1;
 
   i = 0;
