@@ -23,7 +23,10 @@ __lseek (int handle, off_t offset, int mode)
 	current_pos = Fseek (offset, handle, mode);
 	if (current_pos < 0)
 	  {
-	    __set_errno ((int) -current_pos);
+            if (-current_pos == EBADARG) 
+	      __set_errno(EINVAL); /* filesystems should return this - fix up */
+	    else
+	      __set_errno ((int) -current_pos);
 	    return -1L;
 	  }
 	return current_pos;
@@ -32,8 +35,11 @@ __lseek (int handle, off_t offset, int mode)
     current_pos = Fseek (0L, handle, SEEK_CUR); /* find out where we are */
     if (current_pos < 0)
       {
-	/* a real error, e.g. an unseekable device */
-	__set_errno ((int) -current_pos);
+        if (-current_pos == EBADARG) 
+	  __set_errno(EINVAL); /* filesystems should return this - fix up */
+	else
+	  __set_errno ((int) -current_pos); /* an unseekable device */
+
 	return -1L;
       }
 
