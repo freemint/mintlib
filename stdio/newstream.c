@@ -48,6 +48,7 @@ __newstream (void)
   stream->__magic = _IOMAGIC;
   stream->__offset = (fpos_t) -1;
   stream->__target = (fpos_t) -1;
+  stream->__flags = 0;
 
   return stream;
 }
