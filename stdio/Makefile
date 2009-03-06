@@ -31,7 +31,7 @@ include $(top_srcdir)/rules $(top_srcdir)/phony
 
 TESTS = bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 bug12 \
 doprnt errnobug ferror fformat fileno fseek fwrite getln glue iformat \
-llformat popen printf printfsz rdwr scanf scanf1 scanf2 \
+llformat obstream popen printf printfsz rdwr scanf scanf1 scanf2 \
 scanf3 scanf4 scanf5 scanf6 scanf7 scanf8 scanf9 scanf10 scanf11 scanf12 \
 stdiomisc temp tmpfile tmpnam ungetc wc-printf xbug
 

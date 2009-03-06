@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,60 +20,64 @@
 #include <obstack.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* Output-room function for obstack streams.  */
 
 static void
 grow (FILE *stream, int c)
 {
-  struct obstack *const obstack = (struct obstack *) stream->__cookie;
+  struct obstack *obstack = (struct obstack *) stream->__cookie;
+  int size_written = (int)(stream->__target + stream->__bufp - stream->__buffer);
 
-  /* Move the end of the object back to include only the portion
-     of the buffer which the user has already written into.  */
-  obstack_blank_fast (obstack, - (stream->__put_limit - stream->__bufp));
-
-  if ((size_t) stream->__target > obstack_object_size (obstack))
+  /* Check if the buffer has been flushed by fseek().  */
+  if (stream->__target != -1 && stream->__target > 0)
     {
-      /* Our target (where the buffer maps to) is always zero except when
-	 the user just did a SEEK_END fseek.  If he sought within the
-	 buffer, we need do nothing and will zero the target below.  If he
-	 sought past the end of the object, grow and zero-fill the object
-	 up to the target address.  */
-
-      obstack_blank (obstack,
-		     stream->__target - obstack_object_size (obstack));
-      /* fseek has just flushed us, so the put limit points
-	 to the end of the written data.  */
-      bzero (stream->__put_limit,
-	     stream->__target - stream->__bufsize);
+      /* Restore the stream pointers to match the object.  */
+      stream->__buffer = obstack_base (obstack);
+      stream->__bufsize = obstack_object_size (obstack);
+      stream->__bufp = stream->__buffer + stream->__target;
+      stream->__get_limit = stream->__bufp;
+      stream->__put_limit = stream->__buffer + stream->__bufsize;
+      stream->__target = 0;
     }
-
-  if (c != EOF)
-    obstack_1grow (obstack, (unsigned char) c);
 
   /* The stream buffer always maps exactly to the object on the top
      of the obstack.  The start of the buffer is the start of the object.
      The put limit points just past the end of the object.  On fflush, the
      obstack is sync'd so the end of the object points just past the last
      character written to the stream.  */
-
-  stream->__target = stream->__offset = 0;
-  stream->__buffer = obstack_base (obstack);
-  stream->__bufsize = obstack_room (obstack);
-  stream->__bufp = obstack_next_free (obstack);
-  stream->__get_limit = stream->__bufp;
-
   if (c == EOF)
-    /* This is fflush.  Make the stream buffer, the object,
-       and the characters actually written all match.  */
-    stream->__put_limit = stream->__get_limit;
+    {
+      /* This is fflush. The object must be shrinked to keep only the portion
+         of the buffer which the user has already written into.  */
+      obstack_blank_fast (obstack, -(obstack_object_size (obstack) - size_written));
+
+      /* Adjust the stream pointers.  */
+      stream->__bufsize = obstack_object_size (obstack);
+      stream->__put_limit = stream->__buffer + stream->__bufsize;
+    }
+  else if (size_written == obstack_object_size (obstack))
+    {
+      /* The buffer is full. Appending a byte to the object
+         may cause the allocation of a new chunk.  */
+      obstack_1grow (obstack, (unsigned char) c);
+      ++size_written;
+
+      /* Increase the object size to the size of the new chunk.  */
+      obstack_blank_fast (obstack, obstack_room (obstack));
+
+      /* Relocate the stream pointers.  */
+      stream->__buffer = obstack_base (obstack);
+      stream->__bufsize = obstack_object_size (obstack);
+      stream->__bufp = stream->__buffer + size_written;
+      stream->__get_limit = stream->__bufp;
+      stream->__put_limit = stream->__buffer + stream->__bufsize;
+    }
   else
     {
-      /* Extend the buffer (and the object) to include
-	 the rest of the obstack chunk (which is uninitialized).
-	 Data past bufp is undefined.  */
-      stream->__put_limit = stream->__buffer + stream->__bufsize;
-      obstack_blank_fast (obstack, stream->__put_limit - stream->__bufp);
+      /* The user called fseek() backwards, so there is room in the buffer.  */
+      *stream->__bufp++ = (unsigned char)c;
     }
 }
 
@@ -83,56 +87,51 @@ grow (FILE *stream, int c)
 static int
 seek (void *cookie, fpos_t *pos, int whence)
 {
+  struct obstack *obstack = (struct obstack *) cookie;
+  fpos_t current_offset = obstack_object_size (obstack); /* Stream has just been flushed.  */
+  fpos_t target_offset;
+  ptrdiff_t delta;
+
   switch (whence)
     {
     case SEEK_SET:
+      target_offset = *pos;
+      break;
+
     case SEEK_CUR:
-      return 0;
+      target_offset = current_offset + *pos;
+      break;
 
     case SEEK_END:
-      /* Return the position relative to the end of the object.
-	 fseek has just flushed us, so the obstack is consistent.  */
-      *pos += obstack_object_size ((struct obstack *) cookie);
-      return 0;
+      target_offset = current_offset - *pos;
+      break;
 
     default:
       __libc_fatal ("obstream::seek called with bogus WHENCE\n");
       return -1;
     }
+
+  /* Resize the buffer.  */
+  delta = target_offset - current_offset;
+  if (delta > 0)
+    {
+      obstack_blank (obstack, delta);
+      bzero (obstack_base (obstack) + current_offset, delta);
+    }
+
+  return 0;
 }
 
-/* Input room function for obstack streams.
-   Only what has been written to the stream can be read back.  */
-
-static int
-input (FILE *stream)
-{
-  /* Re-sync with the obstack, growing the object if necessary.  */
-  grow (stream, EOF);
-
-  if (stream->__bufp < stream->__get_limit)
-    return (unsigned char) *stream->__bufp++;
-
-  stream->__eof = 1;
-  return EOF;
-}
-
 /* Initialize STREAM to talk to OBSTACK.  */
 
 static void
 init_obstream (FILE *stream, struct obstack *obstack)
 {
-  (void) obstack;
+  int initial_object_size;
 
+  stream->__cookie = obstack;
   stream->__magic = _IOMAGIC;
   stream->__mode.__write = 1;
-  stream->__mode.__read = 1;
-
-  /* Input can read only what has been written.  */
-  stream->__room_funcs.__input = input;
-
-  /* Do nothing for close.  */
-  stream->__io_funcs.__close = NULL;
 
   /* When the buffer is full, grow the obstack.  */
   stream->__room_funcs.__output = grow;
@@ -141,20 +140,26 @@ init_obstream (FILE *stream, struct obstack *obstack)
   stream->__io_funcs.__seek = seek;
   stream->__target = stream->__offset = 0;
 
+  /* Increase the size of the current object to the size of the chunk.  */
+  initial_object_size = obstack_object_size (obstack);
+  obstack_blank_fast (obstack, obstack_room (obstack));
+
+  /* The initial buffer is the current growing object.  */
+  stream->__buffer = obstack_base (obstack);
+  stream->__bufsize = obstack_object_size (obstack);
+  stream->__bufp = stream->__buffer + initial_object_size;
+  stream->__get_limit = stream->__bufp;
+  stream->__put_limit = stream->__buffer + stream->__bufsize;
   stream->__seen = 1;
 
   /* Don't deallocate that buffer!  */
   stream->__userbuf = 1;
-
-  /* We don't have to initialize the buffer.
-     The first read attempt will call grow, which will do all the work.  */
 }
 
 FILE *
-open_obstack_stream (obstack)
-     struct obstack *obstack;
+open_obstack_stream (struct obstack *obstack)
 {
-  register FILE *stream;
+  FILE *stream;
 
   stream = __newstream ();
   if (stream == NULL)
@@ -165,15 +170,18 @@ open_obstack_stream (obstack)
 }
 
 int
-obstack_vprintf (obstack, format, args)
-      struct obstack *obstack;
-      const char *format;
-      va_list args;
+obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 {
+  int result;
   FILE f;
   bzero (&f, sizeof (f));
   init_obstream (&f, obstack);
-  return vfprintf (&f, format, args);
+  result = vfprintf (&f, format, args);
+
+  if (result >= 0)
+    fflush(&f);
+
+  return result;
 }
 
 int
