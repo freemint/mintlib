@@ -27,13 +27,14 @@
 int
 __fxprintf (FILE *fp, const char *fmt, ...)
 {
+  va_list ap;
+  int res;
+
   if (fp == NULL)
     fp = stderr;
 
-  va_list ap;
   va_start (ap, fmt);
 
-  int res;
 #if defined _LIBC && defined USE_IN_LIBIO
   if (_IO_fwide (fp, 0) > 0)
     {

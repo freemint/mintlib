@@ -180,6 +180,7 @@ fill_in_uparams (const struct argp_state *state)
 	    const struct uparam_name *un;
 	    int unspec = 0, val = 0;
 	    const char *arg = var;
+	    size_t u;
 
 	    while (isalnum (*arg) || *arg == '-' || *arg == '_')
 	      arg++;
@@ -215,7 +216,6 @@ fill_in_uparams (const struct argp_state *state)
 	      }
 
 	    un = uparam_names;
-	    size_t u;
 	    for (u = 0; u < nuparam_names; ++un, ++u)
 	      if (strlen (un->name) == var_len
 		  && strncmp (var, un->name, var_len) == 0)
@@ -1772,6 +1772,9 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
       if (stream)
 	{
 	  va_list ap;
+#ifdef _LIBC
+	  char *buf;
+#endif
 
 #if 0 /* _LIBC || (HAVE_FLOCKFILE && HAVE_FUNLOCKFILE) */
 	  __flockfile (stream);
@@ -1780,8 +1783,6 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 	  va_start (ap, fmt);
 
 #ifdef _LIBC
-	  char *buf;
-
 	  if (vasprintf (&buf, fmt, ap) < 0)
 	    buf = NULL;
 
@@ -1847,11 +1848,11 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	  if (fmt)
 	    {
 	      va_list ap;
-
-	      va_start (ap, fmt);
 #ifdef _LIBC
 	      char *buf;
-
+#endif
+	      va_start (ap, fmt);
+#ifdef _LIBC
 	      if (vasprintf (&buf, fmt, ap) < 0)
 		buf = NULL;
 
