@@ -1,51 +1,39 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998, 1999, 2000, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
-
-/* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /*
- *	ISO C Standard: 4.14/2.2.4.2 Limits of integral types	<limits.h>
+ *	ISO C99 Standard: 7.10/5.2.4.2.1 Sizes of integer types	<limits.h>
  */
+
+/* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
 #ifndef _LIBC_LIMITS_H_
 #define _LIBC_LIMITS_H_	1
 
-#ifndef	_FEATURES_H
-# include <features.h>
-#endif
+#include <features.h>
 
-#ifdef	__USE_POSIX
-/* POSIX adds things to <limits.h>.  */
-# include <bits/posix1_lim.h>
-#endif
-
-#ifdef	__USE_POSIX2
-# include <bits/posix2_lim.h>
-#endif
-
-#ifdef	__USE_XOPEN
-# include <bits/xopen_lim.h>
-#endif
 
 /* Maximum length of any multibyte character in any locale.
    We define this value here since the gcc header does not define
    the correct value.  */
 #define MB_LEN_MAX	1	/* Should be 6 later.  */
+
 
 /* If we are not using GNU CC we have to define all the symbols ourself.
    Otherwise use gcc's definitions (see below).  */
@@ -101,7 +89,7 @@
 #  endif
 
 /* Minimum and maximum values a `signed long int' can hold.  */
-#  ifdef __alpha__
+#  if __WORDSIZE == 64
 #   define LONG_MAX	9223372036854775807L
 #  else
 #   define LONG_MAX	2147483647L
@@ -109,7 +97,7 @@
 #  define LONG_MIN	(-LONG_MAX - 1L)
 
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
-#  ifdef __alpha__
+#  if __WORDSIZE == 64
 #   define ULONG_MAX	18446744073709551615UL
 #  else
 #   ifdef __STDC__
@@ -118,6 +106,17 @@
 #    define ULONG_MAX	4294967295L
 #   endif
 #  endif
+
+#  ifdef __USE_ISOC99
+
+/* Minimum and maximum values a `signed long long int' can hold.  */
+#   define LLONG_MAX	9223372036854775807LL
+#   define LLONG_MIN	(-LLONG_MAX - 1LL)
+
+/* Maximum value an `unsigned long long int' can hold.  (Minimum is 0.)  */
+#   define ULLONG_MAX	18446744073709551615ULL
+
+#  endif /* ISO C99 */
 
 # endif	/* limits.h  */
 #endif	/* GCC 2.  */
@@ -132,4 +131,32 @@
 #if defined __GNUC__ && !defined _GCC_LIMITS_H_
 /* `_GCC_LIMITS_H_' is what GCC's file defines.  */
 # include_next <limits.h>
+#endif
+
+/* The <limits.h> files in some gcc versions don't define LLONG_MIN,
+   LLONG_MAX, and ULLONG_MAX.  Instead only the values gcc defined for
+   ages are available.  */
+#if defined __USE_ISOC99 && defined __GNUC__
+# ifndef LLONG_MIN
+#  define LLONG_MIN	(-LLONG_MAX-1)
+# endif
+# ifndef LLONG_MAX
+#  define LLONG_MAX	__LONG_LONG_MAX__
+# endif
+# ifndef ULLONG_MAX
+#  define ULLONG_MAX	(LLONG_MAX * 2ULL + 1)
+# endif
+#endif
+
+#ifdef	__USE_POSIX
+/* POSIX adds things to <limits.h>.  */
+# include <bits/posix1_lim.h>
+#endif
+
+#ifdef	__USE_POSIX2
+# include <bits/posix2_lim.h>
+#endif
+
+#ifdef	__USE_XOPEN
+# include <bits/xopen_lim.h>
 #endif
