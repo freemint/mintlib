@@ -25,6 +25,10 @@ endif
 # for m68020 processors.
 WITH_020_LIB=yes
 
+# Uncomment this out if you want extra libraries
+# for ColdFire V4e processors.
+WITH_V4E_LIB=no
+
 # Uncomment this out if you want a debuggable lib lib_g.a.
 WITH_DEBUG_LIB=yes
 

@@ -25,7 +25,7 @@ endif
 SUBDIRS = include syscall startup argp conf crypt dirent gmp login mintlib \
   misc posix pwdgrp shadow signal socket stdiio stdio stdlib string sysvipc \
   termios time unix lib sunrpc tz
-DIST_SUBDIRS = argp conf crypt dirent gmp include lib lib_g lib_p lib020 \
+DIST_SUBDIRS = argp conf crypt dirent gmp include lib lib_g lib_p lib020 libv4e \
   login mintlib misc posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string sunrpc syscall sysvipc termios time tz unix
 TEST_SUBDIRS = argp crypt dirent login mintlib misc posix pwdgrp shadow signal \
@@ -41,6 +41,10 @@ endif
 
 ifeq ($(WITH_020_LIB), yes)
   SUBDIRS += lib020
+endif
+
+ifeq ($(WITH_V4E_LIB), yes)
+  SUBDIRS += libv4e
 endif
 
 include $(srcdir)/BINFILES

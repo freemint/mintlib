@@ -277,12 +277,18 @@ install_libs ()
 {
   echo "Installing libraries."
   $mkinstalldirs $libdir 
-    for type in "" _p _g 020; do
+    for type in "" _p _g 020 v4e; do
     case x$type in
       x020) 
         libsuffix=020
         libinstdir=$libdir/m68020-60
         libheredir=lib020
+        type=
+        ;;
+      xv4e)
+        libsuffix=v4e
+        libinstdir=$libdir/mcfv4e
+        libheredir=libv4e
         type=
         ;;
       x_p|x_g)

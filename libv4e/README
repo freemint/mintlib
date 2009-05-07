@@ -1,0 +1,4 @@
+This directory contains the libs for the ColdFire V4e from the MiNTLib suite.
+
+Please install them in $prefix/lib/mcfv4e where $prefix is either /usr
+or /usr/local.

@@ -1,3 +1,15 @@
+2009-05-01 Friday 09:18  Vincent Riviere <vincent.riviere@freesbee.fr>
+
+	* Makefile, configvars, libinstall, libv4e/.cvsignore, libv4e/BINFILES,
+	libv4e/EXTRAFILES, libv4e/MISCFILES, libv4e/Makefile, libv4e/README,
+	libv4e/SRCFILES
+
+	Added build support for ColdFire V4e libraries.
+	The new variant is called libv4e, and is built with the -mcfv4e option.
+	Since that option is only available in GCC 4.x and the sources are not
+	yet compilable for ColdFire, the build of that library is currently
+	disabled by default.
+	
 2008-04-29 Tuesday 08:01  Frank Naumann <fnaumann@freemint.de>
 
 	* configvars, mintlib.spec, mintlib.spec.in:
