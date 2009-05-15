@@ -766,8 +766,8 @@ extern short  (**__funcs) (void);
 	register short (**__xfuncs) (void) __asm__ ("a2");		\
 									\
 	__asm__ volatile						\
-	("\
-		.word   0xA000"						\
+	(								\
+		".word	0xA000"						\
 	: "=g"(__xaline), "=g"(__xfonts), "=g"(__xfuncs)  /* outputs */	\
 	: 						  /* inputs  */	\
 	: __CLOBBER_RETURN("a0") __CLOBBER_RETURN("a1") __CLOBBER_RETURN("a2") "d0", "d1", "d2"       /* clobbered regs */	\
@@ -779,10 +779,9 @@ extern short  (**__funcs) (void);
 
 #define linea1() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA001" \
+	(								\
+		".word	0xA001"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -793,8 +792,8 @@ extern short  (**__funcs) (void);
 ({									\
 	register short retvalue __asm__ ("d0");				\
 	__asm__ volatile						\
-	("\
-		.word   0xA002"   \
+	(								\
+		".word	0xA002"						\
 	: "=g"(retvalue)				  /* outputs */	\
 	: 						  /* inputs  */	\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -804,10 +803,9 @@ extern short  (**__funcs) (void);
 
 #define linea3() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA003" \
+	(								\
+		".word	0xA003"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -816,10 +814,9 @@ extern short  (**__funcs) (void);
 
 #define linea4() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA004" \
+	(								\
+		".word	0xA004"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -828,10 +825,9 @@ extern short  (**__funcs) (void);
 
 #define linea5() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA005" \
+	(								\
+		".word	0xA005"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -840,10 +836,9 @@ extern short  (**__funcs) (void);
 
 #define linea6() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA006" \
+	(								\
+		".word	0xA006"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -852,13 +847,12 @@ extern short  (**__funcs) (void);
 
 #define linea7(P) 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		movml	d2/a2/a6, sp@-; \
- 		movl	%0,a6;  \
-		.word   0xA007; \
-		movml	sp@+, d2/a2/a6" \
+	(								\
+		"movml	d2/a2/a6,sp@-\n\t"				\
+ 		"movl	%0,a6\n\t"					\
+		".word	0xA007\n\t"					\
+		"movml	sp@+,d2/a2/a6"					\
 	: 						  /* outputs */	\
 	: "r"(P)					  /* inputs  */	\
 	: "d0", "d1", "a0", "a1"	  	/* clobbered regs */	\
@@ -867,10 +861,9 @@ extern short  (**__funcs) (void);
 
 #define linea8() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA008" \
+	(								\
+		".word	0xA008"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -879,10 +872,9 @@ extern short  (**__funcs) (void);
 
 #define linea9() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA009" \
+	(								\
+		".word	0xA009"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -891,10 +883,9 @@ extern short  (**__funcs) (void);
 
 #define lineaa() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA00A" \
+	(								\
+		".word	0xA00A"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -903,10 +894,9 @@ extern short  (**__funcs) (void);
 
 #define lineab() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA00B" \
+	(								\
+		".word	0xA00B"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -915,13 +905,12 @@ extern short  (**__funcs) (void);
 
 #define lineac(P) 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
- 		movl	%0,a2;	\
-		movl	a6,sp@-;\
-		.word   0xA00C; \
-		movl	sp@+,a6"\
+	(								\
+ 		"movl	%0,a2\n\t"					\
+		"movl	a6,sp@-\n\t"					\
+		".word	0xA00C\n\t"					\
+		"movl	sp@+,a6"					\
 	: 						  /* outputs */	\
 	: "g"(P)					  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"	   /* clobbered regs */	\
@@ -931,16 +920,15 @@ extern short  (**__funcs) (void);
 #define linead(x, y, sd, ss)	__linead((short)x, (short)y, (void *)sd, (void *)ss)
 #define __linead(x, y,  sd, ss)						\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
- 		movw	%0,d0;  \
- 		movw	%1,d1;  \
- 		movl	%2,a0;  \
- 		movl	%3,a2;  \
-		movl	a6,sp@-;\
-		.word   0xA00D; \
-		movl	sp@+,a6"\
+	(								\
+ 		"movw	%0,d0\n\t"					\
+ 		"movw	%1,d1\n\t"					\
+ 		"movl	%2,a0\n\t"					\
+ 		"movl	%3,a2\n\t"					\
+		"movl	a6,sp@-\n\t"					\
+		".word	0xA00D\n\t"					\
+		"movl	sp@+,a6"					\
 	: 						  /* outputs */	\
 	: "g"(x), "g"(y), "g"(sd), "g"(ss)		  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"	   /* clobbered regs */	\
@@ -949,10 +937,9 @@ extern short  (**__funcs) (void);
 
 #define lineae() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA00E" \
+	(								\
+		".word	0xA00E"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\
@@ -961,10 +948,9 @@ extern short  (**__funcs) (void);
 
 #define lineaf() 							\
 ({									\
-	    								\
 	__asm__ volatile						\
-	("\
-		.word   0xA00F" \
+	(								\
+		".word	0xA00F"						\
 	: 						  /* outputs */	\
 	: 						  /* inputs  */	\
 	: "d0", "d1", "d2", "a0", "a1", "a2"       /* clobbered regs */	\

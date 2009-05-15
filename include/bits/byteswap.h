@@ -39,8 +39,8 @@
      if (__builtin_constant_p (x))				\
        __bswap_32_v = __bswap_constant_32 (x);			\
      else							\
-       __asm__ __volatile__ ("ror%.w %#8, %0;"			\
-			     "swap %0;"				\
+       __asm__ __volatile__ ("ror%.w %#8, %0\n\t"		\
+			     "swap %0\n\t"			\
 			     "ror%.w %#8, %0"			\
 			     : "=d" (__bswap_32_v)		\
 			     : "0" ((unsigned int) (x)));	\

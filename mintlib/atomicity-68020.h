@@ -33,10 +33,10 @@ exchange_and_add (volatile uint32_t *mem, int val)
 {
   register int result = *mem;
   register int temp;
-  __asm__ __volatile__ ("1: move%.l %0,%1;"
-			"   add%.l %2,%1;"
-			"   cas%.l %0,%1,%3;"
-			"   jbne 1b"
+  __asm__ __volatile__ ("1: move%.l %0,%1\n\t"
+			"add%.l	%2,%1\n\t"
+			"cas%.l	%0,%1,%3\n\t"
+			"jbne	1b"
 			: "=d" (result), "=&d" (temp)
 			: "d" (val), "m" (*mem), "0" (result) : "memory");
   return result;
@@ -47,7 +47,7 @@ __attribute__ ((unused))
 atomic_add (volatile uint32_t *mem, int val)
 {
   /* XXX Use cas here as well?  */
-  __asm__ __volatile__ ("add%.l %0,%1"
+  __asm__ __volatile__ ("add%.l	%0,%1"
 			: : "ir" (val), "m" (*mem) : "memory");
 }
 
@@ -58,7 +58,8 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   char ret;
   long int readval;
 
-  __asm__ __volatile__ ("cas%.l %2,%3,%1; seq %0"
+  __asm__ __volatile__ ("cas%.l	%2,%3,%1\n\t"
+			"seq	%0"
                         : "=dm" (ret), "=m" (*p), "=d" (readval)
                         : "d" (newval), "m" (*p), "2" (oldval));
   return ret;

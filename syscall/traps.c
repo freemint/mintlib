@@ -138,13 +138,13 @@ generate_trap_impl(FILE *out, int nr, const char *call)
 			size += 4;
 		}
 		
-		fprintf(out, "\t%%%i,sp@-;\"\n", i+2);
+		fprintf(out, "\t%%%i,sp@-\\n\\t\"\n", i+2);
 		
 		i--;
 	}
 	
-	fprintf(out, "\t\t\"movw\t%%1,sp@-;\"\n");
-	fprintf(out, "\t\t\"trap\t#1;\"\n");
+	fprintf(out, "\t\t\"movw\t%%1,sp@-\\n\\t\"\n");
+	fprintf(out, "\t\t\"trap\t#1\\n\\t\"\n");
 	if (size <= 8)
 		fprintf(out, "\t\t\"addqw\t#%i,sp\"\n", size);
 	else

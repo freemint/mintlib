@@ -35,23 +35,23 @@
 
 /* Define ALIAS as a strong alias for ORIGINAL.  */
 #  define strong_alias(original, alias) \
-  asm (".globl _" #alias "\n" \
-         ".set _" #alias ",_" #original);
+  __asm__ (".globl _" #alias "\n\t" \
+       ".set _" #alias ",_" #original);
 
 /* Define ALIAS as a weak alias for ORIGINAL.  */
 #  ifdef HAVE_WEAK_SYMBOLS
 #   define weak_alias(original, alias) \
-  asm (".weak _" #alias "\n" \
+  __asm__ (".weak _" #alias "\n\t" \
        "_" #alias " = " "_" #original);
-#   define weak_extern(symbol) asm (".weak _" #symbol);
+#   define weak_extern(symbol) __asm__ (".weak _" #symbol);
 #  endif  /* !__HAVE_WEAK_SYMBOLS */
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 # ifdef __HAVE_GNU_LD
-#  define link_warning(symbol, msg)   \
-  asm(".stabs \"" msg "\",30,0,0,0\n"  \
-      ".stabs \"" "_" #symbol  "\",1,0,0,0\n");
+#  define link_warning(symbol, msg) \
+  __asm__(".stabs \"" msg "\",30,0,0,0\n\t" \
+      ".stabs \"_" #symbol "\",1,0,0,0");
 # endif  /* __HAVE_GNU_LD */
 
 # endif  /* !__GNUC__ */

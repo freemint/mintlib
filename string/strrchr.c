@@ -5,7 +5,7 @@
  * strrchr - find last occurrence of a character in a string
  */
 #ifdef __GNUC__
-asm(".stabs \"_rindex\",5,0,0,_strrchr"); /* dept of clean tricks */
+__asm__(".stabs \"_rindex\",5,0,0,_strrchr"); /* dept of clean tricks */
 #else
 char *
 rindex(s, charwanted)

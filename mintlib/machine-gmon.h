@@ -34,7 +34,7 @@
 #ifndef NO_UNDERSCORES
 /* The asm symbols for C functions are `_function'.
    The canonical name for the counter function is `mcount', no _.  */
-void _mcount (void) asm ("mcount");
+void _mcount (void) __asm__ ("mcount");
 #else
 /* The canonical name for the function is `_mcount' in both C and asm,
    but some old asm code might assume it's `mcount'.  */

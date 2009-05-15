@@ -1,3 +1,16 @@
+2009-05-14 Thursday 23:37  Vincent Riviere <vincent.riviere@freesbee.fr>
+
+	* include/macros.h, include/bits/byteswap.h, include/bits/math-68881.h,
+	include/mint/falcon.h, include/mint/linea.h, include/mint/mintbind.h,
+	include/mint/osbind.h, mintlib/atomicity-68020.h, mintlib/libc-symbols.h
+	mintlib/linea.c, mintlib/machine-gmon.h, string/strrchr.c,
+	syscall/traps.c
+
+	Cleanup inline assembly syntax.
+	Removed semicolumns, using "\n\t" instead.
+	Split strings spanning on multiple lines into multiple strings.
+	Replaced "asm" and "__asm" keywords by "__asm__".
+	
 2009-05-01 Friday 09:18  Vincent Riviere <vincent.riviere@freesbee.fr>
 
 	* Makefile, configvars, libinstall, libv4e/.cvsignore, libv4e/BINFILES,
