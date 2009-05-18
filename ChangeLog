@@ -1,3 +1,10 @@
+2009-05-18 Monday 20:51  Vincent Riviere <vincent.riviere@freesbee.fr>
+
+	* mintlib/include/compiler.h, mintlib/include/macros.h,
+	mintlib/include/mint/linea.h, mintlib/mintlib/linea.c
+
+	Added ColdFire support for all the C files.
+
 2009-05-18 Monday 18:44  Vincent Riviere <vincent.riviere@freesbee.fr>
 	* mint/mintbind.h, mint/osbind.h, mintlib/setjmp.S, syscall/traps.c
 

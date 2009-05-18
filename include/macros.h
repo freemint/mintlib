@@ -64,7 +64,7 @@
    The same macros are available with a 1 appended.  Semantics are
    the same except that offset is always 1.  */
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__mcoldfire__)
 #define ROLL(offset, x)	\
 ({ unsigned long __arg = (x);	\
     __asm__ ("roll %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \

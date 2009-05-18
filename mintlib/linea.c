@@ -99,10 +99,10 @@ void linea7(BBPB *P)
 {									
 	__asm__ volatile						
 	(
-		"movml	d2/a2/a6, sp@-\n\t"
+		PUSH_SP("d2/a2/a6", 12)
  		"movl	%0,a6\n\t"
 		".word	0xA007\n\t"
-		"movml	sp@+, d2/a2/a6"
+		POP_SP("d2/a2/a6", 12)
 	: 						  /* outputs */	
 	: "r"(P)					  /* inputs  */	
 	: "d0", "d1", "a0", "a1"		   /* clobbered regs */
