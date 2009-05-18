@@ -140,7 +140,7 @@ __extension__								\
 	(								\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addqw	#2,sp\n\t"					\
+		"addql	#2,sp\n\t"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -160,7 +160,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addqw	#4,sp"						\
+		"addql	#4,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -180,7 +180,7 @@ __extension__								\
 		"movl	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -202,7 +202,7 @@ __extension__								\
 		"movl	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addqw	#8,sp"						\
+		"addql	#8,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -297,7 +297,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -389,7 +389,7 @@ __extension__								\
 		"movl	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -407,7 +407,7 @@ __extension__								\
 	(								\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addqw	#2,sp"						\
+		"addql	#2,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -427,7 +427,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addqw	#4,sp"						\
+		"addql	#4,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -449,7 +449,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -499,7 +499,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addqw	#8,sp"						\
+		"addql	#8,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -521,7 +521,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addqw	#8,sp"						\
+		"addql	#8,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)              /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -565,7 +565,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addqw	#4,sp"						\
+		"addql	#4,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -583,7 +583,7 @@ __extension__								\
 	(								\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addqw	#2,sp"						\
+		"addql	#2,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -627,7 +627,7 @@ __extension__								\
 		"movl	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
@@ -649,7 +649,7 @@ __extension__								\
 		"movw	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addqw	#6,sp"						\
+		"addql	#6,sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\

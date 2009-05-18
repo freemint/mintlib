@@ -37,7 +37,7 @@ _sigsetjmp:
 	clrl	sp@-			| add no signals to sigmask
 	movew	#0x116, sp@-		| Psigblock() system call
 	trap	#1			|
-	addqw	#6, sp
+	addql	#6, sp
 	
 	movel	sp@+, a0		| restore register a0
 	
@@ -68,7 +68,7 @@ _longjmp:
 	jeq	NOMINT			| no -- do not call sigreturn
 	movew	#0x11a, sp@-		| Psigreturn() system call
 	trap	#1			| (ignored if not in a sig handler)
-	addqw	#2, sp
+	addql	#2, sp
 NOMINT:
 	movel	sp@(4),a0		| address of jmp_buf[]
 	movel	a0@(52),d0		| want to restore sigmask?
@@ -87,7 +87,7 @@ NOMINT:
 	movel	d0, sp@-		| restore signal mask
 	movew	#0x117, sp@-		| Psigsetmask() system call
 	trap	#1			|
-	addqw	#6, sp
+	addql	#6, sp
 	
 	movel	sp@+, a0		| restore register a0
 	

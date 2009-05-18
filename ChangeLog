@@ -1,3 +1,10 @@
+2009-05-18 Monday 18:44  Vincent Riviere <vincent.riviere@freesbee.fr>
+	* mint/mintbind.h, mint/osbind.h, mintlib/setjmp.S, syscall/traps.c
+
+	Replaced "addqw" to address register by "addql".
+	This instruction has the same behaviour, size and speed,
+	and is ColdFire compatible.
+
 2009-05-14 Thursday 23:37  Vincent Riviere <vincent.riviere@freesbee.fr>
 
 	* include/macros.h, include/bits/byteswap.h, include/bits/math-68881.h,
