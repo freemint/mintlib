@@ -63,7 +63,6 @@ SRCFILES = \
 	malloc.c \
 	mcount.c \
 	modf.S \
-	osbind.S \
 	profil-freq.c \
 	profil-posix.c \
 	pselect.c \
