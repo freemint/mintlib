@@ -144,7 +144,7 @@ generate_trap_impl(FILE *out, int nr, const char *call)
 	}
 	
 	fprintf(out, "\t\t\"movw\t%%1,sp@-\\n\\t\"\n");
-	fprintf(out, "\t\t\"trap\t#1\\n\\t\"\n");
+	fprintf(out, "\t\t\"trap\t#%i\\n\\t\"\n", nr);
 	if (size <= 8)
 		fprintf(out, "\t\t\"addql\t#%i,sp\"\n", size);
 	else
