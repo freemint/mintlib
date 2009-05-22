@@ -29,7 +29,7 @@ __extension__								\
 		"movl	%2,sp@-\n\t"					\
 		"movw	%1,sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(10),sp"					\
+		"lea	sp@(12),sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
