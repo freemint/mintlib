@@ -12,7 +12,7 @@
 
 __BEGIN_DECLS
 
-/* see osbind.h for __extension__ and AND_MEMORY */
+/* see compiler.h for __extension__ and AND_MEMORY */
 
 #define trap_1_wllw(n, a, b, c)						\
 __extension__								\

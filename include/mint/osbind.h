@@ -124,13 +124,6 @@ __BEGIN_DECLS
  *
  */
 
-#if __GNUC__ > 2 || __GNUC_MINOR__ > 5
-#define AND_MEMORY , "memory"
-#else
-#define AND_MEMORY
-#define __extension__
-#endif
-
 #define trap_1_w(n)							\
 __extension__								\
 ({									\

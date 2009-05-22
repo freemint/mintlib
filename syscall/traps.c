@@ -86,15 +86,6 @@ generate_trap_impl(FILE *out, int nr, const char *call)
 	int len = strlen(call);
 	int i;
 	
-	fprintf(out, "\n");
-	fprintf(out, "#if __GNUC__ > 2 || __GNUC_MINOR__ > 5\n");
-	fprintf(out, "#define AND_MEMORY , \"memory\"\n");
-	fprintf(out, "#else\n");
-	fprintf(out, "#define AND_MEMORY\n");
-//	fprintf(out, "#define __extension__\n");
-	fprintf(out, "#endif\n");
-	fprintf(out, "\n");
-	
 	fprintf(out, "long\n");
 	fprintf(out, "__trap_%i_w%s(short n", nr, call);
 	
@@ -159,7 +150,7 @@ generate_trap_impl(FILE *out, int nr, const char *call)
 		i++;
 	}
 	fprintf(out, "\n");
-	fprintf(out, "\t: \"d0\", \"d1\", \"d2\", \"a0\", \"a1\", \"a2\" /* clobbered regs */\n");
+	fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\" /* clobbered regs */\n");
 	fprintf(out, "\t  AND_MEMORY\n");
 	fprintf(out, "\t);\n");
 	fprintf(out, "\t\n");
@@ -204,6 +195,7 @@ generate_traps(const char *path)
 		
 		print_head(f, "gen-syscall");
 		fprintf(f, "#include <mint/trap.h>\n");
+		fprintf(f, "#include <compiler.h>\n");
 		fprintf(f, "\n");
 		
 		generate_trap_impl(f, l->nr, l->call);

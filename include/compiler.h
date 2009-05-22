@@ -12,6 +12,20 @@
 # define __MINT__
 #endif
 
+/* Convenience macros to test the versions of glibc and gcc.
+   Use them like this:
+   #if __GNUC_PREREQ (2,8)
+   ... code requiring gcc 2.8 or later ...
+   #endif
+   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
+   were not defined then.  */
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
+
 /* symbols to identify the type of compiler */
 
 /* general library stuff */
@@ -44,8 +58,7 @@
 #define __WCHAR_TYPEDEF__ __WCHAR_TYPE__
 #endif
 
-#if (__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 5))
-/* false for gcc < 2.5 */
+#if __GNUC_PREREQ(2, 5)
 #define __NORETURN __attribute__ ((noreturn))
 #define __EXITING void
 #else
@@ -56,10 +69,16 @@
 # define __GNUC_INLINE__
 #endif
 
-#if ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 3)) || (__GNUC__ == 4)
+#if __GNUC_PREREQ(3, 3)
 # define __CLOBBER_RETURN(a) 
 #else
 # define __CLOBBER_RETURN(a) a,
+#endif
+
+#if __GNUC_PREREQ(2, 6)
+#define AND_MEMORY , "memory"
+#else
+#define AND_MEMORY
 #endif
 
 #ifdef __mcoldfire__
