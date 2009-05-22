@@ -170,7 +170,7 @@ opcode	class name	args */
 0x047	Dgetpath	(char *path, short drv)
 0x048	Malloc		(long size)
 0x049	Mfree		(long block)
-0x04a	Mshrink		(short dummy, long block, long size)
+0x04a	Mshrink		(short DUMMY, long block, long size) /* DUMMY is removed in trapmacro */
 0x04b	Pexec		(short mode, const void *ptr1, const void *ptr2, const void *ptr3)
 0x04c	Pterm		(short code)
 0x04d	undefined
@@ -403,8 +403,8 @@ opcode	class name	args */
 0x11f	Psetlimit	(short i, long v)
 
 0x120	Talarm		(long x)
-0x121	Ppause		(void)
-0x122	Ssysconf	(short which)
+0x121	Pause		(void)
+0x122	Sysconf		(short which)
 0x123	Psigpending	(void)
 0x124	Dpathconf	(const char *name, short which)
 0x125	Pmsg		(short mode, long mbid, char *ptr)
@@ -412,7 +412,7 @@ opcode	class name	args */
 0x127	Prenice		(short pid, short increment)
 0x128	Dopendir	(const char *path, short flags)
 0x129	Dreaddir	(short len, long handle, char *buf)
-0x12a	Drewind		(long handle)
+0x12a	Drewinddir	(long handle)
 0x12b	Dclosedir	(long handle)
 0x12c	Fxattr		(short flag, const char *name, struct xattr *xattr)
 0x12d	Flink		(const char *old, const char *new)
@@ -455,7 +455,7 @@ opcode	class name	args */
 0x14e	Psetreuid	(ushort rid, ushort eid)
 0x14f	Psetregid	(ushort rid, ushort eid)
 
-0x150	Ssync		(void)
+0x150	Sync		(void)
 0x151	Shutdown	(long restart)
 0x152	Dreadlabel	(const char *path, char *label, short maxlen)
 0x153	Dwritelabel	(const char *path, const char *label)
@@ -468,7 +468,7 @@ opcode	class name	args */
 0x15a	Fpoll		(struct pollfd *fds, ulong nfds, ulong timeout) /* since 1.15.10 */
 0x15b	Fwritev		(short fd, const struct iovec *iov, long niov) /* since 1.16 */
 0x15c	Freadv		(short fd, const struct iovec *iov, long niov) /* since 1.16 */
-0x15d	Ffstat		(short fd, struct stat *st) /* since 1.16 */
+0x15d	Ffstat64	(short fd, struct stat *st) /* since 1.16 */
 0x15e	Psysctl		(long *name, ulong namelen,
 			 void *old, ulong *oldlenp,
 			 const void *new, ulong newlen)

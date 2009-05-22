@@ -28,6 +28,7 @@
  * 
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,75 +50,128 @@ void
 add_trap(int nr, const char *call)
 {
 	struct call *l;
-	
+
 	l = root;
 	while (l)
 	{
 		if ((l->nr == nr) && !strcmp(l->call, call))
 			return;
-		
+
 		l = l->next;
 	}
-	
+
 	l = malloc(sizeof(*l));
 	if (!l)
 	{
 		perror("malloc");
 		exit(1);
 	}
-	
+
 	l->nr = nr;
 	l->call = strdup(call);
-	
+
 	if (!l->call)
 	{
 		perror("malloc");
 		exit(1);
 	}
-	
+
 	l->next = root;
 	root = l;
 }
 
 static void
-generate_trap_impl(FILE *out, int nr, const char *call)
+generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 {
+	const char *macro0 = macro ? " \\" : "";
 	int size = 2;
-	int len = strlen(call);
+	int len = strlen(call), split_flag = 0;
 	int i;
-	
-	fprintf(out, "long\n");
-	fprintf(out, "__trap_%i_w%s(short n", nr, call);
-	
+
+	assert(len <= 9);
+
+	if (len > 8)
+		split_flag = 1;
+
+	if (macro)
+	{
+		fprintf(out, "#define trap_%i_w%s(n", nr, call);
+	}
+	else
+	{
+		fprintf(out, "long\n");
+		fprintf(out, "__trap_%i_w%s(short n", nr, call);
+	}
+
 	i = 0;
 	while (i < len)
 	{
+		const char *type = NULL;
+
 		if (call[i] == 'w')
-			fprintf(out, ", short a%i", i);
+			type = "short";
 		else if (call[i] == 'l')
-			fprintf(out, ", long a%i", i);
-		else
+			type = "long";
+
+		if (!type)
 		{
 			printf("wrong syscall argument: %s\n", call);
 			exit(1);
 		}
-		
-		i++;
+
+		if (macro)
+			fprintf(out, ",%c", 'a'+i);
+		else
+			fprintf(out, ", %s %c", type, 'a'+i);
+
+		++i;
 	}
-	
-	fprintf(out, ")\n");
-	fprintf(out, "{\n");
-	
-	fprintf(out, "\tregister long ret __asm__(\"d0\");\n");
-	fprintf(out, "\t\n");
-	fprintf(out, "\t__asm__ volatile\n");
-	fprintf(out, "\t(\n");
-	
+
+	fprintf(out, ")%s\n", macro0);
+
+	if (macro)
+	{
+		fprintf(out, "__extension__%s\n", macro0);
+		fprintf(out, "({%s\n", macro0);
+	}
+	else
+	{
+		fprintf(out, "{\n");
+	}
+
+	fprintf(out, "\tregister long retvalue __asm__(\"d0\");%s\n", macro0);
+
+	if (macro)
+	{
+		i = 0;
+		while (i < len)
+		{
+			const char *type = NULL;
+
+			fprintf(out, "\t");
+
+			if (call[i] == 'w')
+				type = "short";
+			else if (call[i] == 'l')
+				type = "long";
+
+			assert(type);
+
+			fprintf(out, "%s _%c = (%s)(%c);%s\n", type, 'a'+i, type, 'a'+i, macro0);
+
+			++i;
+		}
+	}
+
+	fprintf(out, "\t%s\n", macro0);
+	fprintf(out, "\t__asm__ volatile%s\n", macro0);
+	fprintf(out, "\t(%s\n", macro0);
+
 	i = len - 1;
 	while (i >= 0)
 	{
 		fprintf(out, "\t\t\"");
-		
+
 		if (call[i] == 'w')
 		{
 			fprintf(out, "movw");
@@ -128,84 +182,136 @@ generate_trap_impl(FILE *out, int nr, const char *call)
 			fprintf(out, "movl");
 			size += 4;
 		}
-		
-		fprintf(out, "\t%%%i,sp@-\\n\\t\"\n", i+2);
-		
-		i--;
+
+		fprintf(out, "\t%%%i,sp@-\\n\\t\"%s\n", i + 2 - split_flag, macro0);
+
+		--i;
 	}
-	
-	fprintf(out, "\t\t\"movw\t%%1,sp@-\\n\\t\"\n");
-	fprintf(out, "\t\t\"trap\t#%i\\n\\t\"\n", nr);
-	if (size <= 8)
-		fprintf(out, "\t\t\"addql\t#%i,sp\"\n", size);
+
+	fprintf(out, "\t\t\"movw\t%%%i,sp@-%s\"%s\n", split_flag ? 0 : 1, split_flag ? "" : "\\n\\t", macro0);
+
+	if (!split_flag)
+	{
+		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
+		if (size <= 8)
+			fprintf(out, "\t\t\"addql\t#%i,sp\"%s\n", size, macro0);
+		else
+			fprintf(out, "\t\t\"lea\tsp@(%i),sp\"%s\n", size, macro0);
+
+		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
+	}
 	else
-		fprintf(out, "\t\t\"lea\tsp@(%i),sp\"\n", size);
-	
-	fprintf(out, "\t: \"=r\"(ret)                          /* outputs */\n");
+		fprintf(out, "\t: /* outputs */%s\n", macro0);
+
 	fprintf(out, "\t: \"g\"(n)");
 	i = 0;
 	while (i < len)
 	{
-		fprintf(out, ", \"r\"(a%i)", i);
-		i++;
+		fprintf(out, ", \"r\"(%s%c)", macro ? "_" : "", 'a'+i);
+		++i;
 	}
-	fprintf(out, "\n");
-	fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\" /* clobbered regs */\n");
-	fprintf(out, "\t  AND_MEMORY\n");
-	fprintf(out, "\t);\n");
-	fprintf(out, "\t\n");
-	fprintf(out, "\treturn ret;\n");	
-	
-	fprintf(out, "}\n");
+	fprintf(out, " /* inputs  */%s\n", macro0);
+
+	if (!split_flag)
+	{
+		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\" /* clobbered regs */%s\n", macro0);
+		fprintf(out, "\t  AND_MEMORY%s\n", macro0);
+	}
+
+	fprintf(out, "\t);%s\n", macro0);
+
+	if (split_flag)
+	{
+		fprintf(out, "\t%s\n", macro0);
+		fprintf(out, "\t__asm__ volatile%s\n", macro0);
+		fprintf(out, "\t(%s\n", macro0);
+		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
+		fprintf(out, "\t\t\"lea\tsp@(%i),sp\"%s\n", size, macro0);
+		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
+		fprintf(out, "\t: /* inputs */%s\n", macro0);
+		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\" /* clobbered regs */%s\n", macro0);
+		fprintf(out, "\t  AND_MEMORY%s\n", macro0);
+		fprintf(out, "\t);%s\n", macro0);
+	}
+
+	if (macro)
+	{
+		fprintf(out, "\tretvalue;%s\n", macro0);
+		fprintf(out, "})\n");
+	}
+	else
+	{
+		fprintf(out, "\t\n");
+		fprintf(out, "\treturn retvalue;\n");
+		fprintf(out, "}\n");
+	}
 }
 
 void
-generate_traps(const char *path)
+generate_traps_as_macros(FILE *out)
+{
+	struct call *l;
+
+	assert(out);
+
+	l = root;
+	while (l)
+	{
+		generate_trap_impl(out, l->nr, l->call, 1);
+		fprintf(out, "\n");
+
+		l = l->next;
+	}
+}
+
+void
+generate_traps_as_files(const char *path)
 {
 	char srcbuf[1024];
 	FILE *src;
 	struct call *l;
-	
+
 	snprintf(srcbuf, sizeof(srcbuf), "%s/SRCFILES.traps", path);
-	
+
 	src = fopen(srcbuf, "w+");
 	if (!src)
 	{
 		perror("fopen");
 		exit(1);
 	}
-	
+
 	fprintf(src, "TRAPS = \\\n");
-	
+
 	l = root;
 	while (l)
 	{
 		char buf[1024];
 		FILE *f;
-		
+
 		fprintf(src, "\ttrap_%i_w%s.c", l->nr, l->call);
 		snprintf(buf, sizeof(buf), "%s/trap_%i_w%s.c", path, l->nr, l->call);
-		
+
 		f = fopen(buf, "w+");
 		if (!f)
 		{
 			perror("fopen");
 			exit(1);
 		}
-		
+
 		print_head(f, "gen-syscall");
 		fprintf(f, "#include <mint/trap.h>\n");
 		fprintf(f, "#include <compiler.h>\n");
 		fprintf(f, "\n");
-		
-		generate_trap_impl(f, l->nr, l->call);
-		
+
+		generate_trap_impl(f, l->nr, l->call, 0);
+		generate_trap_impl(f, l->nr, l->call, 1);
+
 		fclose(f);
 		l = l->next;
-		
+
 		if (l) fprintf(src, " \\\n");
 	}
-	
+
 	fprintf(src, "\n");
 	fclose(src);
 }
@@ -215,9 +321,9 @@ generate_trap_proto(FILE *out, int nr, const char *call)
 {
 	int len = strlen(call);
 	int i;
-	
+
 	fprintf(out, "long __trap_%i_w%s(short", nr, call);
-	
+
 	i = 0;
 	while (i < len)
 	{
@@ -230,10 +336,10 @@ generate_trap_proto(FILE *out, int nr, const char *call)
 			printf("wrong syscall argument: %s\n", call);
 			exit(1);
 		}
-		
+
 		i++;
 	}
-	
+
 	fprintf(out, ");\n");
 }
 
@@ -242,31 +348,47 @@ generate_trap_h(const char *path)
 {
 	char buf[1024];
 	FILE *f;
-	struct call *l;
-	
+
 	snprintf(buf, sizeof(buf), "%s/trap.h", path);
-	
+
 	f = fopen(buf, "w+");
 	if (!f)
 	{
 		perror("fopen");
 		exit(1);
 	}
-	
+
 	print_head(f, "gen-syscall");
-	fprintf (f, "#ifndef _trap_h\n");
-	fprintf (f, "#define _trap_h\n\n");
-	fprintf (f, "\n");
-	
-	l = root;
-	while (l)
+	fprintf(f, "#ifndef _MINT_TRAP_H\n");
+	fprintf(f, "#define _MINT_TRAP_H\n");
+	fprintf(f, "\n");
+	fprintf(f, "#ifndef _COMPILER_H\n");
+	fprintf(f, "#include <compiler.h>\n");
+	fprintf(f, "#endif\n");
+	fprintf(f, "\n");
+	fprintf(f, "__BEGIN_DECLS\n");
+	fprintf(f, "\n");
+
+	if (1)
 	{
-		generate_trap_proto(f, l->nr, l->call);
-		
-		l = l->next;
+		generate_traps_as_macros(f);
 	}
-	
-	fprintf (f, "\n");
-	fprintf (f, "\n#endif /* _trap_h */\n");
+	else
+	{
+		struct call *l;
+
+		l = root;
+		while (l)
+		{
+			generate_trap_proto(f, l->nr, l->call);
+			generate_trap_impl(f, l->nr, l->call, 1);
+
+			l = l->next;
+		}
+	}
+
+	fprintf(f, "__END_DECLS\n");
+	fprintf(f, "\n");
+	fprintf (f, "#endif /* _MINT_TRAP_H */\n");
 	fclose(f);
 }

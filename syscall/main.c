@@ -48,7 +48,7 @@ main(int argc, char **argv)
 {
 	const char *myname = *argv++;
 	int error;
-	
+
 	if (*argv == NULL)
 	{
 #if YYDEBUG != 0
@@ -59,7 +59,7 @@ main(int argc, char **argv)
 	else
 	{
 		FILE *f;
-		
+
 		f = fopen(*argv, "rt");
 		if (f)
 		{
@@ -72,38 +72,57 @@ main(int argc, char **argv)
 			exit(1);
 		}
 	}
-	
+
 	if (!error)
 	{
 		FILE *f;
-		
+
 		/* check_tab(); */
-		
+
 		f = fopen("../include/mint/sysbind.h", "w");
 		if (!f)
 		{
 			perror("sysbind.h");
 			exit(1);
 		}
-		
+
 		print_head(f, myname);
-		fprintf(f, "#ifndef _sysbind_h\n");
-		fprintf(f, "#define _sysbind_h\n\n");
-		fprintf(f, "#include <sys/types.h>\n");
+		fprintf(f, "#ifndef _MINT_SYSBIND_H\n");
+		fprintf(f, "#define _MINT_SYSBIND_H\n");
+		fprintf(f, "\n");
+		fprintf(f, "#ifndef _FEATURES_H\n");
+		fprintf(f, "# include <features.h>\n");
+		fprintf(f, "#endif\n");
+		fprintf(f, "\n");
+		fprintf(f, "#ifndef _MINT_OSTRUCT_H\n");
+		fprintf(f, "# include <mint/ostruct.h>\n");
+		fprintf(f, "#endif\n");
+		fprintf(f, "\n");
+		fprintf(f, "#ifndef _MINT_TRAP_H\n");
 		fprintf(f, "#include <mint/trap.h>\n");
+		fprintf(f, "#endif\n");
 		fprintf(f, "\n");
+		fprintf(f, "__BEGIN_DECLS\n");
 		fprintf(f, "\n");
-		
+
+		fprintf(f, "/* GEMDOS */\n");
+		fprintf(f, "\n");
 		generate_bindings_old(f, gemdos_table(), 1);
+		fprintf(f, "/* BIOS */\n");
+		fprintf(f, "\n");
 		generate_bindings_old(f, bios_table(), 13);
+		fprintf(f, "/* XBIOS */\n");
+		fprintf(f, "\n");
 		generate_bindings_old(f, xbios_table(), 14);
-		
-		fprintf(f, "\n#endif /* _sysbind_h */\n");
+
+		fprintf(f, "__END_DECLS\n");
+		fprintf(f, "\n");
+		fprintf(f, "#endif /* _MINT_SYSBIND_H */\n");
 		fclose(f);
-		
+
 		generate_trap_h("../include/mint");
-		generate_traps(".");
+	//	generate_traps_as_files(".");
 	}
-	
+
 	return error;
 }

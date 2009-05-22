@@ -41,7 +41,7 @@ generate_trap(struct syscall *call, char *buf, int trapnr)
 {
 	char *s = buf;
 	struct arg *l;
-	
+
 	l = call->args;
 	while (l)
 	{
@@ -68,10 +68,10 @@ generate_trap(struct syscall *call, char *buf, int trapnr)
 					call->name, l->name);
 				exit(1);
 		}
-		
+
 		l = l->next;
 	}
-	
+
 	*s = '\0';
 	add_trap(trapnr, buf);
 }
@@ -80,12 +80,12 @@ static void
 print_casted_args(FILE *out, struct syscall *call)
 {
 	struct arg *l;
-	
+
 	l = call->args;
 	while (l)
 	{
 		fprintf(out, ", ");
-		
+
 		if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 		{
 			fprintf(out, "(long)");
@@ -110,7 +110,7 @@ print_casted_args(FILE *out, struct syscall *call)
 				exit(1);
 		}
 		fprintf(out, "%s", l->name);
-		
+
 		l = l->next;
 	}
 }
@@ -119,26 +119,26 @@ void
 generate_bindings_proto(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
-	
+
 	for (i = 0; i < tab->size; i++)
 	{
 		struct syscall *call = tab->table[i];
-		
+
 		if (call && is_syscall(call))
 		{
 			fprintf(out, "long __%s", call->name);
-			
+
 			fprintf(out, "(");
-			
+
 			if (call->args)
 				generate_args(out, call->args, "", 1, ", ");
 			else
 				fprintf(out, "void");
-			
+
 			fprintf(out, ");\n");
 		}
 	}
-	
+
 	fprintf(out, "\n");
 }
 
@@ -146,16 +146,16 @@ void
 generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
-	
+
 	fprintf(out, "/* forward declarations */\n");
 	for (i = 0; i < tab->size; i++)
 	{
 		struct syscall *call = tab->table[i];
-		
+
 		if (call && is_syscall(call))
 		{
 			struct arg *l;
-			
+
 			l = call->args;
 			while (l)
 			{
@@ -164,84 +164,89 @@ generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 				{
 					fprintf(out, "%s;\n", l->types);
 				}
-				
+
 				l = l->next;
 			}
 		}
 	}
 	fprintf(out, "\n");
-	
+
 	for (i = 0; i < tab->size; i++)
 	{
 		struct syscall *call = tab->table[i];
-		
+
 		if (call && is_syscall(call))
 		{
 			char trap[128];
-			
+
 			fprintf(out, "static inline long __%s", call->name);
 			fprintf(out, "(");
-			
+
 			if (call->args)
 				generate_args(out, call->args, "", 1, ", ");
 			else
 				fprintf(out, "void");
-			
+
 			fprintf(out, ")\n");
 			fprintf(out, "{ ");
-			
+
 			generate_trap(call, trap, trapnr);
-			
+
 			fprintf(out, "return __trap_%i_w%s", trapnr, trap);
 			fprintf(out, "(0x%x", i);
-			
+
 			print_casted_args(out, call);
-			
+
 			fprintf(out, "); }\n\n");
 		}
 	}
 }
-	
+
 void
 generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
-	
+
 	for (i = 0; i < tab->size; i++)
 	{
 		struct syscall *call = tab->table[i];
-		
+
 		if (call && is_syscall(call))
 		{
 			char trap[128];
 			struct arg *l;
 			char arg;
-			
+
 			fprintf(out, "#define %s(", call->name);
 			arg = 'a';
 			l = call->args;
 			while (l)
 			{
-				fprintf(out, "%c", arg);
-				
-				arg++;
+				int skip = (strcmp(l->name, "DUMMY") == 0);
+
+				if (!skip)
+					fprintf(out, "%c", arg);
+
+				++arg;
 				l = l->next;
-				
-				if (l) fprintf(out, ",");
+
+				if (l && !skip) fprintf(out, ",");
 			}
 			fprintf(out, ") ");
-			
+
 			generate_trap(call, trap, trapnr);
-			
-			fprintf(out, "__trap_%i_w%s", trapnr, trap);
+
+			fprintf(out, "(long)trap_%i_w%s", trapnr, trap);
 			fprintf(out, "(0x%x", i);
-			
+
 			arg = 'a';
 			l = call->args;
 			while (l)
 			{
+				int skip = (strcmp(l->name, "DUMMY") == 0);
+
 				fprintf(out, ",");
-				
+
 				if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 				{
 					fprintf(out, "(long)");
@@ -265,18 +270,19 @@ generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 							call->name, l->name);
 						exit (1);
 				}
-				
-				fprintf(out, "%c", arg);
-				
-				arg++;
+
+				if (skip)
+					fprintf(out, "0");
+				else
+					fprintf(out, "%c", arg);
+
+				++arg;
 				l = l->next;
 			}
 			fprintf(out, ")");
-			
-			
 			fprintf(out, "\n");
 		}
 	}
-	
+
 	fprintf(out, "\n");
 }
