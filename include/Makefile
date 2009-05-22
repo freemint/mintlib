@@ -57,7 +57,7 @@ features.h: features.h.in $(top_srcdir)/configvars
 
 # Special rule for linker.h.  We build that automatically from
 # linker.h.in.
-# If features.h would not change we won't replace it because that
+# If linker.h would not change we won't replace it because that
 # would cause a global rebuild.
 linker.h: linker.h.in $(top_srcdir)/configvars
 	@echo Updating linker.h ...
