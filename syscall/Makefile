@@ -38,15 +38,13 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
-# override (cross)compiler
-CC = gcc
-CFLAGS = -Wall -O
-COMPILE = $(CC) $(CFLAGS)
-
-syscalls.stmp: gen-syscall syscalls.master
+syscalls.stmp: gen-syscall0 syscalls.master
 	echo "TRAPS=" > SRCFILES.traps
 	./gen-syscall syscalls.master
 	touch $@
+
+gen-syscall0:
+	$(MAKE) gen-syscall CC="gcc" CFLAGS="-O -Wall" COMPILE="gcc -O -Wall"
 
 gen-syscall: $(gen_objs)
 	$(CC) $(gen_objs) -o $@ -lfl
