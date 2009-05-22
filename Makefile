@@ -95,7 +95,7 @@ dist-check:
 		&& echo "##################################################"
 	@rm -f $(distdir)
 
-dist: $(top_srcdir)/CFILES $(top_srcdir)/include/linker.h \
+dist: $(top_srcdir)/CFILES $(top_srcdir)/include/features.h \
   $(top_srcdir)/include/linker.h distdir
 	-chmod -R a+r $(distdir)
 	touch $(distdir)/include/features.h $(distdir)/include/linker.h
