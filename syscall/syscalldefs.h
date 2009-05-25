@@ -44,6 +44,7 @@ struct systab
 struct syscall
 {
 	char name[STRMAX];
+	struct arg *ret;
 	struct arg *args;
 	int status;
 #define SYSCALL_REGULAR		0

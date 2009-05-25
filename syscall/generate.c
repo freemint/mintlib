@@ -236,7 +236,44 @@ generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 
 			generate_trap(call, trap, trapnr);
 
-			fprintf(out, "(long)trap_%i_w%s", trapnr, trap);
+			if (call->ret)
+			{
+				fprintf(out, "(");
+				switch (call->ret->type)
+				{
+					case TYPE_VOID:
+						fprintf(out, "void");
+						break;
+					case TYPE_INT:
+					case TYPE_CHAR:
+					case TYPE_SHORT:
+						fprintf(out, "short");
+						break;
+					case TYPE_UNSIGNED:
+					case TYPE_UCHAR:
+					case TYPE_USHORT:
+						fprintf(out, "unsigned short");
+						break;
+					case TYPE_LONG:
+						fprintf(out, "long");
+						break;
+					case TYPE_ULONG:
+						fprintf(out, "unsigned long");
+						break;
+					case TYPE_IDENT:
+						fprintf(out, "%s", call->ret->types);
+						break;
+					default:
+						printf("invalid type specification for %s (%s)\n",
+							call->name, call->ret->name);
+						exit (1);
+				}
+				if (call->ret->flags & FLAG_POINTER)
+					fprintf(out, " *");
+				fprintf(out, ")");
+			}
+
+			fprintf(out, "trap_%i_w%s", trapnr, trap);
 			fprintf(out, "(0x%x", i);
 
 			arg = 'a';
