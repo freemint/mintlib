@@ -98,8 +98,14 @@ main(int argc, char **argv)
 		fprintf(f, "# include <mint/ostruct.h>\n");
 		fprintf(f, "#endif\n");
 		fprintf(f, "\n");
-		fprintf(f, "#ifndef _MINT_TRAP_H\n");
-		fprintf(f, "#include <mint/trap.h>\n");
+		fprintf(f, "#ifndef _MINT_TRAP1_H\n");
+		fprintf(f, "# include <mint/trap1.h>\n");
+		fprintf(f, "#endif\n");
+		fprintf(f, "#ifndef _MINT_TRAP13_H\n");
+		fprintf(f, "# include <mint/trap13.h>\n");
+		fprintf(f, "#endif\n");
+		fprintf(f, "#ifndef _MINT_TRAP14_H\n");
+		fprintf(f, "# include <mint/trap14.h>\n");
 		fprintf(f, "#endif\n");
 		fprintf(f, "\n");
 		fprintf(f, "__BEGIN_DECLS\n");
@@ -120,7 +126,7 @@ main(int argc, char **argv)
 		fprintf(f, "#endif /* _MINT_SYSBIND_H */\n");
 		fclose(f);
 
-		generate_trap_h("../include/mint");
+		generate_traps_h("../include/mint");
 	//	generate_traps_as_files(".");
 	}
 

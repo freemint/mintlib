@@ -34,9 +34,8 @@
 
 void add_trap(int nr, const char *call);
 
-void generate_traps_as_macros(FILE *f);
 void generate_traps_as_files(const char *path);
-void generate_trap_h(const char *path);
+void generate_traps_h(const char *path);
 
 
 #endif /* _traps_h */

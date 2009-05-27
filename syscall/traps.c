@@ -247,8 +247,8 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 	}
 }
 
-void
-generate_traps_as_macros(FILE *out)
+static void
+generate_traps_as_macros(FILE *out, int nr)
 {
 	struct call *l;
 
@@ -257,8 +257,11 @@ generate_traps_as_macros(FILE *out)
 	l = root;
 	while (l)
 	{
-		generate_trap_impl(out, l->nr, l->call, 1);
-		fprintf(out, "\n");
+		if (l->nr == nr)
+		{
+			generate_trap_impl(out, l->nr, l->call, 1);
+			fprintf(out, "\n");
+		}
 
 		l = l->next;
 	}
@@ -343,13 +346,28 @@ generate_trap_proto(FILE *out, int nr, const char *call)
 	fprintf(out, ");\n");
 }
 
-void
-generate_trap_h(const char *path)
+static void
+generate_trap_protos(FILE *out, int nr)
+{
+	struct call *l;
+
+	l = root;
+	while (l)
+	{
+		if (l->nr == nr)
+			generate_trap_proto(out, l->nr, l->call);
+
+		l = l->next;
+	}
+}
+
+static void
+generate_trap_h(const char *path, int nr)
 {
 	char buf[1024];
 	FILE *f;
 
-	snprintf(buf, sizeof(buf), "%s/trap.h", path);
+	snprintf(buf, sizeof(buf), "%s/trap%i.h", path, nr);
 
 	f = fopen(buf, "w+");
 	if (!f)
@@ -359,8 +377,8 @@ generate_trap_h(const char *path)
 	}
 
 	print_head(f, "gen-syscall");
-	fprintf(f, "#ifndef _MINT_TRAP_H\n");
-	fprintf(f, "#define _MINT_TRAP_H\n");
+	fprintf(f, "#ifndef _MINT_TRAP%i_H\n", nr);
+	fprintf(f, "#define _MINT_TRAP%i_H\n", nr);
 	fprintf(f, "\n");
 	fprintf(f, "#ifndef _COMPILER_H\n");
 	fprintf(f, "#include <compiler.h>\n");
@@ -370,25 +388,20 @@ generate_trap_h(const char *path)
 	fprintf(f, "\n");
 
 	if (1)
-	{
-		generate_traps_as_macros(f);
-	}
+		generate_traps_as_macros(f, nr);
 	else
-	{
-		struct call *l;
-
-		l = root;
-		while (l)
-		{
-			generate_trap_proto(f, l->nr, l->call);
-			generate_trap_impl(f, l->nr, l->call, 1);
-
-			l = l->next;
-		}
-	}
+		generate_trap_protos(f, nr);
 
 	fprintf(f, "__END_DECLS\n");
 	fprintf(f, "\n");
-	fprintf (f, "#endif /* _MINT_TRAP_H */\n");
+	fprintf (f, "#endif /* _MINT_TRAP%i_H */\n", nr);
 	fclose(f);
+}
+
+void
+generate_traps_h(const char *path)
+{
+	generate_trap_h(path, 1);
+	generate_trap_h(path, 13);
+	generate_trap_h(path, 14);
 }
