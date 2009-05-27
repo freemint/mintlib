@@ -46,19 +46,37 @@ _ldexp:
  |-----------------------------------------------------------------------------
 
 	lea	sp@(4),a1
+#ifdef __mcoldfire__
+	lea	sp@(-24),sp
+	moveml	d2-d7,sp@	| save d2-d7
+#else
 	moveml	d2-d7,sp@-	| save d2-d7
+#endif
 
 	movew	a1@,d0		| extract value.exp
 	movew	d0,d2		| extract value.sign
+#ifdef __mcoldfire__
+	andil	#0x7fff,d0	| kill sign bit
+	lsrl	#4,d0
+#else
 	bclr	#15,d0		| kill sign bit
 	lsrw	#4,d0
+#endif
 
 	moveq	#0x0f,d3	| remove exponent from value.mantissa
+#ifdef __mcoldfire__
+	andl	d2,d3		| four upper bits of value in d3
+#else
 	andb	d2,d3		| four upper bits of value in d3
+#endif
 	bset	#4,d3		| implied leading 1
 	tstw	d0		| check for zero exponent
 	jne	1f
+#ifdef __mcoldfire__
+	addql	#1,d0
+#else
 	addqw	#1,d0
+#endif
 	bclr	#4,d3		| nah, we do not need stinkin leadin 1
 1:	movew	d3,a1@		| save results of our efforts
 #ifdef __MSHORT__
@@ -80,8 +98,14 @@ _ldexp:
 retz:
 	moveq	#0,d0		| zero return value
 	movel	d0,d1
+#ifdef __mcoldfire__
+	btst	#15,d2
+	jeq	L0
+	bset 	#31,d0
+#else
 	lslw	#1,d2		| transfer argument sign
 	roxrl	#1,d0
+#endif
 	jra	L0
 
 rangerr:
@@ -95,12 +119,22 @@ rangerr:
 	addql	#8,a7		|
 #endif /* ERROR_CHECK */
 
+#ifdef __mcoldfire__
+	movel	__infinitydf,d0    | return HUGE_VAL (same as in <math.h>)
+	movel	__infinitydf+4,d1
+#else
 	moveml	__infinitydf,d0-d1 | return HUGE_VAL (same as in <math.h>)
+#endif
 	tstw	d2
 	jge	L0
 	bset	#31,d0
 L0:
+#ifdef __mcoldfire__
+	moveml	sp@,d2-d7	| pop saved reggies
+	lea	sp@(24),sp
+#else
 	moveml	sp@+,d2-d7	| pop saved reggies
+#endif
 	rts
 
 #else	/* __M68881__ || sfp004 */

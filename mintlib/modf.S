@@ -23,14 +23,26 @@ BIAS8	=	0x3ff - 1
 	.globl _modf
 _modf:
 	lea	sp@(4),a0	| a0 -> float argument
+#ifdef __mcoldfire__
+	lea	sp@(-24),sp
+	moveml	d2-d7,sp@	| save d2-d7
+	movel	a0@+,d0
+	movel	a0@+,d1
+#else
 	moveml	d2-d7,sp@-	| save d2-d7
 	moveml	a0@+,d0-d1
+#endif
 	movel   a0@,a1		| a1 -> ipart result
 
 	movel	d0,d2		| calculate exponent
 	swap	d2
+#ifdef __mcoldfire__
+	andil	#0x7fff,d2	| kill sign bit
+	lsrl	#4,d2
+#else
 	bclr	#15,d2		| kill sign bit
 	lsrw	#4,d2		| exponent in lower 12 bits of d2
+#endif
 
 	cmpw	#BIAS8,d2
 	jgt	1f		| fabs(value) >= 1.0
@@ -39,12 +51,22 @@ _modf:
 	clrl	a1@		| make integer part 0
 
 0:
+#ifdef __mcoldfire__
+	moveml	sp@,d2-d7	| restore saved d2-d7
+	lea	sp@(24),sp
+#else
 	moveml	sp@+,d2-d7	| restore saved d2-d7
+#endif
 	rts
 
 1:
+#ifdef __mcoldfire__
+	movel	#BIAS8+53,d3
+	subl	d2,d3		| compute position of "binary point"
+#else
 	movew	#BIAS8+53,d3
 	subw	d2,d3		| compute position of "binary point"
+#endif
 	jgt	2f		| branch if we do have fractional part
 
 	moveml  d0-d1,a1@	| store entire value as the integer part
@@ -58,7 +80,11 @@ _modf:
 	cmpw	d6,d3
 	jlt	3f		| jump if "binary point" in a lower part
 	movel	d0,d4
+#ifdef __mcoldfire__
+	subl	d6,d3
+#else
 	subw	d6,d3
+#endif
 	moveq	#0,d6		| compute mask for splitting
 	bset	d3,d6
 	negl	d6
@@ -79,7 +105,13 @@ _modf:
 	moveml	d0-d1,a1@	| store computed integer part
 
 	swap	d0
+#ifdef __mcoldfire__
+	movl	d2,d3		| set registers for norm_df
+	movl	d0,d2
+	movl	d3,d0
+#else
 	exg	d0,d2		| set registers for norm_df
+#endif
 	clrw	d1		| rounding = 0
 |				| normalize fractional part
 	jmp	___norm_df	| norm_df will pop d2/d7 we saved before

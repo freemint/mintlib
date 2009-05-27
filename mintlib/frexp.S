@@ -42,18 +42,31 @@ nonzero:
 2:				| return here when looping
 	swap	d0		| sign and exponent into lower 16 bits
 	movew	d0,d2		| set d2 for norm_df
+#ifdef __mcoldfire__
+	andil	#0x7fff,d0	| kill sign bit
+	lsrl	#4,d0
+#else
 	bclr	#15,d0		| kill sign bit
 	lsrw	#4,d0
+#endif
 
 	cmpw	#BIAS8,d0	| get out of loop if finally (a1) in [0.5,1.0)
 	jeq	3f
 
 	moveq	#0x0f,d1	| remove exponent from value.mantissa
+#ifdef __mcoldfire__
+	andl	d2,d1		| four upper bits of value in d1
+#else
 	andb	d2,d1		| four upper bits of value in d1
+#endif
 	bset	#4,d1		| implied leading 1
 	tstw	d0		| check for zero exponent
 	jne	1f
+#ifdef __mcoldfire__
+	addql	#1,d0
+#else
 	addqw	#1,d0
+#endif
 	bclr	#4,d1		| nah, we do not need stinkin leadin 1
 1:	movew	d1,a1@		| save results of our efforts
 
@@ -61,7 +74,11 @@ nonzero:
 	orl	a1@(4),d1
 	jeq	3f		| if zero, all done : exp = 0, num = 0.0
 				| sign of zero is correct
+#ifdef __mcoldfire__
+	subl	#BIAS8,d0	| remove bias
+#else
 	subw	#BIAS8,d0	| remove bias
+#endif
 #ifdef __MSHORT__
 	addw	d0,a0@		| add current exponent in
 #else
@@ -72,7 +89,12 @@ nonzero:
 	movew	#BIAS8,d0	| set bias for return value
 	clrw	d1		| rounding = 0
 	pea	L0		| call to norm_df (dirty, but dont ...
+#ifdef __mcoldfire__
+	lea	sp@(-24),sp
+	moveml	d2-d7,sp@	| ... need to copy with -mshort)
+#else
 	moveml	d2-d7,sp@-	| ... need to copy with -mshort)
+#endif
 	moveml	a1@,d4-d5
 	jmp	___norm_df	| normalize result
 L0:				| norm_df does not affect a0 or a1

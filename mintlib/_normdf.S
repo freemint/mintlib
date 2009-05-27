@@ -67,8 +67,15 @@ LC0:
 	| double __normdf(long long mant, int exp, int sign, int rbits);
 ___normdf:
 	lea	sp@(4),a0	| parameter pointer
+#ifdef __mcoldfire__
+	lea	sp@(-24),sp
+	moveml	d2-d7,sp@	| save working registers
+	movel	a0@+,d4		| get mantissa
+	movel	a0@+,d5
+#else
 	moveml	d2-d7,sp@-	| save working registers
 	moveml	a0@+,d4-d5	| get mantissa
+#endif
 
 # ifdef __MSHORT__
 	movew	a0@+,d0		| get exponent
@@ -93,6 +100,12 @@ ___normdf:
 	| d0=u.exp, d2=u.sign, d1=rounding bits, d4/d5=mantissa
 	| registers d2-d7 must be saved on the stack !
 ___norm_df:
+#ifdef __mcoldfire__
+	movel	#0xffff,d3	| clean high words of arguments
+	andl	d3,d0
+	andl	d3,d1
+	andl	d3,d2
+#endif
 	movel	d4,d3		| rounding and u.mant == 0 ?
 	orl	d5,d3
 	jne	1f
@@ -108,45 +121,95 @@ ___norm_df:
 	swap	d5
 	movew	d5,d4
 	moveb	d1,d5		| some doubt about this one !
+#ifdef __mcoldfire__
+	movew	d5,d3
+	lsll	#8,d3
+	movew	d3,d5
+#else
 	lslw	#8,d5
+#endif
 	clrw	d1
+#ifdef __mcoldfire__
+	subl	#16,d0		| account for swap
+#else
 	subw	#16,d0		| account for swap
+#endif
 	jra	1b
 2:
+#ifdef __mcoldfire__
+	andil	#0xffffff00,d2	| sticky byte
+#else
 	clrb	d2		| sticky byte
+#endif
 	movel	#0xffe00000,d6
 3:	tstw	d0		| divide (shift)
 	jle	0f		|  denormalized number
 	movel	d4,d3
 	andl	d6,d3		|  or until no bits above 53
 	jeq	4f
+#ifdef __mcoldfire__
+0:	addl	#1,d0		| increment exponent
+	movew	d4,d3		| backup bit 0 of highest long
+	lsrl	#1,d4
+	lsrl	#1,d5
+	lsrl	#1,d1		| shift into rounding bits
+	btst	#0,d3
+	jeq	33f
+	bset	#31,d5
+	bset	#7,d1
+33:	orl	d1,d2		| set sticky
+#else
 0:	addw	#1,d0		| increment exponent
 	lsrl	#1,d4
 	roxrl	#1,d5
 	orb	d1,d2		| set sticky
 	roxrb	#1,d1		| shift into rounding bits
+#endif
 	jra	3b
 4:
+#ifdef __mcoldfire__
+	andl	#0xffffff01,d2
+	movel	d2,d3
+	andil	#1,d3
+	orl	d3,d1		| make least sig bit sticky
+#else
 	andb	#1,d2
 	orb	d2,d1		| make least sig bit sticky
+#endif
 	asrl	#1,d6		| #0xfff00000 -> d6
 5:	movel	d4,d3		| multiply (shift) until
 	andl	d6,d3		| one in implied position
 	jne	6f
+#ifdef __mcoldfire__
+	subl	#1,d0		| decrement exponent
+#else
 	subw	#1,d0		| decrement exponent
+#endif
 	jeq	6f		|  too small. store as denormalized number
+#ifdef __mcoldfire__
+	addl	d1,d1		| some doubt about this one *
+#else
 	addb	d1,d1		| some doubt about this one *
+#endif
 	addxl	d5,d5
 	addxl	d4,d4
 	jra	5b
 6:
 	tstb	d1		| check rounding bits
 	jge	8f		| round down - no action neccessary
+#ifdef __mcoldfire__
+	cmpb	#0x80,d1
+	jne	7f		| round up
+        movew   d5,d1           | tie case - round to even
+                                | dont need rounding bits any more
+        andl    #1,d1           | check if even
+#else
 	negb	d1
 	jvc	7f		| round up
         movew   d5,d1           | tie case - round to even
                                 | dont need rounding bits any more
         andw    #1,d1           | check if even
+#endif
         jeq     8f              | mantissa is even - no action necessary
                                 | fall through
 7:
@@ -155,7 +218,11 @@ ___norm_df:
 	addxl	d1,d4
 	tstw	d0
 	jne	0f		| renormalize if number was denormalized
+#ifdef __mcoldfire__
+	addl	#1,d0		| correct exponent for denormalized numbers
+#else
 	addw	#1,d0		| correct exponent for denormalized numbers
+#endif
 	jra	2b
 0:	movel	d4,d3		| check for rounding overflow
 	asll	#1,d6		| #0xffe00000 -> d3
@@ -170,16 +237,31 @@ ___norm_df:
 	cmpw	#2047,d0
 	jge	oflow
 
+#ifdef __mcoldfire__
+	swap	d0		| map to upper word
+	lsll	#4,d0		| re-position exponent
+	andil	#0x7ff00000,d0
+	btst	#15,d2
+	jeq	9f
+	bset 	#31,d0
+9:
+#else
 	lslw	#5,d0		| re-position exponent - one bit too high
 	lslw	#1,d2		| get X bit
 	roxrw	#1,d0		| shift it into sign position
 	swap	d0		| map to upper word
 	clrw	d0
+#endif
 	andl	#0x0fffff,d4	| top mantissa bits
 	orl	d0,d4		| insert exponent and sign
 	movel	d4,d0
 	movel	d5,d1
+#ifdef __mcoldfire__
+	moveml	sp@,d2-d7
+	lea	sp@(24),sp
+#else
 	moveml	sp@+,d2-d7
+#endif
 	rts
 
 retz:
@@ -188,9 +270,17 @@ retz:
 retzok:
 	moveq	#0,d0		| return zero value
 	movel	d0,d1
+#ifdef __mcoldfire__
+	movw	d2,d0
+	swap	d0
+	andil	#0x80000000,d0
+0:	moveml	sp@,d2-d7
+	lea	sp@(24),sp
+#else
 	lslw	#1,d2		| set value of extension
 	roxrl	#1,d0		| and move it to hight bit of d0
 0:	moveml	sp@+,d2-d7
+#endif
 	rts
 
 oflow:
@@ -204,12 +294,22 @@ oflow:
 #endif	/* ERROR_CHECK */
 
 |	moveml	pc@(__infinitydf),d0-d1 | return infinity value
+#ifdef __mcoldfire__
+	movel	__infinitydf,d0	| return infinty value
+	movel	__infinitydf+4,d1
+#else
 	moveml	__infinitydf,d0-d1 | return infinty value
+#endif
 	tstw	d2
 	jpl	1f
 	bset	#31,d0
 1:
+#ifdef __mcoldfire__
+	moveml	sp@,d2-d7	| should really cause trap ?!? (mjr: why?)
+	lea	sp@(24),sp
+#else
 	moveml	sp@+,d2-d7	| should really cause trap ?!? (mjr: why?)
+#endif
 	rts
 
 #endif /* __M68881__ */
