@@ -15,8 +15,8 @@ csrcdir = $(top_srcdir)/src
 subdir = libv4e
 
 libsize = v4e
-instdir = mcfv4e
-cflags = -mcfv4e
+instdir = m5475
+cflags = -mcpu=5475
 
 default: all
 
