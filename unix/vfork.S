@@ -37,12 +37,22 @@ ___vfork:
 	jmi	L_err
 	jmp	a1@		| return
 L_TOS:
+#ifdef __mcoldfire__
+	lea	Vfsav, a0
+	moveml	d2-d7/a1-a6, a0@	| save registers
+#else
 	moveml	d2-d7/a1-a6, Vfsav	| save registers
+#endif
 	pea	Vfsav
 	pea	pc@(L_newprog)
 	jbsr	_tfork		| tfork(L_newprog, L_vfsav)
 	addql	#8, sp
+#ifdef __mcoldfire__
+	lea	Vfsav, a0
+	moveml	a0@, d2-d7/a1-a6	| restore reggies
+#else
 	moveml	Vfsav, d2-d7/a1-a6	| restore reggies
+#endif
 	tstl	d0		| fork went OK??
 	jmi	L_err		| no -- error
 	jmp	a1@		| return to caller

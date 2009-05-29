@@ -67,9 +67,15 @@ common2:
 	cmpl	a0,a1
 	jgt	top_down
 
+#ifdef __mcoldfire__
+	movl	a0,d1		| test for alignment
+	movl	a1,d2
+	eorl	d2,d1
+#else
 	movw	a0,d1		| test for alignment
 	movw	a1,d2
 	eorw	d2,d1
+#endif
 	btst	#0,d1		| one odd one even ?
 	jne	slow_copy
 	btst	#0,d2		| both even ?
@@ -77,10 +83,29 @@ common2:
 	movb	a0@+,a1@+	| copy one byte, now we are both even
 	subql	#1,d0
 both_even:
-	clrw	d1		| save length less 256
+	movq	#0,d1		| save length less 256
 	movb	d0,d1
 	lsrl	#8,d0		| number of 256 bytes blocks
 	jeq	less256
+#ifdef __mcoldfire__
+	lea	sp@(-40),sp
+	movml	d1/d3-d7/a2/a3/a5/a6,sp@	| d2 is already saved
+					| exclude a4 because of -mbaserel
+copy256:
+	movml	a0@,d1-d7/a2/a3/a5/a6	| copy 5*44+36=256 bytes
+	movml	d1-d7/a2/a3/a5/a6,a1@
+	movml	a0@(44),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(44)
+	movml	a0@(88),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(88)
+	movml	a0@(132),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(132)
+	movml	a0@(176),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(176)
+	movml	a0@(220),d1-d7/a2-a3
+	movml	d1-d7/a2-a3,a1@(220)
+	lea	a0@(256),a0
+#else
 	movml	d1/d3-d7/a2/a3/a5/a6,sp@-	| d2 is already saved
 					| exclude a4 because of -mbaserel
 copy256:
@@ -96,9 +121,25 @@ copy256:
 	movml	d1-d7/a2/a3/a5/a6,a1@(176)
 	movml	a0@+,d1-d7/a2-a3
 	movml	d1-d7/a2-a3,a1@(220)
+#endif
 	lea	a1@(256),a1		| increment dest, src is already
 	subql	#1,d0
 	jne	copy256 		| next, please
+#ifdef __mcoldfire__
+	movml	sp@,d1/d3-d7/a2/a3/a5/a6
+	lea	sp@(40),sp
+less256:			| copy 16 bytes blocks
+	movl	d1,d0
+	lsrl	#2,d0		| number of 4 bytes blocks
+	jeq	less4		| less that 4 bytes left
+	movl	d0,d2
+	negl	d2
+	andil	#3,d2		| d2 = number of bytes below 16 (-n)&3
+	subql	#1,d0
+	lsrl	#2,d0		| number of 16 bytes blocks minus 1, if d2==0
+	addl	d2,d2		| offset in code (movl two bytes)
+	jmp	pc@(2,d2:l)	| jmp into loop
+#else
 	movml	sp@+,d1/d3-d7/a2/a3/a5/a6
 less256:			| copy 16 bytes blocks
 	movw	d1,d0
@@ -111,12 +152,18 @@ less256:			| copy 16 bytes blocks
 	lsrw	#2,d0		| number of 16 bytes blocks minus 1, if d2==0
 	addw	d2,d2		| offset in code (movl two bytes)
 	jmp	pc@(2,d2:w)	| jmp into loop
+#endif
 copy16:
 	movl	a0@+,a1@+
 	movl	a0@+,a1@+
 	movl	a0@+,a1@+
 	movl	a0@+,a1@+
+#ifdef __mcoldfire__
+	subql	#1,d0
+	bpl	copy16
+#else
 	dbra	d0,copy16
+#endif
 less4:
 	btst	#1,d1
 	jeq	less2
@@ -133,6 +180,15 @@ exit:
 	rts
 
 slow_copy:			| byte by bytes copy
+#ifdef __mcoldfire__
+	movl	d0,d1
+	negl	d1
+	andil	#7,d1		| d1 = number of bytes blow 8 (-n)&7
+	addql	#7,d0
+	lsrl	#3,d0		| number of 8 bytes block plus 1, if d1!=0
+	addl	d1,d1		| offset in code (movb two bytes)
+	jmp	pc@(2,d1:l)	| jump into loop
+#else
 	movw	d0,d1
 	negw	d1
 	andiw	#7,d1		| d1 = number of bytes blow 8 (-n)&7
@@ -140,6 +196,7 @@ slow_copy:			| byte by bytes copy
 	lsrl	#3,d0		| number of 8 bytes block plus 1, if d1!=0
 	addw	d1,d1		| offset in code (movb two bytes)
 	jmp	pc@(2,d1:w)	| jump into loop
+#endif
 scopy:
 	movb	a0@+,a1@+
 	movb	a0@+,a1@+
@@ -157,9 +214,15 @@ top_down:
 	addl	d0,a0		| a0 byte after end of src
 	addl	d0,a1		| a1 byte after end of dest
 
+#ifdef __mcoldfire__
+	movl	a0,d1		| exact the same as above, only with predec
+	movl	a1,d2
+	eorl	d2,d1
+#else
 	movw	a0,d1		| exact the same as above, only with predec
 	movw	a1,d2
 	eorw	d2,d1
+#endif
 	btst	#0,d1
 	jne	slow_copy_d
 
@@ -168,10 +231,28 @@ top_down:
 	movb	a0@-,a1@-
 	subql	#1,d0
 both_even_d:
-	clrw	d1
+	movq	#0,d1
 	movb	d0,d1
 	lsrl	#8,d0
 	jeq	less256_d
+#ifdef __mcoldfire__
+	lea	sp@(-40),sp
+	movml	d1/d3-d7/a2/a3/a5/a6,sp@
+copy256_d:
+	movml	a0@(-44),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(-44)
+	movml	a0@(-88),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(-88)
+	movml	a0@(-132),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(-132)
+	movml	a0@(-176),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(-176)
+	movml	a0@(-220),d1-d7/a2/a3/a5/a6
+	movml	d1-d7/a2/a3/a5/a6,a1@(-220)
+	movml	a0@(-256),d1-d7/a2-a3
+	movml	d1-d7/a2-a3,a1@(-256)
+	lea	a1@(-256),a1
+#else
 	movml	d1/d3-d7/a2/a3/a5/a6,sp@-
 copy256_d:
 	movml	a0@(-44),d1-d7/a2/a3/a5/a6
@@ -186,9 +267,25 @@ copy256_d:
 	movml	d1-d7/a2/a3/a5/a6,a1@-
 	movml	a0@(-256),d1-d7/a2-a3
 	movml	d1-d7/a2-a3,a1@-
+#endif
 	lea	a0@(-256),a0
 	subql	#1,d0
 	jne	copy256_d
+#ifdef __mcoldfire__
+	movml	sp@,d1/d3-d7/a2/a3/a5/a6
+	lea	sp@(40),sp
+less256_d:
+	movl	d1,d0
+	lsrl	#2,d0
+	jeq	less4_d
+	movl	d0,d2
+	negl	d2
+	andil	#3,d2
+	subql	#1,d0
+	lsrl	#2,d0
+	addl	d2,d2
+	jmp	pc@(2,d2:l)
+#else
 	movml	sp@+,d1/d3-d7/a2/a3/a5/a6
 less256_d:
 	movw	d1,d0
@@ -201,12 +298,18 @@ less256_d:
 	lsrw	#2,d0
 	addw	d2,d2
 	jmp	pc@(2,d2:w)
+#endif
 copy16_d:
 	movl	a0@-,a1@-
 	movl	a0@-,a1@-
 	movl	a0@-,a1@-
 	movl	a0@-,a1@-
+#ifdef __mcoldfire__
+	subql	#1,d0
+	bpl	copy16_d
+#else
 	dbra	d0,copy16_d
+#endif
 less4_d:
 	btst	#1,d1
 	jeq	less2_d
@@ -217,6 +320,15 @@ less2_d:
 	movb	a0@-,a1@-
 	jra	exit_d2
 slow_copy_d:
+#ifdef __mcoldfire__
+	movl	d0,d1
+	negl	d1
+	andil	#7,d1
+	addql	#7,d0
+	lsrl	#3,d0
+	addl	d1,d1
+	jmp	pc@(2,d1:l)
+#else
 	movw	d0,d1
 	negw	d1
 	andiw	#7,d1
@@ -224,6 +336,7 @@ slow_copy_d:
 	lsrl	#3,d0
 	addw	d1,d1
 	jmp	pc@(2,d1:w)
+#endif
 scopy_d:
 	movb	a0@-,a1@-
 	movb	a0@-,a1@-

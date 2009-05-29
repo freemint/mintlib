@@ -18,7 +18,12 @@
 	
 ___libc_exit:
 	link a6,#0
-	moveml #0x3020,sp@-
+#ifdef __mcoldfire__
+	lea	sp@(-12),sp
+	moveml	d5/a4/a5,sp@
+#else
+	moveml	d5/a4/a5,sp@-
+#endif
 #ifndef __MSHORT__
 	movel a6@(8),d3
 #else

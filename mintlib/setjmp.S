@@ -42,7 +42,11 @@ _sigsetjmp:
 	movel	sp@+, a0		| restore register a0
 	
 nomint:
+#ifdef __mcoldfire__
+	orl	#1,d0			| make it != 0 (SIGNULL is unmaskable)
+#else
 	orw	#1,d0			| make it != 0 (SIGNULL is unmaskable)
+#endif
 	movel	d0, a0@(52)		| save signal mask
 	jra	SETJMP			| call common code
 
@@ -73,7 +77,11 @@ NOMINT:
 	movel	sp@(4),a0		| address of jmp_buf[]
 	movel	a0@(52),d0		| want to restore sigmask?
 	jeq	NORESTORE		| no -- skip restore code
+#ifdef __mcoldfire__
+	andl	#-2,d0
+#else
 	andw	#-2,d0
+#endif
 	movel	d0, Sigmask		| restore tos emulation signal mask
 #ifdef __MSHORT__
 	tstw	Mint			| see if MiNT is active
