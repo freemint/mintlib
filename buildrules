@@ -11,11 +11,6 @@ include $(top_srcdir)/rules
 # binary distributions.
 ifndef top_distdir
 
-ifdef WITH_SOFT_FP
-SFPFLAG = -Dsfp004
-sfp = sfp
-endif
-
 libc := libc$(qualifier).a
 libiio := libiio$(qualifier).a
 librpcsvc := librpcsvc$(qualifier).a

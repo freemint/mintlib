@@ -20,25 +20,13 @@ dont_install_libs = yes
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
 
-STANDARD_MODULES = crt0.o gcrt0.o
-
-ifdef WITH_SHARED_TEXT
-SHARED_TEXT_MODULES = bcrt0.o bgcrt0.o
-endif
-
-OBJS = $(STANDARD_MODULES) $(SHARED_TEXT_MODULES)
+OBJS = crt0.o gcrt0.o
 
 libdir = $(prefix)/lib
 
-ifdef WITH_SOFT_FP
-SFPFLAG = -Dsfp004
-endif
-
-ASFLAGS = 
-
 INCLUDES = -nostdinc -I$(top_srcdir)/include
 
-COMPILE = $(CC) $(WARN) $(CFLAGS) $(INCLUDES) $(DEFS) $(SFPFLAG) $(ASFLAGS)
+COMPILE = $(CC) $(WARN) $(CFLAGS) $(INCLUDES) $(DEFS)
 
 all-here: $(OBJS)
 
@@ -49,12 +37,6 @@ crt0.o: $(srcdir)/crt0.S
 
 gcrt0.o: $(srcdir)/crt0.S
 	$(COMPILE) -DGCRT0 -c $< -o $@
-
-bcrt0.o: $(srcdir)/crt0.S
-	$(COMPILE) -mbaserel -c $< -o $@
-
-bgcrt0.o: $(srcdir)/crt0.S
-	$(COMPILE) -DGCRT0 -mbaserel -c $< -o $@
 
 include $(top_srcdir)/rules
 

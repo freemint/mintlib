@@ -106,7 +106,7 @@ AR=$(toolprefix)ar
 # Define this to "${AR} s" if your system lacks the ranlib program.
 RANLIB=$(toolprefix)ranlib
 
-# Minimal set of CFLAGS to use.  The flags "-mshort", "-mbaserel"
+# Minimal set of CFLAGS to use.  Additional flags for other processors
 # will be added by the individual Makefiles.  If you want a debuggable
 # library you will have to add "-g" here.  If you want more or less
 # optimization you can change "-O2" to nothing, "-O" or "-O3".  Don't

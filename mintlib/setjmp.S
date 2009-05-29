@@ -4,14 +4,6 @@
 
 	.globl ___mint
 
-#ifdef __MBASE__
-#define Mint	__MBASE__@(___mint:w)
-#define Sigmask	__MBASE__@(__sigmask:w)
-#else
-#define Mint	___mint
-#define Sigmask __sigmask
-#endif
-
 	.text
 	.even
 	.globl _sigsetjmp
@@ -24,11 +16,11 @@ _sigsetjmp:
 #endif
 	movel	a1, a0@(52)		| save sigmask for siglongjmp?
 	jeq	SETJMP			| no -- call common code
-	movel	Sigmask, d0		| save tos emulation signal mask
+	movel	__sigmask, d0		| save tos emulation signal mask
 #ifdef __MSHORT__
-	tstw	Mint			| see if MiNT is active
+	tstw	___mint			| see if MiNT is active
 #else
-	tstl	Mint
+	tstl	___mint
 #endif
 	jeq	nomint			| no -- call common code
 	
@@ -65,9 +57,9 @@ _siglongjmp:
 	.globl _longjmp
 _longjmp:
 #ifdef __MSHORT__
-	tstw	Mint			| see if MiNT is active
+	tstw	___mint			| see if MiNT is active
 #else
-	tstl	Mint
+	tstl	___mint
 #endif
 	jeq	NOMINT			| no -- do not call sigreturn
 	movew	#0x11a, sp@-		| Psigreturn() system call
@@ -82,11 +74,11 @@ NOMINT:
 #else
 	andw	#-2,d0
 #endif
-	movel	d0, Sigmask		| restore tos emulation signal mask
+	movel	d0, __sigmask		| restore tos emulation signal mask
 #ifdef __MSHORT__
-	tstw	Mint			| see if MiNT is active
+	tstw	___mint			| see if MiNT is active
 #else
-	tstl	Mint
+	tstl	___mint
 #endif
 	jeq	NORESTORE		| no -- do not call sigsetmask
 	

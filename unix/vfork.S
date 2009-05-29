@@ -11,23 +11,13 @@
 	.text
 	.even
 
-# ifdef __MBASE__
-#define Mint __MBASE__@(___mint:w)
-#define Vfsav __MBASE__@(L_vfsav:w)
-#define Errno __MBASE__@(_errno:w)
-# else
-#define Mint ___mint
-#define Vfsav L_vfsav
-#define Errno _errno
-# endif
-
 _vfork:
 ___vfork:
 	movel	sp@+, a1	| save return address; this is important!
 #ifdef __MSHORT__
-	tstw	Mint
+	tstw	___mint
 # else
-	tstl	Mint
+	tstl	___mint
 #endif
 	jeq	L_TOS		| go do the TOS thing
 	movew	#0x113, sp@-	| push MiNT Pvfork() parameter
@@ -38,20 +28,20 @@ ___vfork:
 	jmp	a1@		| return
 L_TOS:
 #ifdef __mcoldfire__
-	lea	Vfsav, a0
+	lea	L_vfsav, a0
 	moveml	d2-d7/a1-a6, a0@	| save registers
 #else
-	moveml	d2-d7/a1-a6, Vfsav	| save registers
+	moveml	d2-d7/a1-a6, L_vfsav	| save registers
 #endif
-	pea	Vfsav
+	pea	L_vfsav
 	pea	pc@(L_newprog)
 	jbsr	_tfork		| tfork(L_newprog, L_vfsav)
 	addql	#8, sp
 #ifdef __mcoldfire__
-	lea	Vfsav, a0
+	lea	L_vfsav, a0
 	moveml	a0@, d2-d7/a1-a6	| restore reggies
 #else
-	moveml	Vfsav, d2-d7/a1-a6	| restore reggies
+	moveml	L_vfsav, d2-d7/a1-a6	| restore reggies
 #endif
 	tstl	d0		| fork went OK??
 	jmi	L_err		| no -- error
@@ -59,9 +49,9 @@ L_TOS:
 L_err:
 	negl	d0
 #ifdef __MSHORT__
-	movew	d0, Errno	| save error code in errno
+	movew	d0, _errno	| save error code in errno
 # else
-	movel	d0, Errno	| save error code in errno
+	movel	d0, _errno	| save error code in errno
 # endif
 	moveql	#-1, d0		| return -1
 	jmp	a1@		| return
