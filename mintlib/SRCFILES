@@ -17,6 +17,7 @@ SRCFILES = \
 	assert.c \
 	buffindf.c \
 	calloc.c \
+	checkcpu.S \
 	console.c \
 	crtinit.c \
 	ctermid.c \
@@ -32,12 +33,13 @@ SRCFILES = \
 	frexp.S \
 	ftime.c \
 	ftw.c \
-	getcookie.c \
+	getcookie.S \
 	getcwd.c \
 	getenv.c \
 	getloadavg.c \
 	getlogin.c \
 	getopt_old.c \
+	getsysvar.S \
 	getumask.c \
 	getwd.c \
 	globals.c \
@@ -89,12 +91,12 @@ SRCFILES = \
 	setjmp.S \
 	setlocale.c \
 	setstack.S \
+	setsysvar.c \
 	spawn.c \
 	spawnve.c \
 	spawnvp.c \
 	stksiz.c \
 	syscall.c \
-	sysvar.c \
 	tell.c \
 	thread.c \
 	toxxx.c \
