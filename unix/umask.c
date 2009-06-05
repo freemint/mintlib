@@ -14,27 +14,28 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
+/*
+ * This function never fails
+ */
 
 mode_t
 __umask (mode_t complmode)
 {
-	int old_umask;
-	int retval;
-
 	if (__current_umask == -1) {
 		__current_umask = Pumask (0);
-		if (__current_umask < 0)
-			__current_umask = 0;
-	}
-	old_umask = __current_umask;
-	__current_umask = complmode;
 
-	retval = Pumask (complmode);
-	if (retval < 0 && retval != -ENOSYS) {
-		__current_umask = old_umask;
-		__set_errno (-retval);
-		return -1;
+		if (__current_umask < 0)
+			 __current_umask = 0;
+
+		/* put back the old umask */
+		Pumask(__current_umask);
 	}
-	return old_umask;
+
+	if (complmode == (mode_t) __current_umask)
+		return __current_umask;
+
+	__current_umask = Pumask (complmode);
+
+	return __current_umask;
 }
 weak_alias (__umask, umask)
