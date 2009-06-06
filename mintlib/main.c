@@ -86,7 +86,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	__libc_unix_names = 0;
 	__scriptable = 0;
 
-	__has_no_ssystem = Ssystem (-1, NULL, NULL);
 	_starttime = get_sysvar (_hz_200);
 	_childtime = 0;
 
@@ -100,16 +99,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 
 	if (_app)
 		_pdomain = Pdomain(1);	/* set MiNT domain */
-
-	/* Check hardware requirements.  */
-#ifdef __M68020__
-	if (Getcookie (C__CPU, &l) != C_FOUND || l < 20)
-		__libc_fatal ("this program requires an m68020 cpu or higher!");
-#endif
-#ifdef __M68881__
-	if (Getcookie (C__FPU, &l) != C_FOUND || l == 0)
-		__libc_fatal ("this program requires an fpu!");
-#endif
 
 	/* Check if we are suid or guid.  We simply use the bare operating
 	 * system calls because we only check for differences.  If it fails
