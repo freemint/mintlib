@@ -69,6 +69,7 @@ __startprg:
 	movel	a0@(4), d0	| get _base->p_hitpa
 	bclr	#0, d0		| round off
 	movel	d0, sp		| set stack (temporarily)
+	subl	#64, sp		| see note in mintlib/setstack.S
 	jsr	.early_init	| early initialization
 	jsr	__checkcpu	| check for correct CPU or exit
 	jmp	__crtinit	| in crtinit.c
