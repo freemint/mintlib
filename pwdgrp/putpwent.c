@@ -54,7 +54,7 @@ int putpwent(p, f)
 const struct passwd *p;
 FILE *f;
 {
-  if ((p->pw_passwd[0] == 0x00) || (p->pw_age[0] == 0x00))
+  if ((p->pw_passwd[0] == 0x00) || !p->pw_age || (p->pw_age[0] == 0x00))
   {
     /* Do not include age field if password is empty or age field not set */
     if (fprintf(f, "%s:%s:%ld:%ld:%s:%s:%s\n",
