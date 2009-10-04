@@ -4,17 +4,6 @@
 /*
  * strrchr - find last occurrence of a character in a string
  */
-#ifdef __GNUC__
-__asm__(".stabs \"_rindex\",5,0,0,_strrchr"); /* dept of clean tricks */
-#else
-char *
-rindex(s, charwanted)
-      const char *s;
-      int charwanted;
-{
-      return strrchr(s, charwanted);
-}
-#endif
 
 char *				/* found char, or NULL if none */
 strrchr(s, charwanted)
@@ -32,3 +21,5 @@ register int charwanted;
 		return((char *)--s);
 	return (char *)place;
 }
+
+strong_alias (strrchr, rindex)
