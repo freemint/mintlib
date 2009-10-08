@@ -159,7 +159,7 @@ __read (int fd, void *buf, size_t size)
 			/* for multibyte reads terminated by a CR, we add
 			   the CR since TOS doesn't put it in for us
                         */
-			if ((r < size)  && (foo[r - 1] != '\r'))
+			if ((r < (long)size)  && (foo[r - 1] != '\r'))
 			{
 				foo[r] = '\r';
 				r++;

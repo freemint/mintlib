@@ -659,6 +659,8 @@ mint_set_clock_mode (buf, bufsize)
   long int lclock_mode = 1;
   long int retval;
 
+  (void) bufsize;
+
   if (buf == NULL) {
     __set_errno (EFAULT);
     return -1;
