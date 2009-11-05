@@ -177,6 +177,12 @@ $(top_srcdir)/includepath: $(top_srcdir)/configvars
 	installdir=`$(CC) --print-search-dirs | awk '{ print $$2; exit; }'`; \
 	case $$installdir in /usr/local*) local=/local;; esac; \
 	echo "$${installdir}include -I$${installdir}include-fixed -I/usr$$local/m68k-atari-mint/include" >$@
+	@if [ -z "$$(<$@)" ]; then \
+	  rm $@; \
+	  echo "error: The syntax \$$(<file) is unsupported by $(SHELL)." >&2; \
+	  echo "       Please use \"$(MAKE) SHELL=/bin/bash\" instead." >&2; \
+	  exit 1; \
+	fi
 	
 include $(top_srcdir)/bindist
 
