@@ -84,6 +84,7 @@ enum __rlimit_resource
 
 #define RLIM_INFINITY	0x7fffffffL
 
+typedef __rlim_t rlim_t;
 
 /* Used by [gs]etrlimit.  */
 struct rlimit 
