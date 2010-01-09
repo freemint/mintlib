@@ -36,6 +36,12 @@
 #define	O_EXCL		0x800		/* error if file exists */
 #define O_NOCTTY	0x4000		/* do not open new controlling tty */
 
+#ifdef __USE_GNU
+# define O_NOATIME	0x04		/* Do not set atime.  */
+# define O_DIRECTORY	0x10000		/* Must be a directory.	 */
+# define O_NOFOLLOW	0x20000		/* Do not follow links.	 */
+#endif
+
 /* File status flags for `open' and `fcntl'.  */
 #define	O_APPEND	0x1000		/* position at EOF */
 #define _REALO_APPEND	0x08		/* this is what MiNT uses */

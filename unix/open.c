@@ -110,25 +110,52 @@ __open_v (const char *_filename, int iomode, va_list argp)
 			if (iomode & O_APPEND)
 				iomode |= _REALO_APPEND;
 		}
+
+		if (__mint >= 0x111) 
+			modemask |= O_DIRECTORY | O_NOATIME;
+
 	} else {
 		modemask = O_ACCMODE;
 	}
 	
-	rv = __quickstat (filename, &sb, 0);
+	if (iomode & O_NOFOLLOW)
+		rv = __quickstat (filename, &sb, 1);
+	else
+		rv = __quickstat (filename, &sb, 0);
+
 	/* The code used to call Fstat.  Emulate this here.  */
 	if (rv != 0)
 		rv = -errno;
 	
 	if (rv == 0)		/* file exists */
 	{
-		if (S_ISDIR (sb.st_mode)) {
-	    		/* FIXME: It is actually not forbidden to open a 
-	    		   directory for reading only.  What should we return 
-	    		   then?  */
-	    		__set_errno (EISDIR);
-	    		return -1;
+		if (S_ISLNK (sb.st_mode) && (iomode & O_NOFOLLOW)) {
+			__set_errno(ELOOP);
+			return -1;
 		}
 		
+		if (S_ISDIR (sb.st_mode)) {
+			/* Mimick old behaviour on 1.16 or earlier.
+			 * It's valid to open a directory read-only but
+			 * MiNT 1.16 (and earlier) couldn't do it, and even
+			 * then the filesystem code also needs updates.
+			 */
+			if (__mint < 0x111) {
+				__set_errno(EISDIR);
+				return -1;
+			}
+				
+			if ((iomode & O_ACCMODE) != O_RDONLY) {
+	    			__set_errno (EISDIR);
+	    			return -1;
+			}
+		} else {
+			if (iomode & O_DIRECTORY) {
+				__set_errno(ENOTDIR);
+				return -1;
+			}
+		}
+
 		if ((iomode & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL)) {
 			__set_errno (EEXIST);
 			/* return __SMALLEST_VALID_HANDLE - 1; */
