@@ -63,10 +63,7 @@ uninstall: uninstall-rpcsvc-programs uninstall-rpcsvc-headers
 # Not suitable for cross-compiling.
 ifndef CROSS
 
-rpcgen-cmd = $(srcdir)/rpcgen `$(CC) -print-file-name=cpp | \
-			       sed -e "s,/cpp$$,," \
-			           -e "s,^cpp$$,," \
-			           -e "s,^..*,-Y &,"`
+rpcgen-cmd := $(srcdir)/rpcgen -Y $(patsubst %/cpp,%,$(shell which cpp))
 
 # XDR headers.
 $(rpcsvc:%.x=%.h): %.h: %.stmp
