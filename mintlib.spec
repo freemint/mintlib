@@ -27,7 +27,7 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.58.0
+Version       : 0.59.0
 Release       : 1
 Group         : Base
 Copyright     : distributable
@@ -592,6 +592,9 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Wed Jan 13 2010 Alan Hourihane <alanh@fairlite.co.uk>
+- update to 0.59.0 stable release
+
 * Tue Apr 29 2008 Frank Naumann <fnaumann@freemint.de>
 - updated to 0.58.0 stable release
   Please note: the libsocket is now integrated into the libc.
