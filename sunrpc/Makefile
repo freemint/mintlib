@@ -113,7 +113,7 @@ endif
 	for header in $(rpcsvc_hdrs); do \
 	  $(INSTALL) -m 644 $$header $(includedir)/rpcsvc; \
 	  echo "$(INSTALL) -m 644 $$header $(includedir)/rpcsvc"; \
-	done; \
+	done; 
 
 ifndef CROSS
 uninstall-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
@@ -123,22 +123,22 @@ endif
 	for header in $(rpcsvc_hdrs); do \
 	  rm -f $(includedir)/rpcsvc/$$header; \
 	  echo "rm -f $(includedir)/rpcsvc/$$header"; \
-	done; \
+	done; 
 
 install-man:
 	sections=""; \
 	for manpage in $(MANS); do \
 	  sections="$$sections $(mandir)/man`echo $$manpage | sed 's,^.*\\.,,'`"; \
-	done; \
+	done;
 	mandirs=`echo $$sections | sort | uniq`; \
 	for mandir in $$mandirs; do \
 	  $(mkinstalldirs) $$mandir; \
-	done; \
+	done;
 	for manpage in $(MANS); do \
 	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
 	  $(INSTALL) -m 644 $$manpage $(mandir)/man$$section; \
 	  echo "$(INSTALL) -m 644 $$manpage $(mandir)/man$$section"; \
-	done; \
+	done; 
 
 uninstall-man:
 	@for manpage in $(MANS); do \
