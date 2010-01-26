@@ -302,7 +302,6 @@ generate_traps_as_files(const char *path)
 		}
 
 		print_head(f, "gen-syscall");
-		fprintf(f, "#include <mint/trap.h>\n");
 		fprintf(f, "#include <compiler.h>\n");
 		fprintf(f, "\n");
 

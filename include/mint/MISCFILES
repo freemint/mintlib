@@ -27,5 +27,7 @@ MISCFILES = MISCFILES \
 	sysbind.h \
 	sysctl.h \
 	sysvars.h \
-	trap.h \
+	trap1.h \
+	trap13.h \
+	trap14.h \
 	xbra.h

@@ -25,7 +25,7 @@ endif
 SUBDIRS = include syscall startup argp conf crypt dirent gmp login mintlib \
   misc posix pwdgrp shadow signal socket stdiio stdio stdlib string sysvipc \
   termios time unix lib sunrpc tz
-DIST_SUBDIRS = argp conf crypt dirent gmp include lib lib_g lib_p lib020 libv4e \
+DIST_SUBDIRS = argp conf crypt dirent gmp include lib \
   login mintlib misc posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string sunrpc syscall sysvipc termios time tz unix
 TEST_SUBDIRS = argp crypt dirent login mintlib misc posix pwdgrp shadow signal \
@@ -33,18 +33,22 @@ TEST_SUBDIRS = argp crypt dirent login mintlib misc posix pwdgrp shadow signal \
 
 ifeq ($(WITH_PROFILE_LIB), yes)
   SUBDIRS += lib_p
+  DIST_SUBDIRS += lib_p
 endif
 
 ifeq ($(WITH_DEBUG_LIB), yes)
   SUBDIRS += lib_g
+  DIST_SUBDIRS += lib_g
 endif
 
 ifeq ($(WITH_020_LIB), yes)
   SUBDIRS += lib020
+  DIST_SUBDIRS += lib020
 endif
 
 ifeq ($(WITH_V4E_LIB), yes)
   SUBDIRS += libv4e
+  DIST_SUBDIRS += libv4e
 endif
 
 include $(srcdir)/BINFILES
@@ -103,8 +107,8 @@ dist: $(top_srcdir)/CFILES $(top_srcdir)/include/features.h \
 	-rm -rf $(distdir)
 
 distdir: $(DISTFILES)
-	@if sed 15q $(srcdir)/NEWS | fgrep -e "$(VERSION)" > /dev/null; then :; else \
-	  echo "NEWS not updated; not releasing" 1>&2; \
+	@if sed 15q $(srcdir)/ChangeLog | fgrep -e "$(VERSION)" > /dev/null; then :; else \
+	  echo "ChangeLog not updated; not releasing" 1>&2; \
 	  exit 1; \
 	fi
 	-rm -rf $(distdir)
@@ -131,8 +135,8 @@ bin-dist: bindistdir
 	-rm -rf $(bindistdir)
 
 bindistdir: $(BINDISTFILES)
-	@if sed 15q $(srcdir)/NEWS | fgrep -e "$(VERSION)" > /dev/null; then :; else \
-	  echo "NEWS not updated; not releasing" 1>&2; \
+	@if sed 15q $(srcdir)/ChangeLog | fgrep -e "$(VERSION)" > /dev/null; then :; else \
+	  echo "ChangeLog not updated; not releasing" 1>&2; \
 	  exit 1; \
 	fi
 	-rm -rf $(bindistdir)
