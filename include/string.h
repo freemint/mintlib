@@ -350,6 +350,9 @@ __EXTERN int strcmpi __P (( const char* , const char*));
 __EXTERN int strncmpi __P (( const char* , const char* , size_t ));
 #endif
 
+/* BSD? */
+__EXTERN size_t strlcpy __P ((char *dst, const char *src, size_t siz));
+
 __END_DECLS
 
 #endif /* _STRING_H */
