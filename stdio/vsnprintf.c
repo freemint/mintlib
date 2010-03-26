@@ -35,10 +35,13 @@ __vsnprintf (char *s, size_t maxlen, const char *format, va_list arg)
 {
   int done;
   FILE f;
+  char temp;
 
   /* We have to handle the case of MAXLEN == 0 special.  */
-  if (maxlen == 0)
-    return 0;
+  if (maxlen == 0) {
+    s = &temp;
+    maxlen = 1;
+  }
 
   memset ((void *) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
