@@ -352,6 +352,7 @@ __EXTERN int strncmpi __P (( const char* , const char* , size_t ));
 
 /* BSD? */
 __EXTERN size_t strlcpy __P ((char *dst, const char *src, size_t siz));
+__EXTERN size_t strlcat __P ((char *dst, const char *src, size_t siz));
 
 __END_DECLS
 

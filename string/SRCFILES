@@ -46,6 +46,7 @@ SRCFILES = \
 	strerror.c \
 	strerror_r.c \
 	strfry.c \
+	strlcat.c \
 	strlcpy.c \
 	strlen.c \
 	strlwr.c \
