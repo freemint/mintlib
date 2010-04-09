@@ -72,7 +72,7 @@ struct __post_mortem_dump {
 #define sshiftmd	(((short *) 0x44cL)) /* shadow of hdwr. shiftmd reg */
  					     /* 0=Lo 1=med 2=Hi rez         */
 #define _v_bas_ad	(((void *) 0x44eL))  /* screen mem base             */
-#define vblsem		((short *) 0x452L))  /* vbl semaphore               */
+#define vblsem		(((short *) 0x452L))  /* vbl semaphore               */
 #define nvbls		(((short *) 0x454L)) /* # of vbl entries def. == 8  */
 #define _vblqueue	(((void (***)()) 0x456L)) /* vbl queue pointer      */
 #define colorptr	(((short **) 0x45aL)) /* pal. on next vblank if!NULL */
