@@ -90,11 +90,16 @@ static char *acc_argv[] = { "", NULL }; /* no name and no arguments */
 void
 _acc_main(void)
 {
+        char *s;
+
 	if (_stksize == 0 || _stksize == -1L)
 		_stksize = MINKEEP;
 
 	if (_stksize < 0)
 		_stksize = -_stksize;
+
+	if ((s = getenv("STACKSIZE")) != 0)
+		_stksize = atoi(s);
 
 	/* stack on word boundary */
 	_stksize &= 0xfffffffeL;
@@ -119,6 +124,7 @@ _crtinit(void)
 	register BASEPAGE *bp;
 	register long m;
 	register long freemem;
+	char *s;
 
 	/* its an application */
 	_app = 1;
@@ -164,6 +170,9 @@ _crtinit(void)
 			_heapbase = (void *)((long)bp + m);
 		}
 	}
+
+	if ((s = getenv("STACKSIZE")) != 0)
+		_stksize = atoi(s);
 
 	/* make m the total number of bytes including stack */
 	_stksize = _stksize & (~3L);
