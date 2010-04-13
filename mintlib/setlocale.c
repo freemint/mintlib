@@ -63,5 +63,8 @@ char *setlocale(category, name)
         int category;
         const char *name;
 {
+  (void) category;
+  (void) name;
+
   return "C";
 }
