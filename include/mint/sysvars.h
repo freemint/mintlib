@@ -35,14 +35,14 @@ struct __post_mortem_dump {
 
 
 /* timer, crit error and process termination handoff vectors */
-#define etv_timer	(((void (**)()) 0x400L))
-#define etv_critic	(((void (**)()) 0x404L))
-#define etv_term	(((void (**)()) 0x408L))
+#define etv_timer	((void (**)()) 0x400L)
+#define etv_critic	((void (**)()) 0x404L)
+#define etv_term	((void (**)()) 0x408L)
 
 /* memory controller */
 #define MEMVALID_MAGIC	0x752019F3L	/* once memory is sized */
-#define memvalid	(((unsigned long *) 0x420L))
-#define mencntlr	(((unsigned char *) 0x424L))
+#define memvalid	((unsigned long *) 0x420L)
+#define mencntlr	((unsigned char *) 0x424L)
  			/* 0 = 128K, 4 = 512K 0 = 256k(2banks) 5 = 1M */
 
 /* reset vector, jump through resvector if resvalid on reset */
@@ -52,36 +52,36 @@ struct __post_mortem_dump {
 			/* do a jmp 0x24L(a6) at end to go to system reset */
 
 /* mem */
-#define phystop		(((unsigned long *) 0x42eL)) /* physical top of st ram */
-#define _membot		(((unsigned long *) 0x432L)) /* bottom of avail     */
-#define _memtop		(((unsigned long *) 0x436L)) /* top    of avail     */
+#define phystop		((unsigned long *) 0x42eL) /* physical top of st ram */
+#define _membot		((unsigned long *) 0x432L) /* bottom of avail     */
+#define _memtop		((unsigned long *) 0x436L) /* top    of avail     */
 #define MEMVAL2_MAGIC	0x237698AAL /* after suc. coldstart && memvalid     */
-#define memval2		(((unsigned long *) 0x43aL))
-#define ramtop		(((unsigned long *) 0x5a4L)) /* physical top of tt ram */
+#define memval2		((unsigned long *) 0x43aL)
+#define ramtop		((unsigned long *) 0x5a4L) /* physical top of tt ram */
 
 /* floppy */
-#define flock		(((short *) 0x43eL)) /* lock usage of DMA   chip */
-#define seekrate	(((short *) 0x440L)) /* 0=6ms 1=12ms 2=2ms 3=3ms */
-#define _timr_ms	(((short *) 0x442L)) /* timer calib == 20ms      */
-#define _fverify	(((short *) 0x444L)) /* write verify flag        */
-#define _bootdev	(((short *) 0x446L))
+#define flock		((short *) 0x43eL) /* lock usage of DMA   chip */
+#define seekrate	((short *) 0x440L) /* 0=6ms 1=12ms 2=2ms 3=3ms */
+#define _timr_ms	((short *) 0x442L) /* timer calib == 20ms      */
+#define _fverify	((short *) 0x444L) /* write verify flag        */
+#define _bootdev	((short *) 0x446L)
 
 /* video */
-#define palmode		(((short *) 0x448L)) /* PAL video mode flag         */
-#define defshiftmd	(((unsigned char *) 0x44aL)) /* default video rez   */
-#define sshiftmd	(((short *) 0x44cL)) /* shadow of hdwr. shiftmd reg */
- 					     /* 0=Lo 1=med 2=Hi rez         */
-#define _v_bas_ad	(((void *) 0x44eL))  /* screen mem base             */
-#define vblsem		(((short *) 0x452L))  /* vbl semaphore               */
-#define nvbls		(((short *) 0x454L)) /* # of vbl entries def. == 8  */
-#define _vblqueue	(((void (***)()) 0x456L)) /* vbl queue pointer      */
-#define colorptr	(((short **) 0x45aL)) /* pal. on next vblank if!NULL */
-#define _vbclock	(((unsigned long *) 0x462L)) /* vbi counter         */
-#define _frclock        (((unsigned long *) 0x466L)) /* #vbi not vblsem'ed  */
+#define palmode		((short *) 0x448L) /* PAL video mode flag         */
+#define defshiftmd	((unsigned char *) 0x44aL) /* default video rez   */
+#define sshiftmd	((short *) 0x44cL) /* shadow of hdwr. shiftmd reg */
+ 					   /* 0=Lo 1=med 2=Hi rez         */
+#define _v_bas_ad	((void *) 0x44eL)  /* screen mem base             */
+#define vblsem		((short *) 0x452L) /* vbl semaphore               */
+#define nvbls		((short *) 0x454L) /* # of vbl entries def. == 8  */
+#define _vblqueue	((void (***)()) 0x456L) /* vbl queue pointer      */
+#define colorptr	((short **) 0x45aL) /* pal. on next vblank if!NULL */
+#define _vbclock	((unsigned long *) 0x462L) /* vbi counter         */
+#define _frclock        ((unsigned long *) 0x466L) /* #vbi not vblsem'ed  */
 
 #define _hz_200		((unsigned long *) 0x4baL)
 
-#define conterm		(*((char *) 0x484L))
+#define conterm		(*(char *) 0x484L)
 #define savptr		((long *) 0x4A2L)
 #define _nflops		((short *) 0x4A6L)
 #define _sysbase	((long *) 0x4F2L)
