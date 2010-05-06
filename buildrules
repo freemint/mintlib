@@ -28,7 +28,7 @@ endif
 DIRSTEM=$(notdir $(<D))
 
 INCLUDES = -nostdinc -I$(<D) -I$(top_srcdir) -I$(top_srcdir)/include \
--I$(top_srcdir)/mintlib -I$(top_srcdir)/stdlib -I$$(<$(top_srcdir)/includepath) 
+-I$(top_srcdir)/mintlib -I$(top_srcdir)/stdlib -I$(shell cat $(top_srcdir)/includepath) 
 DEFS += -DHAVE_CONFIG_H -D_LIBC -D_REENTRANT
 
 COMPILE = $(filter-out $(NOCFLAGS-$(<F)), $(filter-out $(nocflags),\

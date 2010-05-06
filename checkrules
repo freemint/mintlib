@@ -30,7 +30,7 @@ TESTCFLAGS = $(cflags) $(EXTRACFLAGS)
 TESTLDFLAGS = $(cflags) -s -nostartfiles -nostdlib
 TESTDEFS = -D_GNU_SOURCE -D_REENTRANT
 
-INCLUDES = -nostdinc -I$$(<$(top_srcdir)/includepath) \
+INCLUDES = -nostdinc -I$(shell cat $(top_srcdir)/includepath) \
 -I$(top_srcdir)/include -I$(srcdir) -I$(top_srcdir) -I$(top_srcdir)/time
 COMPILE = $(CC) $(TESTCFLAGS) $(CFLAGS-$(<F)) $(DEFS) $(DEFS-$(<F)) $(TESTDEFS)\
 $(INCLUDES)
