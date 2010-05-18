@@ -71,7 +71,7 @@ typedef unsigned long int __size_t;
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
 
 #if (!defined _POSIX_C_SOURCE || _POSIX_C_SOURCE < 2 || defined _BSD_SOURCE \
-     || defined _GNU_SOURCE)
+     || defined __USE_GNU)
 # define GLOB_MAGCHAR	 (1 << 8)/* Set in gl_flags if any metachars seen.  */
 # define GLOB_ALTDIRFUNC (1 << 9)/* Use gl_opendir et al functions.  */
 # define GLOB_BRACE	 (1 << 10)/* Expand "{a,b}" to "a" "b".  */
@@ -95,7 +95,7 @@ typedef unsigned long int __size_t;
 #define	GLOB_ABORTED	2	/* Read error.  */
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 #define GLOB_NOSYS	4	/* Not implemented.  */
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 /* Previous versions of this file defined GLOB_ABEND instead of
    GLOB_ABORTED.  Provide a compatibility definition here.  */
 # define GLOB_ABEND GLOB_ABORTED
