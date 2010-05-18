@@ -136,7 +136,7 @@ extern int glob __P ((__const char *__pattern, int __flags,
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree __P ((glob_t *__pglob));
 
-#ifdef _GNU_SOURCE
+#ifdef __USE_GNU
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.
 
