@@ -84,6 +84,10 @@ enum __rlimit_resource
 
 #define RLIM_INFINITY	0x7fffffffL
 
+/* We can represent all limits */
+#define RLIM_SAVED_MAX	RLIM_INFINITY
+#define RLIM_SAVED_CUR	RLIM_INFINITY
+
 typedef __rlim_t rlim_t;
 
 /* Used by [gs]etrlimit.  */
