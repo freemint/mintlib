@@ -5,7 +5,7 @@
 # serve both as input to "make" and a Bourne shell.
 
 # Define this to the version of the package.
-VERSION=0.59.0
+VERSION=0.59.1
 
 # Define this if you cross-compile.  When cross-compiling some files
 # (notably programs and commands like zic, zdump or tzselect) won't
@@ -27,7 +27,7 @@ WITH_020_LIB=yes
 
 # Uncomment this out if you want extra libraries
 # for ColdFire V4e processors.
-WITH_V4E_LIB=no
+WITH_V4E_LIB=yes
 
 # Uncomment this out if you want a debuggable lib lib_g.a.
 WITH_DEBUG_LIB=yes

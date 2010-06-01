@@ -27,7 +27,7 @@ Name          : mintlib
 %else
 Name          : cross-mint-libc
 %endif
-Version       : 0.59.0
+Version       : 0.59.1
 Release       : 1
 Group         : Base
 Copyright     : distributable
@@ -46,7 +46,7 @@ Docdir        : %{_prefix}/doc
 %endif
 Buildroot     : %{_tmppath}/%{name}-root
 
-Source: mintlib-%{version}.tar.gz
+Source: mintlib-%{version}.tar.bz2
 
 %ifnarch m68kmint
 %define crossprefix /m68k-atari-mint
@@ -83,7 +83,7 @@ Conflicts     : libpng < 1.0.1-4
 Conflicts     : libtermcap-devel < 2.0.8-4
 Conflicts     : libtiff-devel < 3.4-3
 Conflicts     : libxml-devel < 1.7.3-3
-Conflicts     : mintbin < 0.3-3
+Conflicts     : mintbin < 0.3-4
 Conflicts     : mintdb < 1.85-5
 Conflicts     : mintnet < 1.04-4
 Conflicts     : ncurses-devel < 4.2-9
@@ -577,6 +577,12 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
+%{_prefix}%{crossprefix}/lib/m5475/libc.a
+%{_prefix}%{crossprefix}/lib/m5475/libcv4e.a
+%{_prefix}%{crossprefix}/lib/m5475/libiio.a
+%{_prefix}%{crossprefix}/lib/m5475/libiiov4e.a
+%{_prefix}%{crossprefix}/lib/m5475/librpcsvc.a
+%{_prefix}%{crossprefix}/lib/m5475/librpcsvcv4e.a
 
 %files debug
 %defattr(-,root,root)
@@ -592,6 +598,10 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Tue Jun 01 2010 Keith Scroggins <kws@radix.net>
+- update to 0.59.1 stable release and enabled / added Coldfire libraries to the
+- distribution also changed mintbin to require latest package build
+
 * Wed Jan 13 2010 Alan Hourihane <alanh@fairlite.co.uk>
 - update to 0.59.0 stable release
 
