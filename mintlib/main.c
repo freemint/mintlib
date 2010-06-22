@@ -84,7 +84,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 
 	__libc_enable_secure = 1;
 	__libc_unix_names = 0;
-	__scriptable = 0;
 
 	_starttime = get_sysvar (_hz_200);
 	_childtime = 0;
@@ -120,6 +119,8 @@ __libc_main (long _argc, char **_argv, char **_envp)
 #endif
 	/* For UNIXMODE we currently have to live with the security
 	 * hole imposed by getenv().
+	 *
+	 * See spawn.c for scriptability check.
 	 */
 	if ((s = getenv("UNIXMODE")) != 0) {
 		while (*s) {
@@ -127,8 +128,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 				__default_mode__.__binary = 1;
 			else if (*s == 'r' && s[1])
 				_rootdir = *++s;
-			else if (*s == 's')
-				__scriptable = 1;
 			else if (*s == '.' && s[1])
 				s++;	/* ignore */
 			s++;
