@@ -483,9 +483,13 @@ need_more_core:
 	{
 #ifdef HASH_BANG
 		if (rval == -ENOEXEC) {
-			/* Always check the environment here, don't remove */
+			/*
+			 * Always check the environment here, don't remove.
+			 * If UNIXMODE isn't set we run scripts by default
+			 * otherwise, check the 's' flag for activation.
+			 */
 			char *unixmode = getenv("UNIXMODE");
-			if (unixmode && strchr(unixmode, 's')) {
+			if (!unixmode || (unixmode && strchr(unixmode, 's'))) {
 				(void)Mfree(env);
 				return interpret_script(mode, path, _path, _argv, _envp);
 			}
