@@ -1,3 +1,114 @@
+2010-06-24 09:53  alanh
+
+	* configvars, mintlib.spec, mintlib.spec.in: bump to 0.59.2
+
+2010-06-23 10:34  alanh
+
+	* mintlib/spawn.c: If UNIXMODE isn't set at all, then by default
+	  use scriptability.
+
+	  It can still be turned off omitting the 's' from UNIXMODE as
+	  before.
+
+2010-06-22 19:51  alanh
+
+	* mintlib/: globals.c, lib.h, main.c, spawn.c: Put back the
+	  previous scriptability check. It's required to check the
+	  environment in spawn().
+
+	  We should release a 0.59.2.
+
+2010-06-01 19:42  alanh
+
+	* configvars, mintlib.spec, mintlib.spec.in: Bump to 0.59.1 Enable
+	  coldfire libs (Keith Scroggins)
+
+2010-05-18 22:17  alanh
+
+	* include/glob.h: __GNU_SOURCE -> __USE_GNU
+
+2010-05-18 22:15  alanh
+
+	* include/glob.h: _GNU_SOURCE -> __USE_GNU
+
+2010-05-18 14:42  alanh
+
+	* include/sys/resource.h: add RLIM_SAVED_MAX/CUR
+
+2010-05-06 17:24  alanh
+
+	* buildrules, checkrules: Fix the includepath generation based on
+	  Miro's patch
+
+2010-04-19 09:10  alanh
+
+	* stdio/vsnprintf.c: Move NULL buffer check lower
+
+2010-04-13 13:00  alanh
+
+	* mintlib/crtinit.c: Add an enviroment variable to override default
+	  stacksize.
+
+	  Use STACKSIZE to set.
+
+2010-04-13 12:59  alanh
+
+	* include/mint/sysvars.h: Removed unnecessary parentheses.
+	  Contributed by Vincent Riviere.
+
+2010-04-13 12:57  alanh
+
+	* mintlib/setlocale.c: silence warning
+
+2010-04-09 22:47  alanh
+
+	* include/mint/sysvars.h: Fixing missing brace (contributed by
+	  Patrice Mandin)
+
+2010-04-06 14:21  alanh
+
+	* include/string.h, string/SRCFILES, string/strlcat.c,
+	  string/strlcpy.c: Add strlcat()
+
+2010-03-26 15:28  alanh
+
+	* stdio/vsnprintf.c: deal with NULL buffer separately
+
+2010-03-26 09:13  alanh
+
+	* stdio/vsnprintf.c: deal with 0 length vsnprintf correctly.
+
+2010-03-22 09:10  alanh
+
+	* string/SRCFILES, string/strlcpy.c, include/string.h: Add
+	  strlcpy()
+
+2010-01-26 09:18  alanh
+
+	* Makefile, include/EXTRAFILES, include/mint/.cvsignore,
+	  include/mint/MISCFILES, syscall/EXTRAFILES, syscall/traps.c:
+	  miscelleneous fixes for 0.59 release tarball
+
+2010-01-14 23:41  alanh
+
+	* socket/Makefile, sunrpc/Makefile, tz/Makefile: revert some of the
+	  whitespace cleanup from Mark. Only the last \ removal is needed.
+
+2010-01-14 22:24  alanh
+
+	* socket/Makefile, sunrpc/Makefile, tz/Makefile: Fix line breaks in
+	  makefiles in tz, sunrpc and socket.
+
+	  Contributed by Mark Duckworth.
+
+2010-01-13 17:33  alanh
+
+	* mintlib.spec.in: bump mintlib.spec.in
+
+2010-01-13 17:08  alanh
+
+	* ChangeLog: Update ChangeLog
+
 2010-01-13 16:58  alanh
 
 	* configvars, mintlib.spec: Bump to 0.59.0
