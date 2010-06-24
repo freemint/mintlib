@@ -598,6 +598,9 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Thu Jun 24 2010 Alan Hourihane <alanh@fairlite.co.uk>
+- update to 0.59.2 stable release
+
 * Tue Jun 01 2010 Keith Scroggins <kws@radix.net>
 - update to 0.59.1 stable release and enabled / added Coldfire libraries to the
 - distribution also changed mintbin to require latest package build
