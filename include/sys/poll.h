@@ -36,6 +36,8 @@ __BEGIN_DECLS
 # include <bits/types.h>
 #endif
 
+/* Type used for the number of file descriptors.  */
+typedef unsigned long int nfds_t;
 
 /* Data structure describing a polling request.  */
 struct pollfd
@@ -51,9 +53,9 @@ struct pollfd
    an event to occur; if TIMEOUT is -1, block until an event occurs.
    Returns the number of file descriptors with events, zero if timed out,
    or -1 for errors.  */
-extern int poll (struct pollfd *__fds, unsigned long int __nfds,
+extern int poll (struct pollfd *__fds, nfds_t __nfds,
 		 __int32_t __timeout) __THROW;
-extern int __poll (struct pollfd *__fds, unsigned long int __nfds,
+extern int __poll (struct pollfd *__fds, nfds_t __nfds,
 		   __int32_t __timeout) __THROW;
 
 __END_DECLS
