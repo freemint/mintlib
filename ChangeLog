@@ -1,3 +1,22 @@
+2010-07-06 20:59  alanh
+
+	* include/mint/linea.h, mintlib/linea.c: The Line A interface is
+	  problematic on ColdFire because all the opcodes conflict with the
+	  MAC instructions, and do not trigger any exception. I found a
+	  very simple solution: use the opcodes A92X instead of A00X. These
+	  opcodes are invalid on any ColdFire and trigger the standard Line
+	  A exception.
+
+	  Contributed by Vincent Riviere
+
+2010-06-24 15:28  alanh
+
+	* include/sys/poll.h: define nfds_t
+
+2010-06-24 09:57  alanh
+
+	* ChangeLog: renew ChangeLog entries
+
 2010-06-24 09:53  alanh
 
 	* configvars, mintlib.spec, mintlib.spec.in: bump to 0.59.2
