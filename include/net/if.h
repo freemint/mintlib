@@ -86,6 +86,7 @@ struct ifaddr
 
 
 #define	IFNAMSIZ	16
+#define IF_NAMESIZE	IFNAMSIZ
 
 struct ifnet {
 	char	if_name[IFNAMSIZ];	/* name, e.g. ``en'' or ``lo'' */
