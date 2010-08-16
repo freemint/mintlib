@@ -16,18 +16,26 @@ clock_t _clock (void);
  * the actual suspension time can be arbitrarily longer
  *
  */
-void
-usleep (unsigned long usec)
+int 
+usleep (__useconds_t __useconds)
 {
 	long stop;
 	int r = -ENOSYS;
 
-	if (usec >= 1000)
-		r = Fselect((unsigned)(usec/1000), 0L, 0L, 0L);
+	if (__useconds >= 1000)
+		r = Fselect((unsigned)(__useconds/1000), 0L, 0L, 0L);
 
 	if (r == -ENOSYS) {
-		stop = _clock() + USEC_TO_CLOCK_TICKS(usec);
+		stop = _clock() + USEC_TO_CLOCK_TICKS(__useconds);
 		while (_clock() < stop)
 			;
+		r = 0;
 	}
+
+	if (r < 0) {
+		__set_errno (-r);
+		return -1;
+	}
+
+	return 0;
 }

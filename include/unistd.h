@@ -353,11 +353,7 @@ extern __useconds_t ualarm (__useconds_t __value, __useconds_t __interval)
 
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
    or ignored.  */
-#ifndef __MINT__
 extern int usleep (__useconds_t __useconds) __THROW;
-#else
-extern void usleep (unsigned long) __THROW;
-#endif
 #endif
 
 
