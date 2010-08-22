@@ -42,11 +42,10 @@ WITH_PROFILE_LIB=yes
 
 # This variable is used for various others.  Change its value if 
 # need be.  When cross-compiling you will usually want to set this
-# to "/usr/local/m68k-atari-mint".
+# to "/usr/m68k-atari-mint".
 ifeq ($(CROSS),yes)
- prefix=/usr/local/m68k-atari-mint
+ prefix=/usr/m68k-atari-mint
 else
-# prefix=/usr/local
  prefix=/usr
 endif
 
