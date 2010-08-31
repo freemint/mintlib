@@ -11,7 +11,7 @@
 #define regexp __V8_regexp
 #define regcomp __V8_regcomp
 #define regsub __V8_regsub
-#define regerror __V8_regerror
+/*#define regerror __V8_regerror */
 #define regdump __V8_regdump
 #define regexec __V8_regexec
 
