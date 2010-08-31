@@ -5,7 +5,7 @@
 # alphabetical order.
 
 SRCFILES = \
-	auth_des.c \
+#	auth_des.c \
 	auth_none.c \
 	auth_unix.c \
 	authdes_prot.c \
@@ -26,12 +26,14 @@ SRCFILES = \
 	key_call.c \
 	key_prot.c \
 	openchild.c \
+#	netname.c \
 	pm_getmaps.c \
 	pm_getport.c \
 	pmap_clnt.c \
 	pmap_prot.c \
 	pmap_prot2.c \
 	pmap_rmt.c \
+#	publickey.c \
 	rpc_cmsg.c \
 	rpc_common.c \
 	rpc_dtable.c \
@@ -46,7 +48,7 @@ SRCFILES = \
 	svc_tcp.c \
 	svc_udp.c \
 	svc_unix.c \
-	svcauth_des.c \
+#	svcauth_des.c \
 	xcrypt.c \
 	xdr.c \
 	xdr_array.c \
@@ -57,6 +59,3 @@ SRCFILES = \
 	xdr_ref.c \
 	xdr_sizeof.c \
 	xdr_stdio.c
-# not yet
-#	netname.c \
-#	publickey.c \
