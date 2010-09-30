@@ -472,7 +472,7 @@ typedef struct {
 
 /* NVMaccess params */
 #define NVM_READ		0
-#define MVM_WRITE		1
+#define NVM_WRITE		1
 #define NVM_RESET		2
 
 /* Blitmode() modes */
