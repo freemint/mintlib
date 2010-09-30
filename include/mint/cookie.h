@@ -562,7 +562,7 @@
 
 /* Return values of Getcookie() */
 #define C_FOUND		0
-#define C_NOTFOUND	1
+#define C_NOTFOUND	-1	/* EERROR */
 
 extern int 	Getcookie(long cookie, long *val);
 
