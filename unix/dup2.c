@@ -15,6 +15,12 @@ __dup2 (int handle1, int handle2)
 {
 	int rv;
 	long flags;
+	struct stat s;
+
+	if (__do_fstat (handle1, &s, 0) != 0) {
+		__set_errno (EBADF);
+		return -1;
+	}
 
 	if (handle1 == handle2)
 		return (handle2);
