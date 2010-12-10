@@ -70,7 +70,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 			}
 
 #define LEGAL_FLAGS \
-	(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | POLLRDNORM | POLLWRNORM)
+	(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | POLLRDNORM | POLLWRNORM | POLLRDBAND | POLLWRBAND)
 
 			if ((pfds[i].events | LEGAL_FLAGS) != LEGAL_FLAGS) {
 				/* Not supported.  */
@@ -78,11 +78,11 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 				return -1;
 			}
 
-			if (pfds[i].events & POLLIN)
+			if (pfds[i].events & (POLLIN | POLLRDNORM))
 				rfds |= (1L << (pfds[i].fd));
 			if (pfds[i].events & POLLPRI)
 				xfds |= (1L << (pfds[i].fd));
-			if (pfds[i].events & POLLOUT)
+			if (pfds[i].events & (POLLOUT | POLLWRNORM))
 				wfds |= (1L << (pfds[i].fd));
 		}
 
@@ -138,13 +138,13 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 		/* Now fill in the results in struct pollfd.	*/
 		for (i = 0; i < nfds; i++) {
 			if (rfds & (1L << (pfds[i].fd)))
-				pfds[i].revents = POLLIN;
+				pfds[i].revents = (pfds[i].events & (POLLIN | POLLRDNORM));
 			else
 				pfds[i].revents = 0;
 			if (xfds & (1L << (pfds[i].fd)))
 				pfds[i].revents |= POLLPRI;
 			if (wfds & (1L << (pfds[i].fd)))
-				pfds[i].revents |= POLLOUT;
+				pfds[i].revents |= (pfds[i].events & (POLLOUT | POLLWRNORM));
 		}
 
 	} /* must emulate.  */
