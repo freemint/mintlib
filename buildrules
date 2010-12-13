@@ -103,6 +103,8 @@ NOCFLAGS-profil-freq.c = -pg -fomit-frame-pointer
 NOCFLAGS-profil-posix.c = -pg -fomit-frame-pointer
 #NOCFLAGS-linea.c = -pg -fomit-frame-pointer -O2 -O
 #DEFS-vfscanf.c = -DNO_BUG_IN_ISO_C_CORRIGENDUM_1
+CFLAGS-mktime.c = -fwrapv
+CFLAGS-nanosleep.c = -fwrapv
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-ivfprintf.c = -Wno-uninitialized
 DEFS-ident.c = -DVERSION=\"$(VERSION)\"
