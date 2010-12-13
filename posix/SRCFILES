@@ -19,6 +19,7 @@ SRCFILES = \
 	getopt_init.c \
 	glob.c \
 	isfdtype.c \
+	nanosleep.c \
 	posix_fallocate.c \
 	pread.c \
 	pwrite.c \

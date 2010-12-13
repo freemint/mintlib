@@ -278,6 +278,14 @@ extern time_t timelocal (struct tm *__tp) __THROW;
 extern int dysize (int __year) __THROW  __attribute__ ((__const__));
 # endif
 
+# ifdef __USE_POSIX199309
+/* Pause execution for a number of nanoseconds.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int nanosleep (__const struct timespec *__requested_time,
+		      struct timespec *__remaining);
+# endif
 
 # ifdef __USE_XOPEN_EXTENDED
 /* Set to one of the following values to indicate an error.
