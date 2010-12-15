@@ -132,27 +132,19 @@ struct sockaddr
     char sa_data[14];		/* Address data.  */
   };
 
-
 /* Structure large enough to hold any socket address (with the historical
    exception of AF_UNIX).  We reserve 128 bytes.  */
-#if ULONG_MAX > 0xffffffff
-# define __ss_aligntype	__uint64_t
-#else
-# define __ss_aligntype	__uint32_t
-#endif
-#ifndef __MINT__
-/* RFC 2553: protocol-independent placeholder for socket addresses */
-/* XXX: Used in ntpd to detect ipv6 which is not supported */
+#define __ss_aligntype	unsigned long int
 #define _SS_SIZE	128
 #define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_aligntype)))
 
 struct sockaddr_storage
   {
-    __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
+    __SOCKADDR_COMMON (ss_);	/* Address family, etc.  */
     __ss_aligntype __ss_align;	/* Force desired alignment.  */
     char __ss_padding[_SS_PADSIZE];
   };
-#endif
+
 
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
 enum
