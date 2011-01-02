@@ -330,14 +330,14 @@ extern char *__secure_getenv (__const char *__name) __THROW;
 extern int putenv (__const char *__string) __THROW;
 #endif
 
-#ifdef	__USE_BSD
+#if defined(__USE_BSD) || defined(__USE_XOPEN2K)
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv (__const char *__name, __const char *__value,
 			int __replace) __THROW;
 
 /* Remove the variable NAME from the environment.  */
-extern void unsetenv (__const char *__name) __THROW;
+extern int unsetenv (__const char *__name) __THROW;
 #endif
 
 #ifdef __USE_MISC
