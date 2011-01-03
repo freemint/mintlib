@@ -73,6 +73,10 @@
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
 #define	FD_CLOEXEC	1	/* Close on exec.  */
 
+#ifdef __USE_GNU
+# define F_DUPFD_CLOEXEC 1030	/* Duplicate file descriptor with
+				   close-on-exit set.  */
+#endif
 
 #include <bits/types.h>
 
