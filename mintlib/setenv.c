@@ -38,12 +38,7 @@ extern int errno;
 # include <unistd.h>
 #endif
 
-#if !_LIBC
-# define __environ	environ
-# ifndef HAVE_ENVIRON_DECL
-extern char **environ;
-# endif
-#endif
+#define __environ	environ
 
 #if _LIBC
 # define LOCK
