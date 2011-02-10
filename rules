@@ -35,9 +35,7 @@ else
 
 baselibs = $(basename $(LIBS))
 
-install-lib: install-lib-plain install-lib-links
-
-install-lib-plain:
+install-lib:
 	$(mkinstalldirs) $(libdir)/$(instdir)
 	@list='$(LIBS)'; for p in $$list; do \
 	  if test -f $$p; then \
@@ -45,21 +43,6 @@ install-lib-plain:
 	    $(INSTALL) -m 644 $$p $(libdir)/$(instdir); \
 	  else :; fi; \
 	done
-
-ifdef instdir
-install-lib-links:
-	$(mkinstalldirs) $(libdir)/$(instdir)
-	@list='$(baselibs)'; for p in $$list; do \
-	  if test -f $(libdir)/$(instdir)/$$p.a; then \
-	    echo " rm -f $(libdir)/$(instdir)/"$$p"$(libsize).a $(libdir)/"$$p"$(libsize).a"; \
-	    rm -f $(libdir)/$(instdir)/"$$p"$(libsize).a $(libdir)/"$$p"$(libsize).a; \
-	    echo " ln -sf $$p.a $(libdir)/$(instdir)/"$$p"$(libsize).a"; \
-	    ln -sf $$p.a $(libdir)/$(instdir)/"$$p"$(libsize).a; \
-	  else :; fi; \
-	done	
-else
-install-lib-links:
-endif
 
 uninstall-lib:
 	list='$(baselibs)'; for p in $$list; do \

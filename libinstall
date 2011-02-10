@@ -280,41 +280,30 @@ install_libs ()
     for type in "" _p _g 020 v4e; do
     case x$type in
       x020) 
-        libsuffix=020
         libinstdir=$libdir/m68020-60
         libheredir=lib020
         type=
         ;;
       xv4e)
-        libsuffix=v4e
         libinstdir=$libdir/m5475
         libheredir=libv4e
         type=
         ;;
       x_p|x_g)
-      	libsuffix=
       	libinstdir=$libdir
       	libheredir=lib$type
       	;;
       *) 
-        libsuffix=
         libinstdir=$libdir
         libheredir=lib
         ;;
     esac
     
     for lib in c iio socket; do
-      liblongname=lib$lib$libsuffix.a
       libname=lib$lib$type.a
       test -f $libheredir/$libname || continue
       echo "  $install -m 644 $libheredir/$libname $libinstdir"
       $install -m 644 $libheredir/$libname $libinstdir || exit 1
-      if test x$libsuffix != x; then
-        echo "  rm -f $libdir/$liblongname $libinstdir/$liblongname"
-        rm -f $libdir/$liblongname $libinstdir/$liblongname
-        echo "  $ln_s $libname $libinstdir/$liblongname"
-        $ln_s $libname $libinstdir/$liblongname
-      fi
     done
   done
 }

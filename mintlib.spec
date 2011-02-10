@@ -572,17 +572,11 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 %{_prefix}%{crossprefix}/lib/libiio.a
 %{_prefix}%{crossprefix}/lib/librpcsvc.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libc020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/libiio.a
-%{_prefix}%{crossprefix}/lib/m68020-60/libiio020.a
 %{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc.a
-%{_prefix}%{crossprefix}/lib/m68020-60/librpcsvc020.a
 %{_prefix}%{crossprefix}/lib/m5475/libc.a
-%{_prefix}%{crossprefix}/lib/m5475/libcv4e.a
 %{_prefix}%{crossprefix}/lib/m5475/libiio.a
-%{_prefix}%{crossprefix}/lib/m5475/libiiov4e.a
 %{_prefix}%{crossprefix}/lib/m5475/librpcsvc.a
-%{_prefix}%{crossprefix}/lib/m5475/librpcsvcv4e.a
 
 %files debug
 %defattr(-,root,root)

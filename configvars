@@ -30,7 +30,7 @@ WITH_020_LIB=yes
 WITH_V4E_LIB=yes
 
 # Uncomment this out if you want a debuggable lib lib_g.a.
-WITH_DEBUG_LIB=yes
+#WITH_DEBUG_LIB=yes
 
 # Uncomment this out if you want a debugable lib lib_p.a.  
 # This is currently not recommended.  At least on my machine
@@ -38,7 +38,7 @@ WITH_DEBUG_LIB=yes
 # cannot debug it because the debugger runs out of memory before
 # it can fork (even for hello.c).  It may be a memory problem
 # that only occurs here, it may be a bug.
-WITH_PROFILE_LIB=yes
+#WITH_PROFILE_LIB=yes
 
 # This variable is used for various others.  Change its value if 
 # need be.  When cross-compiling you will usually want to set this

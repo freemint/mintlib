@@ -13,7 +13,6 @@ MISCFILES = MISCFILES \
 	ipc.h \
 	libc-lock.h \
 	local_lim.h \
-	math-68881.h \
 	mathdef.h \
 	mint_stdio.h \
 	msq.h \
