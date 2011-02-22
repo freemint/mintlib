@@ -13,7 +13,7 @@ set_sysvar_to_long (void *var, long val)
 
     		save_ssp = (long) Super((void *) 0L);
     		*((volatile long *)var) = val;
-    		(void)Super((void *) save_ssp);
+    		(void)SuperToUser((void *) save_ssp);
 	}
 	else
 		(void) Ssystem (S_SETLVAL, var, val); /* note: root only! */

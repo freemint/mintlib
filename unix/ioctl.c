@@ -215,7 +215,7 @@ __ioctl (int fd, int cmd, void *arg)
 		  		if (Super(1L) == 0L) {
 		  			ssp = Super(0L);
                 	m = *mfp & 0xff;
-                  	Super(ssp);
+                  	SuperToUser(ssp);
                 } else {
                 	m = *mfp & 0xff;
                 }

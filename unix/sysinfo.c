@@ -302,7 +302,7 @@ si_version (buf, bufsize)
 				save_stk = (void *) Super (0L);
 				sysbase = *((long int**) 0x000004f2);
 				tosversion = *sysbase;
-				(void) Super ((void*) save_stk);
+				(void) SuperToUser ((void*) save_stk);
 			}
 			else
 			{
