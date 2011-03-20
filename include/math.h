@@ -138,7 +138,7 @@ extern const double _infinitydf;	/* in normdf.cpp */
 #endif
 
 #if _INLINE_MATH
-# include <bits/math-68881.h>
+# include <math-68881.h>
 #endif
 
 #define HUGE HUGE_VAL
