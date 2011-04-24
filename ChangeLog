@@ -1,3 +1,130 @@
+2011-04-24 21:35  alanh
+
+	* posix/regex.c: Fix build
+
+2011-04-24 21:35  alanh
+
+	* string/: SRCFILES, memmem.c: Add memmem()
+
+2011-03-20 08:27  alanh
+
+	* include/math.h: use GCC math-68881.h
+
+2011-02-22 23:32  alanh
+
+	* include/mint/osbind.h, mintlib/setsysvar.c, unix/ioctl.c,
+	  unix/sysinfo.c: New safe binding SuperToUser() to return from
+	  supervisor to user mode.  Patch provided by Vincent Rivi?re.
+
+2011-02-10 08:36  alanh
+
+	* configvars, libinstall, mintlib.spec, mintlib.spec.in, rules,
+	  include/bits/EXTRAFILES, include/bits/MISCFILES: Disable DEBUG &
+	  PROFILE libs by default.  Don't install our math-68881.h header
+	  file. Use the one from GCC.  Disable other unnecessary libraries.
+	  Contributed by Miro Kropacek.
+
+2011-01-14 17:06  alanh
+
+	* include/mint/dcntl.h: Fix MiNTlib's interpretation of fs types.
+
+2011-01-12 17:39  alanh
+
+	* mintlib/setenv.c: Re-instate small portion of previous setenv
+	  code.
+
+2011-01-03 13:48  alanh
+
+	* include/bits/fcntl.h: Add support for F_DUPFD_CLOEXEC
+
+2011-01-02 21:25  alanh
+
+	* include/stdlib.h, mintlib/setenv.c: Update setenv/unsetenv.
+
+	  NOTE: GCC needs recompilation with this as it fixincludes
+	  stdlib.h and unsetenv now has a return value.
+
+2010-12-15 00:13  alanh
+
+	* include/bits/socket.h: open up sockaddr_storage
+
+2010-12-13 09:38  alanh
+
+	* buildrules: Use -fwrapv for mktime.c & nanosleep.c
+
+2010-12-13 09:35  alanh
+
+	* include/time.h, posix/SRCFILES, posix/nanosleep.c: Add
+	  nanosleep() functionality using select().
+
+2010-12-10 08:44  alanh
+
+	* unix/poll.c: Fix usage of POLLRDNORM & POLLWRNORM.
+
+2010-12-09 21:22  alanh
+
+	* include/pty.h: remove _THROW.
+
+2010-12-09 21:19  alanh
+
+	* include/pty.h: update pty.h from glibc.
+
+2010-12-09 20:18  alanh
+
+	* include/pty.h: add #include <sys/ioctl.h>
+
+2010-11-26 13:06  alanh
+
+	* unix/dup2.c: Check that the oldfd is valid, if not return EBADF.
+
+2010-09-30 22:38  alanh
+
+	* include/mint/cookie.h: Fix value of C_NOTFOUND.
+
+	  Contributed by Vicent Riviere.
+
+2010-09-30 22:37  alanh
+
+	* include/mint/ostruct.h: Fix typo on MVM_WRITE -> NVM_WRITE
+
+	  Contributed by Vicent Riviere.
+
+2010-09-13 12:47  alanh
+
+	* sunrpc/SRCFILES: Fix build
+
+2010-08-31 12:44  alanh
+
+	* include/regexp.h: Don't redefine regerror
+
+2010-08-31 12:13  alanh
+
+	* sunrpc/SRCFILES: remove currently non-functional code
+
+2010-08-31 11:42  alanh
+
+	* posix/SRCFILES: remove duplicate entry
+
+2010-08-22 21:53  alanh
+
+	* configvars: set prefix to match cflib etc
+
+2010-08-16 23:55  alanh
+
+	* include/net/if.h: add IF_NAMESIZE
+
+2010-08-16 23:54  alanh
+
+	* include/bits/types.h: define useconds_t correctly
+
+2010-08-16 23:53  alanh
+
+	* include/unistd.h, posix/usleep.c: Fix usleep()
+
+2010-08-02 15:39  alanh
+
+	* ChangeLog: Update ChangeLog
+
 2010-07-06 20:59  alanh
 
 	* include/mint/linea.h, mintlib/linea.c: The Line A interface is
