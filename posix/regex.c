@@ -173,7 +173,7 @@ char *realloc ();
 #endif /* not emacs */
 
 /* Get the interface, including the syntax bits.  */
-#include <regex.h>
+#include "../include/regex.h"
 
 #ifdef __MINT__
 extern int __re_search_2
