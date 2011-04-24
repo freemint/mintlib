@@ -27,6 +27,7 @@ SRCFILES = \
 	memchr.c \
 	memcmp.c \
 	memfrob.c \
+	memmem.c \
 	mempcpy.c \
 	memrchr.c \
 	memset.S \
