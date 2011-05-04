@@ -22,19 +22,15 @@ extern int siglongjmp (sigjmp_buf env, int val);
 #ifdef __USE_BSD
 /* BUG: we lose if __USE_BSD && __STRICT_ANSI__ */
 #define _setjmp(__jb)		(sigsetjmp(__jb, 0))
-#define _longjmp(__jb,__v)	(siglongjmp(__jb, __v))
 #define setjmp(__jb)		(sigsetjmp(__jb, 1))
 
-#ifndef __cplusplus
-#define longjmp(__jb,__v)	(siglongjmp(__jb, __v))
-#else /* __cplusplus */
-// <csetjmp> needs a real function instead of a macro.
+extern void longjmp(sigjmp_buf env, int val);
+
 static inline void
-longjmp (sigjmp_buf env, int val)
+_longjmp (sigjmp_buf env, int val)
 {
 	siglongjmp(env, val);
 }
-#endif /* __cplusplus */
 
 #endif /* __USE_BSD */
 
