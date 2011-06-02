@@ -99,9 +99,9 @@ extern int __lockf (int __fd, int __cmd, __off_t __len) __THROW;
    respect to the file associated with FD.  */
 extern int posix_fadvise (int __fd, __off_t __offset, size_t __len,
 			  int __advise) __THROW;
+#endif
 /* Reserve storage for the data of the file associated with FD.  */
 extern int posix_fallocate (int __fd, __off_t __offset, size_t __len) __THROW;
-#endif
 #endif
 
 __END_DECLS
