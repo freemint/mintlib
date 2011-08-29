@@ -7,6 +7,16 @@ MAKEFLAGS = -r
 include $(top_srcdir)/configvars
 include $(top_srcdir)/rules
 
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR    " $@;
+AM_V_RANLIB = $(am__v_RANLIB_$(V))
+am__v_RANLIB_ = $(am__v_RANLIB_$(AM_DEFAULT_VERBOSITY))
+am__v_RANLIB_0 = @echo "  RANLIB" $@;
+
 # This is the slow part of the Makefiles.  Exclude it if we build
 # binary distributions.
 ifndef top_distdir
@@ -243,32 +253,29 @@ vpath %.S $(srcdirs)
 .SUFFIXES: .c .o .S .s
 
 .c.o:
-	@echo '$(COMPILE) -c $< -o $@'; \
-	$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
 			
 .S.o:
-	@echo '$(COMPILE) -c $< -o $@'; \
-	$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
 			
 .s.o:
-	@echo '$(COMPILE) -c $< -o $@'; \
-	$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
 				
 # Finally, build the libs.
 $(libc): $(LIBCOBJS)
-	rm -f $@
-	$(AR) cru $@ $(LIBCOBJS)
-	$(RANLIB) $@
+	@rm -f $@
+	$(AM_V_AR)$(AR) cru $@ $(LIBCOBJS)
+	$(AM_V_RANLIB)$(RANLIB) $@
 
 $(libiio): $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
-	rm -f $@
-	$(AR) cru $@ $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
-	$(RANLIB) $@
+	@rm -f $@
+	$(AM_V_AR)$(AR) cru $@ $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
+	$(AM_V_RANLIB)$(RANLIB) $@
 
 $(librpcsvc): $(RPCSVCOBJS)
-	rm -f $@
-	$(AR) cru $@ $(RPCSVCOBJS)
-	$(RANLIB) $@
+	@rm -f $@
+	$(AM_V_AR)$(AR) cru $@ $(RPCSVCOBJS)
+	$(AM_V_RANLIB)$(RANLIB) $@
 	
 $(top_srcdir)/include/linker.h: $(top_srcdir)/include/linker.h.in \
   $(top_srcdir)/configvars

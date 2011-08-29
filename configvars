@@ -14,6 +14,9 @@ VERSION=0.59.2
 # The easiest way to do this is to change "prefix", see below.
 #CROSS=yes
 
+# Silent build or verbose
+AM_DEFAULT_VERBOSITY = 0
+
 # Define this to "m68k-atari-mint-" if you cross compile.
 ifeq ($(CROSS),yes)
  toolprefix=m68k-atari-mint-
