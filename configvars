@@ -15,7 +15,7 @@ VERSION=0.59.2
 #CROSS=yes
 
 # Silent build or verbose
-AM_DEFAULT_VERBOSITY = 0
+AM_DEFAULT_VERBOSITY = 1
 
 # Define this to "m68k-atari-mint-" if you cross compile.
 ifeq ($(CROSS),yes)
