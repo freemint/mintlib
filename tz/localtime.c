@@ -274,7 +274,7 @@ settzname(void)
 #endif /* defined ALTZONE */
 #ifdef ALL_STATE
 	if (sp == NULL) {
-		tzname[0] = tzname[1] = gmt;
+		tzname[0] = tzname[1] = (char *)gmt;
 		return;
 	}
 #endif /* defined ALL_STATE */

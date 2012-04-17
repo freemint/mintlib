@@ -253,7 +253,7 @@ getdate (const char *string)
 {
   /* Buffer returned by getdate.  */
   static struct tm tmbuf;
-  int errval = __getdate_r (string, &tmbuf);
+  int errval = getdate_r (string, &tmbuf);
 
   if (errval != 0)
     {
