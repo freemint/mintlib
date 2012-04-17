@@ -13,8 +13,6 @@
 #include <errno.h>
 #include <mintbind.h>
 
-#include "time/tzstruct.h"
-
 int __adjtime (__const struct timeval *__delta,
 		    struct timeval *__olddelta)
 {

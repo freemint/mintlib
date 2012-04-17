@@ -13,8 +13,6 @@
 #include <errno.h>
 #include <mintbind.h>
 
-#include "time/tzstruct.h"
-
 int 
 __settimeofday (const struct timeval *tp, const struct timezone *tzp)
 {
@@ -48,7 +46,7 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
     /* The T[gs]et(date|time) system calls always expect local
      * times.
      */    
-    __localsub ((time_t*) &tp->tv_sec, 0L, &then);
+    localtime_r((time_t*) &tp->tv_sec, &then);
     
     if (then.tm_year < 80) {
       __set_errno (EINVAL);
