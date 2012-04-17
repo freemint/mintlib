@@ -6,5 +6,5 @@
 
 SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES new_york.h \
 test-clock.c test-time.args test-time.c test-posixtz.c \
-tzfile.h tzstruct.h
+tzfile.h
 

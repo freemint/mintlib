@@ -21,7 +21,7 @@ program (default:
 .TP
 \f3TZDIR\fP
 Name of the directory containing time zone data files (default:
-.BR /usr/share/zoneinfo ).
+.BR /usr/local/etc/zoneinfo ).
 .SH FILES
 .TP
 \f2TZDIR\fP\f3/iso3166.tab\fP
@@ -38,3 +38,6 @@ The exit status is zero if a time zone was successfully obtained from the user,
 nonzero otherwise.
 .SH "SEE ALSO"
 newctime(3), tzfile(5), zdump(8), zic(8)
+.\" @(#)tzselect.8	8.2
+.\" This file is in the public domain, so clarified as of
+.\" 2009-05-17 by Arthur David Olson.

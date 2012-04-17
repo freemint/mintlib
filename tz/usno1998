@@ -1,13 +1,13 @@
-# @(#)usno1995	8.1
+# @(#)usno1998	8.1
 #
-# From Arthur David Olson (1995-12-21):
+# From Arthur David Olson (1998-05-26):
 #
 # Here's time zone information from the United States Naval Observatory
 # via http://tycho.usno.navy.mil/tzones.html. See USNO's note at the end.
+Unofficial Time Zone Information
 World Time Zones
-For selected countries, the local standard time offset from UTC is given,
-with daylight savings time where observed.
-Time: Thu Dec 21 17:43:00 utc 1995
+For selected countries, the local standard time offset from UTC is given, with  daylight savings time where observed.
+Time:  Mon May 25 21:14:24 UTC 1998
 Afghanistan: +4.5 hours
 Albania: +1 hours (Local summer +2 hours)
 Algeria: +1 hours (Local summer +2 hours)
@@ -111,7 +111,7 @@ France: +1 hours (Local summer +2 hours)
 French Guiana: -3 hours
 French Polynesia: -10 hours
 Gabon: +1 hours
-Galapagos Islands: -6 hours
+Galapagos Islands: -5 hours
 Gambia: 0 hours
 Gambier Island: -9 hours
 Georgia: +4 hours
@@ -247,7 +247,7 @@ Samoa: -11 hours
 San Marino: +1 hours (Local summer +2 hours)
 Sao Tome e Principe: 0 hours
 Saudi Arabia: +3 hours
-Scotland: 0 hours
+Scotland: 0 hours (Local summer +1 hours)
 Senegal: 0 hours
 Seychelles: +4 hours
 Sierra Leone: 0 hours
@@ -302,7 +302,8 @@ USA Arizona: -7 hours
 USA Indiana East: -5 hours
 USA Pacific: -8 hours (Local summer -7 hours)
 USA Alaska: -9 hours (Local summer -8 hours)
-USA Hawaii Aleutian: - hours (Local summer -10 hours)
+USA Aleutian: -10 hours
+USA Hawaii: -10 hours
 Uruguay: -3 hours
 Uzbekistan: +5 hours
 Vanuatu: +11 hours (Local summer +12 hours)

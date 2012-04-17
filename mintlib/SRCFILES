@@ -31,7 +31,6 @@ SRCFILES = \
 	dostime.c \
 	enoent.c \
 	frexp.S \
-	ftime.c \
 	ftw.c \
 	getcookie.S \
 	getcwd.c \

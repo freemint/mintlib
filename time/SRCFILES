@@ -5,17 +5,8 @@
 # alphabetical order.
 
 SRCFILES = \
-	asctime.c \
 	clock.c \
-	ctime.c \
-	ctime_r.c \
-	difftime.c \
 	dysize.c \
+	ftime.c \
 	getdate.c \
-	gmtime.c \
-	localtime.c \
-	mktime.c \
-	offtime.c \
-	strftime.c \
-	strptime.c \
-	tz.c 
+	strptime.c

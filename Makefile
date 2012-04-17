@@ -24,7 +24,7 @@ endif
 
 SUBDIRS = include syscall startup argp conf crypt dirent gmp login mintlib \
   misc posix pwdgrp shadow signal socket stdiio stdio stdlib string sysvipc \
-  termios time unix lib sunrpc tz
+  termios time unix lib tz sunrpc
 DIST_SUBDIRS = argp conf crypt dirent gmp include lib \
   login mintlib misc posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string sunrpc syscall sysvipc termios time tz unix

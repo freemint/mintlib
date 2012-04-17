@@ -102,7 +102,7 @@ check_mday (int year, int mon, int mday)
 
 
 int
-__getdate_r (const char *string, struct tm *tp)
+getdate_r (const char *string, struct tm *tp)
 {
   FILE *fp;
   char *line;
@@ -180,7 +180,7 @@ __getdate_r (const char *string, struct tm *tp)
 
   /* Get current time.  */
   time (&timer);
-  __localtime_r (&timer, &tm);
+  localtime_r (&timer, &tm);
 
   /* If only the weekday is given, today is assumed if the given day
      is equal to the current day and next week if it is less.  */
@@ -247,10 +247,6 @@ __getdate_r (const char *string, struct tm *tp)
 
   return 0;
 }
-#ifdef weak_alias
-weak_alias (__getdate_r, getdate_r)
-#endif
-
 
 struct tm *
 getdate (const char *string)

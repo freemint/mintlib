@@ -196,15 +196,11 @@ extern struct tm *localtime (__const time_t *__timer) __THROW;
    using *TP to store the result.  */
 extern struct tm *gmtime_r (__const time_t *__restrict __timer,
 			    struct tm *__restrict __tp) __THROW;
-extern struct tm *__gmtime_r (__const time_t *__restrict __timer,
-			      struct tm *__restrict __tp) __THROW;
 
 /* Return the `struct tm' representation of *TIMER in local time,
    using *TP to store the result.  */
 extern struct tm *localtime_r (__const time_t *__restrict __timer,
 			       struct tm *__restrict __tp) __THROW;
-extern struct tm *__localtime_r (__const time_t *__restrict __timer,
-			         struct tm *__restrict __tp) __THROW;
 # endif	/* POSIX or misc */
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -221,8 +217,6 @@ extern char *ctime (__const time_t *__timer) __THROW;
    that is the representation of TP in this format.  */
 extern char *asctime_r (__const struct tm *__restrict __tp,
 			char *__restrict __buf) __THROW;
-extern char *__asctime_r (__const struct tm *__restrict __tp,
-			  char *__restrict __buf) __THROW;
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r (__const time_t *__restrict __timer,
@@ -316,8 +310,6 @@ extern struct tm *getdate (__const char *__string) __THROW;
    value is != 0 with the same values as given above for `getdate_err'.  */
 extern int getdate_r (__const char *__string,
 		      struct tm *__resbufp) __THROW;
-extern int __getdate_r (__const char *__string,
-		        struct tm *__resbufp) __THROW;
 # endif
 
 
