@@ -66,6 +66,7 @@ __BEGIN_DECLS
 #define MAXLABEL	NS_MAXLABEL
 #define QFIXEDSZ	NS_QFIXEDSZ
 #define RRFIXEDSZ	NS_RRFIXEDSZ
+#define HFIXEDSZ	NS_HFIXEDSZ
 #define NAMESERVER_PORT	NS_DEFAULTPORT
 
 /*
@@ -116,6 +117,19 @@ __BEGIN_DECLS
 #define T_MINFO		14		/* mailbox information */
 #define T_MX		15		/* mail routing information */
 #define T_TXT		16		/* text strings */
+#define T_RP		17		/* responsible serson */
+#define T_AFSDB		18		/* AFS Data Base location */
+#define T_X25		19		/* public switched data network id */
+#define T_ISDN		20		/* integrated service digital network */
+#define T_RT		21		/* route through */
+#define T_NSAP		22		/* RFC 1348, RFC 1637 */
+#define T_NSAP_PTR	23		/* RFC 1348, RFC 1637 */
+#define T_SIG		24		/* signature, RFC 2065 */
+#define	T_KEY		25		/* associated key, RFC 2065 */
+#define T_PX		26		/* preference, RFC 1664 */
+#define T_GPOS		27		/* geographical location, RFC 1712 */
+#define T_AAAA		28		/* ipv6 host address */
+#define T_LOC		29		/* location information, RFC 1876 */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */
@@ -158,8 +172,8 @@ __BEGIN_DECLS
 #endif
 /*
  * Structure for query header, the order of the fields is machine and
- * compiler dependent, in our case, the bits within a byte are assignd 
- * least significant first, while the order of transmition is most 
+ * compiler dependent, in our case, the bits within a byte are assignd
+ * least significant first, while the order of transmition is most
  * significant first.  This requires a somewhat confusing rearrangement.
  */
 
