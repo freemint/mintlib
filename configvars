@@ -123,6 +123,9 @@ RANLIB=$(toolprefix)ranlib
 # in certain modules.
 CFLAGS=-O2 -fomit-frame-pointer
 
+# Flags for building executables
+LDFLAGS=
+
 # Additional defines.
 DEFS=
 
