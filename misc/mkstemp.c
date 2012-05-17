@@ -84,7 +84,7 @@ mkstemp (char* template)
               int fd;
               template[len - 4] = __tmp_letters[i2 % sizeof __tmp_letters];
               
-              fd = open (template, O_RDWR | O_CREAT | O_EXCL, 0666);
+              fd = open (template, O_RDWR | O_CREAT | O_EXCL, 0600);
               
               if (fd >= 0)
                 {
