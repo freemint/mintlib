@@ -67,62 +67,62 @@
 #if defined(__GNUC__) && !defined(__mcoldfire__)
 #define ROLL(offset, x)	\
 ({ unsigned long __arg = (x);	\
-    __asm__ ("roll %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("roll %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define RORL(offset, x)	\
 ({ unsigned long __arg = (x);	\
-    __asm__ ("rorl %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("rorl %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define ROLW(offset, x)	\
 ({ unsigned short __arg = (x);	\
-    __asm__ ("roll %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("roll %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define RORW(offset, x)	\
 ({ unsigned short __arg = (x);	\
-    __asm__ ("rorl %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("rorl %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define ROLB(offset, x)	\
 ({ unsigned char __arg = (x);	\
-    __asm__ ("roll %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("roll %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define RORB(offset, x)	\
 ({ unsigned char __arg = (x);	\
-    __asm__ ("rorl %2,%1": "=r" (__arg) : "0" (__arg), "d" (offset)); \
+    __asm__ ("rorl %2,%1": "=d" (__arg) : "0" (__arg), "d" (offset)); \
     __arg; })
 
 #define ROLL1(x)	\
 ({ unsigned long __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #define RORL1(x)	\
 ({ unsigned long __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #define ROLW1(x)	\
 ({ unsigned short __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #define RORW1(x)	\
 ({ unsigned short __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #define ROLB1(x)	\
 ({ unsigned char __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #define RORB1(x)	\
 ({ unsigned char __arg = (x);	\
-    __asm__ ("roll #1,%1": "=r" (__arg) : "0" (__arg)); \
+    __asm__ ("roll #1,%1": "=d" (__arg) : "0" (__arg)); \
     __arg; })
 
 #endif
