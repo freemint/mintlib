@@ -38,7 +38,7 @@ failsafe_Fopen (const char* name, int flags)
 	struct stat statbuf;
 	int fd = Fopen (name, flags);
 	int saved_errno = errno;
-	
+
 #define __S_I_WALL (S_IWUSR | S_IWGRP | S_IWOTH)
 
 	if (fd == -EACCES && (flags & O_ACCMODE) != O_RDONLY && !geteuid () 
@@ -101,6 +101,7 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	if (__mint >= 9) {
 		modemask = O_ACCMODE | O_SHMODE | O_SYNC | O_NDELAY 
                            | O_CREAT | O_TRUNC | O_EXCL;
+
 		iomode |= O_DENYNONE;
 #if 0
 		if (__mint >= 96)
@@ -208,43 +209,6 @@ __open_v (const char *_filename, int iomode, va_list argp)
 		long l;
 
 noent:
-		if(iomode & O_CREAT) {
-			/* posix requirement for trailing slash check */
-			size_t len = strlen(filename);
-
-			if (len > 0 && filename[len - 1] == '/') {
-				__set_errno(EISDIR);
-				return -1;
-			}
-
-			if (len > 1 && filename[len - 1] == '\\' &&
-				       filename[len - 2] == '\\') {
-				__set_errno(EISDIR);
-				return -1;
-			}
-
-			if (__mint >= 9)
-			    rv = (int) failsafe_Fopen (filename, iomode & modemask);
-			else {
-			    rv = (int)Fcreate(filename, 0x00);                             
-			    if (rv >= 0) {
-			        struct stat statbuf;
-				sb.st_mode = 0;
-				
-				/*
-				   Problem: Why is sb.st_mode set to 0 and
-				   why do we check then for a fifo???  
-				 */
-				if (fstat(rv,&statbuf) != 0 
-				    || !S_ISFIFO(sb.st_mode)) {
-					(void)Fclose(rv);
-					rv = (int)failsafe_Fopen(filename,iomode & modemask);
-				}
-			    }
-			}
-			if (rv >= 0 && __mint >= 9)
-				(void)Fchmod(filename, pmode);
-		}
 	/* difference between MiNT and unix:  unix can create named pipes
 	   (fifos) and ptys anywhere in the filesystem with mknod/mkfifo
 	   and open both ends with standard open(), without O_CREAT.
@@ -267,14 +231,15 @@ noent:
 	   and long-id not start with an octal digit...
 	*/
 		if (__mint >= 9 &&
-		    rv == ((iomode & O_CREAT) ? -EACCES : -ENOENT) &&
+		    (rv == -EACCES || rv == -ENOENT) &&
 		    Freadlink (sizeof linkf - 1, linkf, filename) >= 0 &&
-		    !strncmp (linkf, "u:\\pipe\\", 8) &&
+		    !strncmp(linkf, "u:\\pipe\\", 8) &&
 		    linkf[9] == '$' && (linkf[8] == 'c' || linkf[8] == 'n') &&
 		    linkf[10] >= '0' && linkf[10] <= '7') {
 			char *p, *q;
 			pmode = strtoul (linkf+10, &q, 8);
 			p = q;
+
 			if (linkf[8] == 'n')
 				l = (FA_HIDDEN|0x80);
 			else {
@@ -308,6 +273,42 @@ noent:
 						      (uid_t) sb.st_uid, 
 						      (gid_t) sb.st_gid);
 			}
+		} else if(iomode & O_CREAT) {
+			/* posix requirement for trailing slash check */
+			size_t len = strlen(filename);
+
+			if (len > 0 && filename[len - 1] == '/') {
+				__set_errno(EISDIR);
+				return -1;
+			}
+
+			if (len > 1 && filename[len - 1] == '\\' &&
+				       filename[len - 2] == '\\') {
+				__set_errno(EISDIR);
+				return -1;
+			}
+
+			if (__mint >= 9) {
+			    rv = (int) failsafe_Fopen (filename, iomode & modemask);
+			} else {
+			    rv = (int)Fcreate(filename, 0x00);                             
+			    if (rv >= 0) {
+			        struct stat statbuf;
+				sb.st_mode = 0;
+				
+				/*
+				   Problem: Why is sb.st_mode set to 0 and
+				   why do we check then for a fifo???  
+				 */
+				if (fstat(rv,&statbuf) != 0 
+				    || !S_ISFIFO(sb.st_mode)) {
+					(void)Fclose(rv);
+					rv = (int)failsafe_Fopen(filename,iomode & modemask);
+				}
+			    }
+			}
+			if (rv >= 0 && __mint >= 9)
+				(void)Fchmod(filename, pmode);
 		}
 	}
 
