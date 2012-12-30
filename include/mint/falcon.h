@@ -251,11 +251,12 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 
 /* _SND cookie values */
 
-#define SND_PSG		0x01	/* GI Sound Chip (PSG) */
-#define	SND_8BIT	0x02	/* Stereo 8-bit Playback */
-#define	SND_DMAREC	0x04	/* DMA Record (w/XBIOS) */
-#define	SND_16BIT	0x08	/* 16-bit CODEC */
-#define	SND_DSP		0x10	/* DSP */
+#define SND_PSG		0x01	/* PSG */
+#define	SND_8BIT	0x02	/* 8-bit DMA */
+#define	SND_16BIT	0x04	/* 16-bit CODEC */
+#define	SND_DSP		0x08	/* DSP */
+#define	SND_MATRIX	0x10	/* Connection matrix */
+#define SND_EXT		0x20	/* Extended XBIOS routines (Milan, GSXB) */
 
 /*
  * Sound data memory layout - samples are all signed values
