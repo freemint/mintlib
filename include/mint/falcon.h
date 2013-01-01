@@ -413,12 +413,6 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define MODE_STEREO16	1
 #define MODE_MONO		2
 
-/* Buffoper() modes */
-#define PLAY_ENABLE		0x01
-#define PLAY_REPEAT		0x02
-#define RECORD_ENABLE	0x04
-#define RECORD_REPEAT	0x08
-
 /* Dsptristate() params */
 #define DSP_TRISTATE	0
 #define DSP_ENABLE		1
