@@ -43,7 +43,7 @@ void *
 __malloc(size_t n)
 {
 	struct mem_chunk *p, *q;
-	long sz;
+	unsigned long sz;
 
 	/* add a mem_chunk to required size and round up */
 	n = (n + sizeof(struct mem_chunk) + 7) & ~7;
@@ -181,7 +181,7 @@ __free(void *param)
 
 	/* merge before if possible, otherwise link it in */
 	s = (struct mem_chunk * )(((long) p) + p->size);
-	if (s >= r && p != &_mchunk_free_list)
+	if (q && s >= r && p != &_mchunk_free_list)
 	{
 		/* remember: r may be below &_mchunk_free_list in memory */
 		assert(s == r);
