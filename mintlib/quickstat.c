@@ -141,7 +141,17 @@ rootdir:
 	r = Fsfirst (path, 0xff);
 	Fsetdta (olddta);
 	if (r < 0) {
-		if (isdot && r == -ENOENT) goto rootdir;
+		/* 
+		 * This is incorrect. When Fsfirst fails for things such as
+		 * C:\\FOO\\ and appends *.*, to become C:\\FOO\\*.*, and
+		 * we get ENOENT, why did we say it was a directory and return
+		 * success ???
+		 *
+		 * Commenting out. See bug....
+		 * http://sparemint.atariforge.net/bugtracker/view.php?id=191
+		 *
+		 * if (isdot && r == -ENOENT) goto rootdir;
+		 */
 		__set_errno (-r);
 		return -1;
 	}	
