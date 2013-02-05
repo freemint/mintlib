@@ -67,7 +67,7 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	}
 
 	{
-	char	*ext, drv, *prevdir = NULL;
+	char	*ext, drv, *cwd, *prevdir = NULL;
 	_DTA	d;
 	_DTA	*olddta;
 	int	isdot = 0;
@@ -123,7 +123,7 @@ rootdir:
 	 * NOTE2: Some versions of TOS don't like Fsfirst("RCS\\", -1) either,
 	 * so we do the same thing if the path ends in '\\'.
 	 */
-
+	
 	/* Find the end of the string, and previous directory for kludging  */
 	for (ext = path; ext[0] && ext[1]; ext++) {
 		if (ext[1] && ext[1] != '.') {
@@ -142,6 +142,12 @@ rootdir:
 	}
 	/* Now, Handle C:\XXXX\.. */
 	else if (*ext == '.' && (ext == path || ext[-1] == '.')) {
+		/*
+		 * XXXXXX FIXME.
+		 * Need to handle recursively, such as....
+		 * C:\XXXX\YYYY\ZZZZ\..\..\..
+		 */
+
 		isdot = 1;
 		if (prevdir) {
 			/* 
