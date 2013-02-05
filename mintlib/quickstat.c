@@ -143,9 +143,14 @@ rootdir:
 	/* Now, Handle C:\XXXX\.. */
 	else if (*ext == '.' && (ext == path || ext[-1] == '.')) {
 		/*
-		 * XXXXXX FIXME.
+		 * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		 * FIXME.
 		 * Need to handle recursively, such as....
 		 * C:\XXXX\YYYY\ZZZZ\..\..\..
+		 *
+		 * Also, need to handle non-rooted drives such as...
+		 * ..\..\.., where the CWD needs to be retrieved.
+		 * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		 */
 
 		isdot = 1;
