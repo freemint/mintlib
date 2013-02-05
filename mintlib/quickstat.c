@@ -67,7 +67,7 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	}
 
 	{
-	char	*ext, drv;
+	char	*ext, drv, *prevdir = NULL;
 	_DTA	d;
 	_DTA	*olddta;
 	int	isdot = 0;
@@ -94,7 +94,6 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	/* A file name: check for root directory of a drive */
 	if (path[0] == '\\' && path[1] == 0) {
 		drv = Dgetdrv() + 'A';
-		isdir = 1;
 		goto rootdir;
 	}
 
@@ -125,14 +124,41 @@ rootdir:
 	 * so we do the same thing if the path ends in '\\'.
 	 */
 
-	/* Find the end of the string.  */
-	for (ext = path; ext[0] && ext[1]; ext++) ;
+	/* Find the end of the string, and previous directory for kludging  */
+	for (ext = path; ext[0] && ext[1]; ext++) {
+		if (ext[1] && ext[1] != '.') {
+			if (ext[0] == '\\') {
+				prevdir = ext;
+			}
+		}
+	};
 
 	/* Add appropriate kludge if necessary. */
-	if (*ext == '.' && (ext == path || ext[-1] == '\\' || ext[-1] == '.')) {
+
+	/* Handle C:\XXXX\. */
+	if (*ext == '.' && (ext == path || ext[-1] == '\\')) {
 		isdot = 1;
 		strcat (path, "\\*.*");
-	} else if (*ext == '\\') {
+	}
+	/* Now, Handle C:\XXXX\.. */
+	else if (*ext == '.' && (ext == path || ext[-1] == '.')) {
+		isdot = 1;
+		if (prevdir) {
+			/* 
+			 * In the case of C:\XXXX\YYYY\.., we now have....
+			 * C:\XXXX\*.*
+			 */
+			strcpy(prevdir, "\\*.*\0");
+		} else {
+			/*
+			 * In the case of C:\.., we now have....
+			 * C:\*.*
+			 */
+			strcpy(&ext[-2], "\\*.*\0");
+		}
+	} 
+	/* Finally, Handle C:\XXXX\ */
+	else if (*ext == '\\') {
 		isdot = 1;
 		strcat (path, "*.*");
 	}
