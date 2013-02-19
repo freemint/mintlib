@@ -1,41 +1,53 @@
-/*  nice.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
+/* Copyright (C) 1992, 1996, 1997, 2001, 2002, 2006
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-    This file is part of the MiNTLib project, and may only be used
-    modified and distributed under the terms of the MiNTLib project
-    license, COPYMINT.  By continuing to use, modify, or distribute
-    this file you indicate that you have read the license and
-    understand and accept it fully.
-*/
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #include <errno.h>
-#include <mint/mintbind.h>
+#include <unistd.h>
 #include <sys/resource.h>
 
-#include "lib.h"
-
+/* Increment the scheduling priority of the calling process by INCR.
+   The superuser may use a negative INCR to decrement the priority.  */
 int
-__nice (int increment)
+nice (int incr)
 {
-  /* Actually the return value of this function is not meaningful.
-   * Yet many programs expect that it returns the current priority,
-   * which is what MiNT intends to do.  But the code looks like:
-   *
-   *   return ((long) current_priority & 0x0ffff);
-   *
-   * Thus we can never find out if the return value was positive
-   * or negative.  But we use our insider knowledge of the
-   * kernel sources and fix the bug here.
-   *
-   * Another potiential problem is the sign of the return value:
-   * If our process has a priority of 0 and we call Pnice with
-   * an argument of 5 the function will return -5.  Maybe this
-   * is a bug in MiNT, maybe it isn't.  But we will return here
-   * what most programs (notably GNU nice) expect and revert
-   * the sign of the return value.
-   */
-  
-  int saved_priority = getpriority (PRIO_PROCESS, 0);
-  return setpriority (PRIO_PROCESS, 0, saved_priority + increment);
+  int save;
+  int prio;
+  int result;
+
+  /* -1 is a valid priority, so we use errno to check for an error.  */
+  save = errno;
+  __set_errno (0);
+  prio = getpriority (PRIO_PROCESS, 0);
+  if (prio == -1)
+    {
+      if (errno != 0)
+	return -1;
+      else
+	__set_errno (save);
+    }
+
+  result = setpriority (PRIO_PROCESS, 0, prio + incr);
+  if (result == -1)
+    {
+      if (errno == EACCES)
+	errno = EPERM;
+      return -1;
+    }
+  return getpriority (PRIO_PROCESS, 0);
 }
-weak_alias (__nice, nice)
