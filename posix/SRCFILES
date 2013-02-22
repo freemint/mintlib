@@ -20,12 +20,14 @@ SRCFILES = \
 	glob.c \
 	isfdtype.c \
 	nanosleep.c \
+	nl_langinfo.c \
 	posix_fallocate.c \
 	pread.c \
 	pwrite.c \
 	raise.c \
 	regex.c \
 	remove.c \
+	sched_yield.c \
 	sleep.c \
 	sysconf.c \
 	system.c \
