@@ -20,7 +20,6 @@ SRCFILES = \
 	glob.c \
 	isfdtype.c \
 	nanosleep.c \
-	nl_langinfo.c \
 	posix_fallocate.c \
 	pread.c \
 	pwrite.c \
