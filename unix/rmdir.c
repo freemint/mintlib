@@ -31,7 +31,7 @@ __rmdir(const char *_path)
 	    _unx2dos(_path, path, sizeof (pathbuf));
 	  }
 	
-	if (__quickstat (path, &statbuf, 0) != 0) 
+	if (__quickstat (path, &statbuf, 1) != 0) 
 	  {
 	    /* Can't stat, can't remove.  */
 	    __set_errno (ENOENT);
