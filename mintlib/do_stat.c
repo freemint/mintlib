@@ -147,7 +147,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 
 	{
 	_DTA	*olddta;
-	char	*ext, drv;
+	char	*ext, drv, *prevdir = NULL;
 	int	fd;
 	short	magic;
 	_DTA	d;
@@ -209,23 +209,71 @@ rootdir:
 	 * so we do the same thing if the path ends in '\\'.
 	 */
 
-	/* find the end of the string */
-	for (ext = path; ext[0] && ext[1]; ext++) ;
+	/* Find the end of the string, and previous directory for kludging  */
+	for (ext = path; ext[0] && ext[1]; ext++) {
+		if (ext[1] && ext[1] != '.') {
+			if (ext[0] == '\\') {
+				prevdir = ext;
+			}
+		}
+	};
 
-	/* add appropriate kludge if necessary */
-	if (*ext == '.' && (ext == path || ext[-1] == '\\' || ext[-1] == '.')) {
+	/* Add appropriate kludge if necessary. */
+
+	/* Handle C:\XXXX\. */
+	if (*ext == '.' && (ext == path || ext[-1] == '\\')) {
 		isdot = 1;
-		strcat(path, "\\*.*");
-	} else if (*ext == '\\') {
+		strcat (path, "\\*.*");
+	}
+	/* Now, Handle C:\XXXX\.. */
+	else if (*ext == '.' && (ext == path || ext[-1] == '.')) {
+		/*
+		 * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		 * FIXME.
+		 * Need to handle recursively, such as....
+		 * C:\XXXX\YYYY\ZZZZ\..\..\..
+		 *
+		 * Also, need to handle non-rooted drives such as...
+		 * ..\..\.., where the CWD needs to be retrieved.
+		 * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		 */
+
 		isdot = 1;
-		strcat(path, "*.*");
+		if (prevdir) {
+			/* 
+			 * In the case of C:\XXXX\YYYY\.., we now have....
+			 * C:\XXXX\*.*
+			 */
+			strcpy(prevdir, "\\*.*\0");
+		} else {
+			/*
+			 * In the case of C:\.., we now have....
+			 * C:\*.*
+			 */
+			strcpy(&ext[-2], "\\*.*\0");
+		}
+	} 
+	/* Finally, Handle C:\XXXX\ */
+	else if (*ext == '\\') {
+		isdot = 1;
+		strcat (path, "*.*");
 	}
 	olddta = Fgetdta();
 	Fsetdta(&d);
-	r = Fsfirst(path, 0xff);
-	Fsetdta(olddta);
+	r = Fsfirst (path, 0xff);
+	Fsetdta (olddta);
 	if (r < 0) {
-		if (isdot && r == -ENOENT) goto rootdir;
+		/* 
+		 * This is incorrect. When Fsfirst fails for things such as
+		 * C:\\FOO\\ and appends *.*, to become C:\\FOO\\*.*, and
+		 * we get ENOENT, why did we say it was a directory and return
+		 * success ???
+		 *
+		 * Commenting out. See bug....
+		 * http://sparemint.atariforge.net/bugtracker/view.php?id=191
+		 *
+		 * if (isdot && r == -ENOENT) goto rootdir;
+		 */
 		__set_errno (-r);
 		return -1;
 	}	
