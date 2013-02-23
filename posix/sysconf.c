@@ -36,8 +36,8 @@ __sysconf (int var)
 	case _SC_ARG_MAX:
 		return 127; /* ignore this, cuz we can pass via the env */
 	case _SC_OPEN_MAX:
-		/* XXX TOS reports less than this. */
-		return 29; /* 32 - stdout, stdin, and stderr */
+		/* XXX TOS reports less than this using a short test app. */
+		return 32;
 	case _SC_NGROUPS_MAX:
 		return NGROUPS_MAX;
 	case _SC_CHILD_MAX:
