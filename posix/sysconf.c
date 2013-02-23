@@ -36,15 +36,12 @@ __sysconf (int var)
 	case _SC_ARG_MAX:
 		return 127; /* ignore this, cuz we can pass via the env */
 	case _SC_OPEN_MAX:
+		/* XXX TOS reports less than this. */
 		return 29; /* 32 - stdout, stdin, and stderr */
 	case _SC_NGROUPS_MAX:
 		return NGROUPS_MAX;
 	case _SC_CHILD_MAX:
 		return UNLIMITED; /* good 'ol TOS :-) */
-	case _SC_GETPW_R_SIZE_MAX:
-		return -1;
-	case _SC_GETGR_R_SIZE_MAX:
-		return -1;
 	default:
 		return -1;
 	}
