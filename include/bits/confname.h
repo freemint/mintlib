@@ -42,6 +42,8 @@
 #define _SC_PAGE_SIZE	6	/* pagesize */
 #define _SC_PAGESIZE	_SC_PAGE_SIZE	
 #define _SC_PHYS_PAGES	7	/* physical pages */
+#define _SC_GETPW_R_SIZE_MAX	8 /* passwd buffer size */
+#define _SC_GETGR_R_SIZE_MAX	9 /* group buffer size */
 
 #if (defined __USE_POSIX2 || defined __USE_UNIX98 \
      || defined __USE_FILE_OFFSET64 || defined __USE_LARGEFILE64 \
