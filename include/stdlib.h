@@ -311,14 +311,6 @@ extern size_t wcstombs (char *__restrict __s,
      __THROW;
 
 
-extern wchar_t *wcscat (wchar_t *, __const wchar_t *) __THROW;
-extern int wcscmp (__const wchar_t *, __const wchar_t *) __THROW;
-extern wchar_t *wcscpy (wchar_t *, __const wchar_t *) __THROW;
-extern size_t wcslen (__const wchar_t *) __THROW;
-extern wchar_t *wcsncat (wchar_t *, __const wchar_t *, size_t) __THROW;
-extern int wcsncmp (__const wchar_t *, __const wchar_t *, size_t) __THROW;
-extern wchar_t *wcsncpy (wchar_t *, __const wchar_t *, size_t) __THROW;
-
 /* This function is similar to the above but returns NULL if the
    programs is running with SUID or SGID enabled.  */
 extern char *__secure_getenv (__const char *__name) __THROW;
