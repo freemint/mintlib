@@ -71,4 +71,31 @@ SRCFILES = \
 	strupr.c \
 	strverscmp.c \
 	strxfrm.c \
-	swab.c
+	swab.c \
+	wcpcpy.c \
+	wcpncpy.c \
+	wcscasecmp.c \
+	wcscat.c \
+	wcschr.c \
+	wcscmp.c \
+	wcscpy.c \
+	wcscspn.c \
+	wcsdup.c \
+	wcslen.c \
+	wcsncasecmp.c \
+	wcsncat.c \
+	wcsncmp.c \
+	wcsncpy.c \
+	wcsnlen.c \
+	wcspbrk.c \
+	wcsrchr.c \
+	wcsspn.c \
+	wcsstr.c \
+	wcstok.c \
+	wcswcs.c \
+	wmemchr.c \
+	wmemcmp.c \
+	wmemcpy.c \
+	wmemmove.c \
+	wmemset.c
+	

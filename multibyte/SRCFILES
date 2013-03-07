@@ -1,0 +1,23 @@
+# This file gets included by the Makefile in this directory to determine
+# the files that should go only into source distributions.
+# The files listed here are sorted in alphanumerical order.  This is
+# necessary but if it keeps like this the files are also compiled in
+# alphabetical order.
+
+SRCFILES = \
+	btowc.c \
+	internal.c \
+	mblen.c \
+	mbrlen.c \
+	mbrtowc.c \
+	mbsinit.c \
+	mbsnrtowcs.c \
+	mbsrtowcs.c \
+	mbstowcs.c \
+	mbtowc.c \
+	wcrtomb.c \
+	wcsnrtombs.c \
+	wcsrtombs.c \
+	wcstombs.c \
+	wctob.c \
+	wctomb.c

@@ -104,9 +104,6 @@ SRCFILES = \
 	uidgid.c \
 	unixtime.c \
 	unx2dos.c \
-	wcmb.c \
-	wcscat.c \
-	wcscmp.c \
-	wcscpy.c \
-	wcslen.c \
-	wnull.c
+	wctrans.c \
+	wctype.c
+	

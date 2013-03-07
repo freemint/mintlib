@@ -54,6 +54,7 @@ gmpdir     := $(top_srcdir)/gmp
 logindir   := $(top_srcdir)/login
 mintlibdir := $(top_srcdir)/mintlib
 miscdir    := $(top_srcdir)/misc
+mbytedir   := $(top_srcdir)/multibyte
 posixdir   := $(top_srcdir)/posix
 pwdgrpdir  := $(top_srcdir)/pwdgrp
 shadowdir  := $(top_srcdir)/shadow
@@ -71,7 +72,7 @@ timedir    := $(top_srcdir)/time
 tzdir      := $(top_srcdir)/tz
 unixdir    := $(top_srcdir)/unix
 srcdirs   := $(argpdir) $(cryptdir) $(direntdir) $(gmpdir) $(logindir) $(mintlibdir) \
-  $(miscdir) $(posixdir) $(pwdgrpdir) $(shadowdir) $(signaldir) $(socketdir) \
+  $(miscdir) $(mbytedir) $(posixdir) $(pwdgrpdir) $(shadowdir) $(signaldir) $(socketdir) \
   $(stdiiodir) $(stdiodir) $(stdlibdir) $(stringdir) $(sunrpcdir) \
   $(syscalldir) $(sysvipcdir) $(termiosdir) $(timedir) $(tzdir) $(unixdir)
 
@@ -82,6 +83,7 @@ GMPSRCS     := $(addprefix $(gmpdir)/,     $(GMPCFILES))
 LOGINSRCS   := $(addprefix $(logindir)/,   $(LOGINCFILES))
 MINTLIBSRCS := $(addprefix $(mintlibdir)/, $(MINTLIBCFILES))
 MISCSRCS    := $(addprefix $(miscdir)/,    $(MISCCFILES))
+MBYTESRCS   := $(addprefix $(mbytedir)/,   $(MBYTECFILES))
 POSIXSRCS   := $(addprefix $(posixdir)/,   $(POSIXCFILES))
 PWDGRPSRCS  := $(addprefix $(pwdgrpdir)/,  $(PWDGRPCFILES))
 RPCSVCSRCS  := $(addprefix $(sunrpcdir)/,  $(RPCSVCCFILES))
@@ -100,7 +102,7 @@ TIMESRCS    := $(addprefix $(timedir)/,    $(TIMECFILES))
 TZSRCS      := $(addprefix $(tzdir)/,      $(TZCFILES))
 UNIXSRCS    := $(addprefix $(unixdir)/,    $(UNIXCFILES))
 SRCS := $(ARGPSRCS) $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIBSRCS) \
-  $(MISCSRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(RPCSVCSRCS) $(SHADOWSRCS) \
+  $(MISCSRCS) $(MBYTESRCS) $(POSIXSRCS) $(PWDGRPSRCS) $(RPCSVCSRCS) $(SHADOWSRCS) \
   $(SIGNALSRCS) $(SOCKETSRCS) $(STDIOSRCS) $(STDIOSRCS) $(STDLIBSRCS) \
   $(STRINGSRCS) $(SUNRPCSRCS) $(SYSCALLSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) \
   $(TIMESRCS) $(TZSRCS) $(UNIXSRCS)
@@ -147,6 +149,7 @@ GMPOBJS     := $(addsuffix .o, $(basename $(notdir $(GMPSRCS))))
 LOGINOBJS   := $(addsuffix .o, $(basename $(notdir $(LOGINSRCS))))
 MINTLIBOBJS := $(addsuffix .o, $(basename $(notdir $(MINTLIBSRCS))))
 MISCOBJS    := $(addsuffix .o, $(basename $(notdir $(MISCSRCS))))
+MBYTEOBJS   := $(addsuffix .o, $(basename $(notdir $(MBYTESRCS))))
 POSIXOBJS   := $(addsuffix .o, $(basename $(notdir $(POSIXSRCS))))
 PWDGRPOBJS  := $(addsuffix .o, $(basename $(notdir $(PWDGRPSRCS))))
 RPCSVCOBJS  := $(addsuffix .o, $(basename $(notdir $(RPCSVCSRCS))))
@@ -165,12 +168,12 @@ TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
 TZOBJS      := $(addsuffix .o, $(basename $(notdir $(TZSRCS))))
 UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
 OBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
-  $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
+  $(MISCOBJS) $(MBYTEOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
   $(SIGNALOBJS) $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) \
   $(STRINGOBJS) $(SUNRPCOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) \
   $(TIMEOBJS) $(TZOBJS) $(UNIXOBJS)
 LIBCOBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
-  $(MISCOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
+  $(MISCOBJS) $(MBYTEOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(SHADOWOBJS) $(SIGNALOBJS) \
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) \
   $(TERMIOSOBJS) $(TIMEOBJS) $(TZOBJS) $(UNIXOBJS) $(SUNRPCOBJS) $(SOCKETOBJS)
 
@@ -216,8 +219,8 @@ ifndef top_distdir    # Not needed when making distributions.
 
 # Copy SRCFILES from source directory here.
 $(top_srcdir)/CFILES: $(argpdir)/SRCFILES $(cryptdir)/SRCFILES $(direntdir)/SRCFILES \
-  $(gmpdir)/SRCFILES $(logindir)/SRCFILES $(mintlibdir)/SRCFILES \
-  $(miscdir)/SRCFILES $(posixdir)/SRCFILES $(pwdgrpdir)/SRCFILES \
+  $(gmpdir)/SRCFILES $(mbytedir)/SRCFILES $(logindir)/SRCFILES $(mintlibdir)/SRCFILES \
+  $(miscdir)/SRCFILES $($(posixdir)/SRCFILES $(pwdgrpdir)/SRCFILES \
   $(shadowdir)/SRCFILES $(signaldir)/SRCFILES $(socketdir)/SRCFILES \
   $(stdiiodir)/SRCFILES $(stdiodir)/SRCFILES $(stdlibdir)/SRCFILES \
   $(stringdir)/SRCFILES $(sunrpcdir)/SRCFILES $(sunrpcdir)/RPCSVCCFILES \
@@ -232,6 +235,7 @@ $(top_srcdir)/CFILES: $(argpdir)/SRCFILES $(cryptdir)/SRCFILES $(direntdir)/SRCF
 	sed -e 's,^SRCFILES *=,LOGINCFILES =,g' $(logindir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,MINTLIBCFILES =,g' $(mintlibdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,MISCCFILES =,g' $(miscdir)/SRCFILES >>$@
+	sed -e 's,^SRCFILES *=,MBYTECFILES =,g' $(mbytedir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,POSIXCFILES =,g' $(posixdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,PWDGRPCFILES =,g' $(pwdgrpdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,SHADOWCFILES =,g' $(shadowdir)/SRCFILES >>$@
