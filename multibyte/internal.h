@@ -20,4 +20,4 @@ extern const uint32_t bittab[]; /* ATTR_LIBC_VISIBILITY; */
 #define FAILSTATE R(0x80,0x80)
 
 #define SA 0xc2u
-#define SB 0xf5u
+#define SB 0xf4u
