@@ -5,6 +5,13 @@
 #include <time.h>
 #include <sys/time.h>
 #include <errno.h>
+#include <time.h>
+
+#include "lib.h"	/* __mint */
+
+#define TIMESPEC_TO_USEC(ts) ((ts)->tv_sec * 1000000L + (ts)->tv_nsec / 1000)
+#define USEC_PER_TICK (1000000L / ((unsigned long)CLOCKS_PER_SEC))
+#define	USEC_TO_CLOCK_TICKS(us)	((us) / USEC_PER_TICK )
 
 enum { BILLION = 1000 * 1000 * 1000 };
 
@@ -18,6 +25,19 @@ nanosleep(const struct timespec *req, struct timespec *rem)
 	if (req->tv_nsec < 0 || BILLION <= req->tv_nsec) {
 		__set_errno(EINVAL);
 		return -1;
+	}
+
+	if (!__mint) {
+		/* on TOS this cannot be interrupted and
+		 * there's no Tgettimeofday/Fselect,
+		 * so just busyloop
+		 */
+		long stop;
+		__useconds_t useconds = TIMESPEC_TO_USEC(req);
+		stop = _clock() + USEC_TO_CLOCK_TICKS(useconds);
+		while (_clock() < stop)
+			;
+		return 0;
 	}
 
 	wait.tv_sec = req->tv_sec;
