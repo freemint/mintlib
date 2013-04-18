@@ -11,7 +11,7 @@
 
 #include "internal.h"
 
-size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st)
+size_t wcrtomb(char *__restrict s, wchar_t wc, mbstate_t *__restrict st)
 {
 	if (!s) return 1;
 	if ((unsigned)wc < 0x80) {

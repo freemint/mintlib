@@ -11,7 +11,7 @@
 
 #include "internal.h"
 
-size_t mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st)
+size_t mbsrtowcs(wchar_t *__restrict ws, const char **__restrict src, size_t wn, mbstate_t *__restrict st)
 {
 	const unsigned char *s = (const void *)*src;
 	size_t wn0 = wn;

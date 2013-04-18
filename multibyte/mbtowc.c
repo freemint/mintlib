@@ -11,7 +11,7 @@
 
 #include "internal.h"
 #include <stdio.h>
-int mbtowc(wchar_t *restrict wc, const char *restrict src, size_t n)
+int mbtowc(wchar_t *__restrict wc, const char *__restrict src, size_t n)
 {
 	unsigned c;
 	const unsigned char *s = (const void *)src;

@@ -11,7 +11,7 @@
 
 #include "internal.h"
 
-size_t mbrtowc(wchar_t *restrict wc, const char *restrict src, size_t n, mbstate_t *restrict st)
+size_t mbrtowc(wchar_t *__restrict wc, const char *__restrict src, size_t n, mbstate_t *__restrict st)
 {
 	static unsigned internal_state;
 	unsigned c;
