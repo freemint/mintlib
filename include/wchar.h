@@ -29,8 +29,9 @@ extern "C" {
 #include <wctype.h>
 #endif
 
-#undef WEOF
-#define WEOF (-1)
+#ifndef WEOF
+# define WEOF (0xffffffffu)
+#endif
 
 typedef struct
 {
@@ -130,8 +131,6 @@ struct tm;
 size_t wcsftime (wchar_t *__restrict, size_t, const wchar_t *__restrict, const struct tm *__restrict);
 #endif
 
-#undef iswdigit
-
 #if defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) \
  || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE)
 #ifndef __MINT__
@@ -153,29 +152,6 @@ int wcsncasecmp_l(const wchar_t *, const wchar_t *, size_t, locale_t);
 int wcscoll_l(const wchar_t *, const wchar_t *, locale_t);
 size_t wcsxfrm_l(wchar_t *__restrict, const wchar_t *__restrict, size_t n, locale_t);
 #endif
-#endif
-
-#if defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE)
-int wcwidth (wchar_t);
-int wcswidth (const wchar_t *, size_t);
-int       iswalnum(wint_t);
-int       iswalpha(wint_t);
-int       iswblank(wint_t);
-int       iswcntrl(wint_t);
-int       iswdigit(wint_t);
-int       iswgraph(wint_t);
-int       iswlower(wint_t);
-int       iswprint(wint_t);
-int       iswpunct(wint_t);
-int       iswspace(wint_t);
-int       iswupper(wint_t);
-int       iswxdigit(wint_t);
-int       iswctype(wint_t, wctype_t);
-wint_t    towlower(wint_t);
-wint_t    towupper(wint_t);
-wctype_t  wctype(const char *);
-#undef iswdigit
-#define iswdigit(a) ((unsigned)(a)-'0' < 10)
 #endif
 
 #ifdef __cplusplus

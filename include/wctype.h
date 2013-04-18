@@ -5,15 +5,23 @@
 extern "C" {
 #endif
 
-#include <stddef.h>
+#ifndef __MINT__
+#if defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) \
+ || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE)
+#define __need_locale_t
+#endif
+#endif
+
 #include <wchar.h>
 
-typedef wchar_t wctrans_t;
-typedef wchar_t wctype_t;
+typedef const int * wctrans_t;
+typedef unsigned long wctype_t;
 
 #ifndef WEOF
 # define WEOF (0xffffffffu)
 #endif
+
+#undef iswdigit
 
 int       iswalnum(wint_t);
 int       iswalpha(wint_t);
@@ -34,7 +42,34 @@ wint_t    towupper(wint_t);
 wctrans_t wctrans(const char *);
 wctype_t  wctype(const char *);
 
+#undef iswdigit
 #define iswdigit(a) (((unsigned)(a)-L'0') < 10)
+
+#ifndef __MINT__
+#if defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) \
+ || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE)
+
+int iswalnum_l(wint_t, locale_t);
+int iswalpha_l(wint_t, locale_t);
+int iswblank_l(wint_t, locale_t);
+int iswcntrl_l(wint_t, locale_t);
+int iswdigit_l(wint_t, locale_t);
+int iswgraph_l(wint_t, locale_t);
+int iswlower_l(wint_t, locale_t);
+int iswprint_l(wint_t, locale_t);
+int iswpunct_l(wint_t, locale_t);
+int iswspace_l(wint_t, locale_t);
+int iswupper_l(wint_t, locale_t);
+int iswxdigit_l(wint_t, locale_t);
+int iswctype_l(wint_t, wctype_t, locale_t);
+wint_t towlower_l(wint_t, locale_t);
+wint_t towupper_l(wint_t, locale_t);
+wint_t towctrans_l(wint_t, wctrans_t, locale_t);
+wctrans_t wctrans_l(const char *, locale_t);
+wctype_t  wctype_l(const char *, locale_t);
+
+#endif
+#endif
 
 #ifdef __cplusplus
 }
