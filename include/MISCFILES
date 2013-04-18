@@ -33,7 +33,6 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	gnu-out.h \
 	grp.h \
 	ieee754.h \
-	ifaddrs.h \
 	inttypes.h \
 	iovec.h \
 	lastlog.h \
