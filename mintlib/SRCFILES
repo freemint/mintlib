@@ -99,6 +99,7 @@ SRCFILES = \
 	tell.c \
 	thread.c \
 	toxxx.c \
+	towctrans.c \
 	ttyname.c \
 	ttyname_r.c \
 	uidgid.c \
@@ -106,4 +107,3 @@ SRCFILES = \
 	unx2dos.c \
 	wctrans.c \
 	wctype.c
-	
