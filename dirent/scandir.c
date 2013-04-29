@@ -71,7 +71,7 @@ SCANDIR (dir, namelist, select, cmp)
 	    v = new;
 	  }
 
-	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
+	dsize = sizeof(DIRENT_TYPE);
 	vnew = malloc (dsize);
 	if (vnew == NULL)
 	  break;
