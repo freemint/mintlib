@@ -28,8 +28,6 @@
  */
 #define _NO_CASE  8
 
-extern int seeking;
-
 struct dirent*
 __readdir(DIR *d)
 {
@@ -50,9 +48,6 @@ __readdir(DIR *d)
 		/* The directory descriptor was optained by calling Dopendir(), as
 		 * there is a valid handle.
 		 */
-		if (seeking) {
-			dbuf.ino = -1;
-		}
 		r = (int)Dreaddir((int)(NAME_MAX+1+sizeof(long)), d->handle, (char *) &dbuf);
 		if (r == -ENMFILES)
 			return 0;
