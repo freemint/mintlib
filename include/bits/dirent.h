@@ -14,7 +14,7 @@
 struct dirent {
        __ino_t         d_fileno;       /* garbage under TOS */
        __off_t         d_off;          /* position in directory  */
-       unsigned short  d_reclen;       /* for us, length of d_name */
+       unsigned short  d_namlen;       /* for us, length of d_name */
        char            d_name[NAME_MAX+1];
 };
 
@@ -36,8 +36,8 @@ struct __dirstream {
 	long	handle;		/* Dreaddir handle */
 };
 
-#undef _DIRENT_HAVE_D_NAMLEN
 #undef _DIRENT_HAVE_D_TYPE
+#undef _DIRENT_HAVE_D_RECLEN
 
-#define _DIRENT_HAVE_D_RECLEN 1
-#define _DIRENT_HAVE_D_OFF 1
+#define _DIRENT_HAVE_D_NAMLEN
+#define _DIRENT_HAVE_D_OFF
