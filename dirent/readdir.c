@@ -28,6 +28,8 @@
  */
 #define _NO_CASE  8
 
+extern int seeking;
+
 struct dirent*
 __readdir(DIR *d)
 {
@@ -48,6 +50,9 @@ __readdir(DIR *d)
 		/* The directory descriptor was optained by calling Dopendir(), as
 		 * there is a valid handle.
 		 */
+		if (seeking) {
+			dbuf.ino = -1;
+		}
 		r = (int)Dreaddir((int)(NAME_MAX+1+sizeof(long)), d->handle, (char *) &dbuf);
 		if (r == -ENMFILES)
 			return 0;
@@ -58,7 +63,7 @@ __readdir(DIR *d)
 		else {
 			dd->d_ino = dbuf.ino;
 			dd->d_off++;
-			dd->d_reclen = (short)strlen(dbuf.name);
+			dd->d_namlen = (short)strlen(dbuf.name);
 			strcpy(dd->d_name, dbuf.name);
 
 			/* if file system is case insensitive, transform name to lowercase */
@@ -92,7 +97,7 @@ __readdir(DIR *d)
 	dd->d_ino = __inode++;
 	dd->d_off++;
 	_dos2unx(d->dta.dta_name, dd->d_name, sizeof (dd->d_name));
-	dd->d_reclen = (short)strlen(dd->d_name);
+	dd->d_namlen = (short)strlen(dd->d_name);
 	return dd;
 }
 
