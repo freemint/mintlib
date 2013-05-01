@@ -58,6 +58,7 @@ SRCFILES = \
 	linea.c \
 	llabs.c \
 	lldiv.c \
+	localeconv.c \
 	lockf.c \
 	ltoa.c \
 	main.c \
