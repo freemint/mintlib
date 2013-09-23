@@ -21,21 +21,13 @@
 mode_t
 __umask (mode_t complmode)
 {
-	if (__current_umask == -1) {
-		__current_umask = Pumask (0);
-
-		if (__current_umask < 0)
-			 __current_umask = 0;
-
-		/* put back the old umask */
-		Pumask(__current_umask);
+	mode_t r = __current_umask;
+	complmode &= (~S_IFMT);
+	if( r != complmode )
+	{
+		r = Pumask(complmode);
+		__current_umask = complmode;
 	}
-
-	if (complmode == (mode_t) __current_umask)
-		return __current_umask;
-
-	__current_umask = Pumask (complmode);
-
-	return __current_umask;
+	return r;
 }
 weak_alias (__umask, umask)
