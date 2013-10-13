@@ -592,6 +592,9 @@ ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 
 %changelog
+* Sun Oct 13 2013 Alan Hourihane <alanh@fairlite.co.uk>
+- update to 0.60.0 stable release
+
 * Thu Jun 24 2010 Alan Hourihane <alanh@fairlite.co.uk>
 - update to 0.59.2 stable release
 

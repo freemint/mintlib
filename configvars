@@ -5,7 +5,7 @@
 # serve both as input to "make" and a Bourne shell.
 
 # Define this to the version of the package.
-VERSION=0.59.2
+VERSION=0.60.0
 
 # Define this if you cross-compile.  When cross-compiling some files
 # (notably programs and commands like zic, zdump or tzselect) won't
