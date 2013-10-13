@@ -1,3 +1,304 @@
+2013-10-13 19:41  alanh
+
+	* configvars, mintlib.spec.in: Bump to 0.60.0
+
+2013-10-06 21:51  alanh
+
+	* multibyte/mbsrtowcs.c: Update from musl sources.
+
+2013-09-23 17:44  hek
+
+	* unix/umask.c: fix umask: didn't work for successive calls
+
+2013-05-01 19:12  alanh
+
+	* mintlib/: SRCFILES, localeconv.c, setlocale.c: Move localeconv()
+	  to it's own source file.
+
+2013-04-29 23:26  alanh
+
+	* mintlib/: SRCFILES, towctrans.c: Add towupper/towlower
+
+2013-04-29 12:03  alanh
+
+	* dirent/readdir.c: Revert errorneous change
+
+2013-04-29 11:55  alanh
+
+	* dirent/readdir.c: fix readdir. Reported by Vincent Riviere.
+
+2013-04-29 09:27  alanh
+
+	* dirent/scandir.c, include/bits/dirent.h: Fix scandir (and dirent
+	  capability) Found by Andreas Schwab
+
+2013-04-29 01:38  alanh
+
+	* dirent/scandir.c: Fix scandir corruption. Reported by Vincent
+	  Riviere.
+
+2013-04-19 00:48  alanh
+
+	* include/MISCFILES: remove bogus ifaddrs.h
+
+2013-04-19 00:37  alanh
+
+	* include/MISCFILES: Add missing wctype.h
+
+2013-04-19 00:33  alanh
+
+	* posix/nanosleep.c: Add nanosleep() support for TOS.  Contributed
+	  by Eero Tamminen
+
+2013-04-19 00:31  alanh
+
+	* include/wchar.h, mintlib/wctrans.c, include/wctype.h: More
+	  wchar/wctype fixes.
+
+2013-04-19 00:27  alanh
+
+	* multibyte/: mbrlen.c, mbrtowc.c, mbsnrtowcs.c, mbsrtowcs.c,
+	  mbstowcs.c, mbtowc.c, wcrtomb.c, wcsnrtombs.c, wcsrtombs.c,
+	  wcstombs.c: restrict -> __restrict
+
+2013-04-19 00:23  alanh
+
+	* multibyte/: Makefile, internal.h, mbrlen.c, mbrtowc.c,
+	  mbsnrtowcs.c, mbsrtowcs.c, mbstowcs.c, mbtowc.c, wcrtomb.c,
+	  wcsnrtombs.c, wcsrtombs.c, wcstombs.c: Updates from musl Fix
+	  Makefile
+
+2013-04-16 21:10  alanh
+
+	* include/wchar.h: Fix wchar.h for FreeMiNT from recent widechar
+	  changes.
+
+2013-03-10 12:32  alanh
+
+	* string/wmemmove.c: Bring fix for wmemmove over from musl
+
+2013-03-08 16:36  alanh
+
+	* include/MISCFILES: add missing wctype.h header
+
+2013-03-07 19:04  alanh
+
+	* mintlib/wctype.c: remove ^M's
+
+2013-03-07 19:00  alanh
+
+	* include/stdlib.h: remove wcs*() functions that shouldn't be
+	  defined here.
+
+2013-03-07 18:56  alanh
+
+	* LICENSES, Makefile, buildrules, include/wchar.h,
+	  include/wctype.h, mintlib/SRCFILES, mintlib/alpha.h,
+	  mintlib/punct.h, mintlib/wcmb.c, mintlib/wcscat.c,
+	  mintlib/wcscmp.c, mintlib/wcscpy.c, mintlib/wcslen.c,
+	  mintlib/wctrans.c, mintlib/wctype.c, multibyte/BINFILES,
+	  multibyte/EXTRAFILES, multibyte/MISCFILES, multibyte/Makefile,
+	  multibyte/SRCFILES, multibyte/btowc.c, multibyte/internal.c,
+	  multibyte/internal.h, multibyte/mblen.c, multibyte/mbrlen.c,
+	  multibyte/mbrtowc.c, multibyte/mbsinit.c, multibyte/mbsnrtowcs.c,
+	  multibyte/mbsrtowcs.c, multibyte/mbstowcs.c, multibyte/mbtowc.c,
+	  multibyte/wcrtomb.c, multibyte/wcsnrtombs.c,
+	  multibyte/wcsrtombs.c, multibyte/wcstombs.c, multibyte/wctob.c,
+	  multibyte/wctomb.c, string/SRCFILES, string/wcpcpy.c,
+	  string/wcpncpy.c, string/wcscasecmp.c, string/wcscat.c,
+	  string/wcschr.c, string/wcscmp.c, string/wcscpy.c,
+	  string/wcscspn.c, string/wcsdup.c, string/wcslen.c,
+	  string/wcsncasecmp.c, string/wcsncat.c, string/wcsncmp.c,
+	  string/wcsncpy.c, string/wcsnlen.c, string/wcspbrk.c,
+	  string/wcsrchr.c, string/wcsspn.c, string/wcsstr.c,
+	  string/wcstok.c, string/wcswcs.c, string/wmemchr.c,
+	  string/wmemcmp.c, string/wmemcpy.c, string/wmemmove.c,
+	  string/wmemset.c: Add musl multibyte and wide character support
+	  code.  Contributed by Jeff Armstrong.
+
+2013-02-23 23:56  alanh
+
+	* posix/sysconf.c: Change to 32 to match FreeMiNT, although in a
+	  short test it came out as 19 in pure TOS, but that I guess
+	  doesn't include currently open file descriptors.
+
+2013-02-23 21:03  alanh
+
+	* mintlib/do_stat.c: Fix bug 191.
+	  http://sparemint.org/bugtracker/view.php?id=191 Apply the same
+	  logic from quickstat.c to do_stat.c Later these two files should
+	  be merged and a #define separating the time code so that
+	  quickstat() remains quick! but then we share fixes between the
+	  two code paths.
+
+2013-02-23 20:34  alanh
+
+	* posix/sysconf.c: Remove GET{PW,GR}_R_SIZE as the default: case
+	  will handle.
+
+2013-02-23 18:12  alanh
+
+	* include/bits/confname.h, posix/sysconf.c: Fix _SC_OPEN_MAX, and
+	  add stubs for _SC_GETPW_R_SIZE_MAX & _SC_GETGR_R_SIZE_MAX
+
+2013-02-22 16:21  alanh
+
+	* posix/SRCFILES: remove nl_langinfo that crept in.
+
+2013-02-22 16:19  alanh
+
+	* posix/: SRCFILES, sched_yield.c: Add sched_yield()
+	  implementation.
+
+2013-02-22 11:45  alanh
+
+	* unix/rmdir.c: rmdir should not follow symlinks.
+
+2013-02-19 10:20  alanh
+
+	* unix/nice.c: Use newer glibc nice().
+
+2013-02-05 00:52  alanh
+
+	* mintlib/quickstat.c: Add secondary comment about non-rooted ..
+	  directories
+
+2013-02-05 00:51  alanh
+
+	* mintlib/quickstat.c: Add comment about requirement to fix
+	  recursiveness.  CV:
+	  ----------------------------------------------------------------------
+
+2013-02-05 00:28  alanh
+
+	* mintlib/quickstat.c: Fix the case when we have .. as the last
+	  entry. Follow up to bug....
+	  http://sparemint.atariforge.net/bugtracker/view.php?id=191
+
+2013-02-04 23:22  alanh
+
+	* mintlib/quickstat.c: Fix bug
+	  http://sparemint.atariforge.net/bugtracker/view.php?id=191.
+	  Where under TOS we'd stat() a directory that didn't exist and
+	  claim it did.
+
+2013-01-07 16:05  alanh
+
+	* mintlib/malloc.c: Fix longstanding free() crashing bug due to
+	  NULL pointer check being missed.
+
+2013-01-01 20:04  alanh
+
+	* include/mint/falcon.h: Remove duplicate buffoper modes.
+	  Contributed by Miro Kropacek.
+
+2012-12-30 22:54  alanh
+
+	* include/mint/falcon.h: Fix the SND_ cookie values (now match the
+	  kernel).  Contributed by Miro Kropacek.
+
+2012-08-18 00:19  alanh
+
+	* unix/open.c: Fix writing to files created with mkfifo()
+
+2012-08-05 20:51  alanh
+
+	* include/macros.h: Fix compilation for GCC 4.7.1. Contributed by
+	  Vincent Riviere.
+
+2012-05-17 09:26  alanh
+
+	* misc/mkstemp.c: Fix permissions on mkstemp()
+
+2012-05-08 09:46  alanh
+
+	* configvars: Initialize LDFLAGS to avoid taking it from the
+	  environment.	Contributed by Vincent Riviere.
+
+2012-04-30 18:05  alanh
+
+	* include/arpa/nameser.h: Additional defines Contributed by m0n0
+
+2012-04-17 15:31  alanh
+
+	* buildrules, time/getdate.c, tz/localtime.c, tz/new_york.h: Re-do
+	  the time/tz directories such that we can now use the
+	  tzdata/tzcode upstream code much more easily. It also fixes
+	  several problems, especially of that with mktime(), used in many
+	  autogen/configure scripts.
+
+2012-04-17 15:17  alanh
+
+	* unix/settimeofday.c: Re-do the time/tz directories such that we
+	  can now use the tzdata/tzcode upstream code much more easily. It
+	  also fixes several problems, especially of that with mktime(),
+	  used in many autogen/configure scripts.
+
+2012-04-17 15:13  alanh
+
+	* config.h, unix/adjtime.c: Re-do the time/tz directories such that
+	  we can now use the tzdata/tzcode upstream code much more easily.
+	  It also fixes several problems, especially of that with mktime(),
+	  used in many autogen/configure scripts.
+
+2012-04-17 15:06  alanh
+
+	* time/ftime.c, tz/tzselect: Re-do the time/tz directories such
+	  that we can now use the tzdata/tzcode upstream code much more
+	  easily. It also fixes several problems, especially of that with
+	  mktime(), used in many autogen/configure scripts.
+
+2012-04-17 15:02  alanh
+
+	* mintlib/: SRCFILES, ftime.c: Re-do the time/tz directories such
+	  that we can now use the tzdata/tzcode upstream code much more
+	  easily. It also fixes several problems, especially of that with
+	  mktime(), used in many autogen/configure scripts.
+
+2012-04-17 14:57  alanh
+
+	* Makefile, buildrules, include/time.h, tz/MISCFILES, tz/README,
+	  tz/SRCFILES, tz/Theory, tz/africa, tz/antarctica, tz/asctime.c,
+	  tz/asia, tz/australasia, tz/backward, tz/checktab.awk, tz/date.1,
+	  tz/date.c, tz/difftime.c, tz/etcetera, tz/europe, tz/factory,
+	  tz/ialloc.c, tz/iso3166.tab, tz/leapseconds, tz/localtime.c,
+	  tz/new_york.h, tz/northamerica, tz/pacificnew, tz/private.h,
+	  tz/scheck.c, tz/solar87, tz/solar88, tz/solar89, tz/southamerica,
+	  tz/strftime.c, tz/systemv, tz/tzfile.5, tz/tzfile.h, tz/tzselect,
+	  tz/tzselect.8, tz/tzselect.ksh, tz/usno1988, tz/usno1989,
+	  tz/usno1989a, tz/usno1995, tz/usno1997, tz/usno1998,
+	  tz/yearistype.sh, tz/zdump.8, tz/zdump.c, tz/zic.8, tz/zic.c,
+	  time/EXTRAFILES, tz/zone.tab, tz/zonelist, time/Makefile,
+	  time/SRCFILES, time/asctime.c, time/ctime.c, time/ctime_r.c,
+	  time/difftime.c, time/getdate.c, time/gmtime.c, time/localtime.c,
+	  time/mktime.c, time/new_york.h, time/offtime.c, time/strftime.c,
+	  time/timegm.c, time/tz.c, time/tzfile.h, time/tzstruct.h: Re-do
+	  the time/tz directories such that we can now use the
+	  tzdata/tzcode upstream code much more easily. It also fixes
+	  several problems, especially of that with mktime(), used in many
+	  autogen/configure scripts.
+
+2011-08-29 21:13  alanh
+
+	* configvars: Make it verbose by default.
+
+2011-08-29 21:11  alanh
+
+	* buildrules, configvars: Allow to build mintlib silently.
+	  Contributed by Patrice Mandin.
+
+2011-06-02 17:04  alanh
+
+	* include/fcntl.h: export posix_fallocate()
+
+2011-05-04 08:33  alanh
+
+	* include/setjmp.h: longjmp cannot be a #define
+
+2011-04-24 21:35  alanh
+
+	* ChangeLog: Update ChangeLog
+
 2011-04-24 21:35  alanh
 
 	* posix/regex.c: Fix build
