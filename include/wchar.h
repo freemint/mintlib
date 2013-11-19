@@ -25,10 +25,6 @@ extern "C" {
 
 #include <stddef.h>
 
-#if defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE)
-#include <wctype.h>
-#endif
-
 #ifndef WEOF
 # define WEOF (0xffffffffu)
 #endif
