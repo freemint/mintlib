@@ -24,7 +24,7 @@
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
 int
-nice (int incr)
+__nice (int incr)
 {
   int save;
   int prio;
@@ -51,3 +51,4 @@ nice (int incr)
     }
   return getpriority (PRIO_PROCESS, 0);
 }
+weak_alias (__nice, nice)
