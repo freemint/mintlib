@@ -30,11 +30,10 @@ struct group
   char *gr_name;    /* The name of the group        */
   __gid_t gr_gid;    /* The numerical group ID       */
   char **gr_mem;    /* array of member names        */
-  char *__gr_passwd;/* The encrypted group password */
+  char *gr_passwd;/* The encrypted group password */
 };
 
 #if defined (__USE_SVID) || defined (__USE_MISC) || defined (__USE_BSD)
-#define gr_passwd __gr_passwd
 __EXTERN void   setgrent __P ((void));
 __EXTERN void   endgrent __P ((void));
 __EXTERN struct group * getgrent __P ((void));
