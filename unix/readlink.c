@@ -52,12 +52,13 @@ __readlink (const char *unxname, char *buf, size_t siz)
 	   because for compatibility reasons they are always stored in
 	   Redmond format.  */
 	_dos2unx(linkto, filenamebuf, sizeof (filenamebuf));
-	l = strlen(filenamebuf);
-	if (l > siz) {
-		__set_errno (ERANGE);
-		return -1;
-	}
-	strncpy(buf, filenamebuf, siz);
+
+	/*
+	 * readlink specifies to truncate with no null termination.
+	 */
+	for (l = 0; l < siz && filenamebuf[l] != '\0'; l++)
+		buf[l] = filenamebuf[l];
+
 	return (int) l;
 }
 weak_alias (__readlink, readlink)
