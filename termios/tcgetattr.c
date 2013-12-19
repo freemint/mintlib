@@ -60,7 +60,7 @@ tcgetattr(int fd, struct termios *stp)
 			 ((sg.sg_flags & RAW) ? 0 : IGNPAR)) /*keep stty happy*/
 			| ((sg.sg_flags & TANDEM) ? (IXON | IXOFF) : 0)
 			| ((sg.sg_flags & RAW) ? 0 : IXON));
-  stp->c_oflag = (tcflag_t) (sg.sg_flags & RAW) ? 0 : OPOST;
+  stp->c_oflag = (tcflag_t) (sg.sg_flags & CRMOD) ? (OPOST | ONLCR) : 0;
   stp->c_cflag = (tcflag_t) (CREAD
 			| ((flags & _TF_CAR) ? 0 : CLOCAL)
 			| ((state & _TS_HPCL) ? HUPCL : 0)
