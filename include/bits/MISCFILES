@@ -34,6 +34,7 @@ MISCFILES = MISCFILES \
 	socket.h \
 	stat.h \
 	statfs.h \
+	statvfs.h \
 	stdio_lim.h \
 	string.h \
 	string2.h \

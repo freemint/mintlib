@@ -27,6 +27,7 @@ MISCFILES = MISCFILES \
 	socket.h \
 	stat.h \
 	statfs.h \
+	statvfs.h \
 	syscall.h \
 	syslog.h \
 	sysmacros.h \
