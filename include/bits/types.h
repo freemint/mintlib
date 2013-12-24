@@ -85,26 +85,13 @@ typedef int __timer_t;
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;
 
-/* Number of descriptors that can fit in an `fd_set'.  Note that for
-   MiNT this is not equivalent to the number of file descriptors you
-   can select simultaneously.  If the kernel implements an Fpoll
-   system call this is probably correct.  If it doesn't you are
-   still stuck with 32 file descriptors.  Any attempt to exceed this
-   limit will result in the error condition EINVAL.  */
+/* Number of descriptors that can fit in an `fd_set'. */
 #define __FD_SETSIZE	1024
 
-/* It's easier to assume 8-bit bytes than to get CHAR_BIT.  We can 
-   also assume that sizeof (__fd_mask) is 4 and thus eliminate the
-   divisions and modulo operations.  */
-#if 0
-#define __NFDBITS	(8 * sizeof (__fd_mask))
+/* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
+#define __NFDBITS	(8 * (int) sizeof (__fd_mask))
 #define	__FDELT(d)	((d) / __NFDBITS)
 #define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
-#else
-#define __NFDBITS	(8 * 4)
-#define	__FDELT(d)	((d) >> 5)
-#define	__FDMASK(d)	((__fd_mask) 1 << ((d) & 31))
-#endif
 
 /* fd_set for select and pselect.  */
 typedef struct
