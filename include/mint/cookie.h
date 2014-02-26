@@ -146,7 +146,7 @@
 #define C_Gfix 0x47666978L     /* Gamefix for Falcon030 */
 #define C_GI30 0x47493330L     /* Gandhi */
 #define C_GIGA 0x47494741L     /* Giga Box ST Driver */
-#define C_gk5_ 0x676B355FL     /* Treiber fr 5.25" HIGH-Density-Drittlaufwerk  */
+#define C_gk5_ 0x676B3522L     /* 'gk5"', Treiber fr 5.25" HIGH-Density-Drittlaufwerk  */
 #define C_gkCO 0x676B434FL     /* Calamus Thingy */
 #define C_GLAS 0x474C4153L     /* Free memorydisplay */
 #define C_GLBL 0x474C424CL     /* GEMLABEL System Extension */
@@ -227,7 +227,7 @@
 #define C_LLCR 0x4C4C4352L     /* Logilex 1st Lock */
 #define C_LOGB 0x4C4F4742L     /* Logbuch */
 #define C_LoSe 0x4C6F5365L     /* SER-LOG */
-#define C_LP_2 0x4C505F32L     /* Malloc 2 Gemdos Vector */
+#define C_LP_2 0x4C502F32L     /* 'LP/2', Malloc 2 Gemdos Vector */
 #define C_LPCD 0x4C504344L     /* Carrier Detector */
 #define C_LPJM 0x4C504A4DL     /* Joy Mouse */
 #define C_LTMF 0x4C544D46L     /* Let 'em Fly */
@@ -297,7 +297,7 @@
 #define C_NSC1 0x4E534331L     /* N_Syscom accessory */
 #define C_nTAS 0x6E544153L     /* TAS-Instruktionen */
 #define C_NTK4 0x4E544B34L     /* NTK4 Falcon MOD player */
-#define C_NUL_ 0x4E554C5FL     /* System startup utility */
+#define C_NUL_ 0x4E554C3EL     /* 'NUL>', System startup utility */
 #define C_NVDI 0x4E564449L     /* NewVDI */
 #define C_OBNL 0x4F424E4CL     /* Load-Time-Linking (kurz "LTL") Protokoll */
 #define C_OFLS 0x4F464C53L     /* Check Open Files */
@@ -332,8 +332,8 @@
 #define C_PRCS 0x50524353L     /* CopySTar */
 #define C_PRDS 0x50524453L     /* Peter Rohde Disk Speeder */
 #define C_PRMD 0x50524D44L     /* MIDIPRT */
-#define C_PRN_ 0x50524E5FL     /* WandelSZ */
-#define C_PRN_ 0x50524E5FL     /* WandelSZ */
+#define C_PRN_ 0x50524E21L     /* 'PRN!', WandelSZ */
+#define C_PRNS 0x50524E9EL     /* 'PRNž', WandelSZ */
 #define C_PRO5 0x50524F35L     /* Resident virus check/kill/prtotect program */
 #define C_PROB 0x50524F42L     /* Profibase */
 #define C_PROT 0x50524F54L     /* Protos Screen Utility */
@@ -383,7 +383,7 @@
 #define C_SDWN 0x5344574EL     /* ScreenDown */
 #define C_SELC 0x53454C43L     /* C-Lab File selector */
 #define C_SENV 0x53454E56L     /* Set Environment */
-#define C_SFA_ 0x5346415FL     /* Fontloader system */
+#define C_SFA_ 0x5346415EL     /* 'SFA^', Fontloader system */
 #define C_SFIX 0x53464958L     /* Serial Port Fix */
 #define C_SFMN 0x53464D4EL     /* SafeMenu */
 #define C_ShLk 0x53684C6BL     /* Shift Lock */
@@ -466,7 +466,7 @@
 #define C_UIS3 0x55495333L     /* Universal Item Selector 3 */
 #define C_UKB1 0x554B4231L     /* Fastload */
 #define C_UKB3 0x554B4233L     /* Fastload plus MIDI Through */
-#define C_UN_X 0x554E5F58L     /* Unixname (/->\ Converter) */
+#define C_UN_X 0x554E2A58L     /* 'UN*X', Unixname (/->\ Converter) */
 #define C_USCK 0x5553434BL     /* CHECKIT */
 #define C_USHD 0x55534844L     /* Diskus HD driver */
 #define C_USPK 0x5553504BL     /* Hard Disk Auto Parker */
@@ -479,7 +479,7 @@
 #define C_VFIX 0x56464958L     /* VDIFix */
 #define C_VFNT 0x56464E54L     /* VdiFont */
 #define C_VGAS 0x56474153L     /* VGA Simulator */
-#define C_VI_2 0x56495F32L     /* Videl Inside */
+#define C_VI_2 0x56492D32L     /* 'VI-2', Videl Inside */
 #define C_View 0x56696577L     /* View Protocol */
 #define C_VIRA 0x56495241L     /* Virus Alarm */
 #define C_VMEM 0x564D454DL     /* Virtual Memory */
