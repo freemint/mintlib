@@ -8,25 +8,6 @@
     understand and accept it fully.
 */
 
-/* Currently this file emulates XPG4 poll and is the base for the
-   select() implementation.  Future kernel versions that support
-   the poll io primitive are already prepared.
-
-   For now that Fpoll is not available we still fall back into Fselect.
-   An open question is what should happen in case TIMEOUT is negative.
-   The current implementation casts TIMEOUT to unsigned long and thus
-   silently converts negative TIMEOUTS to large ones.
-   
-   The prepared implementation for poll assumes that the kernel will
-   emulate the poll primitive by means of select for file systems that
-   do not support it.
-
-   Poll the file descriptors described by the NFDS structures starting at
-   FDS.  If TIMEOUT is nonzero and not -1, allow TIMEOUT milliseconds for
-   an event to occur; if TIMEOUT is -1, block until an event occurs.
-   Returns the number of file descriptors with events, zero if timed out,
-   or -1 for errors.  */
-
 #include <errno.h>
 #include <limits.h>
 #include <mint/mintbind.h>
@@ -38,22 +19,18 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 {
 	long int retval;
 	unsigned long timeout = (unsigned long) __timeout;
-#ifdef Fpoll
-	static int must_emulate = 0;
 
-	if (!must_emulate) {
-		retval = Fpoll (fds, nfds, timeout);
-		if (retval < 0) {
-			if (retval != -ENOSYS) {
-				__set_errno (-retval);
-				return -1;
-			} else
-				must_emulate = 1;
-		}
+	if (__timeout < 0) {
+		timeout = ~0;
 	}
-#endif /* not Fpoll.  */
 
-	{
+	retval = Fpoll (fds, nfds, timeout);
+	if (retval != -ENOSYS) {
+		if (retval < 0) {
+			__set_errno (-retval);
+			return -1;
+		}
+	} else {
 		/* We must emulate the call via Fselect ().  First task is to
 		   set up the file descriptor masks.	*/
 		unsigned long rfds = 0;
@@ -61,21 +38,25 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 		unsigned long xfds = 0;
 		register unsigned long int i;
 		register struct pollfd* pfds = fds;
+		unsigned long early_out = 0;
 
 		for (i = 0; i < nfds; i++) {
-			if (pfds[i].fd > 31) {
-				/* We lose.  Any better idea than EINVAL?  */
-				__set_errno (EINVAL);
-				return -1;
+			pfds[i].revents = 0;
+
+			/* Older than 1.19 can't do more than 32 file descriptors.
+			 * And we'd only get here if we're a very old kernel anyway.
+			 */
+			if (pfds[i].fd >= 32) {
+				pfds[i].revents = POLLNVAL;
+				continue;
 			}
 
 #define LEGAL_FLAGS \
-	(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | POLLRDNORM | POLLWRNORM | POLLRDBAND | POLLWRBAND)
+	(POLLIN | POLLPRI | POLLOUT | POLLRDNORM | POLLWRNORM | POLLRDBAND | POLLWRBAND)
 
 			if ((pfds[i].events | LEGAL_FLAGS) != LEGAL_FLAGS) {
-				/* Not supported.  */
-				__set_errno (EINVAL);
-				return -1;
+				pfds[i].revents = POLLNVAL;
+				continue;
 			}
 
 			if (pfds[i].events & (POLLIN | POLLRDNORM))
@@ -86,7 +67,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 				wfds |= (1L << (pfds[i].fd));
 		}
 
-		if (timeout == -1UL) { 
+		if (__timeout < 0) { 
 			retval = Fselect (0L, &rfds, &wfds, &xfds);
 		} else if (timeout == 0) {
 			retval = Fselect (1L, &rfds, &wfds, &xfds);
@@ -130,24 +111,24 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 			} while (!last_round);
 		}
 
+		/* Now fill in the results in struct pollfd.	*/
+		for (i = 0; i < nfds; i++) {
+			/* Older than 1.19 can't do more than 32 file descriptors. */
+			if (pfds[i].fd >= 32)
+				continue;
+			if (rfds & (1L << (pfds[i].fd)))
+				pfds[i].revents |= (pfds[i].events & (POLLIN | POLLRDNORM));
+			if (wfds & (1L << (pfds[i].fd)))
+				pfds[i].revents |= (pfds[i].events & (POLLOUT | POLLWRNORM));
+			if (xfds & (1L << (pfds[i].fd)))
+				pfds[i].revents |= (pfds[i].events & POLLPRI);
+		}
+
 		if (retval < 0) {
 			__set_errno (-retval);
 			return -1;
 		}
-
-		/* Now fill in the results in struct pollfd.	*/
-		for (i = 0; i < nfds; i++) {
-			if (rfds & (1L << (pfds[i].fd)))
-				pfds[i].revents = (pfds[i].events & (POLLIN | POLLRDNORM));
-			else
-				pfds[i].revents = 0;
-			if (xfds & (1L << (pfds[i].fd)))
-				pfds[i].revents |= POLLPRI;
-			if (wfds & (1L << (pfds[i].fd)))
-				pfds[i].revents |= (pfds[i].events & (POLLOUT | POLLWRNORM));
-		}
-
-	} /* must emulate.  */
+	}
 
 	return retval;
 }
