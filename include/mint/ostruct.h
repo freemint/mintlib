@@ -98,13 +98,14 @@ typedef struct
 /* Modes for Mxalloc() */
 #define MX_STRAM		0x00
 #define MX_TTRAM		0x01
-#define MX_PREFSTRAM	0x02
-#define MX_PREFTTRAM	0x03
+#define MX_PREFSTRAM		0x02
+#define MX_PREFTTRAM		0x03
+#define MX_MPROT		0x08
 /* if bit #3 is set, then */
 #define MX_HEADER		0x00
 #define MX_PRIVATE		0x10
 #define MX_GLOBAL		0x20
-#define MX_SUPERVISOR	0x30
+#define MX_SUPERVISOR		0x30
 #define MX_READABLE		0x40
 
 /* Fforce() params */
