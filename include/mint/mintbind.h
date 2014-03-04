@@ -532,8 +532,8 @@ __extension__								\
 		trap_1_www(0x158, (short)(which), (short)(who))
 #define Psetpriority(which, who, prio) \
 		trap_1_wwww(0x159, (short)(which), (short)(who), (short)(prio))
-/* #define Fpoll(fds, nfds, timeout) \
-		trap_1_wlll(0x15a,(long)(fds),(long)(nfds),(long)(timeout)) */
+#define Fpoll(fds, nfds, timeout) \
+		trap_1_wlll(0x15a,(long)(fds),(long)(nfds),(long)(timeout))
 #define Fwritev(fh, iovp, iovcnt) \
 		trap_1_wwll(0x15b,(short)(fh),(long)(iovp),(long)(iovcnt))
 #define Freadv(fh, iovp, iovcnt) \
