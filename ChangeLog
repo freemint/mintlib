@@ -1,3 +1,78 @@
+2014-03-04 08:38  alanh
+
+	* include/mint/ostruct.h: Add MX_MPROT
+
+2014-03-04 08:37  alanh
+
+	* include/mint/mintbind.h: define Fpoll
+
+2014-03-03 09:11  alanh
+
+	* unix/poll.c: Fix broken poll.  Even when poll() succeeded, we'd
+	  fall through to the older select method.
+
+2014-02-26 10:35  alanh
+
+	* include/mint/cookie.h: Bug 0000196: definitions of some cookie
+	  values wrong in <mint/cookie.h>
+
+2013-12-24 12:53  alanh
+
+	* include/bits/types.h: Allow the use of 1024 file handles with
+	  select.
+
+	  Fortunately select() already falls back to Fpoll, and that now
+	  understands 1024 file handles.
+
+	  Also, luckily the stones were laid correctly that things are
+	  checked for kernels that only support 32, so this should be all
+	  that's required to get us to 1024 now.
+
+2013-12-23 18:58  alanh
+
+	* include/sys/statvfs.h: remove unused defines
+
+2013-12-23 18:52  alanh
+
+	* include/bits/statvfs.h, include/bits/MISCFILES, unix/SRCFILES,
+	  unix/statvfs.c, include/sys/MISCFILES, include/sys/statvfs.h: Add
+	  statvfs()
+
+2013-12-19 09:35  alanh
+
+	* termios/tcgetattr.c: Fixed tcgetattr() to return ONLCR when
+	  appropriate.	Contributed by Vincent Riviere.
+
+2013-12-05 16:27  alanh
+
+	* unix/readlink.c: Fix readlink.
+
+	  When the buffer is not large enough to hold the filename, we need
+	  to return what we can in the buffer that's passed in, and not
+	  return ERANGE.
+
+2013-11-25 14:51  alanh
+
+	* include/grp.h: Remove the __gr_passwd to gr_passwd define. It's
+	  not done in glibc.
+
+2013-11-24 20:56  alanh
+
+	* include/bits/byteswap.h: Update byteswap.h from GNU glibc 2.16
+	  ports tree. Brought up by Vincent Riviere.
+
+2013-11-19 08:42  alanh
+
+	* unix/nice.c: Add missing weak_alias for nice().
+
+2013-11-19 08:29  alanh
+
+	* include/wchar.h: Remove #include for wctype.h
+
+2013-10-13 19:41  alanh
+
+	* ChangeLog: Update ChangeLog
+
 2013-10-13 19:41  alanh
 
 	* configvars, mintlib.spec.in: Bump to 0.60.0
