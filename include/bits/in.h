@@ -42,14 +42,11 @@
 #define	IP_RECVRETOPTS	6	/* bool; Receive IP options for response.  */
 #define	IP_RECVDSTADDR	7	/* bool; Receive IP dst addr w/datagram.  */
 #define	IP_RETOPTS	8	/* ip_opts; Set/get IP per-packet options.  */
-#if 0
-/* not yet supported */
 #define IP_MULTICAST_IF 9	/* in_addr; set/get IP multicast i/f */
 #define IP_MULTICAST_TTL 10	/* u_char; set/get IP multicast ttl */
 #define IP_MULTICAST_LOOP 11	/* i_char; set/get IP multicast loopback */
 #define IP_ADD_MEMBERSHIP 12	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 13	/* ip_mreq; drop an IP group membership */
-#endif
 
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
@@ -60,15 +57,15 @@ struct ip_opts
     char ip_opts[40];		/* Actually variable in size.  */
   };
 
-#if 0
-/* not yet supported */
-
 /* Structure used for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP. */
 struct ip_mreq
   {
     struct in_addr imr_multiaddr;	/* IP multicast address of group */
     struct in_addr imr_interface;	/* local IP address of interface */
   };
+
+#if 0
+/* not yet supported */
 
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
