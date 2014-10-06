@@ -71,7 +71,6 @@ tcgetattr(int fd, struct termios *stp)
 			| ((sg.sg_flags & ODDP) ? (PARENB | PARODD) : 0));
   stp->c_lflag = (tcflag_t) ((sg.sg_flags & (TOSTOP | NOFLSH | ECHOCTL))
 			| ((sg.sg_flags & ECHO) ? (ECHO | ECHOE | ECHOK) : 0)
-			| ((sg.sg_flags & XKEY) ? IEXTEN : 0)
 			| ((sg.sg_flags & RAW)
 				? 0 
 				: ISIG | (sg.sg_flags & CBREAK ? 0 : ICANON)));

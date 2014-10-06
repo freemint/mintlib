@@ -42,7 +42,7 @@ tcsetattr(int fd, int action, const struct termios *stp)
     return -1;
   }
   sg.sg_flags &= ~(CRMOD | TANDEM | RTSCTS | EVENP | ODDP | TOSTOP 
-			| NOFLSH | ECHOCTL | RAW | CBREAK | ECHO | XKEY);
+			| NOFLSH | ECHOCTL | RAW | CBREAK | ECHO);
   sg.sg_flags |= (((stp->c_iflag & ICRNL) ? CRMOD : 0)
 			| (((stp->c_iflag & (IXON | IXOFF)) == (IXON | IXOFF)) ? TANDEM : 0)
 			| ((stp->c_cflag & CRTSCTS) ? RTSCTS : 0));
@@ -55,7 +55,6 @@ tcsetattr(int fd, int action, const struct termios *stp)
 			? ((stp->c_cflag & PARODD) ? ODDP : EVENP)
 			: 0);
   sg.sg_flags |= ((stp->c_lflag & (TOSTOP | NOFLSH | ECHOCTL | ECHO))
-			| ((stp->c_lflag & IEXTEN) ? XKEY : 0)
 			| ((stp->c_lflag & ISIG)
 			   ? (stp->c_lflag & ICANON ? 0 : CBREAK) : RAW));
   sg.sg_ispeed = (char) stp->_c_ispeed;
