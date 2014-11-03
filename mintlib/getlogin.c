@@ -25,14 +25,14 @@ getlogin (void)
 	temp = getpwuid (getuid ());
 
 	if (temp) {
-		strncpy (tmplogname, temp->pw_name, sizeof (logname) - 1);
-		tmplogname[sizeof (logname) - 1] = '\0';
+		strncpy (tmplogname, temp->pw_name, sizeof (tmplogname) - 1);
+		tmplogname[sizeof (tmplogname) - 1] = '\0';
 	}
 
 	/* if that didn't work, try the environment */
 	if (!*tmplogname && getenv ("USER")) {
-		strncpy (tmplogname, getenv ("USER"), sizeof (logname) - 1);
-		tmplogname[sizeof (logname) - 1] = '\0';
+		strncpy (tmplogname, getenv ("USER"), sizeof (tmplogname) - 1);
+		tmplogname[sizeof (tmplogname) - 1] = '\0';
 	}
 
 	/* finally, give up */
