@@ -167,9 +167,8 @@ __open_v (const char *_filename, int iomode, va_list argp)
 		if (rv == -ENOENT)
 		/* race: file can disappear between stat and open... */
 			goto noent;
-		if (rv >= 0 && __mint >= 9 && (/* __mint <= 0x109 ?
-			S_ISFIFO(sb.st_mode) : */
-			(major((dev_t) sb.st_rdev) == major(PIPE_RDEV)))
+		if (rv >= 0 && __mint >= 9 && !(iomode & O_DENYNONE)
+			&& (major((dev_t) sb.st_rdev) == major(PIPE_RDEV))
 		    && ((iomode & O_WRONLY) ? Foutstat(rv) : Finstat(rv)) < 0) {
 		/* /pipe/file still open but noone at other end */
 			(void)Fclose(rv);
