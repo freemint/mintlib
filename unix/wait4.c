@@ -106,7 +106,7 @@ __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
                     || termsig == SIGTRAP || termsig == SIGSYS)
                   correct = 1;
               }
-            if (!correct & termsig)
+            if (!correct && termsig)
               {
                 /* Fatal signals are 1-15 (SIGHUP to SIGTERM), SIGXCPU, SIGXFSZ,
                    and SIGPWR.  */
