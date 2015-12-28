@@ -254,6 +254,7 @@
 #define C_MGEM 0x4D47454DL     /* MultiGEM */
 #define C_MgMc 0x4D674D63L     /* MagiCMac */
 #define C_MgMx 0x4D674D78L     /* MagiCMac X */
+#define C_MgPC 0x4D675067L     /* MagiC PC */
 #define C_MID3 0x4D494433L     /* MIDINET3 */
 #define C_MIMA 0x4D494D41L     /* MIDI Manager */
 #define C_MiNT 0x4D694E54L     /* Mint/MultiTOS */
