@@ -530,6 +530,7 @@
 #define C_zDCF 0x7A444346L     /* DCF-Time receiver */
 #define C__AFM 0x5F41464DL     /* Audio Fun Machine */
 #define C__AKP 0x5F414B50L     /* Keyboard/Language Configuration */
+#define C__CF_ 0x5F43465FL     /* ColdFire CPU */
 #define C__CPU 0x5F435055L     /* Central Processor Unit Type */
 #define C__DOS 0x5F444F53L     /* GEMDOS-Einsprung (im GEMDOS 0.30) */
 #define C__FDC 0x5F464443L     /* Disk Drive Type */
@@ -541,6 +542,7 @@
 #define C__INF 0x5F494E46L     /* STEFIX Program */
 #define C__ISO 0x5F49534FL     /* specifies the real keyboard/font nationality  */
 #define C__JPD 0x5F4A5044L     /* Falcon030 JPEG Decoder by Brainstorm */
+#define C__MCF 0x5F4D4346      /* ColdFire features */
 #define C__MCH 0x5F4D4348L     /* Machine Type */
 #define C__MET 0x5F4D4554L     /* MetaDOS */
 #define C__MIL 0x5F4D494CL     /* Milan computer */
@@ -560,6 +562,70 @@
 #define C__FSC 0x5F465343L     /* Falcon Screen */
 
 #define C_MACCEL 0x00AA006EL		/* MACCELL */
+
+/* Structures pointed by some cookie's value */
+
+/*
+ *  Structure pointed by the '_MCF' cookie's value
+ *
+ *  Values defined below taken from ColdFire Family Programmer's Reference
+ *  Manual (CFPRM). Section 1.10 Hardware Configuration Information.
+ *
+ *  The struct's member "device_name" is the "device identification number" as
+ *  specified in the different families reference manuals, in sections describing
+ *  the registers SDID, CIR, DEVICEID or JTAGID (depending on the CF family).
+ *  For example: MCF5474, MCF5485, MCF54455, etc ...
+ */
+
+/* ColdFire core version */
+#define MCF_V1  1
+#define MCF_V2  2
+#define MCF_V3  3
+#define MCF_V4  4
+#define MCF_V5  5
+
+/* Instruction-Set Architecture (ISA) revision level */
+#define MCF_ISA_A       0
+#define MCF_ISA_B       1
+#define MCF_ISA_C       2
+#define MCF_ISA_A_PLUS  8
+
+/* Debug module revision number */
+#define MCF_DEBUG_A             0
+#define MCF_DEBUG_B             1
+#define MCF_DEBUG_C             2
+#define MCF_DEBUG_D             3
+#define MCF_DEBUG_E             4
+#define MCF_DEBUG_B_PLUS        9
+#define MCF_DEBUG_D_PLUS        11
+#define MCF_DEBUG_D_PLUS_PST    15
+
+/* Bit mask for units, set when present */
+#define MCF_UNITS_MAC           1
+#define MCF_UNITS_DIV           2
+#define MCF_UNITS_EMAC          4
+#define MCF_UNITS_FPU           8
+#define MCF_UNITS_MMU           16
+
+/*
+ * To use with the struct members: version, core,
+ * revision, isa, debug and sysbus_frequency
+ * In the bitmask set to 0 when unknown.
+ */
+#define MCF_VALUE_UNKNOWN     -1
+
+typedef struct {
+    char magic[3];            /* Magic number 0x4d4346 (MCF), identifies this struct */
+#define COOKIE_MCF_VERSION    1
+    unsigned char version;   /* This struct version */
+    char device_name[16];     /* Device identification number, null terminated */
+    char core;                /* ColdFire core version number */
+    char revision;            /* Processor revision number */
+    unsigned long units;     /* Bit mask. b0: MAC, b1: DIV, b2: EMAC, b3: FPU, b4: MMU */
+    char isa;                 /* Instruction-Set Architecture (ISA) revision level */
+    char debug;               /* Debug module revision */
+    short sysbus_frequency;   /* System bus frequency in Mhz */
+} MCF_COOKIE;
 
 /* Return values of Getcookie() */
 #define C_FOUND		0

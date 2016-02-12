@@ -340,6 +340,11 @@ static long architecture_len;
 #define _CPU_20 3
 #define _CPU_10 4
 #define _CPU_00 5
+#define _MCF_V5 6
+#define _MCF_V4 7
+#define _MCF_V3 8
+#define _MCF_V2 9
+#define _MCF_V1 10
 
 static char* architectures[] = {
   "mc68060",
@@ -348,13 +353,24 @@ static char* architectures[] = {
   "mc68020",
   "mc68010",
   "mc68000",
+  "cfv5",
+  "cfv4",
+  "cfv3",
+  "cfv2",
+  "cfv1",
   NULL
 };
 
 static char* isalist = NULL;
-static char isalist_buf[] =
-    "mc68060 mc68040 mc68030 mc68020 mc68010 mc68000";
 long isalist_len;
+#define _ISA_C        6
+#define _ISA_B        7
+#define _ISA_A_PLUS   8
+#define _ISA_A        9
+
+static char* isalists[] = {
+    "mc68060", "mc68040", "mc68030", "mc68020", "mc68010", "mc68000",
+     "isac", "isab", "isaaplus", "isaa"};
 
 static int
 si_architecture (buf, bufsize)
@@ -364,22 +380,68 @@ si_architecture (buf, bufsize)
   if (architecture == NULL) {
     long int value = 0;
     int cpu = _CPU_00;
+    MCF_COOKIE *mcf_cookie;
 
-    (void) Getcookie (C__CPU, &value);
-    if (value >= 60)
-      cpu = _CPU_60;
-    else if (value >= 40)
-      cpu = _CPU_40;
-    else if (value >= 30)
-      cpu = _CPU_30;
-    else if (value >= 20)
-      cpu = _CPU_20;
-    else if (value >= 10)
-      cpu = _CPU_10;
+    /* m68k */
+    if (!Getcookie (C__CPU, &value)) {
+      if (value >= 60)
+        cpu = _CPU_60;
+      else if (value >= 40)
+        cpu = _CPU_40;
+      else if (value >= 30)
+        cpu = _CPU_30;
+      else if (value >= 20)
+        cpu = _CPU_20;
+      else if (value >= 10)
+        cpu = _CPU_10;
+      architecture_len = sizeof ("mc68xxx");
+      isalist = isalists[cpu];
+    }
+    /* ColdFire */
+    else if (!Getcookie (C__MCF, &value)) {
+      mcf_cookie = (MCF_COOKIE *)value;
+
+      if (mcf_cookie->magic[0] == 'M' &&
+          mcf_cookie->magic[1] == 'C' &&
+          mcf_cookie->magic[2] == 'F' &&
+          mcf_cookie->version ==   1)
+      {
+        switch (mcf_cookie->core) {
+          case 1:
+            cpu = _MCF_V1;
+            break;
+          case 2:
+            cpu = _MCF_V2;
+            break;
+          case 3:
+            cpu = _MCF_V3;
+            break;
+          case 4:
+            cpu = _MCF_V4;
+            break;
+          case 5:
+            cpu = _MCF_V5;
+            break;
+        }
+        switch (mcf_cookie->isa) {
+          case MCF_ISA_A:
+            isalist = isalists[_ISA_A];
+            break;
+          case MCF_ISA_B:
+            isalist = isalists[_ISA_B];
+            break;
+          case MCF_ISA_C:
+            isalist = isalists[_ISA_C];
+            break;
+          case MCF_ISA_A_PLUS:
+            isalist = isalists[_ISA_A_PLUS];
+            break;
+         }
+        architecture_len = sizeof ("cfvx");
+      }
+    }
 
     architecture = architectures[cpu];
-    architecture_len = sizeof ("mc68xxx");
-    isalist = &isalist_buf[cpu * sizeof ("mc68xxx")];
     isalist_len = strlen (isalist) + 1;
   }
 
@@ -412,7 +474,9 @@ si_isalist (buf, bufsize)
 #define _PLATFORM_MILAN 4
 #define _PLATFORM_HADES 5
 #define _PLATFORM_ARANYM 6
-#define _PLATFORM_CLONE 7
+#define _PLATFORM_FIREBEE 7
+#define _PLATFORM_CFEVB 8
+#define _PLATFORM_CLONE 9
 
 static char* platforms[] = {
   "atarist",
@@ -422,6 +486,8 @@ static char* platforms[] = {
   "milan",
   "hades",
   "aranym",
+  "firebee",
+  "cfevb"
   "atariclone",
 };
 
@@ -429,12 +495,14 @@ static char* platforms[] = {
 #define _HW_PROVIDER_MILAN 1
 #define _HW_PROVIDER_HADES 2
 #define _HW_PROVIDER_ARANYM 3
-#define _HW_PROVIDER_UNKNOWN 4
+#define _HW_PROVIDER_FREESCALE 4
+#define _HW_PROVIDER_UNKNOWN 5
 static char* hw_providers[] = {
   "atari",
   "milan",
-  "hades",
+  "hades",  /* This should have been "medusa" */
   "aranym",
+  "freescale",
   "unknown"
 };
 
@@ -451,18 +519,30 @@ si_platform (buf, bufsize)
 {
   if (platform == NULL) {
     long _mch = 0;  /* = AtariST */
-    long hi, lo;
+    short hi, lo;
+    int coldfire = 0;
+    long dummy;
 
     /* If we find the Hades cookie ignore the rest.  */
     if (Getcookie (C_hade, &_mch) == 0) {
       platform = platforms[_PLATFORM_HADES];
       hw_provider = hw_providers[_HW_PROVIDER_HADES];
     } else {
+      /* Check for ColdFire CPU */
+      if (!Getcookie (C__CF_, &dummy))
+        coldfire = 1;
+
       (void) Getcookie (C__MCH, &_mch);
       hi = (_mch & 0xffff0000) >> 16;
       lo = (_mch & 0xffff);
 
       switch (hi) {
+        case -1:
+          if(coldfire) {
+            platform = platforms[_PLATFORM_CFEVB];
+            hw_provider = hw_providers[_HW_PROVIDER_FREESCALE];
+          }
+          break;
         case 0:
           platform = platforms[_PLATFORM_ST];
           hw_provider = hw_providers[_HW_PROVIDER_ATARI];
@@ -476,8 +556,13 @@ si_platform (buf, bufsize)
           hw_provider = hw_providers[_HW_PROVIDER_ATARI];
           break;
         case 3:
-          platform = platforms[_PLATFORM_FALCON];
-          hw_provider = hw_providers[_HW_PROVIDER_ATARI];
+          if(coldfire) {
+            platform = platforms[_PLATFORM_FIREBEE];
+            hw_provider = hw_providers[_HW_PROVIDER_HADES];
+          } else {
+            platform = platforms[_PLATFORM_FALCON];
+            hw_provider = hw_providers[_HW_PROVIDER_ATARI];
+          }
           break;
         case 4:
           platform = platforms[_PLATFORM_MILAN];
