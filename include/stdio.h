@@ -579,9 +579,9 @@ extern int putchar __P ((int __c));
 /* The C standard explicitly says this can
    re-evaluate its arguments, so it does.  */
 #define	__putc(c, stream)						      \
-  ((stream)->__bufp < (stream)->__put_limit ?				      \
-   (int) (unsigned char) (*(stream)->__bufp++ = (unsigned char) (c)) :	      \
-   __flshfp ((stream), (unsigned char) (c)))
+  (((FILE*)stream)->__bufp < ((FILE*)stream)->__put_limit ?		      \
+   (int) (unsigned char) (*((FILE*)stream)->__bufp++ = (unsigned char) (c)) : \
+   __flshfp (((FILE*)stream), (unsigned char) (c)))
 
 /* The C standard explicitly says this can be a macro,
    so we always do the optimization for it.  */
