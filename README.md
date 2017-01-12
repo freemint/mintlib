@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mikrosk/mintlib.svg?branch=master)](https://travis-ci.org/mikrosk/mintlib)
+
 This is the MiNTLib.  The MiNTLib is the standard libc for FreeMiNT.
 It will also work to some extent on non-MiNT systems, it tries its 
 best to emulate MiNT-calls on these systems.
