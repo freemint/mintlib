@@ -631,6 +631,14 @@ typedef struct {
 #define C_FOUND		0
 #define C_NOTFOUND	-1	/* EERROR */
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
 extern int 	Getcookie(long cookie, long *val);
+
+__END_DECLS
 
 #endif
