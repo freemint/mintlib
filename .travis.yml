@@ -7,8 +7,68 @@ compiler:
    - m68k-atari-mint-gcc
 
 before_install:
-  - 'openssl aes-256-cbc -K $encrypted_87425b138c6e_key -iv $encrypted_87425b138c6e_iv -in .travis/deploy-key.enc -out .travis/deploy-key -d'
-  - 'sh ./.install-cross-mint.sh'
+  - wget -O .travis/install-cross-mint.sh "${BASE_RAW_URL}/travis-scripts/master/install-cross-mint.sh";
+  - sh ./.travis/install-cross-mint.sh trusty gcc-m68k-atari-mint binutils-m68k-atari-mint;
+  
+  - if [ "${TRAVIS_PULL_REQUEST}" = "false" -a "${USER}" = "${OWNER}" ];
+    then
+        openssl aes-256-cbc -K $encrypted_87425b138c6e_key -iv $encrypted_87425b138c6e_iv -in .travis/deploy-key.enc -out .travis/deploy-key -d;
+    else
+        wget -O .travis/deploy-key "${BASE_RAW_URL}/travis-pr/master/pr-deploy-key";
+    fi
 
+env:
+  global:
+    - USER=mikrosk # TODO: replace with freemint
+    - BASE_RAW_URL="https://raw.githubusercontent.com/${USER}"
+    
+    - OWNER=$(echo "${TRAVIS_REPO_SLUG}" | cut -d '/' -f 1)
+    - PROJECT=$(echo "${TRAVIS_REPO_SLUG}" | cut -d '/' -f 2)
+    - SHORT_ID=$(git log -n1 --format="%H")
+
+before_script:
+    - if [ "${TRAVIS_PULL_REQUEST}" = "false" ];
+      then
+          PUBLISH_REPO="git@github.com:${USER}/freemint.github.io.git";
+          PUBLISH_PATH="builds/${PROJECT}/${TRAVIS_BRANCH}";
+          COMMIT_MESSAGE="[${PROJECT}] [${TRAVIS_BRANCH}] Commit ${TRAVIS_COMMIT}";
+      else
+          PUBLISH_REPO="git@github.com:${USER}/travis-pr.git";
+          PUBLISH_PATH="builds/${PROJECT}/${TRAVIS_PULL_REQUEST}";
+          COMMIT_MESSAGE="[${TRAVIS_REPO_SLUG}] [${TRAVIS_BRANCH}] PR https://github.com/${USER}/travis-pr/tree/${PUBLISH_PATH} ${TRAVIS_REPO_SLUG}#${TRAVIS_PULL_REQUEST}";
+      fi
+    
 script:
-  - make SHELL=/bin/bash CROSS=yes
+  - sed -e "s/\(VERSION=.*\)/\1-${SHORT_ID}/;" configvars > configvars.tmp && mv configvars.tmp configvars
+  - VERSION=$(grep VERSION configvars | sed -e 's/VERSION=//;')
+  - cd ..
+
+  - cd "${PROJECT}" && make SHELL=/bin/bash CROSS=yes && cd ..
+
+after_success:
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" -o "${USER}" = "${OWNER}" ];
+    then
+        eval "$(ssh-agent -s)";
+        chmod 600 "./${PROJECT}/.travis/deploy-key";
+        ssh-add "./${PROJECT}/.travis/deploy-key";
+
+        cd "${PROJECT}" && make SHELL=/bin/bash CROSS=yes prefix="${PWD}/build" install && cd ..;
+        find "build" -type f -perm -a=x -exec m68k-atari-mint-strip -s {} \;;
+        find "build" -type f \( -name '*.a' -o -name '*.o' \) -exec m68k-atari-mint-strip -S -x {} \;;
+
+        cd "build" && tar cjf "../${PROJECT}-${VERSION}.tar.bz2" * && cd ..;
+        
+        git clone "${PUBLISH_REPO}" publish;
+        cd publish;
+        git rm -rf "${PUBLISH_PATH}";
+        mkdir -p "${PUBLISH_PATH}";
+        cp "../${PROJECT}-${VERSION}.tar.bz2" "${PUBLISH_PATH}";
+        git add "${PUBLISH_PATH}" && git commit -m "${COMMIT_MESSAGE}" && git push;
+        cd ..;
+    fi
+
+# it's possible to hook 'deploy' on:
+# - pages (https://docs.travis-ci.com/user/deployment/pages)
+# - releases (https://docs.travis-ci.com/user/deployment/releases)
+#
+# but it requires a personal token, having a user-agnostic deploy key is much more transparent
