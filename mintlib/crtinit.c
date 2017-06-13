@@ -73,6 +73,7 @@
 #include <mint/osbind.h>
 #include <support.h>
 #include <string.h>
+#include <stdlib.h>
 #include "lib.h"
 #include "stksiz.h"
 
