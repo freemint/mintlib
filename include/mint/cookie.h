@@ -560,6 +560,7 @@
 #define C__VDO 0x5F56444FL     /* Video Type */
 #define C___NF 0x5F5F4E46L     /* Native features proposal */
 #define C__FSC 0x5F465343L     /* Falcon Screen */
+#define C_fVDI 0x66564449L     /* fVDI */
 
 #define C_MACCEL 0x00AA006EL		/* MACCELL */
 
