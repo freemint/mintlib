@@ -54,6 +54,11 @@ struct timezone
     int tz_minuteswest;		/* Minutes west of GMT.  */
     int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
   };
+struct __mint_timezone
+  {
+    long tz_minuteswest;		/* Minutes west of GMT.  */
+    long tz_dsttime;		/* Nonzero if DST is ever in effect.  */
+  };
 
 typedef struct timezone *__restrict __timezone_ptr_t;
 #else
