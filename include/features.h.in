@@ -169,14 +169,18 @@
 # define _XOPEN_SOURCE	700
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
+# ifndef __MINT__ /* not yet */
 # undef	 _LARGEFILE64_SOURCE
 # define _LARGEFILE64_SOURCE	1
+# endif /* !__MINT__ */
 # undef  _BSD_SOURCE
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
 # define _SVID_SOURCE	1
+# ifndef __MINT__ /* not yet */
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1
+# endif /* !__MINT__ */
 #endif
 
 /* If nothing (other than _GNU_SOURCE) is defined,
@@ -315,7 +319,9 @@
 #endif
 
 #ifdef	_ATFILE_SOURCE
+# ifndef __MINT__ /* not yet */
 # define __USE_ATFILE	1
+# endif
 #endif
 
 #ifdef	_GNU_SOURCE
