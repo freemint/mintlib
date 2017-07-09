@@ -134,6 +134,7 @@
 #define C_FSMC 0x46534D43L     /* Advanced GDOS */
 #define C_FSmp 0x46536D70L     /* Fileselector */
 #define C_FSmp 0x46536D70L     /* Martin Patzel File Selector */
+#define C_fVDI 0x66564449L     /* fVDI */
 #define C_F_3D 0x465F3344L     /* Focus 3D */
 #define C_GABI 0x47414249L     /* Gabrielle Serial Port Typewriter Emulator */
 #define C_GBel 0x4742656CL     /* GemBell */
@@ -420,6 +421,7 @@
 #define C_STiK 0x5354694BL     /* ST Internet Kit */
 #define C_STMS 0x53544D53L     /* ST Magazine Screendump */
 #define C_STRX 0x53545258L     /* SAT-Trax Antenna driver */
+#define C_SupV 0x53757056L     /* SuperVidel XBIOS */
 #define C_SVAR 0x53564152L     /* Shows MacMiNT */
 #define C_SVGA 0x53564741L     /* Super VGA Emulator */
 #define C_SWAP 0x53574150L     /* Outside */
@@ -560,7 +562,7 @@
 #define C__VDO 0x5F56444FL     /* Video Type */
 #define C___NF 0x5F5F4E46L     /* Native features proposal */
 #define C__FSC 0x5F465343L     /* Falcon Screen */
-#define C_fVDI 0x66564449L     /* fVDI */
+
 
 #define C_MACCEL 0x00AA006EL		/* MACCELL */
 
