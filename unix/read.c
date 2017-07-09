@@ -152,7 +152,7 @@ __read (int fd, void *buf, size_t size)
 		}
 
 	/* watch out for TTYs */
-		if (__mint == 0 && isatty(fd)) {
+		if (__mint == 0 && r > 0 && isatty(fd)) {
 			foo = (char *)buf;
 			if (*foo == __tchars.t_eofc) /* EOF character? */
 				return 0;
