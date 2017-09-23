@@ -37,6 +37,16 @@
 
 #ifdef __GNUC__
 
+/* All functions, except those with callbacks or those that
+   synchronize memory, are leaf functions.  */
+# if __GNUC_PREREQ (4, 6) && !defined _LIBC
+#  define __LEAF , __leaf__
+#  define __LEAF_ATTR __attribute__ ((__leaf__))
+# else
+#  define __LEAF
+#  define __LEAF_ATTR
+# endif
+
 /* GCC can always grok prototypes.  For C++ programs we add throw()
    to help it optimize the function calls.  But this works only with
    gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
@@ -44,13 +54,16 @@
    the -fexceptions options for C code as well.  */
 # if !defined __cplusplus && __GNUC_PREREQ (3, 3)
 #  define __THROW	__attribute__ ((__nothrow__))
+#  define __THROWNL	__attribute__ ((__nothrow__))
 #  define __NTH(fct)	__attribute__ ((__nothrow__)) fct
 # else
 #  if defined __cplusplus && __GNUC_PREREQ (2,8)
 #   define __THROW	throw ()
+#   define __THROWNL	throw ()
 #   define __NTH(fct)	fct throw ()
 #  else
 #   define __THROW
+#   define __THROWNL
 #   define __NTH(fct)	fct
 #  endif
 # endif
@@ -60,6 +73,7 @@
 # define __inline		/* No inline functions.  */
 
 # define __THROW
+# define __THROWNL
 # define __NTH(fct)	fct
 
 # define __const	const
@@ -79,6 +93,7 @@
 
 #define __CONCAT(x,y)	x ## y
 #define __STRING(x)	#x
+#define __STRINGIFY(x)	__STRING(x)
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
 #define __ptr_t void *

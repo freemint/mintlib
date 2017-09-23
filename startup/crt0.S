@@ -18,28 +18,30 @@
 | .extern in order to ensure they will be linked into the executable
 | even if they are not used in this file.
 
-	.globl	__app		| short, defined in crtinit.c
-	.globl	__base		| BASEPAGE *, defined in globals.c
-	.globl	__heapbase	| void *
-	.globl	__stksize	| long, defined by user or in stksiz.c
-	.globl	_main		| for references
-	.globl	___has_no_ssystem	| int, defined in globals.c
+#include "libc-symbols.h"
+
+	.globl	C_SYMBOL_NAME(_app)		| short, defined in crtinit.c
+	.globl	C_SYMBOL_NAME(_base)		| BASEPAGE *, defined in globals.c
+	.globl	C_SYMBOL_NAME(_heapbase)	| void *
+	.globl	C_SYMBOL_NAME(_stksize)	| long, defined by user or in stksiz.c
+	.globl	C_SYMBOL_NAME(main)		| for references
+	.globl	C_SYMBOL_NAME(__has_no_ssystem)	| int, defined in globals.c
 
 |
 | externs to pull ident strings of all used libraries into the
 | executable; if a library is not used, then the extern is
 | satisfied by a dummy in the library
 
-	.globl	___Ident_gnulib
-	.globl	___Ident_socketlib
-	.globl	___Ident_gem
+	.globl	C_SYMBOL_NAME(__Ident_gnulib)
+	.globl	C_SYMBOL_NAME(__Ident_socketlib)
+	.globl	C_SYMBOL_NAME(__Ident_gem)
 
 |
 | Functions defined elsewhere.
 
-	.extern	__checkcpu	| void _checkcpu(void);
-	.extern	__acc_main	| void _acc_main(void);
-	.extern	__crtinit	| void _crtinit(void);
+	.extern	C_SYMBOL_NAME(_checkcpu)	| void _checkcpu(void);
+	.extern	C_SYMBOL_NAME(_acc_main)	| void _acc_main(void);
+	.extern	C_SYMBOL_NAME(_crtinit)	| void _crtinit(void);
 
 |
 | Assumption: basepage is passed in a0 for accessories; for programs
@@ -47,46 +49,46 @@
 
 	.text
 	.even
-	.globl	__start
-__start:
-	subl	a6, a6		| clear a6 for debuggers
-	cmpl	#0, a0		| test if acc or program
+	.globl	C_SYMBOL_NAME(_start)
+C_SYMBOL_NAME(_start):
+	subl	%a6, %a6		| clear a6 for debuggers
+	cmpl	#0, %a0		| test if acc or program
 	beqs	__startprg	| if a program, go elsewhere
-	tstl	a0@(36)		| also test parent basepage pointer
+	tstl	%a0@(36)		| also test parent basepage pointer
 	bnes	__startprg	| for accs, it must be 0
-	movel	a0, __base	| acc basepage is in A0
-	lea	a0@(252), sp	| use the command line as a temporary stack
+	movel	%a0, C_SYMBOL_NAME(_base)	| acc basepage is in A0
+	lea	%a0@(252), %sp	| use the command line as a temporary stack
 	jsr	.early_init	| early initialization
-	jsr	__checkcpu	| check for correct CPU or exit
-	jmp	__acc_main	| function is in crtinit.c
+	jsr	C_SYMBOL_NAME(_checkcpu)	| check for correct CPU or exit
+	jmp	C_SYMBOL_NAME(_acc_main)	| function is in crtinit.c
 |
 | program startup code: doesn''t actually do much, other than push
 | the basepage onto the stack and call _start1 in crtinit.c
 |
 __startprg:
-	movel	sp@(4), a0	| get basepage
-	movel	a0, __base	| save it
-	movel	a0@(4), d0	| get _base->p_hitpa
-	bclr	#0, d0		| round off
-	movel	d0, sp		| set stack (temporarily)
-	subl	#64, sp		| see note in mintlib/setstack.S
+	movel	%sp@(4), %a0	| get basepage
+	movel	%a0, C_SYMBOL_NAME(_base)	| save it
+	movel	%a0@(4), %d0	| get _base->p_hitpa
+	bclr	#0, %d0		| round off
+	movel	%d0, %sp		| set stack (temporarily)
+	subl	#64, %sp		| see note in mintlib/setstack.S
 	jsr	.early_init	| early initialization
-	jsr	__checkcpu	| check for correct CPU or exit
-	jmp	__crtinit	| in crtinit.c
+	jsr	C_SYMBOL_NAME(_checkcpu)	| check for correct CPU or exit
+	jmp	C_SYMBOL_NAME(_crtinit)	| in crtinit.c
 
 |
 | Initialize global variables required by early initialization code.
 | Warning: The registers are not preserved
 |
 .early_init:
-	clrl	sp@-
-	clrl	sp@-
-	movew	#-1,sp@-	| Check Ssystem() availability
-	movew	#0x154,sp@-	| Ssystem()
+	clrl	%sp@-
+	clrl	%sp@-
+	movew	#-1,%sp@-	| Check Ssystem() availability
+	movew	#0x154,%sp@-	| Ssystem()
 	trap	#1
-	lea	sp@(12),sp
+	lea	%sp@(12),%sp
 
-	movel	d0,___has_no_ssystem
+	movel	%d0,C_SYMBOL_NAME(__has_no_ssystem)
 
 	rts
 
@@ -94,24 +96,24 @@ __startprg:
 | interfaces for gprof: for crt0.o, does nothing, but for gcrt0.o branches
 | to the appropriate subroutines
 |
-	.globl 	__monstartup
-	.globl	__moncontrol
-	.globl 	___mcleanup
+	.globl 	C_SYMBOL_NAME(_monstartup)
+	.globl	C_SYMBOL_NAME(_moncontrol)
+	.globl 	C_SYMBOL_NAME(__mcleanup)
 
 #ifdef GCRT0
-	.extern	_monstartup
-	.extern	_moncontrol
-	.extern	__mcleanup
+	.extern	C_SYMBOL_NAME(monstartup)
+	.extern	C_SYMBOL_NAME(moncontrol)
+	.extern	C_SYMBOL_NAME(_mcleanup)
 
-__monstartup:
-	jmp	_monstartup
-__moncontrol:
-	jmp	_moncontrol
-___mcleanup:
-	jmp	__mcleanup
+C_SYMBOL_NAME(_monstartup):
+	jmp	C_SYMBOL_NAME(monstartup)
+C_SYMBOL_NAME(_moncontrol):
+	jmp	C_SYMBOL_NAME(moncontrol)
+C_SYMBOL_NAME(__mcleanup):
+	jmp	C_SYMBOL_NAME(_mcleanup)
 #else
-__monstartup:
-__moncontrol:
-___mcleanup:
+C_SYMBOL_NAME(_monstartup):
+C_SYMBOL_NAME(_moncontrol):
+C_SYMBOL_NAME(__mcleanup):
 	rts
 #endif /* GCRT0 */

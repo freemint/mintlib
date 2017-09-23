@@ -17,56 +17,58 @@
 | pseudo-jump instructions must be avoided (jbsr, jbra...), because they may
 | be translated to unsupported jump instructions.
 
-	.extern	___has_no_ssystem	| int __has_no_ssystem;
+#include "libc-symbols.h"
 
-	.globl	_get_sysvar
-_get_sysvar:
-	lea	sp@(-16),sp
-	movml	d2/d3/a2/a3,sp@		| ColdFire compatibility
+	.extern	C_SYMBOL_NAME(__has_no_ssystem)	| int __has_no_ssystem;
 
-	movel	sp@(16+4),a3		| var
+	.globl	C_SYMBOL_NAME(get_sysvar)
+C_SYMBOL_NAME(get_sysvar):
+	lea	%sp@(-16),%sp
+	movml	%d2/%d3/%a2/%a3,%sp@		| ColdFire compatibility
 
-	tstl	___has_no_ssystem
+	movel	%sp@(16+4),%a3		| var
+
+	tstl	C_SYMBOL_NAME(__has_no_ssystem)
 	beqs	.get_with_ssystem
 
-	movel	#1,sp@-			| SUP_INQUIRE
-	movew	#0x20,sp@-		| Super()
+	movel	#1,%sp@-			| SUP_INQUIRE
+	movew	#0x20,%sp@-		| Super()
 	trap	#1
-	addql	#6,sp
+	addql	#6,%sp
 
-	tstl	d0
+	tstl	%d0
 	beqs	.get_usermode		| We are in user mode
 
-	movel	a3@,d0			| Read the variable directly
+	movel	%a3@,%d0			| Read the variable directly
 
 .return:
-	movml	sp@,d2/d3/a2/a3		| ColdFire compatibility
-	lea	sp@(16),sp
+	movml	%sp@,%d2/%d3/%a2/%a3		| ColdFire compatibility
+	lea	%sp@(16),%sp
 	rts
 
 .get_with_ssystem:
-	clrl	sp@-
-	movl	a3,sp@-			| var
-	movew	#10,sp@-		| S_GETLVAL
-	movew	#0x154,sp@-		| Ssystem()
+	clrl	%sp@-
+	movl	%a3,%sp@-			| var
+	movew	#10,%sp@-		| S_GETLVAL
+	movew	#0x154,%sp@-		| Ssystem()
 	trap	#1
-	lea	sp@(12),sp
+	lea	%sp@(12),%sp
 
 	bras	.return
 
 .get_usermode:
-	clrl	sp@-			| SUP_SET
-	movew	#0x20,sp@-		| Super()
+	clrl	%sp@-			| SUP_SET
+	movew	#0x20,%sp@-		| Super()
 	trap	#1			| Switch to supervisor mode
-	addql	#6,sp
+	addql	#6,%sp
 
-	movel	a3@,d3			| Get the variable value
+	movel	%a3@,%d3			| Get the variable value
 
-	movel	d0,sp@-			| Old SSP
-	movew	#0x20,sp@-		| Super()
+	movel	%d0,%sp@-			| Old SSP
+	movew	#0x20,%sp@-		| Super()
 	trap	#1			| Restore user mode
-	addql	#6,sp
+	addql	#6,%sp
 
-	movel	d3,d0
+	movel	%d3,%d0
 
 	bras	.return

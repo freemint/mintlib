@@ -24,7 +24,7 @@
 #include <mint/falcon.h>	/* for trap_14_xxx macros */
 
 #ifndef OSBIND_CLOBBER_LIST
-#define OSBIND_CLOBBER_LIST	"d1", "d2", "a0", "a1", "a2", "memory"
+#define OSBIND_CLOBBER_LIST	"d1", "d2", "a0", "a1", "a2", "cc", "memory"
 #endif
 
 #ifndef trap_14_wwlwl
@@ -38,13 +38,13 @@ __extension__	\
 	long _d = (long)(d);	\
 	\
 	__asm__ volatile (	\
-		"movl	%5,sp@-\n\t"	\
-		"movw	%4,sp@-\n\t"	\
-		"movl	%3,sp@-\n\t"	\
-		"movw	%2,sp@-\n\t"	\
-		"movw	%1,sp@-\n\t"	\
+		"movl	%5,%%sp@-\n\t"	\
+		"movw	%4,%%sp@-\n\t"	\
+		"movl	%3,%%sp@-\n\t"	\
+		"movw	%2,%%sp@-\n\t"	\
+		"movw	%1,%%sp@-\n\t"	\
 		"trap	#14\n\t"	\
-		"lea	sp@(14),sp"	\
+		"lea	%%sp@(14),%%sp"	\
 		: "=r"(retvalue)	\
 		: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d)	\
 		: OSBIND_CLOBBER_LIST	\
@@ -64,13 +64,13 @@ __extension__	\
 	long _d = (long)(d);	\
 	\
 	__asm__ volatile (	\
-		"movl	%5,sp@-\n\t"	\
-		"movl	%4,sp@-\n\t"	\
-		"movw	%3,sp@-\n\t"	\
-		"movw	%2,sp@-\n\t"	\
-		"movw	%1,sp@-\n\t"	\
+		"movl	%5,%%sp@-\n\t"	\
+		"movl	%4,%%sp@-\n\t"	\
+		"movw	%3,%%sp@-\n\t"	\
+		"movw	%2,%%sp@-\n\t"	\
+		"movw	%1,%%sp@-\n\t"	\
 		"trap	#14\n\t"	\
-		"lea	sp@(14),sp"	\
+		"lea	%%sp@(14),%%sp"	\
 		: "=r"(retvalue)	\
 		: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d)	\
 		: OSBIND_CLOBBER_LIST	\

@@ -24,17 +24,17 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e)		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -51,16 +51,16 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(18),sp"					\
+		"lea	%%sp@(18),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d)			\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -79,18 +79,18 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%7,sp@-\n\t"					\
-		"movl	%6,sp@-\n\t"					\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%7,%%sp@-\n\t"					\
+		"movl	%6,%%sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(26),sp"					\
+		"lea	%%sp@(26),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e), "r"(_f)	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -105,14 +105,14 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(10),sp"					\
+		"lea	%%sp@(10),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b)					\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -128,15 +128,15 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)				\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -152,6 +152,8 @@ __extension__								\
 #define BPS4			0x02
 #define BPS8			0x03
 #define BPS16			0x04
+#define BPS32			0x05	/* SuperVidel's RGBx truecolour (4 bytes per pixel) */
+#define BPS8C			0x07	/* SuperVidel's 8-bit chunky mode */
 
 #define COL80			0x08	/* 80 column if set, else 40 column */
 #define COL40			0x00
@@ -167,6 +169,18 @@ __extension__								\
 #define STMODES			0x80	/* ST compatible */
 
 #define VERTFLAG		0x100	/* double-line on VGA, interlace on ST/TV */
+
+/*
+ * Bits 9-13 specify SuperVidel's base resolution:
+ *
+ * 0: 640x480; 1280x720 (with OVERSCAN set)
+ * 1: 800x600; 1680x1050 (with OVERSCAN set)
+ * 2: 1024x768; 1920x1080 (with OVERSCAN set)
+ * 3: 1280x1024
+ * 4: 1600x1200
+ */
+#define SVEXT_BASERES(res) ((res & 0xf) << 9)	/* specify base resolution */
+#define	SVEXT			0x4000	/* enable SuperVidel's extensions */
 
 #define VM_INQUIRE		-1
 

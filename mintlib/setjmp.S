@@ -2,104 +2,106 @@
 | setjmp.S
 |
 
-	.globl ___mint
+#include "libc-symbols.h"
+
+	.globl C_SYMBOL_NAME(__mint)
 
 	.text
 	.even
-	.globl _sigsetjmp
-_sigsetjmp:
-	movel	sp@(4), a0		| address of sigjmp_buf[]
+	.globl C_SYMBOL_NAME(sigsetjmp)
+C_SYMBOL_NAME(sigsetjmp):
+	movel	%sp@(4), %a0		| address of sigjmp_buf[]
 #ifdef __MSHORT__
-	movew	sp@(8), a1
+	movew	%sp@(8), %a1
 #else
-	movel	sp@(8), a1
+	movel	%sp@(8), %a1
 #endif
-	movel	a1, a0@(52)		| save sigmask for siglongjmp?
+	movel	%a1, %a0@(52)		| save sigmask for siglongjmp?
 	jeq	SETJMP			| no -- call common code
-	movel	__sigmask, d0		| save tos emulation signal mask
+	movel	C_SYMBOL_NAME(_sigmask), %d0		| save tos emulation signal mask
 #ifdef __MSHORT__
-	tstw	___mint			| see if MiNT is active
+	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
 #else
-	tstl	___mint
+	tstl	C_SYMBOL_NAME(__mint)
 #endif
 	jeq	nomint			| no -- call common code
 	
-	movel	a0, sp@-		| save register a0
+	movel	%a0, %sp@-		| save register a0
 	
-	clrl	sp@-			| add no signals to sigmask
-	movew	#0x116, sp@-		| Psigblock() system call
+	clrl	%sp@-			| add no signals to sigmask
+	movew	#0x116, %sp@-		| Psigblock() system call
 	trap	#1			|
-	addql	#6, sp
+	addql	#6, %sp
 	
-	movel	sp@+, a0		| restore register a0
+	movel	%sp@+, %a0		| restore register a0
 	
 nomint:
 #ifdef __mcoldfire__
-	orl	#1,d0			| make it != 0 (SIGNULL is unmaskable)
+	orl	#1,%d0			| make it != 0 (SIGNULL is unmaskable)
 #else
-	orw	#1,d0			| make it != 0 (SIGNULL is unmaskable)
+	orw	#1,%d0			| make it != 0 (SIGNULL is unmaskable)
 #endif
-	movel	d0, a0@(52)		| save signal mask
+	movel	%d0, %a0@(52)		| save signal mask
 	jra	SETJMP			| call common code
 
-	.globl _setjmp
-_setjmp:
-	movel	sp@(4),a0		| address of jmp_buf[]
-	clrl	a0@(52)			| do not restore sigmask on longjmp
+	.globl C_SYMBOL_NAME(setjmp)
+C_SYMBOL_NAME(setjmp):
+	movel	%sp@(4),%a0		| address of jmp_buf[]
+	clrl	%a0@(52)			| do not restore sigmask on longjmp
 SETJMP:
-	movel	sp@,a0@			| save return address
-	moveml	d2-d7/a2-a7,a0@(4)	| save registers d2-d7/a2-a7
-	clrl	d0			| return value is 0
+	movel	%sp@,%a0@			| save return address
+	moveml	%d2-%d7/%a2-%a7,%a0@(4)	| save registers d2-d7/a2-a7
+	clrl	%d0			| return value is 0
 	rts
 
-	.globl _siglongjmp
-_siglongjmp:
-	.globl _longjmp
-_longjmp:
+	.globl C_SYMBOL_NAME(siglongjmp)
+C_SYMBOL_NAME(siglongjmp):
+	.globl C_SYMBOL_NAME(longjmp)
+C_SYMBOL_NAME(longjmp):
 #ifdef __MSHORT__
-	tstw	___mint			| see if MiNT is active
+	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
 #else
-	tstl	___mint
+	tstl	C_SYMBOL_NAME(__mint)
 #endif
 	jeq	NOMINT			| no -- do not call sigreturn
-	movew	#0x11a, sp@-		| Psigreturn() system call
+	movew	#0x11a, %sp@-		| Psigreturn() system call
 	trap	#1			| (ignored if not in a sig handler)
-	addql	#2, sp
+	addql	#2, %sp
 NOMINT:
-	movel	sp@(4),a0		| address of jmp_buf[]
-	movel	a0@(52),d0		| want to restore sigmask?
+	movel	%sp@(4),%a0		| address of jmp_buf[]
+	movel	%a0@(52),%d0		| want to restore sigmask?
 	jeq	NORESTORE		| no -- skip restore code
 #ifdef __mcoldfire__
-	andl	#-2,d0
+	andl	#-2,%d0
 #else
-	andw	#-2,d0
+	andw	#-2,%d0
 #endif
-	movel	d0, __sigmask		| restore tos emulation signal mask
+	movel	%d0, C_SYMBOL_NAME(_sigmask)		| restore tos emulation signal mask
 #ifdef __MSHORT__
-	tstw	___mint			| see if MiNT is active
+	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
 #else
-	tstl	___mint
+	tstl	C_SYMBOL_NAME(__mint)
 #endif
 	jeq	NORESTORE		| no -- do not call sigsetmask
 	
-	movel	a0, sp@-		| save register a0
+	movel	%a0, %sp@-		| save register a0
 	
-	movel	d0, sp@-		| restore signal mask
-	movew	#0x117, sp@-		| Psigsetmask() system call
+	movel	%d0, %sp@-		| restore signal mask
+	movew	#0x117, %sp@-		| Psigsetmask() system call
 	trap	#1			|
-	addql	#6, sp
+	addql	#6, %sp
 	
-	movel	sp@+, a0		| restore register a0
+	movel	%sp@+, %a0		| restore register a0
 	
 NORESTORE:
 #ifdef __MSHORT__
-	movew	sp@(8),d0		| value to return
+	movew	%sp@(8),%d0		| value to return
 #else
-	movel	sp@(8),d0		| value to return
+	movel	%sp@(8),%d0		| value to return
 #endif
 	jne	L1			| may not be 0
-	movql	#1, d0
+	movql	#1, %d0
 L1:
-	moveml	a0@(4),d2-d7/a2-a7	| restore saved reggies
-	movl	a0@,sp@			| and the saved return address
+	moveml	%a0@(4),%d2-%d7/%a2-%a7	| restore saved reggies
+	movl	%a0@,%sp@			| and the saved return address
 	rts
