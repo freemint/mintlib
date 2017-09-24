@@ -13,16 +13,16 @@ __BEGIN_DECLS
 
 extern unsigned int* _ctype;
 
-#define	_CTc	0x01		/* control character */
-#define	_CTd	0x02		/* numeric digit */
-#define	_CTu	0x04		/* upper case */
-#define	_CTl	0x08		/* lower case */
-#define	_CTs	0x10		/* whitespace */
-#define	_CTp	0x20		/* punctuation */
-#define	_CTx	0x40		/* hexadecimal */
-#define _CTb	0x80		/* blank */
-#define _CTg	0x100		/* graph */
-#define _CTP	0x200		/* print */
+#define	_IScntrl	0x01		/* control character */
+#define	_ISdigit	0x02		/* numeric digit */
+#define	_ISupper	0x04		/* upper case */
+#define	_ISlower	0x08		/* lower case */
+#define	_ISspace	0x10		/* whitespace */
+#define	_ISpunct	0x20		/* punctuation */
+#define	_ISxdigit	0x40		/* hexadecimal */
+#define _ISblank	0x80		/* blank */
+#define _ISgraph	0x100		/* graph */
+#define _ISprint	0x200		/* print */
 
 extern int isalnum __P ((int c));
 extern int isalpha __P ((int c));
@@ -39,7 +39,7 @@ extern int ispunct __P ((int c));
 extern int isspace __P ((int c));
 extern int isupper __P ((int c));
 extern int isxdigit __P ((int c));
-#ifdef __USE_GNU
+#ifdef __USE_ISOC99
 extern int isblank __P ((int c));
 #endif
 #ifdef __USE_SVID
@@ -47,12 +47,13 @@ extern int _toupper __P ((int c));
 extern int _tolower __P ((int c));
 #endif
 
+#ifndef __cplusplus
 #ifndef __NO_CTYPE
 /* You will notice that 255 when passed to this macros will return
    the same value as 0.  This happens to be correct so we can
    cast to unsigned char.  */
-#define	isalnum(c)	(_ctype[(unsigned char)((c) + 1)]&(_CTu|_CTl|_CTd))
-#define	isalpha(c)	(_ctype[(unsigned char)((c) + 1)]&(_CTu|_CTl))
+#define	isalnum(c)	(_ctype[(unsigned char)((c) + 1)]&(_ISupper|_ISlower|_ISdigit))
+#define	isalpha(c)	(_ctype[(unsigned char)((c) + 1)]&(_ISupper|_ISlower))
 #if defined(__USE_SVID) || defined(__USE_MISC)
 #define	isascii(c)	!((c)&~0x7F)
 #define	toascii(c)	((c)&0x7F)
@@ -63,27 +64,27 @@ extern int _tolower __P ((int c));
 #ifndef __GNUC__
 # define	iscntrl(c)	(((c) == -1) ? 0 : \
 	(unsigned char) (c) == 255 ? 1 : \
-	(_ctype[(unsigned char)((c) + 1)]&_CTc))
+	(_ctype[(unsigned char)((c) + 1)]&_IScntrl))
 	
 #else /* GNU C */
 # define        iscntrl(c) \
   ({ int _c = (int) (c);   \
      _c == -1 ? 0 : \
-     (unsigned char) (_c) == 255 ? 1 : _ctype[(unsigned char)(_c + 1)]&_CTc; })
+     (unsigned char) (_c) == 255 ? 1 : _ctype[(unsigned char)(_c + 1)]&_IScntrl; })
      
 #endif /* GNU C */
 
-#define	isdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_CTd)
-#define	isgraph(c)	(_ctype[(unsigned char)((c) + 1)]&_CTg)
-#define	islower(c)	(_ctype[(unsigned char)((c) + 1)]&_CTl)
-#define isprint(c)      (_ctype[(unsigned char)((c) + 1)]&_CTP)
-#define	ispunct(c)	(_ctype[(unsigned char)((c) + 1)]&_CTp)
-#define	isspace(c)	(_ctype[(unsigned char)((c) + 1)]&_CTs)
-#define	isupper(c)	(_ctype[(unsigned char)((c) + 1)]&_CTu)
-#define	isxdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_CTx)
+#define	isdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_ISdigit)
+#define	isgraph(c)	(_ctype[(unsigned char)((c) + 1)]&_ISgraph)
+#define	islower(c)	(_ctype[(unsigned char)((c) + 1)]&_ISlower)
+#define isprint(c)      (_ctype[(unsigned char)((c) + 1)]&_ISprint)
+#define	ispunct(c)	(_ctype[(unsigned char)((c) + 1)]&_ISpunct)
+#define	isspace(c)	(_ctype[(unsigned char)((c) + 1)]&_ISspace)
+#define	isupper(c)	(_ctype[(unsigned char)((c) + 1)]&_ISupper)
+#define	isxdigit(c)	(_ctype[(unsigned char)((c) + 1)]&_ISxdigit)
 
-#ifdef __USE_GNU
-#define isblank(c)	(_ctype[(unsigned char)((c) + 1)]&_CTb)
+#ifdef __USE_ISOC99
+#define isblank(c)	(_ctype[(unsigned char)((c) + 1)]&_ISblank)
 #endif
 
 #ifdef __USE_SVID
@@ -145,6 +146,7 @@ extern int _tolower __P ((int c));
 #endif /* __USE_MISC */
 
 #endif /* no __NO_CTYPE */
+#endif /* no __cplusplus */
 
 extern int toupper __P((int));
 extern int tolower __P((int));
