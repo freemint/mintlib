@@ -242,7 +242,7 @@ p_rr(cp, msg, file)
 		switch (class) {
 		case C_IN:
 		case C_HS:
-			bcopy(cp, (char *)&inaddr, sizeof(inaddr));
+			memcpy((char *)&inaddr, cp, sizeof(inaddr));
 			if (dlen == 4) {
 				fprintf(file,"\tinternet address = %s\n",
 					inet_ntoa(inaddr));
@@ -345,7 +345,7 @@ p_rr(cp, msg, file)
 	case T_WKS:
 		if (dlen < sizeof(u_long) + 1)
 			break;
-		bcopy(cp, (char *)&inaddr, sizeof(inaddr));
+		memcpy((char *)&inaddr, cp, sizeof(inaddr));
 		cp += sizeof(u_long);
 		fprintf(file,"\tinternet address = %s, protocol = %d\n\t",
 			inet_ntoa(inaddr), *cp++);

@@ -42,8 +42,8 @@ __realloc (void *r, size_t n)
 		newr = __malloc(n);
 		if (newr)
 		{
-			__bcopy(r, newr, n);
-		        __free(r);
+			memcpy(newr, r, n);
+			__free(r);
 
 			r = newr;
 		}
@@ -84,8 +84,8 @@ __realloc (void *r, size_t n)
 			newr = __malloc(n);
 			if (newr)
 			{
-				__bcopy(r, newr, p->size - sizeof(struct mem_chunk));
-			        __free(r);
+				memcpy(newr, r, p->size - sizeof(struct mem_chunk));
+				__free(r);
 			}
 			r = newr;
 		}

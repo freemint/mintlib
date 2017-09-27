@@ -100,7 +100,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		fcntl(s, F_SETOWN, pid);
 #endif
 		sin.sin_family = hp->h_addrtype;
-		bcopy(hp->h_addr_list[0], (caddr_t)&sin.sin_addr, hp->h_length);
+		memcpy((caddr_t)&sin.sin_addr, hp->h_addr_list[0], hp->h_length);
 		sin.sin_port = rport;
 		if (connect(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
 			break;
@@ -122,7 +122,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			__set_errno (oerrno);
 			perror(0);
 			hp->h_addr_list++;
-			bcopy(hp->h_addr_list[0], (caddr_t)&sin.sin_addr,
+			memcpy(&sin.sin_addr, hp->h_addr_list[0],
 			    hp->h_length);
 			fprintf(stderr, "Trying %s...\n",
 				inet_ntoa(sin.sin_addr));

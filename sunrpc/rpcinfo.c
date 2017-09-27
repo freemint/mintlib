@@ -551,7 +551,7 @@ pmapdump (argc, argv)
       memset((char *) &server_addr, 0, sizeof server_addr);
       server_addr.sin_family = AF_INET;
       if ((hp = gethostbyname ("localhost")) != NULL)
-	bcopy (hp->h_addr, (caddr_t) & server_addr.sin_addr,
+	memcpy(&server_addr.sin_addr, hp->h_addr,
 	       hp->h_length);
       else
 	server_addr.sin_addr.s_addr = inet_addr ("0.0.0.0");
@@ -742,7 +742,7 @@ get_inet_address (addr, host)
 		   host);
 	  exit (1);
 	}
-      bcopy (hp->h_addr, (char *) &addr->sin_addr, hp->h_length);
+      memcpy((char *) &addr->sin_addr, hp->h_addr, hp->h_length);
     }
   addr->sin_family = AF_INET;
 }

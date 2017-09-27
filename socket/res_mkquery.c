@@ -143,7 +143,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 		__putshort(datalen, (u_char *)cp);
 		cp += sizeof(u_short);
 		if (datalen) {
-			bcopy(data, cp, datalen);
+			memcpy(cp, data, datalen);
 			cp += datalen;
 		}
 		hp->ancount = htons(1);
@@ -177,7 +177,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 		__putshort(datalen, cp);
                 cp += sizeof(u_short);
 		if (datalen) {
-			bcopy(data, cp, datalen);
+			memcpy(cp, data, datalen);
 			cp += datalen;
 		}
 		if ( (op == UPDATED) || (op == UPDATEDA) ) {
@@ -200,7 +200,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 		__putshort(newrr->r_size, cp);
                 cp += sizeof(u_short);
 		if (newrr->r_size) {
-			bcopy(newrr->r_data, cp, newrr->r_size);
+			memcpy(cp, newrr->r_data, newrr->r_size);
 			cp += newrr->r_size;
 		}
 		hp->ancount = htons(0);

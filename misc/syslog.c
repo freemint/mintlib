@@ -255,7 +255,7 @@ void openlog(ident, logstat, logfac)
 	{
 		memset(&SyslogAddr, 0, sizeof(SyslogAddr));
 		SyslogAddr.sin_family = AF_INET;
-		bcopy(hp->h_addr, (char *)&SyslogAddr.sin_addr, hp->h_length);
+		memcpy((char *)&SyslogAddr.sin_addr, hp->h_addr, hp->h_length);
 		SyslogAddr.sin_port = sp->s_port;
 		if (LogStat & LOG_NDELAY)
 			LogFile = socket(AF_INET, SOCK_DGRAM, 0);

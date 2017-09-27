@@ -53,7 +53,7 @@ putenv(const char *strng)
 		if (!e) {
 			return -1;
 		}
-		__bcopy (environ, e, (i+1)*sizeof(char *));
+		memcpy(e, environ, (i+1)*sizeof(char *));
 		free(environ);
 		environ = e;
 	}

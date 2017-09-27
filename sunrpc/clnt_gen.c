@@ -127,7 +127,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   sin.sin_family = h->h_addrtype;
   sin.sin_port = 0;
   memset(sin.sin_zero, 0, sizeof (sin.sin_zero));
-  bcopy (h->h_addr, (char *) &sin.sin_addr, h->h_length);
+  memcpy((char *) &sin.sin_addr, h->h_addr, h->h_length);
 
 #ifndef __MINT__
   prtbuflen = 1024;
