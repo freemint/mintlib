@@ -70,24 +70,6 @@ extern long _sigpending;
 
 extern int __current_umask;
 
-/* definitions needed in malloc.c and realloc.c */
-
-struct mem_chunk 
-{
-	long valid;
-#define VAL_FREE  0xf4ee0abcL
-#define VAL_ALLOC 0xa11c0abcL
-#define VAL_BORDER 0xb04d0abcL
-
-	struct mem_chunk *next;
-	unsigned long size;
-};
-#define ALLOC_SIZE(ch) (*(long *)((char *)(ch) + sizeof(*(ch))))
-#define BORDER_EXTRA ((sizeof(struct mem_chunk) + sizeof(long) + 7) & ~7)
-
-/* linked list of free blocks */
-extern struct mem_chunk _mchunk_free_list;
-
 
 /* status of open files (for isatty, et al.) */
 struct __open_file

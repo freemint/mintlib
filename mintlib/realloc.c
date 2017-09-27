@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include "lib.h"
+#include "malloc_int.h"
 
 
 void *
@@ -32,9 +33,9 @@ __realloc (void *r, size_t n)
 	}
 
 	p = ((struct mem_chunk *) r) - 1;
-	sz = (n + sizeof(struct mem_chunk) + 7) & ~7;
+	sz = (n + sizeof(struct mem_chunk) + (MALLOC_ALIGNMENT - 1)) & ~(MALLOC_ALIGNMENT - 1);
 
-	if (p->size > (sz + ((2 * sizeof(struct mem_chunk) + 7) & ~7)))
+	if (p->size > (sz + ((2 * sizeof(struct mem_chunk) + (MALLOC_ALIGNMENT - 1)) & ~(MALLOC_ALIGNMENT - 1))))
 	{
 		/* resize down */
 		void *newr;

@@ -5,6 +5,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
+#include "malloc_int.h"
 
 void *
 __calloc (size_t n, size_t sz)

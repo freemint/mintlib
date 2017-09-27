@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <osbind.h>
 #include "lib.h"
+#include "malloc_int.h"
 
 
 /* CAUTION: use _mallocChunkSize() to tailor to your environment,
@@ -46,7 +47,7 @@ __malloc(size_t n)
 	unsigned long sz;
 
 	/* add a mem_chunk to required size and round up */
-	n = (n + sizeof(struct mem_chunk) + 7) & ~7;
+	n = (n + sizeof(struct mem_chunk) + (MALLOC_ALIGNMENT - 1)) & ~(MALLOC_ALIGNMENT - 1);
 
 	/* look for first block big enough in free list */
 	p = &_mchunk_free_list;
