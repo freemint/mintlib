@@ -427,7 +427,7 @@ need_more_core:
 		*s++ = '\0';
 	}
 
-	__bzero(t = cmd, sizeof(cmd));
+	memset(t = cmd, 0, sizeof(cmd));
 
 /* s points at the environment's copy of the args */
 /* t points at the command line copy to be put in the basepage */

@@ -27,7 +27,7 @@ main (int argc, char* argv[])
 	int status = 0;
 	int prime = 2;
 	
-	bzero (sieve, FD_SETSIZE);
+	memset(sieve, 0, FD_SETSIZE);
 	sieve[0] = 1;
 	sieve[1] = 1;
 	

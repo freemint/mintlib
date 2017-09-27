@@ -132,7 +132,7 @@ __malloc(size_t n)
 	q++; /* hand back ptr to after chunk desc */
 
 	if (ZeroMallocs)
-		__bzero(q, (size_t)(n - sizeof(struct mem_chunk)));
+		memset(q, 0, (size_t)(n - sizeof(struct mem_chunk)));
 
 	return (void *) q;
 }

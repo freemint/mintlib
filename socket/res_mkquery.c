@@ -75,7 +75,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr, buf, buflen)
 	 */
 	if ((buf == NULL) || (buflen < sizeof(HEADER)))
 		return(-1);
-	bzero(buf, sizeof(HEADER));
+	memset(buf, 0, sizeof(HEADER));
 	hp = (HEADER *) buf;
 	hp->id = htons(++_res.id);
 	hp->opcode = op;

@@ -393,7 +393,7 @@ cache_init (void)
     mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
   if (authdes_cache == NULL)
     return;
-  __bzero ((char *) authdes_cache,
+  memset((char *) authdes_cache, 0,
 	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
   authdes_lru = (int *) mem_alloc (sizeof (int) * AUTHDES_CACHESZ);
