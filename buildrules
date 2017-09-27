@@ -290,7 +290,9 @@ $(librpcsvc): $(RPCSVCOBJS)
 	@rm -f $@
 	$(AM_V_AR)$(AR) cru $@ $(RPCSVCOBJS)
 	$(AM_V_RANLIB)$(RANLIB) $@
-	
+
+$(LIBCOBJS) $(LIBIIO_ADDOBJS) $(RPCSVCOBJS): $(top_srcdir)/includepath
+
 $(top_srcdir)/include/linker.h: $(top_srcdir)/include/linker.h.in \
   $(top_srcdir)/configvars
 	(cd $(top_srcdir)/include && $(MAKE) linker.h)
