@@ -110,12 +110,13 @@ SRCS := $(ARGPSRCS) $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIB
 ifeq ($(libsize), _p)
 CFLAGS-_mon.S = -DPROFILING
 endif
-NOCFLAGS-crtinit.c = -pg -fomit-frame-pointer
-NOCFLAGS-gmon.c = -pg -fomit-frame-pointer
-NOCFLAGS-mcount.c = -pg -fomit-frame-pointer
-NOCFLAGS-profil-freq.c = -pg -fomit-frame-pointer
-NOCFLAGS-profil-posix.c = -pg -fomit-frame-pointer
-#NOCFLAGS-linea.c = -pg -fomit-frame-pointer -O2 -O
+CFLAGS-crtinit.c = -fno-omit-frame-pointer --no-profile
+CFLAGS-gmon.c = -fno-omit-frame-pointer --no-profile
+CFLAGS-mcount.c = -fno-omit-frame-pointer --no-profile
+CFLAGS-profil-freq.c = -fno-omit-frame-pointer --no-profile
+CFLAGS-profil-posix.c = -fno-omit-frame-pointer --no-profile
+#NOCFLAGS-linea.c = -O2 -O
+#CFLAGS-linea.c = -fno-omit-frame-pointer --no-profile
 #DEFS-vfscanf.c = -DNO_BUG_IN_ISO_C_CORRIGENDUM_1
 CFLAGS-localtime.c = -DUSG_COMPAT -DALL_STATE -DPCTS -DSTD_INSPIRED -DNOID -fwrapv
 CFLAGS-asctime.c = -DNOID
