@@ -2,6 +2,10 @@
 #include <string.h>
 #undef strlen
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /*
  * strlen - length of string (not including NUL)
  */

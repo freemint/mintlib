@@ -2143,7 +2143,6 @@ wordfree (wordexp_t *pwordexp)
 int
 wordexp (const char *words, wordexp_t *pwordexp, int flags)
 {
-  size_t wordv_offset;
   size_t words_offset;
   size_t word_length;
   size_t max_length;
@@ -2185,7 +2184,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   if ((flags & WRDE_APPEND) == 0)
     pwordexp->we_wordc = 0;
 
-  wordv_offset = pwordexp->we_offs + pwordexp->we_wordc;
+  /* wordv_offset = pwordexp->we_offs + pwordexp->we_wordc; */
 
   /* Find out what the field separators are.
    * There are two types: whitespace and non-whitespace.

@@ -106,6 +106,11 @@
 # include <wctype.h>
 # define STRING_TYPE wchar_t
 # define CHAR_TYPE wint_t
+/* We should get wint_t from <stddef.h>, but not all GCC versions define it
+   there.  So define it ourselves if it remains undefined.  */
+#ifndef _WINT_T
+  typedef unsigned int wint_t;
+#endif
 # define L_(Ch) L##Ch
 # ifdef USE_IN_EXTENDED_LOCALE_MODEL
 #  define ISSPACE(Ch) __iswspace_l ((Ch), loc)
@@ -485,11 +490,6 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   /* Contains the last character read.  */
   CHAR_TYPE c;
 
-/* We should get wint_t from <stddef.h>, but not all GCC versions define it
-   there.  So define it ourselves if it remains undefined.  */
-#ifndef _WINT_T
-  typedef unsigned int wint_t;
-#endif
   /* The radix character of the current locale.  */
   wchar_t decimal;
   /* The thousands character of the current locale.  */

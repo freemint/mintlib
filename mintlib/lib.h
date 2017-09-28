@@ -12,6 +12,17 @@
 #include <support.h>
 #include <sys/stat.h>	/* For struct stat.  */
 
+/*
+ * cast away const-ness.
+ * sometimes needed when the api requires a non-const return type
+ */
+#ifndef NO_CONST
+#  ifdef __GNUC__
+#	 define NO_CONST(p) __extension__({ union { const void *cs; void *s; } x; x.cs = p; x.s; })
+#  else
+#	 define NO_CONST(p) ((void *)(p))
+#  endif
+#endif
 
 int	_doprnt (int (*)(int, FILE *), FILE *, const char *, __gnuc_va_list);
 int	_scanf (FILE *, int (*)(FILE *), int (*)(int, FILE *), const char *, __gnuc_va_list);

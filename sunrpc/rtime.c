@@ -84,7 +84,7 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
   int res;
   unsigned long thetime;
   struct sockaddr_in from;
-  int fromlen;
+  socklen_t fromlen;
   int type;
 
   if (timeout == NULL)

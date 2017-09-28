@@ -66,7 +66,7 @@ __strchrnul (s, c_in)
   switch (sizeof (longword))
     {
     case 4: magic_bits = 0x7efefeffL; break;
-    case 8: magic_bits = ((0x7efefefeL << 16) << 16) | 0xfefefeffL; break;
+    case 8: magic_bits = (unsigned long)0x7efefefefefefeffULL; break;
     default:
       abort ();
     }

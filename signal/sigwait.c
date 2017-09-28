@@ -41,12 +41,12 @@ __sigwait (const sigset_t *set, int *sig)
   int this;
 
   /* Prepare set.  */
-  __sigfillset (&tmp_mask);
+  (void) __sigfillset (&tmp_mask);
 
   /* Unblock all signals in the SET and register our nice handler.  */
   action.sa_handler = ignore_signal;
   action.sa_flags = 0;
-  __sigfillset (&action.sa_mask);	/* Block all signals for handler.  */
+  (void) __sigfillset (&action.sa_mask);	/* Block all signals for handler.  */
 
   /* Make sure we recognize error conditions by setting WAS_SIG to a
      value which does not describe a legal signal number.  */

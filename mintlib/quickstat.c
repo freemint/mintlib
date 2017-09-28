@@ -67,7 +67,7 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	}
 
 	{
-	char	*ext, drv, *cwd, *prevdir = NULL;
+	char	*ext, drv, *prevdir = NULL;
 	_DTA	d;
 	_DTA	*olddta;
 	int	isdot = 0;
