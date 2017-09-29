@@ -76,7 +76,7 @@ getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
     return 0;
 #endif
 
-  bcopy (hp->h_addr, (char *) &addr.sin_addr, hp->h_length);
+  memcpy((char *) &addr.sin_addr, hp->h_addr, hp->h_length);
   addr.sin_family = AF_INET;
   addr.sin_port = 0;
   return pmap_getport (&addr, prognum, versnum, proto);

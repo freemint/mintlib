@@ -131,53 +131,14 @@ extern int errno;
 # define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
 #endif /* POSIX */
 
-#if defined STDC_HEADERS || defined __GNU_LIBRARY__
 # include <stdlib.h>
 # include <string.h>
-# define	ANSI_STRING
-#else	/* No standard headers.  */
-
-extern char *getenv ();
-
-# ifdef HAVE_STRING_H
-#  include <string.h>
-#  define ANSI_STRING
-# else
-#  include <strings.h>
-# endif
-# ifdef	HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-
-extern char *malloc (), *realloc ();
-extern void free ();
-
-extern void qsort ();
-extern void abort (), exit ();
-
-#endif	/* Standard headers.  */
 
 #ifdef HAVE_GETLOGIN_R
 extern int getlogin_r __P ((char *, size_t));
 #else
 extern char *getlogin __P ((void));
 #endif
-
-#ifndef	ANSI_STRING
-
-# ifndef bzero
-extern void bzero ();
-# endif
-# ifndef bcopy
-extern void bcopy ();
-# endif
-
-# define memcpy(d, s, n)	bcopy ((s), (d), (n))
-# define strrchr	rindex
-/* memset is only used for zero here, but let's be paranoid.  */
-# define memset(s, better_be_zero, n) \
-  ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
-#endif	/* Not ANSI_STRING.  */
 
 #if !defined HAVE_STRCOLL && !defined _LIBC
 # define strcoll	strcmp

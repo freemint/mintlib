@@ -86,7 +86,7 @@ _openchild (const char *command, FILE ** fto, FILE ** ffrom)
       for (i = _rpc_dtablesize () - 1; i >= 3; i--)
 	__close (i);
       fflush (stderr);
-      execlp (command, command, 0);
+      execlp (command, command, (const char *)0);
       perror ("exec");
       _exit (~0);
 

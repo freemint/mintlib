@@ -6,6 +6,10 @@
 
 #undef strncmp
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /*
  * strncmp - compare at most n characters of string s1 to s2
  */

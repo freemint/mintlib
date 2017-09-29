@@ -276,9 +276,9 @@ reorder_addrs (struct hostent *h)
 		for ( itp = itab, cnt=numitab; cnt; itp++,cnt--) {	/* loop though the interfaces */
 			if (( (*r)->s_addr & itp->netmask) == itp->address) {	/* compare */
 				/* We found a match.  Swap it into [0] */
-				bcopy( ((struct in_addr **) (h->h_addr_list))[0],    &tmp, sizeof(tmp));
-				bcopy( (*r),    ((struct in_addr **) (h->h_addr_list))[0], sizeof(tmp));
-				bcopy( &tmp,                                      (*r), sizeof(tmp));
+				memcpy(&tmp, ((struct in_addr **) (h->h_addr_list))[0], sizeof(tmp));
+				memcpy(((struct in_addr **) (h->h_addr_list))[0], (*r), sizeof(tmp));
+				memcpy((*r),                                      &tmp, sizeof(tmp));
 
 				return;	/* found one, don't need to continue */
 			}
@@ -607,7 +607,7 @@ getanswer (querybuf *answer, int anslen, int iquery)
 #endif
 			break;
 		}
-		bcopy(cp, *hap++ = bp, n);
+		memcpy(*hap++ = bp, cp, n);
 		bp +=n;
 		cp += n;
 		haveanswer++;
@@ -1010,7 +1010,7 @@ _gethtbyname (char *name)
 
 			if(n<=htbuflen){
 				/* add the found address to the list */
-				bcopy(p->h_addr_list[0], bp, n);
+				memcpy(bp, p->h_addr_list[0], n);
 				*hap++=bp;
 				*hap=NULL;
 				bp+=n;
@@ -1022,7 +1022,7 @@ _gethtbyname (char *name)
 			int n = p->h_length;
 			if(n<=locbuflen){
 				/* add the found local address to the list */
-				bcopy(p->h_addr_list[0], lbp, n);
+				memcpy(lbp, p->h_addr_list[0], n);
 				*lhap++=lbp;
 				*lhap=NULL;
 				lbp+=n;
@@ -1059,10 +1059,10 @@ _gethtbyname (char *name)
 				/* FIXME: What is h good for?  */
 				u_long t, l, h = 0;
 				/* assert(sizeof(u_long)>=ht.h_length); */
-				bcopy(loc_addr_ptrs[i], (char *)&t,
+				memcpy((char *)&t, loc_addr_ptrs[i],
 					ht.h_length);
 				l=ntohl(t);
-				bcopy(ht_addr_ptrs[j], (char *)&t, 
+				memcpy((char *)&t, ht_addr_ptrs[j],
 					ht.h_length);
 				t=l^h;
 

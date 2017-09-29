@@ -9,9 +9,7 @@
  */
 
 char *				/* found string, or NULL if none */
-strstr(s, wanted)
-const char *s;
-const char *wanted;
+strstr(const char *s, const char *wanted)
 {
 	register const char *scan;
 	register size_t len;

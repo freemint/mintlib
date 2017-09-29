@@ -24,6 +24,10 @@
 
 #ifndef __NO_LONG_DOUBLE_MATH
 
+#ifdef __mcoldfire__
+#  define NO_LONG_DOUBLE 1
+#endif
+
 /* Convert a multi-precision integer of the needed number of bits (64 for
    long double) and an integral power of two to a `long double' in IEEE854
    extended-precision format.  */
@@ -31,10 +35,18 @@
 long double
 __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 {
+#ifdef NO_LONG_DOUBLE
+  union ieee754_double u;
+#else
   union ieee854_long_double u;
+#endif
 
   u.ieee.negative = sign;
+#ifdef NO_LONG_DOUBLE
+  u.ieee.exponent = expt + IEEE754_DOUBLE_BIAS;
+#else
   u.ieee.exponent = expt + IEEE854_LONG_DOUBLE_BIAS;
+#endif
 #if BITS_PER_MP_LIMB == 32
   u.ieee.mantissa1 = frac_ptr[0];
   u.ieee.mantissa0 = frac_ptr[1];

@@ -41,7 +41,7 @@ _doprnt (putfunc* putf, FILE* stream,
 	int retval;
 	struct doprnt_arg doprnt_args = { putf, stream };
 	
-	__bzero ((void*) &file, sizeof (file));
+	memset((void*) &file, 0, sizeof (file));
 	file.__magic = _IOMAGIC;
 	file.__mode.__write = 1;
 	file.__bufp = file.__buffer = buf;

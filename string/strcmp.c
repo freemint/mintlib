@@ -5,6 +5,10 @@
 #include <string.h>
 #undef strcmp
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /*
  * strcmp - compare string s1 to s2
  */

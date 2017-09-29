@@ -35,7 +35,7 @@ static struct drand48_data __rpc_lrand48_data;
 unsigned long
 _create_xid (void)
 {
-  unsigned long res;
+  long res;
 
   __libc_lock_lock (createxid_lock);
 

@@ -67,13 +67,13 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	}
 
 	{
-	char	*ext, drv, *cwd, *prevdir = NULL;
+	char	*ext, drv, *prevdir = NULL;
 	_DTA	d;
 	_DTA	*olddta;
 	int	isdot = 0;
 	int	isdir = 0;
 	
-	__bzero (st, sizeof (*st));
+	memset(st, 0, sizeof (*st));
 	
 	/* Otherwise, check to see if we have a name like CON: or AUX: */
 	if (nval == 1) {

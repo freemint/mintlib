@@ -38,6 +38,10 @@
 # include <string.h>
 #endif
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /* This code is shared between the standard stdio implementation found
    in GNU C library and the libio implementation originally found in
    GNU libg++.

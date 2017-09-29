@@ -246,7 +246,7 @@ res_querydomain(name, domain, class, type, answer, anslen)
 		 */
 		n = strlen(name) - 1;
 		if (name[n] == '.' && n < sizeof(nbuf) - 1) {
-			bcopy(name, nbuf, n);
+			memcpy(nbuf, name, n);
 			nbuf[n] = '\0';
 		} else
 			longname = name;

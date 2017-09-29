@@ -13,7 +13,7 @@
 
 #include "lib.h"
 
-#define my_tolower(c) ((c >= 'A' && c <= 'Z') ? c += ('a' - 'A') : c)
+#define my_tolower(c) (((c) >= 'A' && c <= 'Z') ? (c) + ('a' - 'A') : (c))
 
 char*
 dirname (char *path)

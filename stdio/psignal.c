@@ -42,7 +42,7 @@ psignal (int sig, const char *s)
 {
   const char *colon, *desc;
 
-  if (s == NULL || s == '\0')
+  if (s == NULL || *s == '\0')
     s = colon = "";
   else
     colon = ": ";

@@ -12,6 +12,17 @@
 #include <support.h>
 #include <sys/stat.h>	/* For struct stat.  */
 
+/*
+ * cast away const-ness.
+ * sometimes needed when the api requires a non-const return type
+ */
+#ifndef NO_CONST
+#  ifdef __GNUC__
+#	 define NO_CONST(p) __extension__({ union { const void *cs; void *s; } x; x.cs = p; x.s; })
+#  else
+#	 define NO_CONST(p) ((void *)(p))
+#  endif
+#endif
 
 int	_doprnt (int (*)(int, FILE *), FILE *, const char *, __gnuc_va_list);
 int	_scanf (FILE *, int (*)(FILE *), int (*)(int, FILE *), const char *, __gnuc_va_list);
@@ -69,24 +80,6 @@ extern long _sigpending;
 /* unix/open.c */
 
 extern int __current_umask;
-
-/* definitions needed in malloc.c and realloc.c */
-
-struct mem_chunk 
-{
-	long valid;
-#define VAL_FREE  0xf4ee0abcL
-#define VAL_ALLOC 0xa11c0abcL
-#define VAL_BORDER 0xb04d0abcL
-
-	struct mem_chunk *next;
-	unsigned long size;
-};
-#define ALLOC_SIZE(ch) (*(long *)((char *)(ch) + sizeof(*(ch))))
-#define BORDER_EXTRA ((sizeof(struct mem_chunk) + sizeof(long) + 7) & ~7)
-
-/* linked list of free blocks */
-extern struct mem_chunk _mchunk_free_list;
 
 
 /* status of open files (for isatty, et al.) */

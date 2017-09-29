@@ -116,7 +116,7 @@ seek (void *cookie, fpos_t *pos, int whence)
   if (delta > 0)
     {
       obstack_blank (obstack, delta);
-      bzero (obstack_base (obstack) + current_offset, delta);
+      memset(obstack_base (obstack) + current_offset, 0, delta);
     }
 
   return 0;
@@ -174,7 +174,7 @@ obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 {
   int result;
   FILE f;
-  bzero (&f, sizeof (f));
+  memset(&f, 0, sizeof (f));
   init_obstream (&f, obstack);
   result = vfprintf (&f, format, args);
 

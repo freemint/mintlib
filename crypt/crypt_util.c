@@ -67,7 +67,7 @@ STATIC void shuffle_sb (long64 *k, ufc_long saltbits);
 # define int int32_t
 #endif
 
-static const char patchlevel_str[] = PATCHLEVEL;
+/* static const char patchlevel_str[] = PATCHLEVEL; */
 
 /*
  * Permutation done once on the 56 bit
