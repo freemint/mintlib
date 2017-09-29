@@ -127,6 +127,9 @@ CFLAGS-ivfprintf.c = -Wno-uninitialized
 DEFS-ident.c = -DVERSION=\"$(VERSION)\"
 DEFS-ident_sock.c = -DVERSION=\"$(VERSION)\"
 CFLAGS-crypt = -O3 -fexpensive-optimizations
+# This is necessary to avoid optimizing the sequence of malloc/memset
+# to a call to calloc in its own implementation
+CFLAGS-calloc.c = -fno-builtin
 # These source come from ... you know where
 DEFS-xbootparam_prot.c = -Wno-unused
 DEFS-xmount.c = -Wno-unused
