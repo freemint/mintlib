@@ -23,13 +23,24 @@ __gettimeofday (struct timeval *tp, struct timezone *tzp)
   static int have_Tgettimeofday = 1;
   
   if (have_Tgettimeofday != 0) {
-    long retval = Tgettimeofday (tp, tzp);
+    long retval;
+    /*
+     * MiNTs timezone structure is different than ours
+     */
+    struct __mint_timezone minttz;
+
+    retval = Tgettimeofday(tp, &minttz);
     if (retval == -ENOSYS) {
       have_Tgettimeofday = 0;
     } else if (retval < 0) {
       __set_errno (-retval);
       return -1;
     } else {
+      if (tzp != NULL)
+      {
+        tzp->tz_minuteswest = minttz.tz_minuteswest;
+        tzp->tz_dsttime = minttz.tz_dsttime;
+      }
       return 0;
     }
   } /* have_Tgettimeofday != 0 */
