@@ -75,7 +75,12 @@ typedef enum  {
     PLOSS       = 6
 } exception_type;
 
-/* In C++ exception is a reserved word.  */
+/* In SVID error handling, `matherr' is called with this description
+   of the exceptional condition.
+
+   We have a problem when using C++ since `exception' is a reserved
+   name in C++.  */
+/* do not change the comment above; it is looked up by GCCs fixincludes script */
 #ifdef __cplusplus
 struct __exception
 #else

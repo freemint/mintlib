@@ -201,7 +201,7 @@ extern void *__calloc (size_t __n, size_t __s) __THROW;
 
 #ifndef __STRICT_ANSI__
 
-# ifdef atarist
+# ifdef __atarist__
 extern void _malloczero (int __yes) __THROW;
 extern void _mallocChunkSize (size_t __siz) __THROW;
 # endif

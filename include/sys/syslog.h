@@ -188,7 +188,7 @@ CODE facilitynames[] =
    emulate one.  */
 #define __need___va_list
 #include <stdarg.h>
-#define _BSD_VA_LIST_ __gnuc_va_list
+#define _BSD_VA_LIST_ __builtin_va_list
 #endif
 
 #include <sys/cdefs.h>
