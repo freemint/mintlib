@@ -44,6 +44,10 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
 
 #include <atomicity.h>
 
+#if __GNUC_PREREQ(4, 9)
+#pragma GCC diagnostic ignored "-Wframe-address"
+#endif
+
 /*
  * mcount is called on entry to each function compiled with the profiling
  * switch set.  _mcount(), which is declared in a machine-dependent way

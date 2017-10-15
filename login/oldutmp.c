@@ -23,7 +23,7 @@ unsigned long time;
 	struct utmp entry;
 	int fd;
 
-	__bzero(&entry, sizeof(struct utmp));
+	memset(&entry, 0, sizeof(struct utmp));
 
 	if ((fd = open(UTMP_FILE, O_RDWR)) == -1)
 	{

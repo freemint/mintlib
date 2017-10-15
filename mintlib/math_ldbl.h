@@ -2,8 +2,14 @@
 #error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
 #endif
 
+#ifdef __mcoldfire__
+#  define NO_LONG_DOUBLE 1
+#endif
+
 /* A union which permits us to convert between a long double and
    four 32 bit ints or two 64 bit ints.  */
+
+#ifndef NO_LONG_DOUBLE
 
 #if __FLOAT_WORD_ORDER == BIG_ENDIAN
 
@@ -88,3 +94,5 @@ do {								\
   sh_u.value = (d);						\
   (v) = sh_u.parts64.lsw;					\
 } while (0)
+
+#endif /* __mcoldfire__ */

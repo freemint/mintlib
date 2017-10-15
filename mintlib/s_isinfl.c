@@ -12,6 +12,7 @@
 #include "math.h"
 #include "math_private.h"
 
+#ifndef NO_LONG_DOUBLE
 int
 __isinfl (long double x)
 {
@@ -22,3 +23,4 @@ __isinfl (long double x)
 	return ~(lx >> 63) & (hx >> 62);
 }
 weak_alias (__isinfl, isinfl)
+#endif

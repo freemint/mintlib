@@ -188,7 +188,6 @@ xdrfunc *xdrfunc_head = NULL;	/* xdr function list */
 xdrfunc *xdrfunc_tail = NULL;	/* xdr function list */
 
 int
-__attribute__ ((noreturn))
 main (int argc, const char *argv[])
 {
   struct commandline cmd;
@@ -258,6 +257,7 @@ main (int argc, const char *argv[])
     }
   exit (nonfatalerrors);
   /* NOTREACHED */
+  return nonfatalerrors;
 }
 
 /*

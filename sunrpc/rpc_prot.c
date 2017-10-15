@@ -212,7 +212,7 @@ static void
 rejected (enum reject_stat rjct_stat,
 	  struct rpc_err *error)
 {
-  switch (rjct_stat)
+  switch ((int)rjct_stat)
     {
     case RPC_VERSMISMATCH:
       error->re_status = RPC_VERSMISMATCH;

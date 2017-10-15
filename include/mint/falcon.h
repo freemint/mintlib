@@ -152,6 +152,8 @@ __extension__								\
 #define BPS4			0x02
 #define BPS8			0x03
 #define BPS16			0x04
+#define BPS32			0x05	/* SuperVidel's RGBx truecolour (4 bytes per pixel) */
+#define BPS8C			0x07	/* SuperVidel's 8-bit chunky mode */
 
 #define COL80			0x08	/* 80 column if set, else 40 column */
 #define COL40			0x00
@@ -167,6 +169,18 @@ __extension__								\
 #define STMODES			0x80	/* ST compatible */
 
 #define VERTFLAG		0x100	/* double-line on VGA, interlace on ST/TV */
+
+/*
+ * Bits 9-13 specify SuperVidel's base resolution:
+ *
+ * 0: 640x480; 1280x720 (with OVERSCAN set)
+ * 1: 800x600; 1680x1050 (with OVERSCAN set)
+ * 2: 1024x768; 1920x1080 (with OVERSCAN set)
+ * 3: 1280x1024
+ * 4: 1600x1200
+ */
+#define SVEXT_BASERES(res) ((res & 0xf) << 9)	/* specify base resolution */
+#define	SVEXT			0x4000	/* enable SuperVidel's extensions */
 
 #define VM_INQUIRE		-1
 

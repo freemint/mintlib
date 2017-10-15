@@ -249,7 +249,9 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
      enum locale_status *decided;
      int era_cnt;
 {
+#ifdef _NL_CURRENT
   const char *rp_backup;
+#endif
   int cnt;
   size_t val;
   int have_I, is_pm;
@@ -304,7 +306,9 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 #endif
 
       /* Make back up of current processing pointer.  */
+#ifdef _NL_CURRENT
       rp_backup = rp;
+#endif
 
       switch (*fmt++)
 	{
@@ -980,7 +984,8 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	  tm->tm_year += 100;
       }
 #endif
-
+  (void) want_era;
+  
   if (want_xday && !have_wday)
     {
       if ( !(have_mon && have_mday) && have_yday)

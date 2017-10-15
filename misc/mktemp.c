@@ -25,7 +25,6 @@ mktemp (char* template)
   size_t len;
   pid_t pid = getpid ();
   unsigned int i0, i1, i2, j0, j1, j2;
-  int saved_errno;
   
   if (template == NULL)
     {
@@ -56,8 +55,6 @@ mktemp (char* template)
   i0 = Random () % sizeof __tmp_letters;
   i1 = Random () % sizeof __tmp_letters;
   i2 = Random () % sizeof __tmp_letters;
-  
-  saved_errno = errno;
   
   for (j0 = 0; j0 < sizeof __tmp_letters; j0++, i0++)
     {

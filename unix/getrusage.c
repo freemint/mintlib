@@ -40,7 +40,7 @@ __getrusage(enum __rusage_who which, struct rusage *data)
 	long r;
 	long usage[8];
 
-	_bzero(data, (unsigned long) (sizeof (struct rusage)));
+	memset(data, 0, sizeof(*data));
 	
 	r = Prusage(usage);
 

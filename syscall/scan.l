@@ -37,7 +37,15 @@
 int yylex (void);
 int yylinecount = 1;
 
+#define YY_INPUT(buf,result,max_size) \
+		result = (int) fread(buf, 1, max_size, yyin)
+
 %}
+
+%option nounput
+%option noinput
+%option nointeractive never-interactive
+%option noyywrap
 
 digit		[0-9]
 nonzerodigit	[1-9]

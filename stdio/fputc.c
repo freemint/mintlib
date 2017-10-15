@@ -21,6 +21,10 @@
 #include <errno.h>
 #include <stdio.h>
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /* Write the character C to STREAM.  */
 int
 fputc (c, stream)

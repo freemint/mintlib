@@ -17,11 +17,17 @@ VERSION=0.60.1
 # Silent build or verbose
 AM_DEFAULT_VERBOSITY = 1
 
-# Define this to "m68k-atari-mint-" if you cross compile.
+# Define this to "m68k-atari-mint" if you cross compile.
+ifneq ($(CROSS_TOOL),)
+ toolprefix=$(CROSS_TOOL)-
+ CROSS := yes
+else
 ifeq ($(CROSS),yes)
- toolprefix=m68k-atari-mint-
+ CROSS_TOOL=m68k-atari-mint
+ toolprefix=$(CROSS_TOOL)-
 else
  toolprefix=
+endif
 endif
 
 # Uncomment this out if you want extra libraries that are optimized
@@ -47,7 +53,10 @@ WITH_V4E_LIB=yes
 # need be.  When cross-compiling you will usually want to set this
 # to "/usr/m68k-atari-mint".
 ifeq ($(CROSS),yes)
- prefix=/usr/m68k-atari-mint
+ prefix=$(shell $(toolprefix)gcc -print-sysroot)/usr
+  ifeq ($(prefix),)
+    prefix=/usr/$(CROSS_TOOL)
+  endif
 else
  prefix=/usr
 endif
@@ -121,7 +130,7 @@ RANLIB=$(toolprefix)ranlib
 # ATTENTION: You have to optimize at least with -O, otherwise some
 # extern inlines will not work and will cause unresolved references
 # in certain modules.
-CFLAGS=-O2 -fomit-frame-pointer
+CFLAGS=-O2 -fomit-frame-pointer -fgnu89-inline
 
 # Flags for building executables
 LDFLAGS=

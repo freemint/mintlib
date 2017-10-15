@@ -13,13 +13,13 @@
 
 size_t mbrtowc(wchar_t *__restrict wc, const char *__restrict src, size_t n, mbstate_t *__restrict st)
 {
-	static unsigned internal_state;
+	static mbstate_t internal_state;
 	unsigned c;
 	const unsigned char *s = (const void *)src;
 	const unsigned N = n;
 
-	if (!st) st = (void *)&internal_state;
-	c = *(unsigned *)st;
+	if (!st) st = &internal_state;
+	c = st->__opaque1;
 	
 	if (!s) {
 		if (c) goto ilseq;
@@ -36,9 +36,9 @@ size_t mbrtowc(wchar_t *__restrict wc, const char *__restrict src, size_t n, mbs
 	if (n) {
 		if (OOB(c,*s)) goto ilseq;
 loop:
-		c = c<<6 | *s++-0x80; n--;
+		c = (c<<6) | (*s++-0x80); n--;
 		if (!(c&(1U<<31))) {
-			*(unsigned *)st = 0;
+			st->__opaque1 = 0;
 			*wc = c;
 			return N-n;
 		}
@@ -48,10 +48,10 @@ loop:
 		}
 	}
 
-	*(unsigned *)st = c;
+	st->__opaque1 = c;
 	return -2;
 ilseq:
-	*(unsigned *)st = 0;
+	st->__opaque1 = 0;
 	errno = EILSEQ;
 	return -1;
 }

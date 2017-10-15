@@ -151,13 +151,13 @@ gemdos
 		systab = malloc(sizeof(*systab));
 		OUT_OF_MEM(systab);
 
-		bzero(systab, sizeof(*systab));
+		memset(systab, 0, sizeof(*systab));
 
 		systab->size = INITIAL_GEMDOS;
 		systab->table = malloc(systab->size * sizeof(*(systab->table)));
 		OUT_OF_MEM(systab->table);
 
-		bzero(systab->table, systab->size * sizeof(*(systab->table)));
+		memset(systab->table, 0, systab->size * sizeof(*(systab->table)));
 	}
 	'[' _IDENT_GEMDOS ']' definition_list
 	{
@@ -170,13 +170,13 @@ bios
 		systab = malloc(sizeof(*systab));
 		OUT_OF_MEM(systab);
 
-		bzero(systab, sizeof(*systab));
+		memset(systab, 0, sizeof(*systab));
 
 		systab->size = INITIAL_BIOS;
 		systab->table = malloc(systab->size * sizeof(*(systab->table)));
 		OUT_OF_MEM(systab->table);
 
-		bzero(systab->table, systab->size * sizeof(*(systab->table)));
+		memset(systab->table, 0, systab->size * sizeof(*(systab->table)));
 	}
 	'[' _IDENT_BIOS ']' definition_list
 	{
@@ -189,13 +189,13 @@ xbios
 		systab = malloc(sizeof(*systab));
 		OUT_OF_MEM(systab);
 
-		bzero(systab, sizeof(*systab));
+		memset(systab, 0, sizeof(*systab));
 
 		systab->size = INITIAL_XBIOS;
 		systab->table = malloc(systab->size * sizeof(*(systab->table)));
 		OUT_OF_MEM(systab->table);
 
-		bzero(systab->table, systab->size * sizeof(*(systab->table)));
+		memset(systab->table, 0, systab->size * sizeof(*(systab->table)));
 	}
 	'[' _IDENT_XBIOS ']' definition_list
 	{
@@ -539,7 +539,7 @@ resize_tab(struct systab *tab, int newsize)
 
 		if (newtable)
 		{
-			bzero(newtable, newsize * sizeof(*newtable));
+			memset(newtable, 0, newsize * sizeof(*newtable));
 			memcpy(newtable, tab->table, tab->size * sizeof(*(tab->table)));
 
 			free(tab->table);
@@ -574,7 +574,7 @@ add_tab(struct systab *tab, int nr, const char *name, struct arg *r, struct arg 
 		if (!call)
 			return 1;
 
-		bzero(call, sizeof(*call));
+		memset(call, 0, sizeof(*call));
 
 		strcpy(call->name, name);
 		call->ret = r;
@@ -607,7 +607,7 @@ make_arg(int type, const char *s)
 
 	if (l)
 	{
-		bzero(l, sizeof(*l));
+		memset(l, 0, sizeof(*l));
 
 		if (s) strcpy(l->types, s);
 		l->type = type;

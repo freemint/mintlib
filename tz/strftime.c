@@ -29,13 +29,17 @@ static char	elsieid[] = "@(#)strftime.c	8.3";
 
 #ifndef LIBC_SCCS
 #ifndef lint
-static const char	sccsid[] = "@(#)strftime.c	5.4 (Berkeley) 3/14/89";
+/* static const char	sccsid[] = "@(#)strftime.c	5.4 (Berkeley) 3/14/89"; */
 #endif /* !defined lint */
 #endif /* !defined LIBC_SCCS */
 
 #include "tzfile.h"
 #include "fcntl.h"
 #include "locale.h"
+
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
 
 struct lc_time_T {
 	const char *	mon[MONSPERYEAR];

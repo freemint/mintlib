@@ -5,6 +5,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
+#include "malloc_int.h"
 
 void *
 __calloc (size_t n, size_t sz)
@@ -16,7 +18,7 @@ __calloc (size_t n, size_t sz)
 
 	r = __malloc (total);
 	if (r != NULL)
-		__bzero (r, total);
+		memset(r, 0, total);
 
 	return r;
 }

@@ -52,7 +52,7 @@ __select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	}
 	
 	pfds = alloca (nfds * sizeof *pfds);
-	__bzero (pfds, nfds * sizeof *pfds);
+	memset(pfds, 0, nfds * sizeof *pfds);
 	
 	/* Three loops are more efficient than one here.  */
 	if (readfds != NULL)
@@ -90,9 +90,9 @@ __select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	else {
 		u_int sz = howmany (nfds, NFDBITS) * sizeof (fd_mask);
 		
-		if (readfds) __bzero (readfds, sz);
-		if (exceptfds) __bzero (exceptfds, sz);
-		if (writefds) __bzero (writefds, sz);
+		if (readfds) memset(readfds, 0, sz);
+		if (exceptfds) memset(exceptfds, 0, sz);
+		if (writefds) memset(writefds, 0, sz);
 		
 		if (retval) for (i = 0; i < nfds; i++) {
 			if (pfds[i].revents & POLLIN

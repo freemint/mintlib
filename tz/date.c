@@ -849,7 +849,7 @@ netsettime(ntv)
 			perror("date: socket");
 		goto bad;
 	}
-	bzero((char *)&sin, sizeof (sin));
+	memset((char *)&sin, 0, sizeof (sin));
 	sin.sin_family = AF_INET;
 	for (port = IPPORT_RESERVED - 1; port > IPPORT_RESERVED / 2; port--) {
 		sin.sin_port = htons((u_short)port);

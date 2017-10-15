@@ -40,8 +40,8 @@ void * bsearch(key, base, num, size, cmp)
 			{
 			if (dir < 0)
 			{
-			    if (c == 0)
-				return(NULL);
+				if (c == 0)
+					return(NULL);
 				b = c - 1;
 			}
 			else /* (dir > 0) */
