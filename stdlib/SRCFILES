@@ -49,4 +49,8 @@ SRCFILES = \
 	strtoll.c \
 	strtoul.c \
 	strtoull.c \
+	wcstol.c \
+	wcstoul.c \
+	wcstoll.c \
+	wcstoull.c \
 	xpg_basename.c
