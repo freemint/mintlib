@@ -150,6 +150,17 @@ size_t wcsxfrm_l(wchar_t *__restrict, const wchar_t *__restrict, size_t n, local
 #endif
 #endif
 
+/* The following functions are extensions found in X/Open CAE.  */
+#ifdef __USE_XOPEN
+/* Determine number of column positions required for C.  */
+extern int wcwidth (wchar_t __c) __THROW;
+
+/* Determine number of column positions required for first N wide
+   characters (or fewer if S ends before this) in S.  */
+extern int wcswidth (const wchar_t *__s, size_t __n) __THROW;
+#endif	/* Use X/Open.  */
+
+
 #ifdef __cplusplus
 }
 #endif
