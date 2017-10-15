@@ -107,4 +107,6 @@ SRCFILES = \
 	unixtime.c \
 	unx2dos.c \
 	wctrans.c \
-	wctype.c
+	wctype.c \
+	wcwidth.c \
+	$(empty)
