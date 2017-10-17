@@ -24,7 +24,13 @@
 #  endif
 #endif
 
-int	_doprnt (int (*)(int, FILE *), FILE *, const char *, __gnuc_va_list);
+/* Write formatted output to STREAM from argument list ARG using
+   fputc like function PUTFUNCTION.  This is provided for binary
+   compatibility with older versions.  */
+__EXTERN int _doprnt __P ((int (*__putfunction) (int, FILE*), 
+			   FILE* __stream, const char* __format, 
+			   __gnuc_va_list __arg));
+
 int	_scanf (FILE *, int (*)(FILE *), int (*)(int, FILE *), const char *, __gnuc_va_list);
 int	_enoent (const char *);
 
