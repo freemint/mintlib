@@ -109,4 +109,5 @@ SRCFILES = \
 	wctrans.c \
 	wctype.c \
 	wcwidth.c \
+	wcscoll.c \
 	$(empty)
