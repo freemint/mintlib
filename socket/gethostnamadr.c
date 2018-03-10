@@ -877,7 +877,7 @@ _endhtent (void)
 }
 
 struct hostent *
-_gethtent (void)
+gethostent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -978,7 +978,7 @@ _gethtbyname (char *name)
 	(void)gethostname(localname, sizeof(localname));
 
 	_sethtent(0);
-	while ((p = _gethtent())) {
+	while ((p = gethostent())) {
 		if (strcasecmp(p->h_name, name) == 0) 
 			found++;
 		else 
@@ -1092,7 +1092,7 @@ _gethtbyaddr (const char *addr, int len, int type)
 	register struct hostent *p;
 
 	_sethtent(0);
-	while ((p = _gethtent()))
+	while ((p = gethostent()))
 		if (p->h_addrtype == type && !bcmp(p->h_addr, addr, len))
 			break;
 	_endhtent();
