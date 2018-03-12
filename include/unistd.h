@@ -259,6 +259,9 @@ extern int __access (__const char *__name, int __type) __THROW;
    (as normal file operations use).  */
 extern int euidaccess (__const char *__name, int __type) __THROW;
 extern int __euidaccess (__const char *__name, int __type) __THROW;
+
+/* An alias for `euidaccess', used by some other systems.  */
+extern int eaccess (const char *__name, int __type) __THROW;
 #endif
 
 
