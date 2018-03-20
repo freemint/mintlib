@@ -55,7 +55,7 @@
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
    If none of these are defined, the default is to have _SVID_SOURCE,
    _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200112L.  If more than one of these are defined, they accumulate.
+   200809L.  If more than one of these are defined, they accumulate.
    For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
    together give you ISO C, 1003.1, and 1003.2, but nothing else.
 
@@ -136,6 +136,7 @@
 #undef	__FAVOR_BSD
 #undef	__KERNEL_STRICT_NAMES
 #undef  __USE_MINTLIB
+#undef	__GLIBC_USE_DEPRECATED_GETS
 
 /* Suppress kernel-name space pollution unless user expressedly asks
    for it.  */
@@ -177,6 +178,8 @@
 # define _BSD_SOURCE	1
 # undef  _SVID_SOURCE
 # define _SVID_SOURCE	1
+# undef  _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE	1
 # ifndef __MINT__ /* not yet */
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1
@@ -210,13 +213,17 @@
 # define __USE_ISOC95	1
 #endif
 
+#ifdef __cplusplus
+/* This is to enable compatibility for ISO C++17.  */
+# if __cplusplus >= 201703L
+#  define __USE_ISOC11	1
+# endif
 /* This is to enable compatibility for ISO C++11.
-
-   So far g++ does not provide a macro.  Check the temporary macro for
-   now, too.  */
-#if ((defined __cplusplus && __cplusplus >= 201103L)			      \
-     || defined __GXX_EXPERIMENTAL_CXX0X__)
-# define __USE_ISOCXX11	1
+   Check the temporary macro for now, too.  */
+# if __cplusplus >= 201103L || defined __GXX_EXPERIMENTAL_CXX0X__
+#  define __USE_ISOCXX11	1
+#  define __USE_ISOC99	1
+# endif
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
@@ -349,6 +356,16 @@
 #endif
 #ifndef __USE_FORTIFY_LEVEL
 # define __USE_FORTIFY_LEVEL 0
+#endif
+
+/* The function 'gets' existed in C89, but is impossible to use
+   safely.  It has been removed from ISO C11 and ISO C++14.  Note: for
+   compatibility with various implementations of <cstdio>, this test
+   must consider only the value of __cplusplus when compiling C++.  */
+#if defined __cplusplus ? __cplusplus >= 201402L : defined __USE_ISOC11
+# define __GLIBC_USE_DEPRECATED_GETS 0
+#else
+# define __GLIBC_USE_DEPRECATED_GETS 1
 #endif
 
 #ifdef _FAKE_GLIBC

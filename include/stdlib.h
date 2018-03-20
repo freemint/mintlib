@@ -215,6 +215,20 @@ extern int atexit (void (*)(void)) __THROW;
 #endif
 extern __EXITING exit (int) __THROW __NORETURN;
 
+#if defined __USE_ISOC11 || defined __USE_ISOCXX11
+/* Call all functions registered with `at_quick_exit' in the reverse
+   of the order in which they were registered and terminate program
+   execution with STATUS.  */
+extern void quick_exit (int __status) __THROW __attribute__ ((__noreturn__));
+#endif
+
+#ifdef __USE_ISOC99
+/* Terminate the program with STATUS without calling any of the
+   functions registered with `atexit' or `on_exit'.  */
+extern void _Exit (int __status) __THROW __attribute__ ((__noreturn__));
+#endif
+
+
 extern char *getenv (__const char* __tag) __THROW;
 extern int system (__const char* __s) __THROW;
 
@@ -227,6 +241,12 @@ extern void qsort (void* __base, size_t __total_elems,
 
 extern int abs (int __x) __THROW;
 extern long labs (long __x) __THROW;
+
+#ifdef __USE_ISOC99
+__extension__ extern long long int llabs (long long int __x)
+     __THROW;
+#endif
+
 
 /* Return the `div_t', `ldiv_t' or `lldiv_t' representation
    of the value of NUMER over DENOM. */
