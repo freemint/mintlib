@@ -122,14 +122,14 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 extern int scandir (__const char *__restrict __dir,
 		    struct dirent ***__restrict __namelist,
 		    int (*__selector) (__const struct dirent *),
-		    int (*__cmp) (__const void *, __const void *)) __THROW;
+		    int (*__cmp) (const struct dirent **, const struct dirent **)) __THROW;
 
 /* Function to compare two `struct dirent's alphabetically.  */
-extern int alphasort (__const void *__e1, __const void *__e2) __THROW;
+extern int alphasort (const struct dirent **, const struct dirent **) __THROW;
 
 # ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
-extern int versionsort (__const void *__e1, __const void *__e2) __THROW;
+extern int versionsort (const struct dirent **, const struct dirent **) __THROW;
 # endif
 
 #endif /* Use BSD or misc.  */
