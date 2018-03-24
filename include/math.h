@@ -260,6 +260,7 @@ extern double pow (double, double) __THROW;
 extern double fabs (double) __THROW;
 extern double ceil (double) __THROW;
 extern double floor (double) __THROW;
+extern double round (double) __THROW;
 extern double rint (double) __THROW;
 extern double fmod (double, double) __THROW;
 
@@ -271,6 +272,11 @@ extern double modf (double, double *) __THROW;
 extern double acosh (double) __THROW;
 extern double asinh (double) __THROW;
 
+#ifdef __USE_ISOC99
+/* Return X with its signed changed to Y's.  */
+extern double copysign (double, double) __THROW;
+#endif
+
 #ifndef __STRICT_ANSI__
 
 #ifndef dabs
@@ -280,8 +286,6 @@ extern double asinh (double) __THROW;
 extern double dabs (double) __THROW;
 #endif
 #endif
-
-extern double copysign (double, double) __THROW;
 
 #ifdef __cplusplus
 extern int matherr (struct __exception *) throw();
