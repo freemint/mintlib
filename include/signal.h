@@ -202,11 +202,11 @@ __EXTERN int    __sigaction   __P((int, const struct sigaction *,
                                    struct sigaction *));
 __EXTERN int	sigpending  __P((sigset_t *set));
 
-#if 0
-/* Should these four friends be implemented somehow?  */
-
 /* Select any of pending signals from SET or wait for any to arrive.  */
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
+
+#ifndef __MINT__
+/* Should these three friends be implemented somehow?  */
 
 # ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.  */
