@@ -752,6 +752,18 @@
 /* Too many references: cannot splice.  */
 #define ETOOMANYREFS	__KERNEL_NEG(328)		/* Too many references.  */
 
-#define _NE_MAX		ETOOMANYREFS
+/* Function not implemented (POSIX.4 / HPUX) */
+#define ENOTSUP			__KERNEL_NEG(350)		/* Function not implemented.  */
+
+/* aio request was canceled before complete (POSIX.4 / HPUX) */
+#define ECANCELLED      __KERNEL_NEG(351)       /* aio request was canceled before complete */
+
+/* Owner died */
+#define EOWNERDEAD      __KERNEL_NEG(352)       /* Owner died */
+
+/* State not recoverable */
+#define ENOTRECOVERABLE __KERNEL_NEG(353)       /* State not recoverable */
+
+#define _NE_MAX		ENOTRECOVERABLE
 
 #endif /* _MINT_ERRNO_H */
