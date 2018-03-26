@@ -28,6 +28,9 @@
 # include <features.h>
 #endif
 
+/* Get definition of needed basic types.  */
+#include <bits/types.h>
+
 /* Get definition of timer specification structures.  */
 #define __need_timespec
 #include <time.h>
