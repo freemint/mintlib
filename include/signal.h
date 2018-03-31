@@ -171,7 +171,7 @@ __EXTERN int	sigaddset   __P((sigset_t *set, int signo));
 __EXTERN int	sigdelset   __P((sigset_t *set, int signo));
 __EXTERN int	sigemptyset __P((sigset_t *set));
 __EXTERN int	sigfillset  __P((sigset_t *set));
-__EXTERN int	sigismember __P((sigset_t *set, int signo));
+__EXTERN int	sigismember __P((__const sigset_t *set, int signo));
 
 # ifdef __USE_GNU
 /* Return non-empty value is SET is not empty.  */
