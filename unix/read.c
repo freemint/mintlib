@@ -41,12 +41,7 @@ struct ltchars __ltchars = {
  */
 static int scancode = -1;
 
-#ifdef __MSHORT__
-long
-#else
-int
-#endif
-__read (int fd, void *buf, size_t size)
+ssize_t __read (int fd, void *buf, size_t size)
 {
 	char *foo;
 	long r;

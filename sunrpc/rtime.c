@@ -58,8 +58,6 @@ static char sccsid[] = "@(#)rtime.c	2.2 88/08/10 4.0 RPCSRC; from 1.8 88/02/08 S
 #define TOFFSET (u_long)(60*60*24*(365*NYEARS + (NYEARS/4)))
 
 int __socket (int domain, int type, int proto);
-int __close (int fd);
-int __read (int fd, void *buf, size_t size);
 int __connect (int fd, struct sockaddr *addr, size_t addrlen);
 
 static void do_close (int);

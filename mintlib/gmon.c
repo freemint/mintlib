@@ -71,7 +71,6 @@ static void write_bb_counts __P ((int fd)) internal_function;
 
 // FIXME !!!
 int __profil (u_short *, size_t, size_t, u_int);
-int __write (int, const void *, size_t);
 int
 __writev (int s, const struct iovec *iov, int niov)
 {

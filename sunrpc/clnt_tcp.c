@@ -68,10 +68,7 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #endif
 
 int __socket (int domain, int type, int proto);
-int __close (int fd);
 int __connect (int fd, struct sockaddr *addr, socklen_t addrlen);
-int __read (int fd, void *buf, size_t size);
-int __write (int fd, const void *buf, size_t size);
 
 extern u_long _create_xid (void);
 
