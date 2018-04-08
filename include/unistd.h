@@ -181,9 +181,9 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#ifndef	ssize_t
+#ifndef	__ssize_t_defined
 typedef __ssize_t ssize_t;
-# define ssize_t ssize_t
+# define __ssize_t_defined
 #endif
 
 #define	__need_size_t
@@ -193,27 +193,27 @@ typedef __ssize_t ssize_t;
 #ifdef __USE_XOPEN
 /* The Single Unix specification says that some more types are
    available here.  */
-# ifndef gid_t
+# ifndef __gid_t_defined
 typedef __gid_t gid_t;
-#  define gid_t gid_t
+#  define __gid_t_defined 1
 # endif
 
-# ifndef uid_t
+# ifndef __uid_t_defined
 typedef __uid_t uid_t;
-#  define uid_t uid_t
+#  define __uid_t_defined 1
 # endif
 
-# ifndef off_t
+# ifndef __off_t_defined
 #  ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
 #  else
 typedef __off64_t off_t;
 #  endif
-#  define off_t off_t
+#  define __off_t_defined
 # endif
-# if defined __USE_LARGEFILE64 && !defined off64_t
+# if defined __USE_LARGEFILE64 && !defined __off64_t_defined
 typedef __off64_t off64_t;
-#  define off64_t off64_t
+#  define __off64_t_defined
 # endif
 
 # ifndef __useconds_t_defined
@@ -221,9 +221,9 @@ typedef __useconds_t useconds_t;
 #  define __useconds_t_defined
 # endif
 
-# ifndef pid_t
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define pid_t pid_t
+#  define __pid_t_defined 1
 # endif
 #endif	/* X/Open */
 

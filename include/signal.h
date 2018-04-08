@@ -41,13 +41,13 @@ typedef __sigset_t sigset_t;
 #include <bits/signum.h>
 
 #ifdef __USE_XOPEN
-# ifndef pid_t
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define pid_t pid_t
+#  define __pid_t_defined 1
 # endif
-# ifndef uid_t
+# ifndef __uid_t_defined
 typedef __uid_t uid_t;
-#  define uid_t uid_t
+#  define __uid_t_defined 1
 # endif
 #endif	/* Unix98 */
 

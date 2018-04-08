@@ -34,24 +34,24 @@ __BEGIN_DECLS
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <bits/ipc.h>
 
-#ifndef uid_t
+#ifndef __uid_t_defined
 typedef __uid_t uid_t;
-# define uid_t uid_t
+# define __uid_t_defined 1
 #endif
 
-#ifndef gid_t
+#ifndef __gid_t_defined
 typedef __gid_t gid_t;
-# define gid_t gid_t
+# define __gid_t_defined 1
 #endif
 
-#ifndef mode_t
+#ifndef __mode_t_defined
 typedef __mode_t mode_t;
-# define mode_t mode_t
+# define __mode_t_defined 1
 #endif
 
-#ifndef key_t
+#ifndef __key_t_defined
 typedef __key_t key_t;
-# define key_t key_t
+# define __key_t_defined 1
 #endif
 
 /* Generates key for System V style IPC.  */

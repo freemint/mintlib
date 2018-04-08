@@ -144,7 +144,7 @@ struct sigevent;
 #ifdef __USE_XOPEN2K
 # ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define __pid_t_defined
+#  define __pid_t_defined 1
 # endif
 #endif
 
