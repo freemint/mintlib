@@ -1024,7 +1024,7 @@ extern void *setmode (const char *) __THROW;
 
 extern int getloadavg (double *, int) __THROW;  /* Should it be here?  */
 
-extern char *initstate (unsigned int __seed, char *__arg_state, int __n) __THROW;
+extern char *initstate (unsigned int __seed, char *__restrict __arg_state, size_t __n) __THROW;
 extern char *setstate (char *arg_state) __THROW;
 
 extern long random (void) __THROW;

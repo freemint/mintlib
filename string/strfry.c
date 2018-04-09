@@ -24,7 +24,7 @@
 #include <time.h>
 
 #ifdef __MINT__
-extern char* __initstate (unsigned int __seed, char *__arg_state, int __n);
+extern char* __initstate (unsigned int __seed, char *__arg_state, size_t __n);
 extern long __random (void);
 #endif
 

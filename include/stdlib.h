@@ -117,6 +117,76 @@ extern unsigned long long int strtoull (__const char* __nptr, char** _endptr,
                                                    int __base) __THROW;
 #endif
 
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+# include <sys/types.h>	/* we need int32_t... */
+
+/* These are the functions that actually do things.  The `random', `srandom',
+   `initstate' and `setstate' functions are those from BSD Unices.
+   The `rand' and `srand' functions are required by the ANSI standard.
+   We provide both interfaces to the same random number generator.  */
+/* Return a random long integer between 0 and RAND_MAX inclusive.  */
+extern long int random (void) __THROW;
+
+/* Seed the random number generator with the given number.  */
+extern void srandom (unsigned int __seed) __THROW;
+
+/* Initialize the random number generator to use state buffer STATEBUF,
+   of length STATELEN, and seed it with SEED.  Optimal lengths are 8, 16,
+   32, 64, 128 and 256, the bigger the better; values less than 8 will
+   cause an error and values greater than 256 will be rounded down.  */
+extern char *initstate (unsigned int __seed, char *__statebuf,
+			size_t __statelen) __THROW __nonnull ((2));
+
+/* Switch the random number generator to state buffer STATEBUF,
+   which should have been previously initialized by `initstate'.  */
+extern char *setstate (char *__statebuf) __THROW __nonnull ((1));
+
+
+# ifdef __USE_MISC
+/* Reentrant versions of the `random' family of functions.
+   These functions all use the following data structure to contain
+   state, rather than global state variables.  */
+
+struct random_data
+  {
+    int32_t *fptr;		/* Front pointer.  */
+    int32_t *rptr;		/* Rear pointer.  */
+    int32_t *state;		/* Array of state values.  */
+    int rand_type;		/* Type of random number generator.  */
+    int rand_deg;		/* Degree of random number generator.  */
+    int rand_sep;		/* Distance between front and rear.  */
+    int32_t *end_ptr;		/* Pointer behind state table.  */
+  };
+
+extern int random_r (struct random_data *__restrict __buf,
+		     int32_t *__restrict __result) __THROW __nonnull ((1, 2));
+
+extern int srandom_r (unsigned int __seed, struct random_data *__buf)
+     __THROW __nonnull ((2));
+
+extern int initstate_r (unsigned int __seed, char *__restrict __statebuf,
+			size_t __statelen,
+			struct random_data *__restrict __buf)
+     __THROW __nonnull ((2, 4));
+
+extern int setstate_r (char *__restrict __statebuf,
+		       struct random_data *__restrict __buf)
+     __THROW __nonnull ((1, 2));
+# endif	/* Use misc.  */
+#endif	/* Use extended X/Open || misc. */
+
+
+/* Return a random integer between 0 and RAND_MAX inclusive.  */
+extern int rand (void) __THROW;
+/* Seed the random number generator with the given number.  */
+extern void srand (unsigned int __seed) __THROW;
+
+#ifdef __USE_POSIX199506
+/* Reentrant interface according to POSIX.1.  */
+extern int rand_r (unsigned int *__seed) __THROW;
+#endif
+
+
 extern void srand (unsigned int __seed) __THROW;
 extern int rand (void) __THROW;
 
