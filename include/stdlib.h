@@ -269,6 +269,24 @@ extern void *__calloc (size_t __n, size_t __s) __THROW;
 # include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
+#if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K) \
+    || defined __USE_MISC
+/* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
+extern void *valloc (size_t __size) __THROW __attribute_malloc__;
+#endif
+
+#ifdef __USE_XOPEN2K
+/* Allocate memory of SIZE bytes with an alignment of ALIGNMENT.  */
+extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
+     __THROW __nonnull ((1));
+#endif
+
+#ifdef __USE_ISOC11
+/* ISO C variant of aligned allocation.  */
+extern void *aligned_alloc (size_t __alignment, size_t __size)
+     __THROW __attribute_malloc__;
+#endif
+
 #ifndef __STRICT_ANSI__
 
 # ifdef __atarist__
