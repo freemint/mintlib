@@ -24,7 +24,7 @@ OBJS = crt0.o gcrt0.o
 
 libdir = $(prefix)/lib
 
-INCLUDES = -nostdinc -I$(top_srcdir)/include
+INCLUDES = -nostdinc -I$(top_srcdir)/include -I$(top_srcdir)/mintlib
 
 COMPILE = $(CC) $(WARN) $(CFLAGS) $(INCLUDES) $(DEFS)
 
@@ -33,10 +33,10 @@ all-here: $(OBJS)
 include $(top_srcdir)/phony
 
 crt0.o: $(srcdir)/crt0.S
-	$(COMPILE) -c $< -o $@
+	$(COMPILE) $(INCLUDES) -c $< -o $@
 
 gcrt0.o: $(srcdir)/crt0.S
-	$(COMPILE) -DGCRT0 -c $< -o $@
+	$(COMPILE) $(INCLUDES) -DGCRT0 -c $< -o $@
 
 include $(top_srcdir)/rules
 

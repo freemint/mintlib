@@ -24,17 +24,17 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e)		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -51,16 +51,16 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(18),sp"					\
+		"lea	%%sp@(18),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d)			\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -79,18 +79,18 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%7,sp@-\n\t"					\
-		"movl	%6,sp@-\n\t"					\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%7,%%sp@-\n\t"					\
+		"movl	%6,%%sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(26),sp"					\
+		"lea	%%sp@(26),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e), "r"(_f)	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -105,14 +105,14 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(10),sp"					\
+		"lea	%%sp@(10),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b)					\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif
@@ -128,15 +128,15 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)						\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)				\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory");		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory");		\
 	retvalue;							\
 })
 #endif

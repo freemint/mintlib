@@ -10,7 +10,7 @@
 
 |
 | _setstack: changes the stack pointer; called as
-|     void setstack( void *newsp )
+|     void _setstack( void *newsp )
 | called from crtinit.c once the new stack size has been decided upon
 |
 | Note: It is strictly forbidden to read or write data at *newsp or beyond.
@@ -27,11 +27,13 @@
 | be accessible!
 | destroys a0 and a7
 
-	.globl	__setstack
-__setstack:
-	movel	sp@+, a0	| save return address
-	movel	sp@, sp		| new stack pointer
-	subl	#64+4, sp	| push some unused space for buggy OS and a
+#include "libc-symbols.h"
+
+	.globl	C_SYMBOL_NAME(_setstack)
+C_SYMBOL_NAME(_setstack):
+	movel	%sp@+, %a0	| save return address
+	movel	%sp@, %sp		| new stack pointer
+	subl	#64+4, %sp	| push some unused space for buggy OS and a
 				| fake parameter to be popped by the caller
-	jmp	a0@		| back to caller
+	jmp	%a0@		| back to caller
 

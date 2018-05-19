@@ -131,12 +131,12 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addql	#2,sp\n\t"					\
+		"addql	#2,%%sp\n\t"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -150,13 +150,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addql	#4,sp"						\
+		"addql	#4,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -170,13 +170,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -191,14 +191,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addql	#8,sp"						\
+		"addql	#8,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -214,15 +214,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -238,15 +238,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(10),sp"					\
+		"lea	%%sp@(10),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -263,16 +263,16 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -286,14 +286,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -308,14 +308,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(10),sp"					\
+		"lea	%%sp@(10),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -332,16 +332,16 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(16),sp"					\
+		"lea	%%sp@(16),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -357,16 +357,16 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"lea	sp@(14),sp"					\
+		"lea	%%sp@(14),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -379,13 +379,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -398,12 +398,12 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addql	#2,sp"						\
+		"addql	#2,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -417,13 +417,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addql	#4,sp"						\
+		"addql	#4,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -438,14 +438,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -463,18 +463,18 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"lea	sp@(14),sp"					\
+		"lea	%%sp@(14),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -488,14 +488,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#13\n\t"					\
-		"addql	#8,sp"						\
+		"addql	#8,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -510,14 +510,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addql	#8,sp"						\
+		"addql	#8,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)              /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -533,15 +533,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -555,13 +555,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addql	#4,sp"						\
+		"addql	#4,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -574,12 +574,12 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addql	#2,sp"						\
+		"addql	#2,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n)				/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -595,15 +595,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp"					\
+		"lea	%%sp@(12),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)       /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -617,13 +617,13 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a)			/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -638,14 +638,14 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"addql	#6,sp"						\
+		"addql	#6,%%sp"						\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -665,20 +665,20 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%8,sp@-\n\t"					\
-		"movw	%7,sp@-\n\t"					\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%8,%%sp@-\n\t"					\
+		"movw	%7,%%sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(20),sp "					\
+		"lea	%%sp@(20),%%sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b),					\
 	  "r"(_c), "r"(_d), "r"(_e), "r"(_f), "r"(_g) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -698,21 +698,21 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%9,sp@-\n\t"					\
-		"movl	%8,sp@-\n\t"					\
-		"movw	%7,sp@-\n\t"					\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%9,%%sp@-\n\t"					\
+		"movl	%8,%%sp@-\n\t"					\
+		"movw	%7,%%sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(24),sp "					\
+		"lea	%%sp@(24),%%sp "					\
 	: "=r"(retvalue)			   /* outputs */	\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d), "r"(_e), "r"(_f), "r"(_g), "r"(_h) /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -733,16 +733,16 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%9,sp@-\n\t"					\
-		"movl	%8,sp@-\n\t"					\
-		"movw	%7,sp@-\n\t"					\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movl	%1,sp@-\n\t"					\
-                "movw	%0,sp@-"					\
+		"movw	%9,%%sp@-\n\t"					\
+		"movl	%8,%%sp@-\n\t"					\
+		"movw	%7,%%sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movl	%1,%%sp@-\n\t"					\
+                "movw	%0,%%sp@-"					\
 	:					      /* outputs */	\
 	: "g"(n), "g"(_a), "g"(_b), "g"(_c), "g"(_d),			\
 	  "g"(_e), "g"(_f), "g"(_g), "g"(_h), "g"(_i) /* inputs  */	\
@@ -751,10 +751,10 @@ __extension__								\
 	__asm__ volatile						\
 	(								\
 		"trap	#14\n\t"					\
-		"lea	sp@(26),sp"					\
+		"lea	%%sp@(26),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: 					/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -773,19 +773,19 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%7,sp@-\n\t"					\
-		"movw	%6,sp@-\n\t"					\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%7,%%sp@-\n\t"					\
+		"movw	%6,%%sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(14),sp"					\
+		"lea	%%sp@(14),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "g"(_a),						\
 	  "g"(_b), "g"(_c), "g"(_d), "g"(_e), "g"(_f)	/* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -800,15 +800,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(14),sp "					\
+		"lea	%%sp@(14),%%sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -825,17 +825,17 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movl	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movl	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(14),sp"					\
+		"lea	%%sp@(14),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)    /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -851,17 +851,17 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%5,sp@-\n\t"					\
-		"movw	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%5,%%sp@-\n\t"					\
+		"movw	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(12),sp "					\
+		"lea	%%sp@(12),%%sp "					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)        /* inputs  */	\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
 	);								\
 	retvalue;							\
 })
@@ -876,15 +876,15 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movl	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movw	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movw	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(10),sp"					\
+		"lea	%%sp@(10),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)	/* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"    /* clobbered regs */	\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 	retvalue;							\
@@ -901,17 +901,18 @@ __extension__								\
 	    								\
 	__asm__ volatile						\
 	(								\
-		"movw	%5,sp@-\n\t"					\
-		"movl	%4,sp@-\n\t"					\
-		"movw	%3,sp@-\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	%1,sp@-\n\t"					\
+		"movw	%5,%%sp@-\n\t"					\
+		"movl	%4,%%sp@-\n\t"					\
+		"movw	%3,%%sp@-\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	%1,%%sp@-\n\t"					\
 		"trap	#14\n\t"					\
-		"lea	sp@(14),sp"					\
+		"lea	%%sp@(14),%%sp"					\
 	: "=r"(retvalue)			/* outputs */		\
 	: "g"(n),							\
 	  "r"(_a), "r"(_b), "r"(_c), "r"(_d)    /* inputs  */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "memory"			\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc", "memory"			\
+	  AND_MEMORY							\
 	);								\
 	retvalue;							\
 })
@@ -1001,14 +1002,15 @@ __extension__								\
 									\
 	__asm__ volatile						\
 	(								\
-		"movl	sp,%1\n\t"					\
-		"movl	%2,sp@-\n\t"					\
-		"movw	#0x20,sp@-\n\t"					\
+		"movl	%%sp,%1\n\t"					\
+		"movl	%2,%%sp@-\n\t"					\
+		"movw	#0x20,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
-		"movl	%1,sp\n\t"					\
+		"movl	%1,%%sp\n\t"					\
 	: "=r"(retvalue), "=&r"(sp_backup)	/* outputs */		\
 	: "g"((long)(ptr)) 			/* inputs */		\
-	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2"		\
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"		\
+	  AND_MEMORY							\
 	);								\
 })
 

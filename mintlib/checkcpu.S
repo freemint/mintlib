@@ -20,24 +20,26 @@
 | pseudo-jump instructions must be avoided (jbsr, jbra...), because they may
 | be translated to unsupported jump instructions.
 
-	.extern	_Getcookie		| int Getcookie(long cookie, long *val);
+#include "libc-symbols.h"
 
-	.globl	__checkcpu
-__checkcpu:
+	.extern	C_SYMBOL_NAME(Getcookie)		| int Getcookie(long cookie, long *val);
+
+	.globl	C_SYMBOL_NAME(_checkcpu)
+C_SYMBOL_NAME(_checkcpu):
 #ifdef __M68020__
-	subql	#4,sp			| Local variable for cookie value
+	subql	#4,%sp			| Local variable for cookie value
 
-	pea	sp@
-	movl	#0x5f435055,sp@-	| "_CPU"
-	jsr	_Getcookie
-	addql	#8,sp
+	pea	%sp@
+	movl	#0x5f435055,%sp@-	| "_CPU"
+	jsr	C_SYMBOL_NAME(Getcookie)
+	addql	#8,%sp
 
-	movel	sp@+,d1			| Cookie value
+	movel	%sp@+,%d1			| Cookie value
 
-	tstl	d0
+	tstl	%d0
 	bnes	.bad020			| _CPU cookie not found
 
-	cmpl	#20,d1
+	cmpl	#20,%d1
 	bhss	.ok020			| CPU >= 68020
 
 .bad020:
@@ -53,16 +55,16 @@ __checkcpu:
 #endif
 
 #ifdef __mcoldfire__
-	subql	#4,sp			| Local variable for cookie value
+	subql	#4,%sp			| Local variable for cookie value
 
-	pea	sp@
-	movl	#0x5f43465f,sp@-	| "_CF_"
-	jsr	_Getcookie
-	addql	#8,sp
+	pea	%sp@
+	movl	#0x5f43465f,%sp@-	| "_CF_"
+	jsr	C_SYMBOL_NAME(Getcookie)
+	addql	#8,%sp
 
-	movel	sp@+,d1			| Cookie value
+	movel	%sp@+,%d1			| Cookie value
 
-	tstl	d0
+	tstl	%d0
 	beqs	.okv4e			| _CF_ cookie found
 
 	pea	.errv4e			| Error message
@@ -77,19 +79,19 @@ __checkcpu:
 #endif
 
 #ifdef __M68881__
-	subql	#4,sp			| Local variable for cookie value
+	subql	#4,%sp			| Local variable for cookie value
 
-	pea	sp@
-	movl	#0x5f465055,sp@-	| "_FPU"
-	jsr	_Getcookie
-	addql	#8,sp
+	pea	%sp@
+	movl	#0x5f465055,%sp@-	| "_FPU"
+	jsr	C_SYMBOL_NAME(Getcookie)
+	addql	#8,%sp
 
-	movel	sp@+,d1			| Cookie value
+	movel	%sp@+,%d1			| Cookie value
 
-	tstl	d0
+	tstl	%d0
 	bnes	.bad881			| _FPU cookie not found
 
-	tstl	d1
+	tstl	%d1
 	bnes	.ok881			| FPU present
 
 .bad881:
@@ -108,10 +110,10 @@ __checkcpu:
 | Print a message then exit.
 | The message must have been pushed on the stack.
 .printexit:
-	movew	#9,sp@-			| Cconws()
+	movew	#9,%sp@-			| Cconws()
 	trap	#1
-	addql	#6,sp
+	addql	#6,%sp
 
-	movew	#-1,sp@-		| Failure
-	movew	#0x4c,sp@-		| Pterm()
+	movew	#-1,%sp@-		| Failure
+	movew	#0x4c,%sp@-		| Pterm()
 	trap	#1

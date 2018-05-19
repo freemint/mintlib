@@ -29,11 +29,13 @@
 #endif
 
 #ifdef __mcoldfire__
-	// On ColdFire V4e, the standard Line A opcodes
-	// conflict with some valid MAC instructions.
-	// Fortunately, the following range is always invalid
-	// and triggers the standard Line A exception.
-	// The ColdFire OS will keep only the last 4 bits
+	/*
+	 * On ColdFire V4e, the standard Line A opcodes
+	 * conflict with some valid MAC instructions.
+	 * Fortunately, the following range is always invalid
+	 * and triggers the standard Line A exception.
+	 * The ColdFire OS will keep only the last 4 bits
+	 */
 	#define LINEA_OPCODE_BASE 0xa920
 #else
 	#define LINEA_OPCODE_BASE 0xa000
@@ -144,7 +146,7 @@ void linea7(BBPB *P)
 	__asm__ volatile
 	(
 		PUSH_SP("%%d2/%%a2/%%a6", 12)
- 		"movl	%0,%%a6\n\t"
+		"movl	%0,%%a6\n\t"
 		ASM_LINEA(0x7) "\n\t"
 		POP_SP("%%d2/%%a2/%%a6", 12)
 	: 						  /* outputs */
@@ -206,7 +208,7 @@ void lineac(void *P)
 {
 	__asm__ volatile
 	(
- 		"movl	%0,%%a2\n\t"
+		"movl	%0,%%a2\n\t"
 		ASM_LINEA(0xc)
 	: 						  /* outputs */
 	: "r"(P)					  /* inputs  */
@@ -219,10 +221,10 @@ void linead(int x, int y,  SFORM * sd, void *ss)
 {
 	__asm__ volatile
 	(
- 		"movw	%0,%%d0\n\t"
- 		"movw	%1,%%d1\n\t"
- 		"movl	%2,%%a0\n\t"
- 		"movl	%3,%%a2\n\t"
+		"movw	%0,%%d0\n\t"
+		"movw	%1,%%d1\n\t"
+		"movl	%2,%%a0\n\t"
+		"movl	%3,%%a2\n\t"
 		ASM_LINEA(0xd)
 	: 						  /* outputs */
 	: "r"((short)x), "r"((short)y), "r"(sd), "r"(ss)  /* inputs  */
