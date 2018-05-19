@@ -67,9 +67,6 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <libintl.h>
 #endif
 
-int __socket (int domain, int type, int proto);
-int __connect (int fd, struct sockaddr *addr, socklen_t addrlen);
-
 extern u_long _create_xid (void);
 
 #define MCALL_MSG_SIZE 24
@@ -167,16 +164,16 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    */
   if (*sockp < 0)
     {
-      *sockp = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      *sockp = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       if ((*sockp < 0)
-	  || (__connect (*sockp, (struct sockaddr *) raddr,
+	  || (connect (*sockp, (struct sockaddr *) raddr,
 			 sizeof (*raddr)) < 0))
 	{
 	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
 	  rpc_createerr.cf_error.re_errno = errno;
 	  if (*sockp >= 0)
-	    (void) __close (*sockp);
+	    (void) close (*sockp);
 	  goto fooy;
 	}
       ct->ct_closeit = TRUE;
@@ -212,7 +209,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
     {
       if (ct->ct_closeit)
 	{
-	  (void) __close (*sockp);
+	  (void) close (*sockp);
 	}
       goto fooy;
     }
@@ -372,7 +369,7 @@ clnttcp_freeres (cl, xdr_res, res_ptr)
 }
 
 static void
-clnttcp_abort ()
+clnttcp_abort (void)
 {
 }
 
@@ -380,7 +377,7 @@ static bool_t
 clnttcp_control (CLIENT *cl, int request, char *info)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
-
+  u_long *pulong, *src;
 
   switch (request)
     {
@@ -409,12 +406,17 @@ clnttcp_control (CLIENT *cl, int request, char *info)
        * first element in the call structure *.
        * This will get the xid of the PREVIOUS call
        */
-      *(u_long *)info = ntohl (*(u_long *)ct->ct_mcall);
+      pulong = (u_long *)info;
+      src = (u_long *)ct->ct_mcall;
+      *pulong = ntohl (*src);
       break;
     case CLSET_XID:
       /* This will set the xid of the NEXT call */
-      *(u_long *)ct->ct_mcall =  htonl (*(u_long *)info - 1);
+      pulong = (u_long *)ct->ct_mcall;
+      src = (u_long *)info;
       /* decrement by 1 as clnttcp_call() increments once */
+      *pulong = htonl (*src - 1);
+      break;
     case CLGET_VERS:
       /*
        * This RELIES on the information that, in the call body,
@@ -422,12 +424,14 @@ clnttcp_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *)info = ntohl (*(u_long *)(ct->ct_mcall +
-					   4 * BYTES_PER_XDR_UNIT));
+      pulong = (u_long *)info;
+      src = (u_long *)(ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT);
+      *pulong = ntohl (*src);
       break;
     case CLSET_VERS:
-      *(u_long *)(ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT)
-	= htonl (*(u_long *)info);
+      pulong = (u_long *)(ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT);
+      src = (u_long *)info;
+      *pulong = htonl (*src);
       break;
     case CLGET_PROG:
       /*
@@ -436,12 +440,14 @@ clnttcp_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *)info = ntohl(*(u_long *)(ct->ct_mcall +
-					  3 * BYTES_PER_XDR_UNIT));
+      pulong = (u_long *)info;
+      src = (u_long *)(ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT);
+      *pulong = ntohl(*src);
       break;
     case CLSET_PROG:
-      *(u_long *)(ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT)
-	= htonl(*(u_long *)info);
+      pulong = (u_long *)(ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT);
+      src = (u_long *)info;
+	  *pulong = htonl(*src);
       break;
     /* The following are only possible with TI-RPC */
     case CLGET_RETRY_TIMEOUT:
@@ -465,7 +471,7 @@ clnttcp_destroy (CLIENT *h)
 
   if (ct->ct_closeit)
     {
-      (void) __close (ct->ct_sock);
+      (void) close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
   mem_free ((caddr_t) ct, sizeof (struct ct_data));
@@ -492,7 +498,7 @@ readtcp (char *ctptr, char *buf, int len)
   fd.events = POLLIN;
   while (TRUE)
     {
-      switch (__poll(&fd, 1, milliseconds))
+      switch (poll(&fd, 1, milliseconds))
 	{
 	case 0:
 	  ct->ct_error.re_status = RPC_TIMEDOUT;
@@ -507,7 +513,7 @@ readtcp (char *ctptr, char *buf, int len)
 	}
       break;
     }
-  switch (len = __read (ct->ct_sock, buf, len))
+  switch (len = read (ct->ct_sock, buf, len))
     {
 
     case 0:
@@ -533,7 +539,7 @@ writetcp (char *ctptr, char *buf, int len)
 
   for (cnt = len; cnt > 0; cnt -= i, buf += i)
     {
-      if ((i = __write (ct->ct_sock, buf, cnt)) == -1)
+      if ((i = write (ct->ct_sock, buf, cnt)) == -1)
 	{
 	  ct->ct_error.re_errno = errno;
 	  ct->ct_error.re_status = RPC_CANTSEND;

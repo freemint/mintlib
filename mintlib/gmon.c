@@ -33,6 +33,7 @@
 
 /* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
 
+#include "lib.h"
 #include <sys/param.h>
 #include <sys/time.h>
 #include <sys/gmon.h>
@@ -61,42 +62,37 @@ struct gmonparam _gmonparam = { GMON_PROF_OFF, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, 
 static long int	s_scale;
 #define		SCALE_1_TO_1	0x10000L
 
-#define ERR(s) __write(2, s, sizeof(s) - 1)
+#define ERR(s) write(2, s, sizeof(s) - 1)
 
 void moncontrol __P ((int mode));
 void __moncontrol __P ((int mode));
-static void write_hist __P ((int fd)) internal_function;
-static void write_call_graph __P ((int fd)) internal_function;
-static void write_bb_counts __P ((int fd)) internal_function;
+static void write_hist (int fd);
+static void write_call_graph (int fd);
+static void write_bb_counts (int fd);
 
-// FIXME !!!
+/* FIXME !!! */
+
 int __profil (u_short *, size_t, size_t, u_int);
-int
-__writev (int s, const struct iovec *iov, int niov)
+
+static ssize_t __gmon_writev (int s, const struct iovec *iov, ssize_t niov)
 {
 	ssize_t ret = 0;
 	int i;
 
 	for (i = 0; i < niov; i++) {
-		int r = __write (s, iov[i].iov_base, iov[i].iov_len);
+		int r = write (s, iov[i].iov_base, iov[i].iov_len);
 		if (r < 0) return r;
 		ret += r;
 	}
 	return ret;	
 }
-int __open (const char *, int, ...);
-int __close (int);
-int __getpid ();
 
 /*
  * Control profiling
  *	profiling is what mcount checks to see if
  *	all the data structures are ready.
  */
-void
-//__moncontrol (mode)
-moncontrol (mode)
-     int mode;
+void moncontrol (int mode)
 {
   struct gmonparam *p = &_gmonparam;
 
@@ -117,14 +113,10 @@ moncontrol (mode)
       p->state = GMON_PROF_OFF;
     }
 }
-//weak_alias(__moncontrol, moncontrol)
 
 
 void
-//__monstartup (lowpc, highpc)
-monstartup (lowpc, highpc)
-     u_long lowpc;
-     u_long highpc;
+monstartup (u_long lowpc, u_long highpc)
 {
   register int o;
   char *cp;
@@ -192,24 +184,21 @@ monstartup (lowpc, highpc)
     } else
       s_scale = SCALE_1_TO_1;
 
-  //__moncontrol(1);
   moncontrol(1);
 }
-//weak_alias(__monstartup, monstartup)
 
 
 static void
-internal_function
-write_hist (fd)
-     int fd;
+write_hist (int fd)
 {
   u_char tag = GMON_TAG_TIME_HIST;
   struct gmon_hist_hdr thdr __attribute__ ((aligned (__alignof__ (char *))));
+  char **p;
+  int32_t *pi;
 
   if (_gmonparam.kcountsize > 0)
     {
-      extern u_long _base;
-      u_long offset = (u_long) _base + 0x100;
+      u_long offset = (u_long) _base->p_tbase;
       struct iovec iov[3] =
         {
 	  { &tag, sizeof (tag) },
@@ -217,23 +206,25 @@ write_hist (fd)
 	  { _gmonparam.kcount, _gmonparam.kcountsize }
 	};
 
-      *(char **) thdr.low_pc = (char *) _gmonparam.lowpc - offset;
-      *(char **) thdr.high_pc = (char *) _gmonparam.highpc - offset;
-      *(int32_t *) thdr.hist_size = (_gmonparam.kcountsize
-				     / sizeof (HISTCOUNTER));
-      *(int32_t *) thdr.prof_rate = __profile_frequency ();
+      p = (char **) thdr.low_pc;
+      *p = (char *) _gmonparam.lowpc - offset;
+      p = (char **) thdr.high_pc;
+      *p = (char *) _gmonparam.highpc - offset;
+      pi = (int32_t *) thdr.hist_size;
+      *pi = (_gmonparam.kcountsize / sizeof (HISTCOUNTER));
+      pi = (int32_t *) thdr.prof_rate;
+      *pi = __profile_frequency ();
       strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
       thdr.dimen_abbrev = 's';
 
-      __writev (fd, iov, 3);
+      __gmon_writev (fd, iov, 3);
     }
 }
 
 
 static void
 internal_function
-write_call_graph (fd)
-     int fd;
+write_call_graph (int fd)
 {
 #define NARCS_PER_WRITEV	32
   u_char tag = GMON_TAG_CG_ARC;
@@ -243,8 +234,9 @@ write_call_graph (fd)
   u_long frompc;
   struct iovec iov[2 * NARCS_PER_WRITEV];
   int nfilled;
-  extern u_long _base;
-  u_long offset = _base + 0x100;
+  u_long offset = (u_long) _base->p_tbase;
+  char **p;
+  int32_t *pi;
 
   for (nfilled = 0; nfilled < NARCS_PER_WRITEV; ++nfilled)
     {
@@ -269,27 +261,28 @@ write_call_graph (fd)
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  *(char **) raw_arc[nfilled].from_pc = (char *) frompc - offset;
-	  *(char **) raw_arc[nfilled].self_pc =
-	    (char *)_gmonparam.tos[to_index].selfpc - offset;
-	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
+	  p = (char **) raw_arc[nfilled].from_pc;
+	  *p = (char *) frompc - offset;
+	  p = (char **) raw_arc[nfilled].self_pc;
+	  *p = (char *)_gmonparam.tos[to_index].selfpc - offset;
+	  pi = (int32_t *)raw_arc[nfilled].count;
+	  *pi = _gmonparam.tos[to_index].count;
 
 	  if (++nfilled == NARCS_PER_WRITEV)
 	    {
-	      __writev (fd, iov, 2 * nfilled);
+	      __gmon_writev (fd, iov, 2 * nfilled);
 	      nfilled = 0;
 	    }
 	}
     }
   if (nfilled > 0)
-    __writev (fd, iov, 2 * nfilled);
+    __gmon_writev (fd, iov, 2 * nfilled);
 }
 
 
 static void
 internal_function
-write_bb_counts (fd)
-     int fd;
+write_bb_counts (int fd)
 {
   struct __bb *grp;
   u_char tag = GMON_TAG_BB_COUNT;
@@ -316,20 +309,20 @@ write_bb_counts (fd)
   for (grp = __bb_head; grp; grp = grp->next)
     {
       ncounts = grp->ncounts;
-      __writev (fd, bbhead, 2);
+      __gmon_writev (fd, bbhead, 2);
       for (nfilled = i = 0; i < ncounts; ++i)
 	{
 	  if (nfilled > (sizeof (bbbody) / sizeof (bbbody[0])) - 2)
 	    {
-	      __writev (fd, bbbody, nfilled);
+	      __gmon_writev (fd, bbbody, nfilled);
 	      nfilled = 0;
 	    }
 
-	  bbbody[nfilled++].iov_base = (char *) &grp->addresses[i];
+	  bbbody[nfilled++].iov_base = (char *) NO_CONST(&grp->addresses[i]);
 	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
       if (nfilled > 0)
-	__writev (fd, bbbody, nfilled);
+	__gmon_writev (fd, bbbody, nfilled);
     }
 }
 
@@ -340,25 +333,26 @@ write_gmon (void)
     struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd = -1;
     char *env;
+    int32_t *pi;
 
     env = getenv ("GMON_OUT_PREFIX");
     if (env != NULL && !__libc_enable_secure)
       {
 	size_t len = strlen (env);
 	char buf[len + 20];
-	sprintf (buf, "%s.%u", env, __getpid ());
-	fd = __open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	sprintf (buf, "%s.%u", env, getpid ());
+	fd = open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0666);
       }
 
     if (fd == -1)
       {
-	fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	fd = open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
 	if (fd < 0)
 	  {
 	    char buf[300];
 	    int errnum = errno;
 	    fprintf (stderr, "_mcleanup: gmon.out: %s\n",
-		     __strerror_r (errnum, buf, sizeof buf));
+		     strerror_r (errnum, buf, sizeof buf));
 	    return;
 	  }
       }
@@ -366,8 +360,9 @@ write_gmon (void)
     /* write gmon.out header: */
     memset (&ghdr, '\0', sizeof (struct gmon_hdr));
     memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
-    *(int32_t *) ghdr.version = GMON_VERSION;
-    __write (fd, &ghdr, sizeof (struct gmon_hdr));
+    pi = (int32_t *) ghdr.version;
+    *pi = GMON_VERSION;
+    write (fd, &ghdr, sizeof (struct gmon_hdr));
 
     /* write PC histogram: */
     write_hist (fd);
@@ -378,14 +373,14 @@ write_gmon (void)
     /* write basic-block execution counts: */
     write_bb_counts (fd);
 
-    __close (fd);
+    close (fd);
 }
 
 
 void
 __write_profiling (void)
 {
-  int save = _gmonparam.state;
+  long save = _gmonparam.state;
   _gmonparam.state = GMON_PROF_OFF;
   if (save == GMON_PROF_ON)
     write_gmon ();
@@ -397,7 +392,6 @@ weak_alias (__write_profiling, write_profiling)
 void
 _mcleanup (void)
 {
-  //__moncontrol (0);
   moncontrol (0);
 
   if (_gmonparam.state != GMON_PROF_ERROR)

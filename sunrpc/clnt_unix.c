@@ -64,10 +64,6 @@
 #include <libintl.h>
 #endif
 
-int __socket (int domain, int type, int proto);
-int __connect (int fd, struct sockaddr *addr, socklen_t addrlen);
-int __close (int fd);
-
 extern u_long _create_xid (void);
 
 #define MCALL_MSG_SIZE 24
@@ -151,15 +147,15 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
    */
   if (*sockp < 0)
     {
-      *sockp = __socket (AF_UNIX, SOCK_STREAM, 0);
+      *sockp = socket (AF_UNIX, SOCK_STREAM, 0);
       len = strlen (raddr->sun_path) + sizeof (raddr->sun_family) + 1;
       if (*sockp < 0
-	  || __connect (*sockp, (struct sockaddr *) raddr, len) < 0)
+	  || connect (*sockp, (struct sockaddr *) raddr, len) < 0)
 	{
 	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
 	  rpc_createerr.cf_error.re_errno = errno;
 	  if (*sockp != -1)
-	    __close (*sockp);
+	    close (*sockp);
 	  goto fooy;
 	}
       ct->ct_closeit = TRUE;
@@ -193,7 +189,7 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
   if (!xdr_callhdr (&(ct->ct_xdrs), &call_msg))
     {
       if (ct->ct_closeit)
-	__close (*sockp);
+	close (*sockp);
       goto fooy;
     }
   ct->ct_mpos = XDR_GETPOS (&(ct->ct_xdrs));
@@ -347,7 +343,7 @@ clntunix_freeres (cl, xdr_res, res_ptr)
 }
 
 static void
-clntunix_abort ()
+clntunix_abort (void)
 {
 }
 
@@ -355,7 +351,7 @@ static bool_t
 clntunix_control (CLIENT *cl, int request, char *info)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
-
+  u_long *pulong, *src;
 
   switch (request)
     {
@@ -383,12 +379,17 @@ clntunix_control (CLIENT *cl, int request, char *info)
        * first element in the call structure *.
        * This will get the xid of the PREVIOUS call
        */
-      *(u_long *) info = ntohl (*(u_long *)ct->ct_mcall);
+      pulong = (u_long *) info;
+      src = (u_long *)ct->ct_mcall;
+      *pulong = ntohl (*src);
       break;
     case CLSET_XID:
       /* This will set the xid of the NEXT call */
-      *(u_long *) ct->ct_mcall =  htonl (*(u_long *)info - 1);
+      pulong = (u_long *) ct->ct_mcall;
+      src = (u_long *)info;
+      *pulong = htonl (*src - 1);
       /* decrement by 1 as clntunix_call() increments once */
+      break;
     case CLGET_VERS:
       /*
        * This RELIES on the information that, in the call body,
@@ -396,12 +397,14 @@ clntunix_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *) info = ntohl (*(u_long *) (ct->ct_mcall
-					     + 4 * BYTES_PER_XDR_UNIT));
+      pulong = (u_long *) info;
+      src = (u_long *) (ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT);
+      *pulong = ntohl (*src);
       break;
     case CLSET_VERS:
-      *(u_long *) (ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT)
-	= htonl (*(u_long *) info);
+      pulong = (u_long *) (ct->ct_mcall + 4 * BYTES_PER_XDR_UNIT);
+      src = (u_long *) info;
+      *pulong = htonl (*src);
       break;
     case CLGET_PROG:
       /*
@@ -410,12 +413,14 @@ clntunix_control (CLIENT *cl, int request, char *info)
        * begining of the RPC header. MUST be changed if the
        * call_struct is changed
        */
-      *(u_long *) info = ntohl (*(u_long *) (ct->ct_mcall
-					     + 3 * BYTES_PER_XDR_UNIT));
+      pulong = (u_long *) info;
+      src = (u_long *) (ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT);
+      *pulong = ntohl (*src);
       break;
     case CLSET_PROG:
-      *(u_long *) (ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT)
-	= htonl(*(u_long *) info);
+      pulong = (u_long *) (ct->ct_mcall + 3 * BYTES_PER_XDR_UNIT);
+      src = (u_long *) info;
+      *pulong = htonl(*src);
       break;
     /* The following are only possible with TI-RPC */
     case CLGET_RETRY_TIMEOUT:
@@ -439,7 +444,7 @@ clntunix_destroy (CLIENT *h)
 
   if (ct->ct_closeit)
     {
-      (void) __close (ct->ct_sock);
+      (void) close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
   mem_free ((caddr_t) ct, sizeof (struct ct_data));
@@ -508,9 +513,9 @@ __msgwrite (int sock, void *data, size_t cnt)
   /* XXX I'm not sure, if gete?id() is always correct, or if we should use
      get?id(). But since keyserv needs geteuid(), we have no other chance.
      It would be much better, if the kernel could pass both to the server. */
-  cred.pid = __getpid ();
-  cred.uid = __geteuid ();
-  cred.gid = __getegid ();
+  cred.pid = getpid ();
+  cred.uid = geteuid ();
+  cred.gid = getegid ();
 
   memcpy (CMSG_DATA(cmsg), &cred, sizeof (struct ucred));
   cmsg->cmsg_level = SOL_SOCKET;
@@ -560,7 +565,7 @@ readunix (char *ctptr, char *buf, int len)
   fd.events = POLLIN;
   while (TRUE)
     {
-      switch (__poll (&fd, 1, milliseconds))
+      switch (poll (&fd, 1, milliseconds))
         {
         case 0:
           ct->ct_error.re_status = RPC_TIMEDOUT;
