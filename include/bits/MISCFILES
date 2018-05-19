@@ -41,4 +41,5 @@ MISCFILES = MISCFILES \
 	termios.h \
 	time.h \
 	types.h \
+	uintn-id.h \
 	xopen_lim.h

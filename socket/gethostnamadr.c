@@ -147,6 +147,9 @@ typedef union {
 
 int h_errno;
 
+static struct hostent *_gethtbyname (const char *name);
+static struct hostent *_gethtbyaddr (const unsigned char *addr, __socklen_t len, int type);
+
 static void
 dotrimdomain (char *c)
 {
@@ -580,7 +583,7 @@ getanswer (querybuf *answer, int anslen, int iquery)
 			continue;
 		}
 		if (haveanswer) {
-			if (n != host.h_length) {
+			if (n != (int)host.h_length) {
 				cp += n;
 				continue;
 			}
@@ -634,7 +637,6 @@ __gethostbyname (const char *name)
 	register int cc;
 	int n;
 	struct hostent *hp;
-	extern struct hostent *_gethtbyname();
 
 	/*
 	 * disallow names consisting only of digits/dots, unless
@@ -718,14 +720,14 @@ __gethostbyname (const char *name)
 weak_alias (__gethostbyname, gethostbyname)
 
 struct hostent *
-__gethostbyaddr (const char *addr, int len, int type)
+__gethostbyaddr (const void *__addr, __socklen_t len, int type)
 {
+	const unsigned char *addr = (const unsigned char *)__addr;
 	int n;
 	querybuf buf;
 	register int cc;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME];
-	extern struct hostent *_gethtbyaddr();
 	
 	if (type != AF_INET)
 		return ((struct hostent *) NULL);
@@ -944,8 +946,8 @@ again:
  *  shuffling will not take place.
  *                     - John DiMarco <jdd@cdf.toronto.edu>
  */ 
-struct hostent *
-_gethtbyname (char *name)
+static struct hostent *
+_gethtbyname (const char *name)
 {
 	register struct hostent *p;
 	register char **cp;
@@ -985,7 +987,7 @@ _gethtbyname (char *name)
 			for (cp = p->h_aliases; *cp != 0; cp++)
 				if (strcasecmp(*cp, name) == 0){ 
 					found++;
-					aliases[0]=name;
+					aliases[0]=(char *)name;
 					(void) strcpy(namebuf, p->h_name);
 				}
 		if (strcasecmp(p->h_name, localname) == 0)
@@ -1086,8 +1088,8 @@ _gethtbyname (char *name)
 	return (&ht);
 }
 
-struct hostent *
-_gethtbyaddr (const char *addr, int len, int type)
+static struct hostent *
+_gethtbyaddr (const unsigned char *addr, __socklen_t len, int type)
 {
 	register struct hostent *p;
 

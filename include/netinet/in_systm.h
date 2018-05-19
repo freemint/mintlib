@@ -27,6 +27,7 @@
 #ifndef _SYS_TYPES_H
 # include <sys/types.h>
 #endif
+#include <stdint.h>
 
 __BEGIN_DECLS
 
@@ -37,9 +38,9 @@ __BEGIN_DECLS
  * may not reflect the actual size of the native data types.
  */
 
-typedef u_int16_t n_short;      /* short as received from the net */
-typedef u_int32_t n_long;       /* long as received from the net  */
-typedef u_int32_t n_time;       /* ms since 00:00 GMT, byte rev   */
+typedef uint16_t n_short;      /* short as received from the net */
+typedef uint32_t n_long;       /* long as received from the net  */
+typedef uint32_t n_time;       /* ms since 00:00 GMT, byte rev   */
 
 __END_DECLS
 
