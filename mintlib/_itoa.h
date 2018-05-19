@@ -22,7 +22,7 @@
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-extern __inline char * __attribute__ ((unused))
+_EXTERN_INLINE char * __attribute__ ((unused))
 _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
@@ -51,7 +51,7 @@ _itoa_word (unsigned long value, char *buflim,
   return bp;
 }
 
-extern __inline char * __attribute__ ((unused))
+_EXTERN_INLINE char * __attribute__ ((unused))
 _fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
 {
   char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
@@ -61,7 +61,7 @@ _fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
   return buf;
 }
 
-extern __inline char * __attribute__ ((unused))
+_EXTERN_INLINE char * __attribute__ ((unused))
 _fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
 {
   char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
