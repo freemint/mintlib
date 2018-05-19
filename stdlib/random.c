@@ -243,7 +243,7 @@ __initstate( seed, arg_state, n )
 	else  state[ -1 ] = MAX_TYPES*(rptr - state) + rand_type;
 	if(  n  <  BREAK_1  )  {
 	    if(  n  <  BREAK_0  )  {
-		fprintf( stderr, "initstate: not enough state (%d bytes) with which to do jack; ignored.\n", n );
+		fprintf( stderr, "initstate: not enough state (%d bytes) with which to do jack; ignored.\n", (int)n );
 		return 0;
 	    }
 	    rand_type = TYPE_0;
