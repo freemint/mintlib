@@ -18,6 +18,7 @@
 
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
+#include <features.h>
 #include "gmp.h"
 #include "gmp-impl.h"
 #include <ieee754.h>

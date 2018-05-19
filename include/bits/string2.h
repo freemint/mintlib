@@ -42,7 +42,7 @@
 #ifdef __cplusplus
 # define __STRING_INLINE inline
 #else
-# define __STRING_INLINE extern __inline
+# define __STRING_INLINE _EXTERN_INLINE
 #endif
 
 #if _STRING_ARCH_unaligned

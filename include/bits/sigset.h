@@ -43,10 +43,6 @@ typedef unsigned long int __sigset_t;
 #if !defined _SIGSET_H_fns && defined _SIGNAL_H
 #define _SIGSET_H_fns 1
 
-#ifndef _EXTERN_INLINE
-# define _EXTERN_INLINE extern __inline
-#endif
-
 /* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
    overflow if `sigset_t' is wider than `int'.  */
 #define	__sigmask(sig)	(((__sigset_t) 1) << (sig))

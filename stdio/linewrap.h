@@ -66,7 +66,7 @@ void line_unwrap_stream (FILE *stream);
 
 #ifdef __OPTIMIZE__
 /* Returns true if STREAM is line wrapped.  */
-extern __inline int line_wrapped (FILE *stream);
+_EXTERN_INLINE int line_wrapped (FILE *stream);
 #endif
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
@@ -107,14 +107,14 @@ extern void __line_wrap_output (FILE *, int); /* private */
 extern struct line_wrap_data *__line_wrap_update (FILE *stream); /* private */
 
 /* Returns true if STREAM is line wrapped.  */
-extern __inline int
+_EXTERN_INLINE int
 line_wrapped (FILE *stream)
 {
   return (stream->__room_funcs.__output == &__line_wrap_output);
 }
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_lmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -124,7 +124,7 @@ line_wrap_lmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    LMARGIN and return the old value.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_set_lmargin (FILE *stream, size_t lmargin)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
@@ -139,7 +139,7 @@ line_wrap_set_lmargin (FILE *stream, size_t lmargin)
 }
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_rmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -149,7 +149,7 @@ line_wrap_rmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its right margin to
    RMARGIN and return the old value.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_set_rmargin (FILE *stream, size_t rmargin)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
@@ -164,7 +164,7 @@ line_wrap_set_rmargin (FILE *stream, size_t rmargin)
 }
 
 /* If STREAM is not line-wrapped return -1, else return its wrap margin.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_wmargin (FILE *stream)
 {
   if (! line_wrapped (stream))
@@ -174,7 +174,7 @@ line_wrap_wmargin (FILE *stream)
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    WMARGIN and return the old value.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_set_wmargin (FILE *stream, size_t wmargin)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
@@ -190,7 +190,7 @@ line_wrap_set_wmargin (FILE *stream, size_t wmargin)
 
 /* If STREAM is not line-wrapped return -1, else return the column number of
    the current output point.  */
-extern __inline size_t
+_EXTERN_INLINE size_t
 line_wrap_point (FILE *stream)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
