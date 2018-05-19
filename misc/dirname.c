@@ -13,7 +13,7 @@
 
 #include "lib.h"
 
-#define my_tolower(c) (((c) >= 'A' && c <= 'Z') ? (c) + ('a' - 'A') : (c))
+#define my_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A')) : (c))
 
 char*
 dirname (char *path)
@@ -68,16 +68,50 @@ dirname (char *path)
     }
   else if (last_slash != NULL && last_slash[1] == '\0')
     {
+      /* Determine whether all remaining characters are slashes.  */
+      char *runp;
+      
+      for (runp = last_slash; runp != path; --runp)
+	if (runp[-1] != '/' && runp[-1] != '\\')
+	  break;
+
       /* The '/' or '\\' is the last character, we have to look further.  */
-      char* maybe_last_slash = memchr (path, last_slash - path, '/');
-      if (maybe_last_slash == NULL)
-        maybe_last_slash = memchr (path, last_slash - path, '\\');
-      last_slash = maybe_last_slash;
+      if (runp != path)
+      {
+        slash = memrchr (path, '/', runp - path);
+        backslash = memrchr (path, '\\', runp - path);
+        if (slash == NULL || backslash > slash)
+           slash = backslash;
+        last_slash = slash;
+      }
     }
 
   if (last_slash != NULL)
-    /* Terminate the path.  */
-    last_slash[0] = '\0';
+    {
+      /* Determine whether all remaining characters are slashes.  */
+      char *runp;
+
+      for (runp = last_slash; runp != path; --runp)
+	if (runp[-1] != '/' && runp[-1] != '\\')
+	  break;
+
+      /* Terminate the path.  */
+      if (runp == path)
+	{
+	  /* The last slash is the first character in the string.  We have to
+	     return "/".  As a special case we have to return "//" if there
+	     are exactly two slashes at the beginning of the string.  See
+	     XBD 4.10 Path Name Resolution for more information.  */
+	  if (last_slash == path + 1 && path[0] == path[1])
+	    ++last_slash;
+	  else
+	    last_slash = path + 1;
+	}
+      else
+	last_slash = runp;
+
+      last_slash[0] = '\0';
+    }
   else
     /* This assignment is ill-designed but the XPG specs require to
        return a string containing "." in any case no directory part is
