@@ -23,7 +23,7 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-#ifdef __M68020__
+#ifdef __mc68020__
 /* Currently the only purpose of this file is to tell the generic inline
    macros that unaligned memory access is possible.  */
 # define _STRING_ARCH_unaligned	1
