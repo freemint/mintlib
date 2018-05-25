@@ -533,7 +533,8 @@ extern USItype __udiv_qrnnd ();
 	     "d" ((USItype)(bh)),					\
 	     "1" ((USItype)(al)),					\
 	     "g" ((USItype)(bl)))
-#if (defined (__mc68020__) || defined (__NeXT__))
+#if (defined (__mc68020__) || defined(__mc68030__) || defined(__mc68040__) \
+  || defined(__mc68060__) || defined (__NeXT__))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mulu%.l %3,%1:%0"						\
 	   : "=d" ((USItype)(w0)),					\

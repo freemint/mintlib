@@ -24,7 +24,7 @@
 
 #include <inttypes.h>
 
-#ifdef __mc68020__
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
 # include "atomicity-68020.h"
 #else
 static inline int
