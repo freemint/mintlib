@@ -24,7 +24,7 @@
 
 	.globl	__checkcpu
 __checkcpu:
-#ifdef __M68020__
+#ifdef __mc68020__
 	subql	#4,sp			| Local variable for cookie value
 
 	pea	sp@

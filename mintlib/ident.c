@@ -1,7 +1,7 @@
 #include <features.h>
 
 char __Ident_gnulib[] = "$Version: MiNTLib "
-#ifdef __M68020__
+#ifdef __mc68020__
 "-m68020-60 "
 #endif
 #ifdef __mcoldfire__
