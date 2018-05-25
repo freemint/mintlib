@@ -171,7 +171,7 @@ extern void _wordcopy_bwd_dest_aligned __P ((long int, long int, size_t));
 /* It's already included above for the MiNTLib.  */
 /* #include <sysdeps/generic/memcopy.h> */
 
-#if	defined(__mc68020__) || defined(mc68020)
+#if	defined(__mc68020__)
 
 #undef	OP_T_THRES
 #define	OP_T_THRES	16
