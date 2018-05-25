@@ -514,7 +514,7 @@ extern USItype __udiv_qrnnd ();
 #endif /* i960mx */
 #endif /* i960 */
 
-#if (defined (__mc68000__) || defined (__mc68020__) || defined (__NeXT__) || defined(mc68020)) && W_TYPE_SIZE == 32
+#if (defined (__mc68000__) || defined (__NeXT__)) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("add%.l %5,%1\n"	\
 "	addx%.l %3,%0"							\
@@ -533,7 +533,7 @@ extern USItype __udiv_qrnnd ();
 	     "d" ((USItype)(bh)),					\
 	     "1" ((USItype)(al)),					\
 	     "g" ((USItype)(bl)))
-#if (defined (__mc68020__) || defined (__NeXT__) || defined(mc68020))
+#if (defined (__mc68020__) || defined (__NeXT__))
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mulu%.l %3,%1:%0"						\
 	   : "=d" ((USItype)(w0)),					\
