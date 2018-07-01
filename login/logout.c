@@ -44,7 +44,7 @@ logout (const char *line)
 #if _HAVE_UT_TYPE - 0
   tmp.ut_type = USER_PROCESS;
 #endif
-  strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
+  strlcpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
   if (getutline_r (&tmp, &utbuf, &ut) >= 0)

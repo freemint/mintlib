@@ -41,10 +41,10 @@ logwtmp (const char *line, const char *name, const char *host)
 #if _HAVE_UT_TYPE - 0
   ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
 #endif
-  strncpy (ut.ut_line, line, sizeof ut.ut_line);
-  strncpy (ut.ut_name, name, sizeof ut.ut_name);
+  strlcpy (ut.ut_line, line, sizeof ut.ut_line);
+  strlcpy (ut.ut_name, name, sizeof ut.ut_name);
 #if _HAVE_UT_HOST - 0
-  strncpy (ut.ut_host, host, sizeof ut.ut_host);
+  strlcpy (ut.ut_host, host, sizeof ut.ut_host);
 #endif
 
 #if _HAVE_UT_TV - 0

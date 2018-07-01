@@ -111,7 +111,7 @@ login (const struct utmp *ut)
       ttyp = basename (tty);
 
       /* Position to record for this tty.  */
-      strncpy (copy.ut_line, ttyp, UT_LINESIZE);
+      strlcpy (copy.ut_line, ttyp, UT_LINESIZE);
 
       /* Tell that we want to use the UTMP file.  */
       if (utmpname (_PATH_UTMP) == 0)

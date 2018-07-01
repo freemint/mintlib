@@ -34,14 +34,14 @@ if_link (device, ifname)
 		return -1;
 	}
 	_unx2dos (device, ifl.device, PATH_MAX);
-	strncpy (ifl.ifname, ifname, sizeof (ifl.ifname));
+	strlcpy (ifl.ifname, ifname, sizeof (ifl.ifname));
 	r = ioctl (sockfd, SIOCSIFLINK, &ifl);
 	if (r < 0) {
 		close (sockfd);
 		return -1;
 	}
 	close (sockfd);
-	strncpy (ifname, ifl.ifname, sizeof (ifl.ifname));
+	strlcpy (ifname, ifl.ifname, sizeof (ifl.ifname));
 	return 0;
 }
 

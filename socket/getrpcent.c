@@ -184,7 +184,7 @@ interpret (char *val, int len)
 
 	if (d == 0)
 		return NULL;
-	strncpy(d->line, val, len);
+	strncpy(d->line, val, len + 1); /* + 1 to prevent warning with gcc 8 */
 	p = d->line;
 	d->line[len] = '\n';
 	if (*p == '#')

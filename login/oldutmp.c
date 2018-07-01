@@ -57,9 +57,9 @@ unsigned long time;
 	printf("counter = %d\nline = %s\nname = %s\nhost = %s\ntime = %lu\n",
 		counter, line, name, host, time);
 #endif
-	strncpy(entry.ut_line, line, 8);
-	strncpy(entry.ut_name, name, 8);
-	strncpy(entry.ut_host, host, 16);
+	strlcpy(entry.ut_line, line, 8);
+	strlcpy(entry.ut_name, name, 8);
+	strlcpy(entry.ut_host, host, 16);
 	entry.ut_time = time;
 
 	if ((returned_val = write(fd, &entry, (unsigned) sizeof(struct utmp))) == -1)

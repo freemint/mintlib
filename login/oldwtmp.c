@@ -34,9 +34,9 @@ unsigned long time;
  * bytes strncpy adds the the strings if they are greater than 8/16 bytes!
  */
 
-	strncpy(entry.ut_line, line, 8);
-	strncpy(entry.ut_name, name, 8);
-	strncpy(entry.ut_host, host, 16);
+	strlcpy(entry.ut_line, line, 8);
+	strlcpy(entry.ut_name, name, 8);
+	strlcpy(entry.ut_host, host, 16);
 	entry.ut_time = time;
 
 	write(fd, &entry, (unsigned) sizeof(struct utmp));
