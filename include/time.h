@@ -144,7 +144,7 @@ struct sigevent;
 #ifdef __USE_XOPEN2K
 # ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define __pid_t_defined
+#  define __pid_t_defined 1
 # endif
 #endif
 
@@ -261,9 +261,7 @@ extern int stime (__const time_t *__when) __THROW;
    localtime package.  These are included only for compatibility.  */
 
 /* Like `mktime', but for TP represents Universal Time, not local time.  */
-#if 0 /* not yet */
 extern time_t timegm (struct tm *__tp) __THROW;
-#endif
 
 /* Another name for `mktime'.  */
 extern time_t timelocal (struct tm *__tp) __THROW;

@@ -43,7 +43,7 @@ __sys_stat (const char *path, struct stat *st, int lflag, int exact)
 
 		r = Fxattr (lflag, path, &xattr);
 		if (r == 0) {
-			__bzero (st, sizeof (*st));
+			memset(st, 0, sizeof (*st));
 
 			st->st_dev = (__dev_t) xattr.st_dev;
 			st->st_ino = (__ino_t) xattr.st_ino;
@@ -154,7 +154,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 	int	isdot = 0;
 	int	isdir = 0;
 
-	__bzero (st, sizeof (*st));
+	memset(st, 0, sizeof (*st));
 
 	/* otherwise, check to see if we have a name like CON: or AUX: */
 	if (nval == 1) {

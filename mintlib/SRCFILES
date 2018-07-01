@@ -65,6 +65,7 @@ SRCFILES = \
 	malloc.c \
 	mcount.c \
 	modf.S \
+	posix_memalign.c \
 	profil-freq.c \
 	profil-posix.c \
 	pselect.c \
@@ -106,5 +107,9 @@ SRCFILES = \
 	uidgid.c \
 	unixtime.c \
 	unx2dos.c \
+	valloc.c \
 	wctrans.c \
-	wctype.c
+	wctype.c \
+	wcwidth.c \
+	wcscoll.c \
+	$(empty)

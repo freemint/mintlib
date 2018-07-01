@@ -78,13 +78,6 @@ __BEGIN_DECLS
 /* Default functions for streams opened in so-called text mode.  */
 extern __const __io_functions __default_text_io_functions;
 
-/* Write formatted output to STREAM from argument list ARG using
-   fputc like function PUTFUNCTION.  This is provided for binary
-   compatibility with older versions.  */
-__EXTERN int _doprnt __P ((int (*__putfunction) (int, FILE*), 
-			   FILE* __stream, const char* __format, 
-			   __gnuc_va_list __arg));
-
 /* Calling __binmode with a non-zero argument will cause the library
    to open all streams in binary mode.  Calling it with a zero argument
    has the opposite effect, i. e. all files are opened in text mode.  */

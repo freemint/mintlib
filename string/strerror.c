@@ -249,6 +249,16 @@ const char* const _sys_errlist[] = {
   N_("Operation would block"),		/* 326 - EAGAIN */
   N_("No buffer space available"),	/* 327 - ENOBUFS */
   N_("Too many references"),		/* 328 - ETOOMANYREFS */
+  unknown_error, unknown_error, unknown_error, unknown_error,
+  unknown_error, unknown_error, unknown_error, unknown_error,
+  unknown_error, unknown_error, unknown_error, unknown_error,
+  unknown_error, unknown_error, unknown_error, unknown_error,
+  unknown_error, unknown_error, unknown_error, unknown_error,
+  unknown_error,
+  N_("Function not implemented")	/* 350 - ENOTSUP */
+  N_("aio request was canceled before complete")	/* 351 - ECANCELLED */
+  N_("Owner died")	/* 352 - EOWNERDEAD */
+  N_("State not recoverable")	/* 353 - ENOTRECOVERABLE */
 };
 
 int _sys_nerr = (int) (sizeof (_sys_errlist) / sizeof (_sys_errlist[0]));

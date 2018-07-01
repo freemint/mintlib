@@ -22,6 +22,7 @@
 
 #include "math_private.h"
 
+#ifndef NO_LONG_DOUBLE
 int
 __signbitl (long double x)
 {
@@ -31,3 +32,4 @@ __signbitl (long double x)
   return e < 0;
 }
 weak_alias (__signbitl, signbitl)
+#endif

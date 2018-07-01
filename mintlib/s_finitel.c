@@ -21,6 +21,7 @@
 #include "math.h"
 #include "math_private.h"
 
+#ifndef NO_LONG_DOUBLE
 int
 __finitel(long double x)
 {
@@ -30,3 +31,4 @@ __finitel(long double x)
 				 -0x7fff000000000000LL)>>63);
 }
 weak_alias (__finitel, finitel)
+#endif

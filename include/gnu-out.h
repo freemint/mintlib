@@ -117,7 +117,7 @@ enum machine_type {
 /* Address of data segment in memory after it is loaded.
    Note that it is up to you to define SEGMENT_SIZE
    on machines not listed here.  */
-#if defined(atarist) || defined(CROSSATARI) || defined(atariminix) || defined(MINIX)
+#if defined(__atarist__) || defined(CROSSATARI) || defined(atariminix) || defined(MINIX)
 #  ifdef vax
 #    undef vax
 #  endif
@@ -151,7 +151,7 @@ enum machine_type {
 #define PAGE_SIZE 0x400
 #define SEGMENT_SIZE PAGE_SIZE
 #endif
-#if defined(atarist) || defined(CROSSATARI) || defined(atariminix) || defined(MINIX)
+#if defined(__atarist__) || defined(CROSSATARI) || defined(atariminix) || defined(MINIX)
 #define SEGMENT_SIZE 2
 #endif
 

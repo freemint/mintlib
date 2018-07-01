@@ -8,6 +8,10 @@ SRCFILES = \
 	accept.c \
 	bind.c \
 	connect.c \
+	freeaddrinfo.c \
+	gai_strerror.c \
+	getaddrinfo.c \
+	getnameinfo.c \
 	gethostnamadr.c \
 	getnetbyaddr.c \
 	getnetbyname.c \

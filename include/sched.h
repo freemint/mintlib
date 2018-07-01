@@ -38,6 +38,9 @@
 
 __BEGIN_DECLS
 
+/* Yield the processor.  */
+extern int sched_yield (void) __THROW;
+
 #if 0
 /* not yet implemented */
 
@@ -54,9 +57,6 @@ extern int sched_setscheduler (__pid_t __pid, int __policy,
 
 /* Retrieve scheduling algorithm for a particular purpose.  */
 extern int sched_getscheduler (__pid_t __pid) __THROW;
-
-/* Yield the processor.  */
-extern int sched_yield (void) __THROW;
 
 /* Get maximum priority value for a scheduler.  */
 extern int sched_get_priority_max (int __algorithm) __THROW;

@@ -35,7 +35,7 @@ __sys_fstat (short fd, struct stat *st, int exact)
 
 			r = Fcntl (fd, &xattr, FSTAT);
 			if (r == 0) {
-				__bzero (st, sizeof (*st));
+				memset(st, 0, sizeof (*st));
 
 				st->st_dev = (dev_t) xattr.st_dev;
 				st->st_ino = (ino_t) xattr.st_ino;
@@ -96,7 +96,7 @@ __do_fstat (int fd, struct stat *st, int exact)
 	}
 
 	/* emulation for TOS */
-	__bzero (st, sizeof (*st));
+	memset(st, 0, sizeof (*st));
 
 	{
 		long oldplace;

@@ -44,7 +44,7 @@ struct netent * __getnetent (void);
 extern int _net_stayopen;
 
 struct netent *
-__getnetbyaddr (long net, int type)
+__getnetbyaddr (__uint32_t net, int type)
 {
 	register struct netent *p;
 

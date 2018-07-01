@@ -41,13 +41,13 @@ typedef __sigset_t sigset_t;
 #include <bits/signum.h>
 
 #ifdef __USE_XOPEN
-# ifndef pid_t
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define pid_t pid_t
+#  define __pid_t_defined 1
 # endif
-# ifndef uid_t
+# ifndef __uid_t_defined
 typedef __uid_t uid_t;
-#  define uid_t uid_t
+#  define __uid_t_defined 1
 # endif
 #endif	/* Unix98 */
 
@@ -171,7 +171,7 @@ __EXTERN int	sigaddset   __P((sigset_t *set, int signo));
 __EXTERN int	sigdelset   __P((sigset_t *set, int signo));
 __EXTERN int	sigemptyset __P((sigset_t *set));
 __EXTERN int	sigfillset  __P((sigset_t *set));
-__EXTERN int	sigismember __P((sigset_t *set, int signo));
+__EXTERN int	sigismember __P((__const sigset_t *set, int signo));
 
 # ifdef __USE_GNU
 /* Return non-empty value is SET is not empty.  */
@@ -202,11 +202,11 @@ __EXTERN int    __sigaction   __P((int, const struct sigaction *,
                                    struct sigaction *));
 __EXTERN int	sigpending  __P((sigset_t *set));
 
-#if 0
-/* Should these four friends be implemented somehow?  */
-
 /* Select any of pending signals from SET or wait for any to arrive.  */
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
+
+#ifndef __MINT__
+/* Should these three friends be implemented somehow?  */
 
 # ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.  */

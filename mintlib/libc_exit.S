@@ -15,6 +15,7 @@
 	.even
 	.globl ___libc_exit, __exit
 	weak_alias (__libc_exit, _exit)
+	weak_alias (__libc_exit, _Exit)
 	
 ___libc_exit:
 	link a6,#0

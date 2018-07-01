@@ -60,7 +60,7 @@ typedef __int32_t __off_t;	/* Type of file sizes and offsets.  */
 typedef __quad_t __loff_t;	/* Type of file sizes and offsets.  */
 typedef __loff_t __off64_t;	/* Type of file sizes and offsets (LFS).  */
 typedef int __pid_t;		/* Type of process identifications.  */
-typedef __int32_t __ssize_t;	/* Type of a byte count, or error.  */
+typedef signed long int __ssize_t;	/* Type of a byte count, or error.  */
 typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
 typedef __int32_t __clock_t;	/* Type of CPU usage counts.  */
 typedef __int32_t __rlim_t;	/* Type for resource measurement.  */

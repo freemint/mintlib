@@ -14,5 +14,11 @@
 
 extern short __libc_newsockets;
 
+#ifdef _NETDB_H_
+extern __typeof (getnameinfo) __getnameinfo;
+extern __typeof (getaddrinfo) __getaddrinfo;
+extern __typeof (freeaddrinfo) __freeaddrinfo;
+extern __typeof (gai_strerror) __gai_strerror;
+#endif
 
 #endif /* _SOCKETS_GLOBAL_H */

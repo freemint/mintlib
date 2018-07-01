@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <mint/mintbind.h>
+#include <limits.h>
 
 #ifdef TEST
 #include <stdlib.h> /* for calloc() */
@@ -37,13 +38,24 @@ __getgroups (int gsetlen, gid_t *grpset)
   int             i;
   gid_t           currgid;
   long r;
-
-  r = Pgetgroups (gsetlen, grpset);
+  
+  if (gsetlen == 0) {
+    unsigned short gids[NGROUPS_MAX];
+    r = Pgetgroups (gsetlen, gids);
+  } else if (gsetlen < 0 || !grpset) {
+    r = -EINVAL;
+  } else {
+    unsigned short gids[gsetlen];
+    r = Pgetgroups (gsetlen, gids);
+    if (r > 0)
+      for (i = 0; i < (int)r; i++)
+        grpset[i] = gids[i];
+  }
 
   /* The next line used to read "if (r != ENOSYS)" i. e. it was checked
      for a positive value.  How did this ever work?  */
   if (r != -ENOSYS) {
-      if (r == -ERANGE) {
+      if (r == -ERANGE || r == -EBADARG) {
         /* MiNT uses ERANGE but the library binding should use EINVAL.  */
 	__set_errno (EINVAL);
         return -1;
@@ -83,6 +95,7 @@ __getgroups (int gsetlen, gid_t *grpset)
         ++numgroups;
         if (gsetlen) {
           if (numgroups > gsetlen) {
+	    endgrent();
 	    __set_errno (EINVAL);
             return -1;
 	  }

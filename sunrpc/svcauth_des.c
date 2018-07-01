@@ -145,7 +145,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 	  return AUTH_BADCRED;
 	}
       cred->adc_fullname.name = area->area_netname;
-      bcopy ((char *) ixdr, cred->adc_fullname.name, namelen);
+      memcpy(cred->adc_fullname.name, (char *) ixdr, namelen);
       cred->adc_fullname.name[namelen] = 0;
       ixdr += (RNDUP (namelen) / BYTES_PER_XDR_UNIT);
       cred->adc_fullname.key.key.high = *ixdr++;
@@ -393,7 +393,7 @@ cache_init (void)
     mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
   if (authdes_cache == NULL)
     return;
-  __bzero ((char *) authdes_cache,
+  memset((char *) authdes_cache, 0,
 	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
   authdes_lru = (int *) mem_alloc (sizeof (int) * AUTHDES_CACHESZ);

@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/types.h>
 #include <rpc/auth.h>
 #include <rpc/clnt.h>
+#include "lib.h"
 
 #ifdef __MINT__
 /* no intl support in mintlib yet */
@@ -272,10 +273,10 @@ clnt_sperrno (enum clnt_stat stat)
     {
       if (rpc_errlist[i].status == stat)
 	{
-	  return _(rpc_errstr + rpc_errlist[i].message_off);
+	  return (char *)NO_CONST(_(rpc_errstr + rpc_errlist[i].message_off));
 	}
     }
-  return _("RPC: (unknown error code)");
+  return (char *)NO_CONST(_("RPC: (unknown error code)"));
 }
 
 void
@@ -385,7 +386,7 @@ auth_errmsg (enum auth_stat stat)
     {
       if (auth_errlist[i].status == stat)
 	{
-	  return _(auth_errstr + auth_errlist[i].message_off);
+	  return (char *)NO_CONST(_(auth_errstr + auth_errlist[i].message_off));
 	}
     }
   return NULL;

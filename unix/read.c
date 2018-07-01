@@ -41,12 +41,7 @@ struct ltchars __ltchars = {
  */
 static int scancode = -1;
 
-#ifdef __MSHORT__
-long
-#else
-int
-#endif
-__read (int fd, void *buf, size_t size)
+ssize_t __read (int fd, void *buf, size_t size)
 {
 	char *foo;
 	long r;
@@ -152,7 +147,7 @@ __read (int fd, void *buf, size_t size)
 		}
 
 	/* watch out for TTYs */
-		if (__mint == 0 && isatty(fd)) {
+		if (__mint == 0 && r > 0 && isatty(fd)) {
 			foo = (char *)buf;
 			if (*foo == __tchars.t_eofc) /* EOF character? */
 				return 0;

@@ -20,6 +20,17 @@
 		/* some code uses these as function pointers --  i   */
 		/* have seen code that does.			     */
 
+#define _CTc _IScntrl
+#define _CTd _ISdigit
+#define _CTu _ISupper
+#define _CTl _ISlower
+#define _CTs _ISspace
+#define _CTp _ISpunct
+#define _CTx _ISxdigit
+#define _CTb _ISblank
+#define _CTg _ISgraph
+#define _CTP _ISprint
+
 static unsigned int _myctype[UCHAR_MAX + 1] =
 	{
 	0,						/* EOF */

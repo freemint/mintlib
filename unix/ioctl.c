@@ -281,12 +281,12 @@ __ioctl (int fd, int cmd, void *arg)
 	switch (cmd) {
 	    case FIONBIO:
 	    {
-	      r = Fcntl (fd, F_GETFL, 0);
+	      r = Fcntl (fd, 0, F_GETFL);
 	      if (r < 0) {
 	        __set_errno ((int) -r);
 		return -1;
 	      }
-	      r = Fcntl (fd, F_SETFL, *((int *)arg) ? (r | O_NDELAY) : (r & ~O_NDELAY) );
+	      r = Fcntl (fd, *((int *)arg) ? (r | O_NDELAY) : (r & ~O_NDELAY), F_SETFL);
 	      if (r < 0) {
 	        __set_errno ((int) -r);
 		return -1;

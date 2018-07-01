@@ -29,12 +29,11 @@
 #define DIRENT_TYPE struct dirent
 #endif
 
-int
-SCANDIR (dir, namelist, select, cmp)
-     const char *dir;
-     DIRENT_TYPE ***namelist;
-     int (*select) (const DIRENT_TYPE *);
-     int (*cmp) (const void *, const void *);
+int SCANDIR(
+	const char *dir,
+	DIRENT_TYPE ***namelist,
+	int (*select) (const DIRENT_TYPE *),
+	int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **))
 {
   DIR *dp = __opendir (dir);
   DIRENT_TYPE **v = NULL;
@@ -95,7 +94,7 @@ SCANDIR (dir, namelist, select, cmp)
 
   /* Sort the list if we have a comparison function to sort with.  */
   if (cmp != NULL)
-    qsort (v, i, sizeof (*v), cmp);
+    qsort (v, i, sizeof (*v), (int (*)(const void *, const void *))cmp);
   *namelist = v;
   return i;
 }

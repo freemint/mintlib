@@ -695,6 +695,7 @@ __printf_fp (FILE *fp,
 			}
 		    }
 		  used_limbs = fracsize - 1;
+		  (void) used_limbs;
 		}
 	    }
 	  --explog;

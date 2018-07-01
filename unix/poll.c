@@ -38,7 +38,6 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 		unsigned long xfds = 0;
 		register unsigned long int i;
 		register struct pollfd* pfds = fds;
-		unsigned long early_out = 0;
 
 		for (i = 0; i < nfds; i++) {
 			pfds[i].revents = 0;

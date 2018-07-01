@@ -18,12 +18,7 @@
 #include "lib.h"
 
 
-#ifdef __MSHORT__
-long
-#else
-int
-#endif
-__write (int fd, const void *buf, size_t size)
+ssize_t __write (int fd, const void *buf, size_t size)
 {
 	unsigned char c, *foo;
 	unsigned flags;

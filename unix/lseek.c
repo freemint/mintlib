@@ -57,7 +57,7 @@ __lseek (int handle, off_t offset, int mode)
 	new_pos = Fseek (0L, handle, SEEK_END);	/* go to eof */
     }	
     
-    __bzero (buf, (size_t)256);
+    memset(buf, 0, sizeof(buf));
     while (expected_pos > new_pos)	
     {
 	offset = expected_pos - new_pos;

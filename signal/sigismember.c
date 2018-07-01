@@ -12,9 +12,7 @@
 #include <signal.h>
 
 int
-sigismember (set, signo)
-  	sigset_t *set;
-  	int signo;
+sigismember (const sigset_t *set, int signo)
 {
   	if (!set || signo <= 0 || signo >= __NSIG) {
     		__set_errno (EINVAL);

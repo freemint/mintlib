@@ -64,9 +64,6 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
 #include <fcntl.h>
-int __socket (int domain, int type, int proto);
-int __ioctl (int fd, int cmd, void *arg);
-int __close (int fd);
 
 extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
 extern u_long _create_xid (void);
@@ -190,7 +187,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   cu->cu_xdrpos = XDR_GETPOS (&(cu->cu_outxdrs));
   if (*sockp < 0)
     {
-      *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+      *sockp = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
       if (*sockp < 0)
 	{
 	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
@@ -209,7 +206,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 #else
       {
         int dontblock = 1;
-        (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
+        (void) ioctl (*sockp, FIONBIO, (char *) &dontblock);
       }
 #endif
 #ifdef IP_RECVERR
@@ -258,13 +255,13 @@ is_network_up (int sock)
 
   ifc.ifc_len = sizeof (buf);
   ifc.ifc_buf = buf;
-  if (__ioctl(sock, SIOCGIFCONF, (char *) &ifc) == 0)
+  if (ioctl(sock, SIOCGIFCONF, (char *) &ifc) == 0)
     {
       ifr = ifc.ifc_req;
       for (n = ifc.ifc_len / sizeof (struct ifreq); n > 0; n--, ifr++)
 	{
 	  ifreq = *ifr;
-	  if (__ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+	  if (ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
 	    break;
 
 	  if ((ifreq.ifr_flags & IFF_UP)
@@ -359,7 +356,7 @@ send_again:
   anyup = 0;
   for (;;)
     {
-      switch (__poll (&fd, 1, milliseconds))
+      switch (poll (&fd, 1, milliseconds))
 	{
 
 	case 0:
@@ -424,6 +421,7 @@ send_again:
 		      && memcmp (&err_addr.sin_addr, &cu->cu_raddr.sin_addr,
 				 sizeof (err_addr.sin_addr)) == 0
 		      && err_addr.sin_port == cu->cu_raddr.sin_port)))
+	{
 	    for (cmsg = CMSG_FIRSTHDR (&msg); cmsg;
 		 cmsg = CMSG_NXTHDR (&msg, cmsg))
 	      if (cmsg->cmsg_level == SOL_IP && cmsg->cmsg_type == IP_RECVERR)
@@ -432,6 +430,7 @@ send_again:
 		  cu->cu_error.re_errno = e->ee_errno;
 		  return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
+	}
 	}
 #endif
       do
@@ -453,11 +452,16 @@ send_again:
 	continue;
 
       /* see if reply transaction id matches sent id.
-        Don't do this if we only wait for a replay */
-      if (xargs != NULL
-	  && (*((u_int32_t *) (cu->cu_inbuf))
-	      != *((u_int32_t *) (cu->cu_outbuf))))
+        Don't do this if we only wait for a reply */
+      if (xargs != NULL)
+      {
+      	u_int32_t *p1, *p2;
+      	
+      	p1 = (u_int32_t *) (cu->cu_inbuf);
+      	p2 = (u_int32_t *) (cu->cu_outbuf);
+	  if (*p1 != *p2)
 	continue;
+	  }
       /* we now assume we have the proper reply */
       break;
     }
@@ -570,6 +574,7 @@ clntudp_control (CLIENT *cl, int request, char *info)
       /* This will set the xid of the NEXT call */
       *(u_long *)cu->cu_outbuf =  htonl(*(u_long *)info - 1);
       /* decrement by 1 as clntudp_call() increments once */
+      break;
     case CLGET_VERS:
       /*
        * This RELIES on the information that, in the call body,
@@ -616,7 +621,7 @@ clntudp_destroy (CLIENT *cl)
 
   if (cu->cu_closeit)
     {
-      (void) __close (cu->cu_sock);
+      (void) close (cu->cu_sock);
     }
   XDR_DESTROY (&(cu->cu_outxdrs));
   mem_free ((caddr_t) cu, (sizeof (*cu) + cu->cu_sendsz + cu->cu_recvsz));

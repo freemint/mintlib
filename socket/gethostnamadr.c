@@ -147,6 +147,9 @@ typedef union {
 
 int h_errno;
 
+static struct hostent *_gethtbyname (const char *name);
+static struct hostent *_gethtbyaddr (const unsigned char *addr, __socklen_t len, int type);
+
 static void
 dotrimdomain (char *c)
 {
@@ -276,9 +279,9 @@ reorder_addrs (struct hostent *h)
 		for ( itp = itab, cnt=numitab; cnt; itp++,cnt--) {	/* loop though the interfaces */
 			if (( (*r)->s_addr & itp->netmask) == itp->address) {	/* compare */
 				/* We found a match.  Swap it into [0] */
-				bcopy( ((struct in_addr **) (h->h_addr_list))[0],    &tmp, sizeof(tmp));
-				bcopy( (*r),    ((struct in_addr **) (h->h_addr_list))[0], sizeof(tmp));
-				bcopy( &tmp,                                      (*r), sizeof(tmp));
+				memcpy(&tmp, ((struct in_addr **) (h->h_addr_list))[0], sizeof(tmp));
+				memcpy(((struct in_addr **) (h->h_addr_list))[0], (*r), sizeof(tmp));
+				memcpy((*r),                                      &tmp, sizeof(tmp));
 
 				return;	/* found one, don't need to continue */
 			}
@@ -580,7 +583,7 @@ getanswer (querybuf *answer, int anslen, int iquery)
 			continue;
 		}
 		if (haveanswer) {
-			if (n != host.h_length) {
+			if (n != (int)host.h_length) {
 				cp += n;
 				continue;
 			}
@@ -607,7 +610,7 @@ getanswer (querybuf *answer, int anslen, int iquery)
 #endif
 			break;
 		}
-		bcopy(cp, *hap++ = bp, n);
+		memcpy(*hap++ = bp, cp, n);
 		bp +=n;
 		cp += n;
 		haveanswer++;
@@ -634,7 +637,6 @@ __gethostbyname (const char *name)
 	register int cc;
 	int n;
 	struct hostent *hp;
-	extern struct hostent *_gethtbyname();
 
 	/*
 	 * disallow names consisting only of digits/dots, unless
@@ -718,14 +720,14 @@ __gethostbyname (const char *name)
 weak_alias (__gethostbyname, gethostbyname)
 
 struct hostent *
-__gethostbyaddr (const char *addr, int len, int type)
+__gethostbyaddr (const void *__addr, __socklen_t len, int type)
 {
+	const unsigned char *addr = (const unsigned char *)__addr;
 	int n;
 	querybuf buf;
 	register int cc;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME];
-	extern struct hostent *_gethtbyaddr();
 	
 	if (type != AF_INET)
 		return ((struct hostent *) NULL);
@@ -877,7 +879,7 @@ _endhtent (void)
 }
 
 struct hostent *
-_gethtent (void)
+gethostent (void)
 {
 	char *p;
 	register char *cp, **q;
@@ -944,8 +946,8 @@ again:
  *  shuffling will not take place.
  *                     - John DiMarco <jdd@cdf.toronto.edu>
  */ 
-struct hostent *
-_gethtbyname (char *name)
+static struct hostent *
+_gethtbyname (const char *name)
 {
 	register struct hostent *p;
 	register char **cp;
@@ -978,14 +980,14 @@ _gethtbyname (char *name)
 	(void)gethostname(localname, sizeof(localname));
 
 	_sethtent(0);
-	while ((p = _gethtent())) {
+	while ((p = gethostent())) {
 		if (strcasecmp(p->h_name, name) == 0) 
 			found++;
 		else 
 			for (cp = p->h_aliases; *cp != 0; cp++)
 				if (strcasecmp(*cp, name) == 0){ 
 					found++;
-					aliases[0]=name;
+					aliases[0]=(char *)name;
 					(void) strcpy(namebuf, p->h_name);
 				}
 		if (strcasecmp(p->h_name, localname) == 0)
@@ -1010,7 +1012,7 @@ _gethtbyname (char *name)
 
 			if(n<=htbuflen){
 				/* add the found address to the list */
-				bcopy(p->h_addr_list[0], bp, n);
+				memcpy(bp, p->h_addr_list[0], n);
 				*hap++=bp;
 				*hap=NULL;
 				bp+=n;
@@ -1022,7 +1024,7 @@ _gethtbyname (char *name)
 			int n = p->h_length;
 			if(n<=locbuflen){
 				/* add the found local address to the list */
-				bcopy(p->h_addr_list[0], lbp, n);
+				memcpy(lbp, p->h_addr_list[0], n);
 				*lhap++=lbp;
 				*lhap=NULL;
 				lbp+=n;
@@ -1059,10 +1061,10 @@ _gethtbyname (char *name)
 				/* FIXME: What is h good for?  */
 				u_long t, l, h = 0;
 				/* assert(sizeof(u_long)>=ht.h_length); */
-				bcopy(loc_addr_ptrs[i], (char *)&t,
+				memcpy((char *)&t, loc_addr_ptrs[i],
 					ht.h_length);
 				l=ntohl(t);
-				bcopy(ht_addr_ptrs[j], (char *)&t, 
+				memcpy((char *)&t, ht_addr_ptrs[j],
 					ht.h_length);
 				t=l^h;
 
@@ -1086,13 +1088,13 @@ _gethtbyname (char *name)
 	return (&ht);
 }
 
-struct hostent *
-_gethtbyaddr (const char *addr, int len, int type)
+static struct hostent *
+_gethtbyaddr (const unsigned char *addr, __socklen_t len, int type)
 {
 	register struct hostent *p;
 
 	_sethtent(0);
-	while ((p = _gethtent()))
+	while ((p = gethostent()))
 		if (p->h_addrtype == type && !bcmp(p->h_addr, addr, len))
 			break;
 	_endhtent();

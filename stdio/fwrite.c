@@ -21,6 +21,10 @@
 #include <string.h>
 
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /* Write NMEMB chunks of SIZE bytes each from PTR onto STREAM.  */
 size_t
 fwrite (ptr, size, nmemb, stream)

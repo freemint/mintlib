@@ -18,7 +18,15 @@ __setgroups (size_t count, gid_t *groups)
 {
 	int r;
 
-	r = Psetgroups (count, groups);
+	if ((long)count < 0 || (count > 0 && !groups)) {
+		r = -EINVAL;
+	} else {
+		size_t i;
+		unsigned short gids[count];
+		for (i = 0; i < count; i++)
+			gids[i] = groups[i];
+		r = Psetgroups (count, gids);
+	}
 	if (r < 0) {
 		if (r == -EACCES)
 			r = -EPERM;

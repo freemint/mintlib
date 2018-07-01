@@ -20,7 +20,7 @@
 #endif
 
 int
-ftw(char *directory, int (*funcptr)(const char *, struct stat *, int), int depth)
+ftw(const char *directory, int (*funcptr)(const char *, const struct stat *, int), int depth)
 {
     struct stat stats;
     struct direct *entp;

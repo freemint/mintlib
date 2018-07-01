@@ -21,6 +21,7 @@
 #include "math.h"
 #include "math_private.h"
 
+#ifndef NO_LONG_DOUBLE
 int
 __isnanl (long double x)
 {
@@ -32,3 +33,4 @@ __isnanl (long double x)
 	return (int)((u_int64_t)hx>>63);
 }
 weak_alias (__isnanl, isnanl)
+#endif

@@ -256,6 +256,7 @@ unsetenv (name)
 
   ep = __environ;
   if (ep != NULL)
+  {
     while (*ep != NULL)
       if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
 	{
@@ -269,7 +270,8 @@ unsetenv (name)
 	}
       else
 	++ep;
-
+  }
+  
   UNLOCK;
 
   return 0;

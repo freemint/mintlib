@@ -48,12 +48,12 @@ __utime (const char *_filename, const struct utimbuf *_tset)
 	/* The FUTIME_UTC failed.  We have to convert the timestamp
 	   to GEMDOS format.  */   
 	if (_tset) {
-		*((unsigned long*) &(settime.modtime)) = 
-			__dostime (_tset->modtime);
-		*((unsigned long*) &(settime.actime)) = 
-			__dostime (_tset->actime);
+		unsigned long *tp = (unsigned long*) &(settime.modtime);
+		*tp =  __dostime (_tset->modtime);
+		tp = (unsigned long*) &(settime.actime);
+		*tp = __dostime (_tset->actime);
 		
-			tset = &settime;
+		tset = &settime;
 	}
 
 	/* Try again with FUTIME.  */

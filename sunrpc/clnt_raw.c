@@ -146,6 +146,7 @@ clntraw_call (h, proc, xargs, argsp, xresults, resultsp, timeout)
   struct clntraw_private *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;
   struct rpc_msg msg;
+  struct rpc_msg *msgp;
   enum clnt_stat status;
   struct rpc_err error;
 
@@ -157,7 +158,8 @@ call_again:
    */
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
-  ((struct rpc_msg *) clp->mashl_callmsg)->rm_xid++;
+  msgp = ((struct rpc_msg *) clp->mashl_callmsg);
+  msgp->rm_xid++;
   if ((!XDR_PUTBYTES (xdrs, clp->mashl_callmsg, clp->mcnt)) ||
       (!XDR_PUTLONG (xdrs, (long *) &proc)) ||
       (!AUTH_MARSHALL (h->cl_auth, xdrs)) ||

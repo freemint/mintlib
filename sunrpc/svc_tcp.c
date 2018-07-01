@@ -64,9 +64,6 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
 int __socket (int domain, int type, int proto);
-int __close (int fd);
-int __read (int fd, void *buf, size_t size);
-int __write (int fd, const void *buf, size_t size);
 
 /*
  * Ops vector for TCP/IP based rpc service handle
@@ -160,7 +157,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
 	}
       madesock = TRUE;
     }
-  __bzero ((char *) &addr, sizeof (addr));
+  memset((char *) &addr, 0, sizeof (addr));
   addr.sin_family = AF_INET;
   if (bindresvport (sock, &addr))
     {

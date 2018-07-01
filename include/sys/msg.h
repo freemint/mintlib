@@ -42,9 +42,9 @@ __BEGIN_DECLS
 #define	__need_time_t
 #include <time.h>
 
-#ifndef pid_t
+#ifndef __pid_t_defined
 typedef __pid_t pid_t;
-# define pid_t pid_t
+# define __pid_t_defined 1
 #endif
 
 /* The following System V style IPC functions implement a message queue

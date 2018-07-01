@@ -19,7 +19,7 @@ __BEGIN_DECLS
 #define FTW_DNR		2	/* Something opendir(3) failed on	*/
 #define FTW_NS		3	/* Something stat(2) failed on		*/
 
-extern int ftw (char *path, int (*fn)(const char *, struct stat *, int), int param);
+extern int ftw (const char *path, int (*fn)(const char *, const struct stat *, int), int param);
 
 __END_DECLS
 

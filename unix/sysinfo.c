@@ -213,7 +213,6 @@ si_release (buf, bufsize)
   static char* osrelease = NULL;
   static char osrelease_buf[13];
   static long osrelease_len;
-  static long mintversion;
 
   if (osrelease == NULL) {
     unsigned long main_rev = 0;
@@ -262,8 +261,6 @@ si_release (buf, bufsize)
       sprintf (osrelease_buf, "%lu.%lu%s", main_rev, sub_rev, betatag);
     osrelease = osrelease_buf;
     osrelease_len = strlen (osrelease) + 1;
-    mintversion = (main_rev << 24) | (sub_rev << 16)
-        | (patch_level << 8) | betatag[0];
   }
 
   fast_strncpy (buf, osrelease, bufsize);
@@ -519,7 +516,7 @@ si_platform (buf, bufsize)
 {
   if (platform == NULL) {
     long _mch = 0;  /* = AtariST */
-    short hi, lo;
+    short hi;
     int coldfire = 0;
     long dummy;
 
@@ -534,7 +531,7 @@ si_platform (buf, bufsize)
 
       (void) Getcookie (C__MCH, &_mch);
       hi = (_mch & 0xffff0000) >> 16;
-      lo = (_mch & 0xffff);
+      /* lo = (_mch & 0xffff); */
 
       switch (hi) {
         case -1:
@@ -603,7 +600,7 @@ si_hw_provider (buf, bufsize)
 /* Cached results.  */
 static int no_build_date = 0;
 static char* kernel_build_date = NULL;
-static char kernel_build_date_buf[] = "Mmm DD YYYY";
+static char kernel_build_date_buf[14];
 #define kernel_build_date_len ((long) sizeof kernel_build_date_buf)
 
 static char* abbrev_month_names[] = {

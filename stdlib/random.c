@@ -25,7 +25,7 @@ static char sccsid[] = "@(#)random.c	5.5 (Berkeley) 7/6/88";
 #ifdef __MINT__
 extern long __random (void);
 extern char* __setstate (char* arg_state);
-extern char* __initstate (unsigned seed, char* arg_state, int n);
+extern char* __initstate (unsigned seed, char* arg_state, size_t n);
 extern void __srandom (unsigned x);
 #endif
 
@@ -235,7 +235,7 @@ __initstate( seed, arg_state, n )
 
     unsigned		seed;			/* seed for R. N. G. */
     char		*arg_state;		/* pointer to state array */
-    int			n;			/* # bytes of state info */
+    size_t			n;			/* # bytes of state info */
 {
 	register  char		*ostate		= (char *)( &state[ -1 ] );
 
@@ -243,7 +243,7 @@ __initstate( seed, arg_state, n )
 	else  state[ -1 ] = MAX_TYPES*(rptr - state) + rand_type;
 	if(  n  <  BREAK_1  )  {
 	    if(  n  <  BREAK_0  )  {
-		fprintf( stderr, "initstate: not enough state (%d bytes) with which to do jack; ignored.\n", n );
+		fprintf( stderr, "initstate: not enough state (%d bytes) with which to do jack; ignored.\n", (int)n );
 		return 0;
 	    }
 	    rand_type = TYPE_0;

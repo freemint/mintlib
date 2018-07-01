@@ -165,6 +165,7 @@ euidaccess (path, mode)
 #undef euidaccess
 #ifdef weak_alias
 weak_alias (__euidaccess, euidaccess)
+weak_alias (__euidaccess, eaccess)
 #endif
 
 #ifdef TEST

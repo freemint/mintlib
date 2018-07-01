@@ -81,26 +81,6 @@
 #define AND_MEMORY
 #endif
 
-#ifdef __mcoldfire__
-
-#define PUSH_SP(regs,size)						\
-	"lea	sp@(-" #size "),sp\n\t"					\
-	"movml	" regs ",sp@\n\t"
-
-#define POP_SP(regs,size)						\
-	"movml	sp@," regs "\n\t"					\
-	"lea	sp@(" #size "),sp\n\t"
-
-#else
-
-#define PUSH_SP(regs,size)						\
-	"movml	" regs ",sp@-\n\t"
-
-#define POP_SP(regs,size)						\
-	"movml	sp@+," regs "\n\t"
-
-#endif
-
 #endif /* __GNUC__ */
 
 /* some default declarations */

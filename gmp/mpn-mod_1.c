@@ -194,4 +194,5 @@ mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
 	}
       return r;
     }
+    (void) dummy;
 }
