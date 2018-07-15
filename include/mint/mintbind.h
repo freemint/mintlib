@@ -479,7 +479,7 @@ __extension__								\
 		trap_1_wwwll(0x140, (short)(request), (short)(pid), \
 			      (long)(addr), (long)(data))
 #define Mvalidate(pid,addr,size,flags)				\
-		trap_1_wwlll (0x141, (short)(pid), (long)(addr), (long)(size), (long)(flags))
+		trap_1_wwlll(0x141, (short)(pid), (long)(addr), (long)(size), (long)(flags))
 #define Dxreaddir(len, handle, buf, xattr, xret)		\
 		trap_1_wwllll(0x142, (short)(len), (long)(handle), \
 			      (long)(buf), (long)(xattr), (long)(xret))
@@ -521,7 +521,7 @@ __extension__								\
 #define Dwritelabel(path, label)  \
 		trap_1_wll(0x153, (long)(path), (long)(label))
 #define Ssystem(mode, arg1, arg2) \
-		trap_1_wwll(0x154, (int)(mode), (long)(arg1), (long)(arg2))
+		trap_1_wwll(0x154, (short)(mode), (long)(arg1), (long)(arg2))
 #define Tgettimeofday(tvp, tzp) \
 		trap_1_wll(0x155, (long)(tvp), (long)(tzp))
 #define Tsettimeofday(tvp, tzp) \
@@ -601,7 +601,7 @@ __extension__								\
 		trap_1_wlllll(0x17b,(long)(msqid),(long)(msgp),(long)(msgsz),(long)(msgtyp),(long)(msgflg))
 /* 0x17c */
 #define Maccess(addr,size,mode) \
-		trap_1_wllw (0x17d, (long)(addr), (long)(size), (short)(mode))
+		trap_1_wllw(0x17d, (long)(addr), (long)(size), (short)(mode))
 /* 0x17e */
 /* 0x17f */
 #define Fchown16(name, uid, gid, follow_links) \
