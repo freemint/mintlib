@@ -60,7 +60,7 @@ struct __post_mortem_dump {
 #define ramtop		((unsigned long *) 0x5a4L) /* physical top of tt ram */
 
 /* floppy */
-#define flock		((short *) 0x43eL) /* lock usage of DMA   chip */
+#define flock		((volatile short *) 0x43eL) /* lock usage of DMA   chip */
 #define seekrate	((short *) 0x440L) /* 0=6ms 1=12ms 2=2ms 3=3ms */
 #define _timr_ms	((short *) 0x442L) /* timer calib == 20ms      */
 #define _fverify	((short *) 0x444L) /* write verify flag        */
@@ -71,17 +71,18 @@ struct __post_mortem_dump {
 #define defshiftmd	((unsigned char *) 0x44aL) /* default video rez   */
 #define sshiftmd	((short *) 0x44cL) /* shadow of hdwr. shiftmd reg */
  					   /* 0=Lo 1=med 2=Hi rez         */
-#define _v_bas_ad	((void *) 0x44eL)  /* screen mem base             */
-#define vblsem		((short *) 0x452L) /* vbl semaphore               */
+#define _v_bas_ad	((volatile void **) 0x44eL)  /* screen mem base             */
+#define vblsem		((volatile short *) 0x452L) /* vbl semaphore               */
 #define nvbls		((short *) 0x454L) /* # of vbl entries def. == 8  */
 #define _vblqueue	((void (***)()) 0x456L) /* vbl queue pointer      */
-#define colorptr	((short **) 0x45aL) /* pal. on next vblank if!NULL */
-#define _vbclock	((unsigned long *) 0x462L) /* vbi counter         */
-#define _frclock        ((unsigned long *) 0x466L) /* #vbi not vblsem'ed  */
+#define colorptr	((volatile short **) 0x45aL) /* pal. on next vblank if!NULL */
+#define screenptr	((volatile unsigned long *) 0x45eL) /* screen mem on next vblank if !NULL */
+#define _vbclock	((volatile unsigned long *) 0x462L) /* vbi counter         */
+#define _frclock	((volatile unsigned long *) 0x466L) /* #vbi not vblsem'ed  */
 
-#define _hz_200		((unsigned long *) 0x4baL)
+#define _hz_200		((volatile unsigned long *) 0x4baL)
 
-#define conterm		(*(char *) 0x484L)
+#define conterm		((char *) 0x484L)
 #define savptr		((long *) 0x4A2L)
 #define _nflops		((short *) 0x4A6L)
 #define _sysbase	((long *) 0x4F2L)
@@ -116,7 +117,7 @@ typedef struct _osheader
     char		**p_run;	 /* 0x28 -> PID of current proc */
     char		*p_rsv2;	 /* 0x2c reserved		*/
 } OSHEADER;
-    
+
 /* zzzz to-do more */
 
 extern long get_sysvar (void *var) __THROW;
