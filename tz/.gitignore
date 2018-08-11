@@ -8,3 +8,5 @@ date
 dumpstate
 test-dummy
 version.h
+zdump_for_build
+zic_for_build

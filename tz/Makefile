@@ -48,7 +48,32 @@ endif
 # Since "." may not be in PATH...
 YEARISTYPE = ./yearistype
 
+ifeq ($(CROSS),yes)
+
+zic = ./zic_for_build$(EXEEXT_FOR_BUILD)
+OBJS_FOR_BUILD = localtime_for_build.o asctime_for_build.o strftime_for_build.o
+
+zic_for_build$(EXEEXT_FOR_BUILD): zic_for_build.o $(OBJS_FOR_BUILD)
+	$(AM_V_LD)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $^
+zdump = ./zdump_for_build$(EXEEXT_FOR_BUILD)
+zdump_for_build$(EXEEXT_FOR_BUILD): zdump_for_build.o $(OBJS_FOR_BUILD)
+	$(AM_V_LD)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $^
+zic_for_build.o: zic.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+zdump_for_build.o: zdump.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+localtime_for_build.o: localtime.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+asctime_for_build.o: asctime.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+strftime_for_build.o: strftime.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+else
+
 zic = ./zic
+
+endif
+
 ZIC = $(zic) $(ZFLAGS)
 
 sbin_PROGRAMS = zic zdump tzselect
@@ -110,25 +135,18 @@ EXTRA_DIST += newctime.3 newstrftime.3 newtzset.3 time2posix.3
 
 all-here: zic zdump tzselect yearistype tzinit zonelist
 
-ifdef CROSS
-NOTZ=yes
+install: all-here zones
+ifneq ($(TZREDO),none)
+	@for f in $(TABDATA); do rm -f $(DESTDIR)$(TZDIR)/$$f; done
+	$(INSTALL) -m 644 $(TABDATA) $(DESTDIR)$(TZDIR)/.
 endif
-ifeq (REDO,none)
-NOTZ=yes
-endif
-
-ifndef NOTZ
-install: all-here zoneswarning zones
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
-	-rm -f $(DESTDIR)$(TZDIR)/iso3166.tab $(DESTDIR)$(TZDIR)/zone.tab
-	$(INSTALL) -m 644 iso3166.tab zone.tab $(DESTDIR)$(TZDIR)/.
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
-	for file in $(sbin_PROGRAMS); do \
+	@for file in $(sbin_PROGRAMS); do \
 		echo "$(INSTALL) -m 755 $$file $(sbindir)"; \
 		$(INSTALL) -m 755 $$file $(DESTDIR)$(sbindir); \
 	done
 	$(mkinstalldirs) $(DESTDIR)$(bootsbindir)
-	for file in $(bootsbin_PROGRAMS); do \
+	@for file in $(bootsbin_PROGRAMS); do \
 		echo "$(INSTALL) -m 755 $$file $(bootsbindir)"; \
 		$(INSTALL) -m 755 $$file $(DESTDIR)$(bootsbindir); \
 	done
@@ -137,13 +155,36 @@ zoneswarning:
 	@echo "WARNING: Compiling and installing the time zone database"
 	@echo "may take some time.  Have a cup of coffee!"
 	
+localtime-posixrules: $(zic) yearistype
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
+	@rm -f $(DESTDIR)$(TZDIR)/localtime
+	@ln -s /etc/localtime $(DESTDIR)$(TZDIR)/localtime
+	@if test $(LOCALTIME) = Factory; then \
+	  echo "=========================================================" ;\
+	  echo "WARNING: Installed tz database with localtime set to" ;\
+	  echo "dummy timezone \`Factory'.  Run \`zic -l' with the" ;\
+	  echo "correct timezone later or re-install after editing" ;\
+	  echo "the \`LOCALTIME' variable in \`$(top_srcdir)/configvars." ;\
+	  echo "=========================================================" ;\
+	fi
+	@rm -f $(DESTDIR)$(TZDIR)/posixrules
+	@ln -s localtime $(DESTDIR)$(TZDIR)/posixrules
+	@if test $(POSIXRULES) = America/New_York -o $(POSIXRULES) = Factory; then \
+	  echo "=========================================================" ;\
+	  echo "WARNING: Installed tz database with posixrules set to" ;\
+	  echo "dummy timezone \`Factory'.  Run \`zic -p' with the" ;\
+	  echo "correct timezone later or re-install after editing" ;\
+	  echo "the \`POSIXRULES' variable in \`$(top_srcdir)/configvars." ;\
+	  echo "=========================================================" ;\
+	fi
+
 uninstall:
 	rm -rf $(DESTDIR)$(TZDIR)
-	for file in $(sbin_PROGRAMS); do \
+	@for file in $(sbin_PROGRAMS); do \
 		echo "rm -f $(sbindir)/$$file"; \
 		rm -f $(DESTDIR)$(sbindir)/$$file; \
 	done
-	for file in $(bootsbin_PROGRAMS); do \
+	@for file in $(bootsbin_PROGRAMS); do \
 		echo "rm -f $(bootsbindir)/$$file"; \
 		rm -f $(DESTDIR)$(bootsbindir)/$$file; \
 	done
@@ -152,7 +193,7 @@ uninstall-include:
 uninstall-lib:
 
 install-man:
-	sections=""; \
+	@sections=""; \
 	for manpage in $(MANS); do \
 	  sections="$$sections $(mandir)/man`echo $$manpage | sed 's,^.*\\.,,'`"; \
 	done; \
@@ -177,18 +218,6 @@ uninstall-man:
 	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.Z; \
 	done
 	
-else
-install zones-warning uninstall uninstall-lib: cross-warning
-
-install-man:
-
-cross-warning:
-	@echo "Not installing time zone database when cross-compiling."
-
-.PHONY: install uninstall
-
-endif
-
 zdump: $(TZDOBJS) $(CRT0) $(libs)
 	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZDOBJS) -o $@ $(LIBS)
 
@@ -198,35 +227,62 @@ zic: $(TZCOBJS) $(CRT0) $(libs)
 tzinit: $(TZIOBJS) $(CRT0) $(libs)
 	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZIOBJS) -o $@ $(LIBS)
 
-ifndef CROSS
-
-posix_only: zic $(TDATA) yearistype
+tzredo-posix_only: $(zic) $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L /dev/null $(TDATA)
 
-right_only: zic leapseconds $(TDATA) yearistype
+tzredo-right_only: $(zic) leapseconds $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L leapseconds $(TDATA)
 
-other_two: zic leapseconds $(TDATA) yearistype
+other_two: $(zic) leapseconds $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/posix -L /dev/null $(TDATA)
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/right -L leapseconds $(TDATA)
 
-posix_right: posix_only other_two
+tzredo-posix_right: tzredo-posix_only other_two
 
-right_posix: right_only other_two
+tzredo-right_posix: tzredo-right_only other_two
 
-none:
+tzredo-none:
+	@( \
+	  echo "*********************************"; \
+	  echo "Not installing timezone database "; \
+	  echo "*********************************"; \
+	  echo ""; \
+	  echo "create it on the target system using"; \
+	  echo ""; \
+	  ZIC="./zic$(EXEEXT) $(ZFLAGS)"; \
+	  echo "For using right rules only, counting leap seconds:"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
+	  echo ""; \
+	  echo "For using posix rules only, not counting leap seconds:"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
+	  echo ""; \
+	  echo "For using both sets, with leap seconds counted normally:"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
+	  echo "ln -s $(TZDIR_BASENAME) $(TARGET_TZDIR)-leaps"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR)-posix -L /dev/null $(TDATA)"; \
+	  echo ""; \
+	  echo "For using both sets, with leap seconds not counted normally:"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
+	  echo "ln -s $(TZDIR_BASENAME) $(TARGET_TZDIR)-posix"; \
+	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR)-leaps -L leapseconds $(TDATA)"; \
+	  echo "*********************************"; \
+        ) >&2
 
-zones: cleandb $(REDO)
+ifeq ($(TZREDO),none)
+
+zones: tzredo-$(TZREDO)
+	@:
+
+else
+
+zones: zoneswarning cleandb tzredo-$(TZREDO) localtime-posixrules
+
+endif
+
 
 cleandb:
 	$(mkinstalldirs) $(DESTDIR)$(TZDIR)
 	
-else
-zones:
-	@echo "Not installing time zone database when cross-compiling."
-
-endif
-
 yearistype: $(srcdir)/yearistype.sh
 	cp $< $@
 	chmod +x $@

@@ -142,6 +142,16 @@ INSTALL=install
 # Define this to the name of an awk program on your system.
 AWK=awk
 
+ifeq ($(CROSS),yes)
+CC_FOR_BUILD=gcc
+CFLAGS_FOR_BUILD = -O2
+LDFLAGS_FOR_BUILD =
+else
+CC_FOR_BUILD=$(CC)
+CFLAGS_FOR_BUILD = $(CFLAGS)
+LDFLAGS_FOR_BUILD = $(LDFLAGS)
+endif
+
 #####################################################################
 # Time zone stuff.
 #####################################################################
@@ -218,21 +228,21 @@ TZDIR=${TZTOPDIR}/share/zoneinfo
 
 # If you always want time values interpreted as "seconds since the epoch
 # (not counting leap seconds)", use
-#	REDO=posix_only
+#	TZREDO=posix_only
 # below.  If you always want right time values interpreted as "seconds since
 # the epoch" (counting leap seconds)", use
-#	REDO=right_only
+#	TZREDO=right_only
 # below.  If you want both sets of data available, with leap seconds not
 # counted normally, use
-#	REDO=posix_right
+#	TZREDO=posix_right
 # below.  If you want both sets of data available, with leap seconds counted
 # normally, use
-#	REDO=right_posix
+#	TZREDO=right_posix
 # below.
 # POSIX mandates that leap seconds not be counted; for compatibility with it,
 # use either "posix_only" or "posix_right".  If you don't want to install
-# any timezone database specifiy "REDO=none".
-REDO=posix_right
+# any timezone database specifiy "TZREDO=none".
+TZREDO=posix_right
 
 # If you want zic's -s option used when installing, uncomment the next line
 # (see zic(8) for details).
