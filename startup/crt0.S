@@ -33,6 +33,7 @@
 	.globl	___Ident_gnulib
 	.globl	___Ident_socketlib
 	.globl	___Ident_gem
+	.globl	___Ident_tzlib
 
 |
 | Functions defined elsewhere.

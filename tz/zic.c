@@ -873,6 +873,7 @@ static void dolink(const char *fromfield, const char *tofield, int staysymlink)
 {
 	int todirs_made = FALSE;
 	int link_errno;
+	int to_absolute;
 
 	/*
 	 ** We get to be careful here since
@@ -887,39 +888,49 @@ static void dolink(const char *fromfield, const char *tofield, int staysymlink)
 	/*
 	 * Do not attempt to create links to absolute paths.
 	 * It will most likely fail below anyway, but don't
-	 * relay on this.
+	 * rely on this.
 	 * This won't happen with links from database files,
 	 * but may be the case for TZDEFAULT
 	 */
-	if (*tofield == '/')
-		return;
-	
+	to_absolute = *tofield == '/';
 	if (staysymlink)
-		staysymlink = itssymlink(tofield);
-	if (remove(tofield) == 0)
+		staysymlink = to_absolute || itssymlink(tofield);
+	if (!to_absolute || strcmp(directory, TZDIR) == 0)
 	{
-		todirs_made = TRUE;
-	} else if (errno != ENOENT)
-	{
-		const char *e = strerror(errno);
+		if (remove(tofield) == 0)
+		{
+			todirs_made = TRUE;
+		} else if (errno != ENOENT)
+		{
+			const char *e = strerror(errno);
 
-		fprintf(stderr, _("%s: Can't remove %s/%s: %s\n"), progname, directory, tofield, e);
-		exit(EXIT_FAILURE);
+			if (to_absolute)
+				fprintf(stderr, _("%s: Can't remove %s: %s\n"), progname, tofield, e);
+			else
+				fprintf(stderr, _("%s: Can't remove %s/%s: %s\n"), progname, directory, tofield, e);
+			exit(EXIT_FAILURE);
+		}
 	}
 	link_errno = staysymlink ? ENOTSUP : hardlinkerr(fromfield, tofield);
 	if (link_errno == ENOENT && !todirs_made)
 	{
-		mkdirs(tofield, TRUE);
+		if (!to_absolute)
+		{
+			mkdirs(tofield, TRUE);
+			link_errno = hardlinkerr(fromfield, tofield);
+		}
 		todirs_made = TRUE;
-		link_errno = hardlinkerr(fromfield, tofield);
 	}
 	if (link_errno != 0)
 	{
 		int absolute = *fromfield == '/';
 		char *linkalloc = absolute ? NULL : relname(fromfield, tofield);
 		char const *contents = absolute ? fromfield : linkalloc;
-		int symlink_errno = symlink(contents, tofield) == 0 ? 0 : errno;
+		int symlink_errno;
 
+		symlink_errno = symlink(contents, tofield) == 0 ? 0 : errno;
+		if (symlink_errno == EEXIST && to_absolute)
+			return;
 		if (!todirs_made && (symlink_errno == ENOENT || symlink_errno == ENOTSUP))
 		{
 			mkdirs(tofield, TRUE);
