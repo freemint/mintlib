@@ -81,11 +81,11 @@ includefiles = $(filter %.h, $(MISCFILES)) stab.def COPYMINT COPYING.LIB \
 syscall-list.h
 
 install-include: remove-stale
-	$(mkinstalldirs) $(includedir)
+	$(mkinstalldirs) $(DESTDIR)$(includedir)
 	@list='$(includefiles)'; for p in $$list; do \
   	  if test -f $$p; then \
 	    echo " $(INSTALL) -m 644 $$p $(includedir)"; \
-	    $(INSTALL) -m 644 $$p $(includedir); \
+	    $(INSTALL) -m 644 $$p $(DESTDIR)$(includedir); \
 	  else :; fi; \
 	done
 
@@ -102,7 +102,7 @@ uninstall-include:
 	for p in $$list; do \
 	  if test -f $$p; then \
 	    echo " rm -f $(includedir)/$$p"; \
-	    rm -f $(includedir)/$$p; \
+	    rm -f $(DESTDIR)$(includedir)/$$p; \
 	  else :; fi; \
 	done
 

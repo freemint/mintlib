@@ -52,14 +52,7 @@ WITH_V4E_LIB=yes
 # This variable is used for various others.  Change its value if 
 # need be.  When cross-compiling you will usually want to set this
 # to "/usr/m68k-atari-mint".
-ifeq ($(CROSS),yes)
- prefix=$(shell $(toolprefix)gcc -print-sysroot)/usr
-  ifeq ($(prefix),)
-    prefix=/usr/$(CROSS_TOOL)
-  endif
-else
- prefix=/usr
-endif
+prefix=/usr
 
 # This is where include files get installed.
 includedir=${prefix}/include
@@ -83,10 +76,10 @@ sbindir=${prefix}/sbin
 # you replace your system files with this distribution, you should
 # choose "/sbin".  If your general prefix is "/usr/local" (or something
 # else, then "$prefix/sbin" will be alright.
-ifeq ($(CROSS),yes)
- bootsbindir=${prefix}/sbin
-else
+ifeq ($(prefix),/usr)
  bootsbindir=/sbin
+else
+ bootsbindir=${prefix}/sbin
 endif
 
 # Define this to the name of your C compiler.  You need at least 

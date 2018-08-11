@@ -41,11 +41,11 @@ gcrt0.o: $(srcdir)/crt0.S
 include $(top_srcdir)/rules
 
 install: all-here
-	$(mkinstalldirs) $(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	@list='$(OBJS)'; for p in $$list; do \
 	  if test -f $$p; then \
 	    echo " $(INSTALL) -m 644 $$p $(libdir)"; \
-	    $(INSTALL) -m 644 $$p $(libdir); \
+	    $(INSTALL) -m 644 $$p $(DESTDIR)$(libdir); \
 	  else :; fi; \
 	done
 
@@ -53,7 +53,7 @@ uninstall:
 	@list='$(OBJS)'; for p in $$list; do \
 	  if test -f $$p; then \
 	    echo " rm -f $(libdir)/$$p"; \
-	    rm -f $(libdir)/$$p; \
+	    rm -f $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
 	

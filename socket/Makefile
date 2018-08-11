@@ -47,12 +47,12 @@ install-man:
 	done; \
 	mandirs=`echo $$sections | sort | uniq`; \
 	for mandir in $$mandirs; do \
-	  $(mkinstalldirs) $$mandir; \
+	  $(mkinstalldirs) $(DESTDIR)$$mandir; \
 	done; \
 	for manpage in $(MANS); do \
 	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
-	  $(INSTALL) -m 644 $$manpage $(mandir)/man$$section; \
 	  echo "$(INSTALL) -m 644 $$manpage $(mandir)/man$$section"; \
+	  $(INSTALL) -m 644 $$manpage $(DESTDIR)$(mandir)/man$$section; \
 	done;
 
 uninstall-man:
@@ -61,9 +61,9 @@ uninstall-man:
 	  echo "rm -f $(mandir)/man$$section/$$manpage"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.gz"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.Z"; \
-	  rm -f $(mandir)/man$$section/$$manpage; \
-	  rm -f $(mandir)/man$$section/$$manpage.gz; \
-	  rm -f $(mandir)/man$$section/$$manpage.Z; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.gz; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.Z; \
 	done
 	
 

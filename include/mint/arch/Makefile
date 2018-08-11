@@ -12,7 +12,7 @@ SHELL = /bin/sh
 srcdir = .
 top_srcdir = ../../..
 csrcdir = $(top_srcdir)/src
-subdir = arch
+subdir = mint/arch
 
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
@@ -32,11 +32,11 @@ include $(top_srcdir)/rules
 includefiles = $(filter %.h, $(MISCFILES))
 
 install-include: 
-	$(mkinstalldirs) $(includedir)/mint/arch
+	$(mkinstalldirs) $(DESTDIR)$(includedir)/$(subdir)
 	@list='$(includefiles)'; for p in $$list; do \
   	  if test -f $$p; then \
-	    echo " $(INSTALL) -m 644 $$p $(includedir)/mint/arch"; \
-	    $(INSTALL) -m 644 $$p $(includedir)/mint/arch; \
+	    echo " $(INSTALL) -m 644 $$p $(includedir)/$(subdir)"; \
+	    $(INSTALL) -m 644 $$p $(DESTDIR)$(includedir)/$(subdir); \
 	  else :; fi; \
 	done
 	
@@ -44,8 +44,8 @@ uninstall-include:
 	@list='$(includefiles)'; \
 	for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " rm -f $(includedir)/mint/arch/$$p"; \
-	    rm -f $(includedir)/mint/arch/$$p; \
+	    echo " rm -f $(includedir)/$(subdir)/$$p"; \
+	    rm -f $(DESTDIR)$(includedir)/$(subdir)/$$p; \
 	  else :; fi; \
 	done
 

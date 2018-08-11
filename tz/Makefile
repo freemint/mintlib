@@ -90,19 +90,18 @@ endif
 
 ifndef NOTZ
 install: all-here zoneswarning zones
-	$(ZIC) -y $(YEARISTYPE) \
-		-d $(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
-	-rm -f $(TZDIR)/iso3166.tab $(TZDIR)/zone.tab
-	$(INSTALL) -m 644 iso3166.tab zone.tab $(TZDIR)/.
-	$(mkinstalldirs) $(sbindir)
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
+	-rm -f $(DESTDIR)$(TZDIR)/iso3166.tab $(DESTDIR)$(TZDIR)/zone.tab
+	$(INSTALL) -m 644 iso3166.tab zone.tab $(DESTDIR)$(TZDIR)/.
+	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	for file in $(sbin_PROGRAMS); do \
-		$(INSTALL) -m 755 $$file $(sbindir); \
 		echo "$(INSTALL) -m 755 $$file $(sbindir)"; \
+		$(INSTALL) -m 755 $$file $(DESTDIR)$(sbindir); \
 	done
-	$(mkinstalldirs) $(bootsbindir)
+	$(mkinstalldirs) $(DESTDIR)$(bootsbindir)
 	for file in $(bootsbin_PROGRAMS); do \
-		$(INSTALL) -m 755 $$file $(bootsbindir); \
 		echo "$(INSTALL) -m 755 $$file $(bootsbindir)"; \
+		$(INSTALL) -m 755 $$file $(DESTDIR)$(bootsbindir); \
 	done
 
 zoneswarning:
@@ -110,14 +109,14 @@ zoneswarning:
 	@echo "may take some time.  Have a cup of coffee!"
 	
 uninstall:
-	rm -rf $(TZDIR)
+	rm -rf $(DESTDIR)$(TZDIR)
 	for file in $(sbin_PROGRAMS); do \
 		echo "rm -f $(sbindir)/$$file"; \
-		rm -f $(sbindir)/$$file; \
+		rm -f $(DESTDIR)$(sbindir)/$$file; \
 	done
 	for file in $(bootsbin_PROGRAMS); do \
 		echo "rm -f $(bootsbindir)/$$file"; \
-		rm -f $(bootsbindir)/$$file; \
+		rm -f $(DESTDIR)$(bootsbindir)/$$file; \
 	done
 	
 uninstall-include:
@@ -130,12 +129,12 @@ install-man:
 	done; \
 	mandirs=`echo $$sections | sort | uniq`; \
 	for mandir in $$mandirs; do \
-	  $(mkinstalldirs) $$mandir; \
+	  $(mkinstalldirs) $(DESTDIR)$$mandir; \
 	done; \
 	for manpage in $(MANS); do \
 	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
-	  $(INSTALL) -m 644 $$manpage $(mandir)/man$$section; \
 	  echo "$(INSTALL) -m 644 $$manpage $(mandir)/man$$section"; \
+	  $(INSTALL) -m 644 $$manpage $(DESTDIR)$(mandir)/man$$section; \
 	done;
 
 uninstall-man:
@@ -144,9 +143,9 @@ uninstall-man:
 	  echo "rm -f $(mandir)/man$$section/$$manpage"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.gz"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.Z"; \
-	  rm -f $(mandir)/man$$section/$$manpage; \
-	  rm -f $(mandir)/man$$section/$$manpage.gz; \
-	  rm -f $(mandir)/man$$section/$$manpage.Z; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.gz; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.Z; \
 	done
 	
 else
@@ -176,15 +175,14 @@ yearistype: yearistype.sh
 	chmod +x yearistype
 
 posix_only: zic $(TDATA)
-	$(ZIC) -y $(YEARISTYPE) -d $(TZDIR) -L /dev/null $(TDATA)
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L /dev/null $(TDATA)
 
 right_only: zic leapseconds $(TDATA)
-	$(ZIC) -y $(YEARISTYPE) -d $(TZDIR) -L leapseconds $(TDATA)
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L leapseconds $(TDATA)
 
 other_two: zic leapseconds $(TDATA)
-	$(ZIC) -y $(YEARISTYPE) -d $(TZDIR)/posix -L /dev/null $(TDATA)
-	$(ZIC) -y $(YEARISTYPE) \
-		-d $(TZDIR)/right -L leapseconds $(TDATA)
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/posix -L /dev/null $(TDATA)
+	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/right -L leapseconds $(TDATA)
 
 posix_right: posix_only other_two
 
@@ -195,7 +193,7 @@ none:
 zones: cleandb $(REDO)
 
 cleandb:
-	$(mkinstalldirs) $(TZDIR)
+	$(mkinstalldirs) $(DESTDIR)$(TZDIR)
 	
 tzselect: tzselect.ksh
 	sed \

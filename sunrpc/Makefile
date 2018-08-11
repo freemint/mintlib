@@ -84,14 +84,14 @@ x%.stmp: %.x rpcgen
 	touch $@
 
 install-rpcsvc-programs: rpcgen rpcinfo
-	$(mkinstalldirs) $(bindir)
-	$(INSTALL) -m 755 rpcgen $(bindir)
-	$(mkinstalldirs) $(sbindir)
-	$(INSTALL) -m 755 rpcinfo $(sbindir)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL) -m 755 rpcgen $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(sbindir)
+	$(INSTALL) -m 755 rpcinfo $(DESTDIR)$(sbindir)
 
 uninstall-rpcsvc-programs:
-	rm -f $(bindir)/rpcgen
-	rm -f $(sbindir)/rpcinfo
+	rm -f $(DESTDIR)$(bindir)/rpcgen
+	rm -f $(DESTDIR)$(sbindir)/rpcinfo
 
 # End of non-cross section.
 else
@@ -109,10 +109,10 @@ install-rpcsvc-headers: $(rpcsvc_hdrs:.h=.stmp)
 else
 install-rpcsvc-headers:
 endif
-	$(mkinstalldirs) $(includedir)/rpcsvc
+	$(mkinstalldirs) $(DESTDIR)$(includedir)/rpcsvc
 	for header in $(rpcsvc_hdrs); do \
-	  $(INSTALL) -m 644 $$header $(includedir)/rpcsvc; \
 	  echo "$(INSTALL) -m 644 $$header $(includedir)/rpcsvc"; \
+	  $(INSTALL) -m 644 $$header $(DESTDIR)$(includedir)/rpcsvc; \
 	done; 
 
 ifndef CROSS
@@ -121,8 +121,8 @@ else
 uninstall-rpcsvc-headers:
 endif
 	for header in $(rpcsvc_hdrs); do \
-	  rm -f $(includedir)/rpcsvc/$$header; \
 	  echo "rm -f $(includedir)/rpcsvc/$$header"; \
+	  rm -f $(DESTDIR)$(includedir)/rpcsvc/$$header; \
 	done; 
 
 install-man:
@@ -132,12 +132,12 @@ install-man:
 	done; \
 	mandirs=`echo $$sections | sort | uniq`; \
 	for mandir in $$mandirs; do \
-	  $(mkinstalldirs) $$mandir; \
+	  $(mkinstalldirs) $(DESTDIR)$$mandir; \
 	done; \
 	for manpage in $(MANS); do \
 	  section=`echo $$manpage | sed 's,^.*\\.,,'`; \
-	  $(INSTALL) -m 644 $$manpage $(mandir)/man$$section; \
 	  echo "$(INSTALL) -m 644 $$manpage $(mandir)/man$$section"; \
+	  $(INSTALL) -m 644 $$manpage $(DESTDIR)$(mandir)/man$$section; \
 	done;
 
 uninstall-man:
@@ -146,8 +146,8 @@ uninstall-man:
 	  echo "rm -f $(mandir)/man$$section/$$manpage"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.gz"; \
 	  echo "rm -f $(mandir)/man$$section/$$manpage.Z"; \
-	  rm -f $(mandir)/man$$section/$$manpage; \
-	  rm -f $(mandir)/man$$section/$$manpage.gz; \
-	  rm -f $(mandir)/man$$section/$$manpage.Z; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.gz; \
+	  rm -f $(DESTDIR)$(mandir)/man$$section/$$manpage.Z; \
 	done
 
