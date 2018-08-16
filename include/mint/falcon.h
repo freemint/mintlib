@@ -459,6 +459,8 @@ typedef struct SndBufPtr {
 	(long)trap_14_wwll((short)131,(short)(region),(long)(beg),(long)(end))
 #define Soundcmd(mode,data)						\
 	(long)trap_14_www((short)130,(short)(mode),(short)(data))
+#define NSoundcmd(mode,data,data2)						\
+	(long)trap_14_wwwl((short)130,(short)(mode),(short)(data),(long)(data2))
 #define Setmode(stereo_mode)						\
 	(long)trap_14_ww((short)132,(short)(stereo_mode))
 #define Settracks(play,rec)						\

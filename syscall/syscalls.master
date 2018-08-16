@@ -728,7 +728,8 @@ opcode	ret	class name	args */
 
 0x080	long	Locksnd		(void) passthrough
 0x081	long	Unlocksnd	(void) passthrough
-0x082	long	Soundcmd	(short mode, short data) passthrough /* NSoundcmd for MilanBlaster */
+0x082	long	Soundcmd	(short mode, short data) passthrough
+0x082	long	NSoundcmd	(short mode, short data, long data2) passthrough
 0x083	long	Setbuffer	(short region, long beg, long end) passthrough
 0x084	long	Setmode		(short stereo_mode) passthrough
 0x085	long	Settracks	(short play, short rec) passthrough
