@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -34,6 +32,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "syscalldefs.h"
+#include "syscallparser.h"
 
 /* from scanner */
 int yylex (void);
@@ -65,7 +64,7 @@ struct systab *xbios_table(void) { return xbios; }
 
 /* prototypes */
 
-static void yyerror(char *s);
+static void yyerror(const char *s);
 static void insert_string(char *dst, const char *src);
 
 static int resize_tab(struct systab *tab, int newsize);
@@ -85,7 +84,7 @@ static struct arg *make_arg(int type, const char *s);
 
 %union {
 	/* terminals */
-	char	ident[STRMAX];
+	char	ident[STRMAX + 1];
 	long	value;
 
 	/* nonterminals */
@@ -106,6 +105,7 @@ static struct arg *make_arg(int type, const char *s);
 %token	<ident>	_IDENT_CHAR
 %token	<ident>	_IDENT_SHORT
 %token	<ident>	_IDENT_LONG
+%token	<ident>	_IDENT_OFF_T
 %token	<ident>	_IDENT_UNSIGNED
 %token	<ident>	_IDENT_UCHAR
 %token	<ident>	_IDENT_USHORT
@@ -309,6 +309,8 @@ simple_parameter
 		struct arg *l = $1;
 
 		strcpy(l->name, $2);
+		if (l->type == TYPE_IDENT)
+			l->flags |= FLAG_POINTER;
 
 		$$ = l;
 	}
@@ -427,6 +429,15 @@ type
 
 		$$ = l;
 	}
+|	_IDENT_OFF_T
+	{
+		struct arg *l;
+
+		l = make_arg(TYPE_OFF_T, $1);
+		OUT_OF_MEM(l);
+
+		$$ = l;
+	}
 |	_IDENT_UNSIGNED
 	{
 		struct arg *l;
@@ -505,7 +516,7 @@ status
 %%
 
 void
-yyerror(char *s)
+yyerror(const char *s)
 {
 	errors++;
 	printf("line %i: %s", yylinecount, s);

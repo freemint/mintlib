@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -31,103 +29,122 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #include "generate.h"
 #include "traps.h"
 
 #include "syscallparser.h"
 
+static const char *myname;
 
 #ifdef __MINT__
 long _stksize = 64 * 1024;
 #endif
 
 
+static void generate_sysbind_h(const char *path)
+{
+	char outfilename[1024];
+	FILE *outfile;
+
+	snprintf(outfilename, sizeof(outfilename), "%s/sysbind.h", path);
+
+	outfile = fopen(outfilename, "w");
+	if (outfile == NULL)
+	{
+		perror(outfilename);
+		exit(1);
+	}
+
+	print_head(outfile, myname);
+	fprintf(outfile, "#ifndef _MINT_SYSBIND_H\n");
+	fprintf(outfile, "#define _MINT_SYSBIND_H\n");
+	fprintf(outfile, "\n");
+	fprintf(outfile, "#ifndef _FEATURES_H\n");
+	fprintf(outfile, "# include <features.h>\n");
+	fprintf(outfile, "#endif\n");
+	fprintf(outfile, "\n");
+	fprintf(outfile, "#ifndef _MINT_OSTRUCT_H\n");
+	fprintf(outfile, "# include <mint/ostruct.h>\n");
+	fprintf(outfile, "#endif\n");
+	fprintf(outfile, "\n");
+	fprintf(outfile, "#ifndef _MINT_TRAP1_H\n");
+	fprintf(outfile, "# include <mint/trap1.h>\n");
+	fprintf(outfile, "#endif\n");
+	fprintf(outfile, "#ifndef _MINT_TRAP13_H\n");
+	fprintf(outfile, "# include <mint/trap13.h>\n");
+	fprintf(outfile, "#endif\n");
+	fprintf(outfile, "#ifndef _MINT_TRAP14_H\n");
+	fprintf(outfile, "# include <mint/trap14.h>\n");
+	fprintf(outfile, "#endif\n");
+	fprintf(outfile, "\n");
+	fprintf(outfile, "__BEGIN_DECLS\n");
+	fprintf(outfile, "\n");
+
+	fprintf(outfile, "/* GEMDOS */\n");
+	fprintf(outfile, "\n");
+	generate_bindings_old(outfile, gemdos_table(), 1);
+	fprintf(outfile, "/* BIOS */\n");
+	fprintf(outfile, "\n");
+	generate_bindings_old(outfile, bios_table(), 13);
+	fprintf(outfile, "/* XBIOS */\n");
+	fprintf(outfile, "\n");
+	generate_bindings_old(outfile, xbios_table(), 14);
+
+	fprintf(outfile, "__END_DECLS\n");
+	fprintf(outfile, "\n");
+	fprintf(outfile, "#endif /* _MINT_SYSBIND_H */\n");
+
+	fclose(outfile);
+}
+
+
 int
 main(int argc, char **argv)
 {
-	const char *myname = *argv++;
 	int error;
+	const char *infilename;
+	const char *path;
 
-	if (*argv == NULL)
-	{
-#if YYDEBUG != 0
-		yydebug = 1;
-#endif
-		error = parse_syscall_description(NULL);
-	}
-	else
+	myname = *argv++;
+	if (argc > 1)
 	{
 		FILE *f;
 
-		f = fopen(*argv, "rt");
+		infilename = *argv++;
+		f = fopen(infilename, "r");
 		if (f)
 		{
 			error = parse_syscall_description(f);
 			fclose(f);
-		}
-		else
+		} else
 		{
-			perror(*argv);
+			perror(infilename);
 			exit(1);
 		}
+	} else
+	{
+#ifdef YYDEBUG
+		yydebug = 1;
+#endif
+		error = parse_syscall_description(stdin);
+	}
+	if (argc > 2)
+	{
+		path = *argv++;
+	} else
+	{
+		path = "../include/mint";
 	}
 
 	if (!error)
 	{
-		FILE *f;
-
 		/* check_tab(); */
 
-		f = fopen("../include/mint/sysbind.h", "w");
-		if (!f)
-		{
-			perror("sysbind.h");
-			exit(1);
-		}
-
-		print_head(f, myname);
-		fprintf(f, "#ifndef _MINT_SYSBIND_H\n");
-		fprintf(f, "#define _MINT_SYSBIND_H\n");
-		fprintf(f, "\n");
-		fprintf(f, "#ifndef _FEATURES_H\n");
-		fprintf(f, "# include <features.h>\n");
-		fprintf(f, "#endif\n");
-		fprintf(f, "\n");
-		fprintf(f, "#ifndef _MINT_OSTRUCT_H\n");
-		fprintf(f, "# include <mint/ostruct.h>\n");
-		fprintf(f, "#endif\n");
-		fprintf(f, "\n");
-		fprintf(f, "#ifndef _MINT_TRAP1_H\n");
-		fprintf(f, "# include <mint/trap1.h>\n");
-		fprintf(f, "#endif\n");
-		fprintf(f, "#ifndef _MINT_TRAP13_H\n");
-		fprintf(f, "# include <mint/trap13.h>\n");
-		fprintf(f, "#endif\n");
-		fprintf(f, "#ifndef _MINT_TRAP14_H\n");
-		fprintf(f, "# include <mint/trap14.h>\n");
-		fprintf(f, "#endif\n");
-		fprintf(f, "\n");
-		fprintf(f, "__BEGIN_DECLS\n");
-		fprintf(f, "\n");
-
-		fprintf(f, "/* GEMDOS */\n");
-		fprintf(f, "\n");
-		generate_bindings_old(f, gemdos_table(), 1);
-		fprintf(f, "/* BIOS */\n");
-		fprintf(f, "\n");
-		generate_bindings_old(f, bios_table(), 13);
-		fprintf(f, "/* XBIOS */\n");
-		fprintf(f, "\n");
-		generate_bindings_old(f, xbios_table(), 14);
-
-		fprintf(f, "__END_DECLS\n");
-		fprintf(f, "\n");
-		fprintf(f, "#endif /* _MINT_SYSBIND_H */\n");
-		fclose(f);
-
-		generate_traps_h("../include/mint");
-	//	generate_traps_as_files(".");
+		generate_sysbind_h(path);
+		generate_traps_h(path);
+	/*	generate_traps_as_files("."); */
 	}
 
 	return error;

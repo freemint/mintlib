@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -36,8 +34,7 @@
 #include <string.h>
 
 
-static void
-generate_trap(struct syscall *call, char *buf, int trapnr)
+static void generate_trap(struct syscall *call, char *buf, int trapnr)
 {
 	char *s = buf;
 	struct arg *l;
@@ -61,6 +58,7 @@ generate_trap(struct syscall *call, char *buf, int trapnr)
 				break;
 			case TYPE_LONG:
 			case TYPE_ULONG:
+			case TYPE_OFF_T:
 				*s++ = 'l';
 				break;
 			default:
@@ -76,8 +74,8 @@ generate_trap(struct syscall *call, char *buf, int trapnr)
 	add_trap(trapnr, buf);
 }
 
-static void
-print_casted_args(FILE *out, struct syscall *call)
+
+static void print_casted_args(FILE *out, struct syscall *call)
 {
 	struct arg *l;
 
@@ -104,22 +102,26 @@ print_casted_args(FILE *out, struct syscall *call)
 			case TYPE_ULONG:
 				fprintf(out, "(long)");
 				break;
+			case TYPE_OFF_T:
+				fprintf(out, "(long)");
+				break;
 			default:
 				printf("invalid type specification for %s (%s)\n",
 					call->name, l->name);
 				exit(1);
 		}
-		fprintf(out, "%s", l->name);
+		fprintf(out, "(%s)", l->name);
 
 		l = l->next;
 	}
 }
 
-void
-generate_bindings_proto(FILE *out, struct systab *tab, int trapnr)
+
+void generate_bindings_proto(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
 
+	(void) trapnr;
 	for (i = 0; i < tab->size; i++)
 	{
 		struct syscall *call = tab->table[i];
@@ -142,8 +144,8 @@ generate_bindings_proto(FILE *out, struct systab *tab, int trapnr)
 	fprintf(out, "\n");
 }
 
-void
-generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
+
+void generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
 
@@ -202,8 +204,8 @@ generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 	}
 }
 
-void
-generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
+
+void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 {
 	int i;
 
@@ -260,6 +262,9 @@ generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 					case TYPE_ULONG:
 						fprintf(out, "unsigned long");
 						break;
+					case TYPE_OFF_T:
+						fprintf(out, "off_t");
+						break;
 					case TYPE_IDENT:
 						fprintf(out, "%s", call->ret->types);
 						break;
@@ -300,6 +305,7 @@ generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 						break;
 					case TYPE_LONG:
 					case TYPE_ULONG:
+					case TYPE_OFF_T:
 						fprintf(out, "(long)");
 						break;
 					default:
@@ -311,7 +317,7 @@ generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 				if (skip)
 					fprintf(out, "0");
 				else
-					fprintf(out, "%c", arg);
+					fprintf(out, "(%c)", arg);
 
 				++arg;
 				l = l->next;

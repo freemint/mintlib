@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -137,6 +135,12 @@ space		[ \t\n]
 	strncpy(yylval.ident, yytext, STRMAX);
 	yylval.ident[STRMAX] = '\0';
 	return _IDENT_LONG;
+}
+
+"off_t"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_OFF_T;
 }
 
 "unsigned"	{

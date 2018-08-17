@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -69,13 +67,15 @@ struct arg
 #define TYPE_USHORT	7
 #define TYPE_ULONG	8
 #define TYPE_IDENT	9
+#define TYPE_OFF_T	10
+#define TYPE_MASK	0xff
 	int flags;
-#define FLAG_CONST	0x01
-#define FLAG_STRUCT	0x02
-#define FLAG_UNION	0x04
-#define FLAG_POINTER	0x08
-#define FLAG_ARRAY	0x10
-#define FLAG_POINTER2	0x20
+#define FLAG_CONST		0x0100
+#define FLAG_STRUCT		0x0200
+#define FLAG_UNION		0x0400
+#define FLAG_POINTER	0x0800
+#define FLAG_ARRAY		0x1000
+#define FLAG_POINTER2	0x2000
 	int ar_size;
 	
 	char types[STRMAX];
