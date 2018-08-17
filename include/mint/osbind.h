@@ -1197,7 +1197,7 @@ __extension__								\
        (void)trap_14_wwwwl((short)(0x1F),(short)(timer),(short)(ctrl), \
 			   (short)(data),(long)(vptr))
 #define	       Dosound(ptr)					       \
-       (void)trap_14_wl((short)(0x20),(long)(ptr))
+       trap_14_wl((short)(0x20),(long)(ptr))
 #define	       Setprt(config)					       \
        (short)trap_14_ww((short)(0x21),(short)(config))
 #define	       Kbdvbase()					       \
