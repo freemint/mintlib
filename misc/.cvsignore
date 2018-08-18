@@ -1,8 +1,0 @@
-.deps
-*.o
-*~
-lib*.a
-test-dirname
-test-efgcvt
-test-fdset
-test-tsearch
