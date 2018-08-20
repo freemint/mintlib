@@ -29,7 +29,7 @@ typedef jmp_buf sigjmp_buf;
    signal mask if SAVEMASK is nonzero.  Return 0.
    This is the internal name for `sigsetjmp'.  */
 extern int sigsetjmp  (sigjmp_buf env, int savemask);
-extern int siglongjmp (sigjmp_buf env, int val) __THROWNL __attribute__ ((__noreturn__));
+extern void siglongjmp (sigjmp_buf env, int val) __THROWNL __attribute__ ((__noreturn__));
 
 
 #ifdef __USE_BSD
