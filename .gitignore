@@ -137,6 +137,12 @@ tz/tzselect
 tz/yearistype
 tz/zdump
 tz/zic
+tz/leapseconds
+tz/date
+tz/dumpstate
+tz/version.h
+tz/zdump_for_build
+tz/zic_for_build
 unix/test-fdset
 unix/test-open
 unix/test-opendir
