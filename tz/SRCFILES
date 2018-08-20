@@ -4,4 +4,5 @@
 SRCFILES = asctime.c \
 	   difftime.c \
            localtime.c \
-	   strftime.c
+	   strftime.c \
+	   ident_tz.c

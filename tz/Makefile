@@ -7,6 +7,13 @@
 # this file you indicate that you have read the license and
 # understand and accept it fully.
 
+#
+# currently also duplicated at top of private.h; FIXME
+#
+TZVERSION = 2018e
+TZ_BUGEMAIL = tz@iana.org
+PKGVERSION = mintlib
+
 SHELL = /bin/sh
 
 SUBDIRS = 
@@ -39,45 +46,67 @@ ifdef TIMEZONE
 endif
 	
 # Since "." may not be in PATH...
-YEARISTYPE = $(srcdir)/yearistype
+YEARISTYPE = ./yearistype
 
-TZDEFS = -DHAVE_ADJTIME=0 -DHAVE_GETTEXT=0 -DHAVE_LONG_DOUBLE=0 \
--DHAVE_SETTIMEOFDAY=2 -DHAVE_STRERROR=1 -DTM_GMTOFF=tm_gmtoff \
--DTM_ZONE=tm_zone -Dunix -DNOID
-
-zic = $(srcdir)/zic
+zic = ./zic
 ZIC = $(zic) $(ZFLAGS)
 
 sbin_PROGRAMS = zic zdump tzselect
 bootsbin_PROGRAMS = tzinit
 
-TZCOBJS = zic.o scheck.o ialloc.o stack.o
-TZDOBJS = zdump.o ialloc.o stack.o
+TZCOBJS = zic.o
+TZDOBJS = zdump.o
 TZIOBJS = tzinit.o
 
 MANS = tzfile.5 tzselect.8 zic.8 zdump.8 tzinit.8
 DOCS = README README.1st Theory $(MANS) Makefile
+
+# If you want out-of-scope and often-wrong data from the file 'backzone', use
+#	PACKRATDATA=	backzone
+# To omit this data, use
+#	PACKRATDATA=
+
+PACKRATDATA = 
+
+# For backward-compatibility links for old zone names, use
+#	BACKWARD=	backward
+# If you also want the link US/Pacific-New, even though it is confusing
+# and is planned to be removed from the database eventually, use
+#	BACKWARD=	backward pacificnew
+# To omit these links, use
+#	BACKWARD=
+
+BACKWARD=	backward
+
+# Choose source data features.  To get new features right away, use:
+#	DATAFORM=	vanguard
+# To wait a while before using new features, to give downstream users
+# time to upgrade zic (the default), use:
+#	DATAFORM=	main
+# To wait even longer for new features, use:
+#	DATAFORM=	rearguard
+DATAFORM=		main
+
 PRIMARY_YDATA =	africa antarctica asia australasia \
 		europe northamerica southamerica
-YDATA =	$(PRIMARY_YDATA) pacificnew etcetera factory backward
+YDATA =	$(PRIMARY_YDATA) pacificnew etcetera factory $(BACKWARD) $(PACKRATDATA)
 NDATA =	systemv
-SDATA =	solar87 solar88 solar89
+#SDATA =	solar87 solar88 solar89
 TDATA =	$(YDATA) $(NDATA) $(SDATA)
-TABDATA = iso3166.tab zone.tab
-DATA = $(YDATA) $(NDATA) $(SDATA) $(TABDATA) leapseconds yearistype.sh
+ZONETABLES=	zone1970.tab zone.tab
+TABDATA = iso3166.tab $(TZDATA_TEXT) $(ZONETABLES)
+LEAP_DEPS =	$(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list
+TZDATA_ZI_DEPS=	ziguard.awk zishrink.awk $(TDATA) $(PACKRATDATA)
+DSTDATA_ZI_DEPS= ziguard.awk $(TDATA) $(PACKRATDATA)
+TDATA_TO_CHECK=	$(YDATA) $(NDATA) $(srcdir)/backward $(srcdir)/pacificnew
 MISC = usno1988 usno1989 usno1989a usno1995 usno1997 \
 	Arts.htm WWW.htm gccdiffs checktab.awk
 
-DEFS-zic.c = $(TZDEFS)
-DEFS-scheck.c = $(TZDEFS)
-DEFS-ialloc.c = $(TZDEFS)
-DEFS-zdump.c = $(TZDEFS)
-DEFS-tzinit.c = $(TZDEFS)
-CFLAGS-zic.c = -I$(top_srcdir)/time
-CFLAGS-scheck.c = -I$(top_srcdir)/time
-CFLAGS-ialloc.c = -I$(top_srcdir)/time
-CFLAGS-zdump.c = -I$(top_srcdir)/time
-CFLAGS-tzinit.c = -I$(top_srcdir)/time
+# The date program contained here is not used.
+# The one in /usr/bin is from coreutils
+EXTRA_DIST += date.1 date.c
+
+EXTRA_DIST += newctime.3 newstrftime.3 newtzset.3 time2posix.3
 
 all-here: zic zdump tzselect yearistype tzinit zonelist
 
@@ -161,26 +190,23 @@ cross-warning:
 endif
 
 zdump: $(TZDOBJS) $(CRT0) $(libs)
-	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZDOBJS) -o $@ $(LIBS)
+	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZDOBJS) -o $@ $(LIBS)
 
-zic: $(TZCOBJS) $(CRT0) $(libs) yearistype
-	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZCOBJS) -o $@ $(LIBS)
+zic: $(TZCOBJS) $(CRT0) $(libs)
+	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZCOBJS) -o $@ $(LIBS)
 
 tzinit: $(TZIOBJS) $(CRT0) $(libs)
-	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZIOBJS) -o $@ $(LIBS)
+	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZIOBJS) -o $@ $(LIBS)
 
 ifndef CROSS
-yearistype: yearistype.sh
-	cp yearistype.sh yearistype
-	chmod +x yearistype
 
-posix_only: zic $(TDATA)
+posix_only: zic $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L /dev/null $(TDATA)
 
-right_only: zic leapseconds $(TDATA)
+right_only: zic leapseconds $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L leapseconds $(TDATA)
 
-other_two: zic leapseconds $(TDATA)
+other_two: zic leapseconds $(TDATA) yearistype
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/posix -L /dev/null $(TDATA)
 	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/right -L leapseconds $(TDATA)
 
@@ -195,31 +221,52 @@ zones: cleandb $(REDO)
 cleandb:
 	$(mkinstalldirs) $(DESTDIR)$(TZDIR)
 	
-tzselect: tzselect.ksh
-	sed \
-		-e 's|AWK=[^}]*|AWK=$(AWK)|g' \
-		-e 's|TZDIR=[^}]*|TZDIR=$(TZDIR)|' \
-		<$? >$@
-	chmod +x $@
-
 else
 zones:
 	@echo "Not installing time zone database when cross-compiling."
 
-tzselect yearistype:
-	touch $@
 endif
+
+yearistype: $(srcdir)/yearistype.sh
+	cp $< $@
+	chmod +x $@
+
+leapseconds:	$(LEAP_DEPS)
+		$(AWK) -f $(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list >$@.out
+		mv $@.out $@
+
+tzselect: $(srcdir)/tzselect.ksh
+	sed \
+		-e 's|AWK=[^}]*|AWK=$(AWK)|g' \
+		-e 's|TZDIR=[^}]*|TZDIR=$(TZDIR)|' \
+		-e 's|\(TZVERSION\)=.*|\1=$(TZVERSION)|' \
+		<$< >$@
+	chmod +x $@
 
 install-include: # Do nothing here.
 
-check_tables: checktab.awk $(PRIMARY_YDATA)
-	$(AWK) -f checktab.awk $(PRIMARY_YDATA)
+check_tables: $(srcdir)/checktab.awk $(PRIMARY_YDATA)
+	$(AWK) -f $(srcdir)/checktab.awk $(PRIMARY_YDATA)
 
-zonenames: $(TDATA)
-	@awk '/^Zone/ { print $$2 } /^Link/ { print $$3 }' $(TDATA)
+# This file has a version comment that attempts to capture any tailoring
+# via BACKWARD, DATAFORM, PACKRATDATA, and REDO.
+tzdata.zi:	$(DATAFORM).zi zishrink.awk
+		$(AM_V_GEN)
+		$(AM_V_at)LC_ALL=C $(AWK) \
+		    -v dataform='$(DATAFORM)' \
+		    -v deps='$(DSTDATA_ZI_DEPS) zishrink.awk' \
+		    -v redo='$(REDO)' \
+		    -v version="$(TZVERSION)" \
+		    -f zishrink.awk \
+		    $(DATAFORM).zi >$@.out
+		$(AM_V_at)mv $@.out $@
 
-zonelist: $(TDATA)
-	$(MAKE) zonenames >$@
+MAKE_ZONENAMES = $(AWK) '/^Z/ { print $$2 } /^L/ { print $$3 }' tzdata.zi
+
+zonenames: tzdata.zi
+	@$(MAKE_ZONENAMES)
+
+zonelist: tzdata.zi
+	$(MAKE_ZONENAMES) >$@
 
 -include $(top_srcdir)/phony
-

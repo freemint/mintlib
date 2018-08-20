@@ -1,6 +1,17 @@
+/* Private header for tzdb code.  */
+
 #ifndef PRIVATE_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #define PRIVATE_H
+
+#define PKGVERSION "(mintlib) "
+#define TZVERSION  "2018e"
+#define REPORT_BUGS_TO "tz@iana.org"
+
 
 /*
 ** This file is in the public domain, so clarified as of
@@ -16,66 +27,103 @@
 */
 
 /*
-** ID
+** zdump has been made independent of the rest of the time
+** conversion package to increase confidence in the verification it provides.
+** You can use zdump to help in verifying other implementations.
+** To do this, compile with -DUSE_LTZ=0 and link without the tz library.
 */
+#ifndef USE_LTZ
+# define USE_LTZ 1
+#endif
 
-#ifndef lint
-#ifndef NOID
-static char	privatehid[] = "@(#)private.h	8.6";
-#endif /* !defined NOID */
-#endif /* !defined lint */
-
+/* This string was in the Factory zone through version 2016f.  */
 #define GRANDPARENTED	"Local time zone must be set--see zic manual page"
 
 /*
 ** Defaults for preprocessor symbols.
-** You can override these in your C compiler options, e.g. `-DHAVE_ADJTIME=0'.
+** You can override these in your C compiler options, e.g. '-DHAVE_ADJTIME=0'.
 */
+
+#ifndef HAVE_SETLOCALE
+#ifdef __MINT__
+#define HAVE_SETLOCALE		0
+#else
+#define HAVE_SETLOCALE		1
+#endif
+#endif
 
 #ifndef HAVE_ADJTIME
 #define HAVE_ADJTIME		1
-#endif /* !defined HAVE_ADJTIME */
-
-#ifndef HAVE_GETTEXT
-#define HAVE_GETTEXT		0
-#endif /* !defined HAVE_GETTEXT */
+#endif
 
 #ifndef HAVE_INCOMPATIBLE_CTIME_R
 #define HAVE_INCOMPATIBLE_CTIME_R	0
-#endif /* !defined INCOMPATIBLE_CTIME_R */
+#endif
+
+#ifndef HAVE_LINK
+#define HAVE_LINK		1
+#endif
 
 #ifndef HAVE_SETTIMEOFDAY
 #define HAVE_SETTIMEOFDAY	3
-#endif /* !defined HAVE_SETTIMEOFDAY */
+#endif
+
+#ifndef HAVE_POSIX_DECLS
+#define HAVE_POSIX_DECLS 1
+#endif
+
+#ifndef HAVE_STRDUP
+#define HAVE_STRDUP 1
+#endif
+
+#ifndef HAVE_STRTOLL
+#define HAVE_STRTOLL 1
+#endif
 
 #ifndef HAVE_SYMLINK
 #define HAVE_SYMLINK		1
-#endif /* !defined HAVE_SYMLINK */
+#endif
 
 #ifndef HAVE_SYS_STAT_H
 #define HAVE_SYS_STAT_H		1
-#endif /* !defined HAVE_SYS_STAT_H */
+#endif
 
 #ifndef HAVE_SYS_WAIT_H
 #define HAVE_SYS_WAIT_H		1
-#endif /* !defined HAVE_SYS_WAIT_H */
+#endif
 
 #ifndef HAVE_UNISTD_H
 #define HAVE_UNISTD_H		1
-#endif /* !defined HAVE_UNISTD_H */
+#endif
 
 #ifndef HAVE_UTMPX_H
+#ifdef __MINT__
 #define HAVE_UTMPX_H		0
-#endif /* !defined HAVE_UTMPX_H */
+#else
+#define HAVE_UTMPX_H		1
+#endif
+#endif
 
 #ifndef LOCALE_HOME
 #define LOCALE_HOME		"/usr/lib/locale"
-#endif /* !defined LOCALE_HOME */
+#endif
+
+#ifndef NETBSD_INSPIRED
+# ifdef __MINT__
+#  define NETBSD_INSPIRED 0
+# else
+#  define NETBSD_INSPIRED 1
+# endif
+#endif
 
 #if HAVE_INCOMPATIBLE_CTIME_R
 #define asctime_r _incompatible_asctime_r
 #define ctime_r _incompatible_ctime_r
-#endif /* HAVE_INCOMPATIBLE_CTIME_R */
+#endif
+
+#ifdef __MINT__
+#define HAVE_DOS_FILE_NAMES
+#endif
 
 /*
 ** Nested includes
@@ -89,74 +137,246 @@ static char	privatehid[] = "@(#)private.h	8.6";
 #include "time.h"
 #include "stdlib.h"
 
-#if HAVE_GETTEXT
+#ifdef ENABLE_NLS
+#include "locale.h"	/* for setlocale */
 #include "libintl.h"
-#endif /* HAVE_GETTEXT */
+#endif
 
 #if HAVE_SYS_WAIT_H
 #include <sys/wait.h>	/* for WIFEXITED and WEXITSTATUS */
-#endif /* HAVE_SYS_WAIT_H */
+#endif
 
 #ifndef WIFEXITED
 #define WIFEXITED(status)	(((status) & 0xff) == 0)
-#endif /* !defined WIFEXITED */
+#endif
 #ifndef WEXITSTATUS
 #define WEXITSTATUS(status)	(((status) >> 8) & 0xff)
-#endif /* !defined WEXITSTATUS */
+#endif
 
 #if HAVE_UNISTD_H
 #include "unistd.h"	/* for F_OK, R_OK, and other POSIX goodness */
-#endif /* HAVE_UNISTD_H */
+#endif
+
+#ifndef HAVE_STRFTIME_L
+# if (!defined(_POSIX_VERSION) || _POSIX_VERSION < 200809) || !HAVE_SETLOCALE
+#  define HAVE_STRFTIME_L 0
+# else
+#  define HAVE_STRFTIME_L 1
+# endif
+#endif
+
+#ifndef USG_COMPAT
+# if !defined(_XOPEN_VERSION) && !defined(__MINT__)
+#  define USG_COMPAT 0
+# else
+#  define USG_COMPAT 1
+# endif
+#endif
+
+#ifndef HAVE_TZNAME
+# if (!defined(_POSIX_VERSION) || _POSIX_VERSION < 198808) && !USG_COMPAT
+#  define HAVE_TZNAME 0
+# else
+#  define HAVE_TZNAME 1
+# endif
+#endif
 
 #ifndef F_OK
 #define F_OK	0
-#endif /* !defined F_OK */
+#endif
 #ifndef R_OK
 #define R_OK	4
-#endif /* !defined R_OK */
+#endif
 
 /* Unlike <ctype.h>'s isdigit, this also works if c < 0 | c > UCHAR_MAX. */
 #define is_digit(c) ((unsigned)(c) - '0' <= 9)
 
 /*
 ** Define HAVE_STDINT_H's default value here, rather than at the
-** start, since __GLIBC__'s value depends on previously-included
-** files.
-** (glibc 2.1 and later have stdint.h, even with pre-C99 compilers.)
+** start, since __GLIBC__ and INTMAX_MAX's values depend on
+** previously-included files.  glibc 2.1 and Solaris 10 and later have
+** stdint.h, even with pre-C99 compilers.
 */
 #ifndef HAVE_STDINT_H
-#define HAVE_STDINT_H \
-	(199901 <= __STDC_VERSION__ || \
-	2 < (__GLIBC__ + (0 < __GLIBC_MINOR__)))
-#endif /* !defined HAVE_STDINT_H */
+#if ((defined(__STDC_VERSION__) && 199901 <= __STDC_VERSION__) || \
+	 (defined(__GLIBC__) && 2 < (__GLIBC__ + (0 < __GLIBC_MINOR__))) || \
+	 defined(__CYGWIN__) || defined(INTMAX_MAX))
+#define HAVE_STDINT_H 1
+#else
+#define HAVE_STDINT_H 0
+#endif
+#endif
 
 #if HAVE_STDINT_H
 #include "stdint.h"
-#endif /* !HAVE_STDINT_H */
+#endif
+
+#ifndef HAVE_INTTYPES_H
+# define HAVE_INTTYPES_H HAVE_STDINT_H
+#endif
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+
+/* Pre-C99 GCC compilers define __LONG_LONG_MAX__ instead of LLONG_MAX.  */
+#ifdef __LONG_LONG_MAX__
+# ifndef LLONG_MAX
+#  define LLONG_MAX __LONG_LONG_MAX__
+# endif
+# ifndef LLONG_MIN
+#  define LLONG_MIN (-1 - LLONG_MAX)
+# endif
+#endif
 
 #ifndef INT_FAST64_MAX
-/* Pre-C99 GCC compilers define __LONG_LONG_MAX__ instead of LLONG_MAX.  */
-#if defined LLONG_MAX || defined __LONG_LONG_MAX__
+# ifdef LLONG_MAX
 typedef long long	int_fast64_t;
-#else /* ! (defined LLONG_MAX || defined __LONG_LONG_MAX__) */
-#if (LONG_MAX >> 31) < 0xffffffff
+#  define INT_FAST64_MIN LLONG_MIN
+#  define INT_FAST64_MAX LLONG_MAX
+#  define SCNdFAST64 "lld"
+# else
+#  if LONG_MAX >> 31 < 0xffffffff
 Please use a compiler that supports a 64-bit integer type (or wider);
 you may need to compile with "-DHAVE_STDINT_H".
-#endif /* (LONG_MAX >> 31) < 0xffffffff */
+#  endif
 typedef long		int_fast64_t;
-#endif /* ! (defined LLONG_MAX || defined __LONG_LONG_MAX__) */
-#endif /* !defined INT_FAST64_MAX */
+#  define INT_FAST64_MIN LONG_MIN
+#  define INT_FAST64_MAX LONG_MAX
+#  define SCNdFAST64 "ld"
+# endif
+#endif
+
+#ifndef PRIdFAST64
+# if INT_FAST64_MAX == LLONG_MAX
+#  define PRIdFAST64 "lld"
+# else
+#  define PRIdFAST64 "ld"
+# endif
+#endif
+
+#ifndef SCNdFAST64
+# define SCNdFAST64 PRIdFAST64
+#endif
+
+#ifndef INT_FAST32_MAX
+# if INT_MAX >> 31 == 0
+typedef long int_fast32_t;
+#  define INT_FAST32_MAX LONG_MAX
+#  define INT_FAST32_MIN LONG_MIN
+# else
+typedef int int_fast32_t;
+#  define INT_FAST32_MAX INT_MAX
+#  define INT_FAST32_MIN INT_MIN
+# endif
+#endif
+
+#ifndef INTMAX_MAX
+# ifdef LLONG_MAX
+typedef long long intmax_t;
+#  define strtoimax strtoll
+#  define PRIdMAX "lld"
+#  define INTMAX_MAX LLONG_MAX
+#  define INTMAX_MIN LLONG_MIN
+# else
+typedef long intmax_t;
+#  define PRIdMAX "ld"
+#  define INTMAX_MAX LONG_MAX
+#  define INTMAX_MIN LONG_MIN
+# endif
+# ifndef strtoimax
+#  define strtoimax strtol
+# endif
+#endif
+
+#ifndef PRIdMAX
+# if INTMAX_MAX == LLONG_MAX
+#  define PRIdMAX "lld"
+# else
+#  define PRIdMAX "ld"
+# endif
+#endif
+
+#ifndef UINT_FAST64_MAX
+# if defined ULLONG_MAX || defined __LONG_LONG_MAX__
+typedef unsigned long long uint_fast64_t;
+# else
+#  if ULONG_MAX >> 31 >> 1 < 0xffffffff
+Please use a compiler that supports a 64-bit integer type (or wider);
+you may need to compile with "-DHAVE_STDINT_H".
+#  endif
+typedef unsigned long	uint_fast64_t;
+# endif
+#endif
+
+#ifndef UINTMAX_MAX
+# if defined ULLONG_MAX || defined __LONG_LONG_MAX__
+typedef unsigned long long uintmax_t;
+#  define PRIuMAX "llu"
+# else
+typedef unsigned long uintmax_t;
+#  define PRIuMAX "lu"
+# endif
+#endif
+
+#ifndef PRIuMAX
+# if defined ULLONG_MAX || defined __LONG_LONG_MAX__
+#  define PRIuMAX "llu"
+# else
+#  define PRIuMAX "lu"
+# endif
+#endif
 
 #ifndef INT32_MAX
 #define INT32_MAX 0x7fffffff
-#endif /* !defined INT32_MAX */
+#endif
 #ifndef INT32_MIN
 #define INT32_MIN (-1 - INT32_MAX)
-#endif /* !defined INT32_MIN */
+#endif
+
+#ifndef SIZE_MAX
+#define SIZE_MAX ((size_t) -1)
+#endif
+
+#if __GNUC_PREREQ(2, 96)
+# define ATTRIBUTE_CONST __attribute__ ((const))
+# define ATTRIBUTE_MALLOC __attribute__ ((__malloc__))
+# define ATTRIBUTE_PURE __attribute__ ((__pure__))
+# define ATTRIBUTE_FORMAT(spec) __attribute__ ((__format__ spec))
+#else
+# define ATTRIBUTE_CONST /* empty */
+# define ATTRIBUTE_MALLOC /* empty */
+# define ATTRIBUTE_PURE /* empty */
+# define ATTRIBUTE_FORMAT(spec) /* empty */
+#endif
+
+#if !defined _Noreturn && defined __STDC_VERSION__ && __STDC_VERSION__ < 201112
+# if __GNUC_PREREQ(2, 8)
+#  define _Noreturn __attribute__ ((__noreturn__))
+# else
+#  define _Noreturn
+# endif
+#endif
 
 /*
 ** Workarounds for compilers/systems.
 */
+
+#ifndef EPOCH_LOCAL
+# define EPOCH_LOCAL 0
+#endif
+#ifndef EPOCH_OFFSET
+# define EPOCH_OFFSET 0
+#endif
+#ifndef RESERVE_STD_EXT_IDS
+# define RESERVE_STD_EXT_IDS 0
+#endif
+
+/* If standard C identifiers with external linkage (e.g., localtime)
+   are reserved and are not already being renamed anyway, rename them
+   as if compiling with '-Dtime_tz=time_t'.  */
+#if !defined time_tz && RESERVE_STD_EXT_IDS && USE_LTZ
+# define time_tz time_t
+#endif
 
 /*
 ** Some time.h implementations don't declare asctime_r.
@@ -169,17 +389,192 @@ extern char *	asctime_r(struct tm const *, char *);
 #endif
 
 /*
-** Private function declarations.
+** Compile with -Dtime_tz=T to build the tz package with a private
+** time_t type equivalent to T rather than the system-supplied time_t.
+** This debugging feature can test unusual design decisions
+** (e.g., time_t wider than 'long', or unsigned time_t) even on
+** typical platforms.
+*/
+#if defined time_tz || EPOCH_LOCAL || EPOCH_OFFSET != 0
+# define TZ_TIME_T 1
+#else
+# define TZ_TIME_T 0
+#endif
+
+#if TZ_TIME_T
+# ifdef LOCALTIME_IMPLEMENTATION
+static time_t sys_time(time_t *x) { return time(x); }
+# endif
+
+typedef time_tz tz_time_t;
+
+# undef  ctime
+# define ctime tz_ctime
+# undef  ctime_r
+# define ctime_r tz_ctime_r
+# undef  difftime
+# define difftime tz_difftime
+# undef  gmtime
+# define gmtime tz_gmtime
+# undef  gmtime_r
+# define gmtime_r tz_gmtime_r
+# undef  localtime
+# define localtime tz_localtime
+# undef  localtime_r
+# define localtime_r tz_localtime_r
+# undef  localtime_rz
+# define localtime_rz tz_localtime_rz
+# undef  mktime
+# define mktime tz_mktime
+# undef  mktime_z
+# define mktime_z tz_mktime_z
+# undef  offtime
+# define offtime tz_offtime
+# undef  posix2time
+# define posix2time tz_posix2time
+# undef  posix2time_z
+# define posix2time_z tz_posix2time_z
+# undef  strftime
+# define strftime tz_strftime
+# undef  time
+# define time tz_time
+# undef  time2posix
+# define time2posix tz_time2posix
+# undef  time2posix_z
+# define time2posix_z tz_time2posix_z
+# undef  time_t
+# define time_t tz_time_t
+# undef  timegm
+# define timegm tz_timegm
+# undef  timelocal
+# define timelocal tz_timelocal
+# undef  timeoff
+# define timeoff tz_timeoff
+# undef  tzalloc
+# define tzalloc tz_tzalloc
+# undef  tzfree
+# define tzfree tz_tzfree
+# undef  tzset
+# define tzset tz_tzset
+# undef  tzsetwall
+# define tzsetwall tz_tzsetwall
+# if HAVE_STRFTIME_L
+#  undef  strftime_l
+#  define strftime_l tz_strftime_l
+# endif
+# if HAVE_TZNAME
+#  undef  tzname
+#  define tzname tz_tzname
+# endif
+# if USG_COMPAT
+#  undef  daylight
+#  define daylight tz_daylight
+#  undef  timezone
+#  define timezone tz_timezone
+# endif
+# ifdef ALTZONE
+#  undef  altzone
+#  define altzone tz_altzone
+# endif
+
+char *ctime(time_t const *);
+char *ctime_r(time_t const *, char *);
+double difftime(time_t, time_t) ATTRIBUTE_CONST;
+size_t strftime(char *__restrict, size_t, char const *__restrict,
+		struct tm const *__restrict);
+# if HAVE_STRFTIME_L
+size_t strftime_l(char *__restrict, size_t, char const *__restrict,
+		  struct tm const *__restrict, locale_t);
+# endif
+struct tm *gmtime(time_t const *);
+struct tm *gmtime_r(time_t const *__restrict, struct tm *__restrict);
+struct tm *localtime(time_t const *);
+struct tm *localtime_r(time_t const *__restrict, struct tm *__restrict);
+time_t mktime(struct tm *);
+time_t time(time_t *);
+void tzset(void);
+#endif
+
+#if TZ_TIME_T || !HAVE_POSIX_DECLS
+# if HAVE_TZNAME
+extern char *tzname[];
+# endif
+# if USG_COMPAT
+extern long timezone;
+extern int daylight;
+# endif
+#endif
+
+#ifdef ALTZONE
+extern long altzone;
+#endif
+
+/*
+** The STD_INSPIRED functions are similar, but most also need
+** declarations if time_tz is defined.
 */
 
-char *		icalloc(int nelem, int elsize);
-char *		icatalloc(char * old, const char * new);
-char *		icpyalloc(const char * string);
-char *		imalloc(int n);
-void *		irealloc(void * pointer, int size);
-void		icfree(char * pointer);
-void		ifree(char * pointer);
-const char *	scheck(const char * string, const char * format);
+#ifdef STD_INSPIRED
+# if TZ_TIME_T || !defined tzsetwall
+void tzsetwall(void);
+# endif
+# if TZ_TIME_T || !defined offtime
+struct tm *offtime(time_t const *, long);
+# endif
+# if TZ_TIME_T || !defined timegm
+time_t timegm(struct tm *);
+# endif
+# if TZ_TIME_T || !defined timelocal
+time_t timelocal(struct tm *);
+# endif
+# if TZ_TIME_T || !defined timeoff
+time_t timeoff(struct tm *, long);
+# endif
+# if TZ_TIME_T || !defined time2posix
+time_t time2posix(time_t);
+# endif
+# if TZ_TIME_T || !defined posix2time
+time_t posix2time(time_t);
+# endif
+#endif
+
+/* Infer TM_ZONE on systems where this information is known, but suppress
+   guessing if NO_TM_ZONE is defined.  Similarly for TM_GMTOFF.  */
+#if (defined __GLIBC__ \
+     || defined __FreeBSD__ || defined __NetBSD__ || defined __OpenBSD__ \
+     || (defined __APPLE__ && defined __MACH__) || defined(__MINT__))
+# if !defined TM_GMTOFF && !defined NO_TM_GMTOFF
+#  define TM_GMTOFF tm_gmtoff
+# endif
+# if !defined TM_ZONE && !defined NO_TM_ZONE
+#  define TM_ZONE tm_zone
+# endif
+#endif
+
+/*
+** Define functions that are ABI compatible with NetBSD but have
+** better prototypes.  NetBSD 6.1.4 defines a pointer type timezone_t
+** and labors under the misconception that 'const timezone_t' is a
+** pointer to a constant.  This use of 'const' is ineffective, so it
+** is not done here.  What we call 'struct state' NetBSD calls
+** 'struct __state', but this is a private name so it doesn't matter.
+*/
+#if NETBSD_INSPIRED
+typedef struct state *timezone_t;
+struct tm *localtime_rz(timezone_t __restrict, time_t const *__restrict,
+			struct tm *__restrict);
+time_t mktime_z(timezone_t __restrict, struct tm *__restrict);
+timezone_t tzalloc(const char *);
+void tzfree(timezone_t);
+# ifdef STD_INSPIRED
+#  if TZ_TIME_T || !defined posix2time_z
+time_t posix2time_z(timezone_t, time_t) ATTRIBUTE_PURE;
+#  endif
+#  if TZ_TIME_T || !defined time2posix_z
+time_t time2posix_z(timezone_t, time_t) ATTRIBUTE_PURE;
+#  endif
+# endif
+#endif
 
 /*
 ** Finally, some convenience items.
@@ -187,28 +582,41 @@ const char *	scheck(const char * string, const char * format);
 
 #ifndef TRUE
 #define TRUE	1
-#endif /* !defined TRUE */
+#endif
 
 #ifndef FALSE
 #define FALSE	0
-#endif /* !defined FALSE */
+#endif
 
-#ifndef TYPE_BIT
 #define TYPE_BIT(type)	(sizeof (type) * CHAR_BIT)
-#endif /* !defined TYPE_BIT */
-
-#ifndef TYPE_SIGNED
 #define TYPE_SIGNED(type) (((type) -1) < 0)
-#endif /* !defined TYPE_SIGNED */
+#define TWOS_COMPLEMENT(t) ((t) ~ (t) 0 < 0)
 
-/*
-** Since the definition of TYPE_INTEGRAL contains floating point numbers,
-** it cannot be used in preprocessor directives.
-*/
+#if __GNUC_PREREQ(4,9)
+#pragma GCC diagnostic ignored "-Wshift-negative-value"
+#endif
 
-#ifndef TYPE_INTEGRAL
-#define TYPE_INTEGRAL(type) (((type) 0.5) != 0.5)
-#endif /* !defined TYPE_INTEGRAL */
+/* Max and min values of the integer type T, of which only the bottom
+   B bits are used, and where the highest-order used bit is considered
+   to be a sign bit if T is signed.  */
+#define MAXVAL(t, b)						\
+  ((t) (((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))			\
+	- 1 + ((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))))
+#define MINVAL(t, b)						\
+  ((t) (TYPE_SIGNED(t) ? - TWOS_COMPLEMENT(t) - MAXVAL(t, b) : 0))
+
+/* The extreme time values, assuming no padding.  */
+#define TIME_T_MIN_NO_PADDING MINVAL(time_t, TYPE_BIT(time_t))
+#define TIME_T_MAX_NO_PADDING MAXVAL(time_t, TYPE_BIT(time_t))
+
+/* The extreme time values.  These are macros, not constants, so that
+   any portability problem occur only when compiling .c files that use
+   the macros, which is safer for applications that need only zdump and zic.
+   This implementation assumes no padding if time_t is signed and
+   either the compiler lacks support for _Generic or time_t is not one
+   of the standard signed integer types.  */
+# define TIME_T_MIN TIME_T_MIN_NO_PADDING
+# define TIME_T_MAX TIME_T_MAX_NO_PADDING
 
 #ifndef INT_STRLEN_MAXIMUM
 /*
@@ -220,7 +628,7 @@ const char *	scheck(const char * string, const char * format);
 #define INT_STRLEN_MAXIMUM(type) \
 	((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + \
 	1 + TYPE_SIGNED(type))
-#endif /* !defined INT_STRLEN_MAXIMUM */
+#endif
 
 /*
 ** INITIALIZE(x)
@@ -229,70 +637,117 @@ const char *	scheck(const char * string, const char * format);
 #ifndef GNUC_or_lint
 #ifdef lint
 #define GNUC_or_lint
-#endif /* defined lint */
+#endif
 #ifndef lint
 #ifdef __GNUC__
 #define GNUC_or_lint
-#endif /* defined __GNUC__ */
-#endif /* !defined lint */
-#endif /* !defined GNUC_or_lint */
+#endif
+#endif
+#endif
 
 #ifndef INITIALIZE
 #ifdef GNUC_or_lint
 #define INITIALIZE(x)	((x) = 0)
-#endif /* defined GNUC_or_lint */
+#endif
 #ifndef GNUC_or_lint
 #define INITIALIZE(x)
-#endif /* !defined GNUC_or_lint */
-#endif /* !defined INITIALIZE */
+#endif
+#endif
+
+#ifndef UNINIT_TRAP
+# define UNINIT_TRAP 0
+#endif
 
 /*
 ** For the benefit of GNU folk...
-** `_(MSGID)' uses the current locale's message library string for MSGID.
+** '_(MSGID)' uses the current locale's message library string for MSGID.
 ** The default is to use gettext if available, and use MSGID otherwise.
 */
 
 #ifndef _
-#if HAVE_GETTEXT
-#define _(msgid) gettext(msgid)
-#else /* !HAVE_GETTEXT */
+#ifdef ENABLE_NLS
+#define _(msgid) dgettext(TZ_DOMAIN, msgid)
+#else
 #define _(msgid) msgid
-#endif /* !HAVE_GETTEXT */
-#endif /* !defined _ */
+#endif
+#endif
 
 #ifndef TZ_DOMAIN
 #define TZ_DOMAIN "tz"
-#endif /* !defined TZ_DOMAIN */
+#endif
 
 #if HAVE_INCOMPATIBLE_CTIME_R
 #undef asctime_r
 #undef ctime_r
 char *asctime_r(struct tm const *, char *);
 char *ctime_r(time_t const *, char *);
-#endif /* HAVE_INCOMPATIBLE_CTIME_R */
+#endif
+
+/* Handy macros that are independent of tzfile implementation.  */
 
 #ifndef YEARSPERREPEAT
 #define YEARSPERREPEAT		400	/* years before a Gregorian repeat */
-#endif /* !defined YEARSPERREPEAT */
+#endif
+
+#define SECSPERMIN	60
+#define MINSPERHOUR	60
+#define HOURSPERDAY	24
+#define DAYSPERWEEK	7
+#define DAYSPERNYEAR	365
+#define DAYSPERLYEAR	366
+#define SECSPERHOUR	(SECSPERMIN * MINSPERHOUR)
+#define SECSPERDAY	((int_fast32_t) SECSPERHOUR * HOURSPERDAY)
+#define MONSPERYEAR	12
+
+#define TM_SUNDAY	0
+#define TM_MONDAY	1
+#define TM_TUESDAY	2
+#define TM_WEDNESDAY	3
+#define TM_THURSDAY	4
+#define TM_FRIDAY	5
+#define TM_SATURDAY	6
+
+#define TM_JANUARY	0
+#define TM_FEBRUARY	1
+#define TM_MARCH	2
+#define TM_APRIL	3
+#define TM_MAY		4
+#define TM_JUNE		5
+#define TM_JULY		6
+#define TM_AUGUST	7
+#define TM_SEPTEMBER	8
+#define TM_OCTOBER	9
+#define TM_NOVEMBER	10
+#define TM_DECEMBER	11
+
+#define TM_YEAR_BASE	1900
+
+#define EPOCH_YEAR	1970
+#define EPOCH_WDAY	TM_THURSDAY
+
+#define isleap(y) (((y) % 4) == 0 && (((y) % 100) != 0 || ((y) % 400) == 0))
+
+/*
+** Since everything in isleap is modulo 400 (or a factor of 400), we know that
+**	isleap(y) == isleap(y % 400)
+** and so
+**	isleap(a + b) == isleap((a + b) % 400)
+** or
+**	isleap(a + b) == isleap(a % 400 + b % 400)
+** This is true even if % means modulo rather than Fortran remainder
+** (which is allowed by C89 but not by C99 or later).
+** We use this to avoid addition overflow problems.
+*/
+
+#define isleap_sum(a, b)	isleap((a) % 400 + (b) % 400)
+
 
 /*
 ** The Gregorian year averages 365.2425 days, which is 31556952 seconds.
 */
 
-#ifndef AVGSECSPERYEAR
 #define AVGSECSPERYEAR		31556952L
-#endif /* !defined AVGSECSPERYEAR */
-
-#ifndef SECSPERREPEAT
 #define SECSPERREPEAT		((int_fast64_t) YEARSPERREPEAT * (int_fast64_t) AVGSECSPERYEAR)
-#endif /* !defined SECSPERREPEAT */
-
-#ifndef SECSPERREPEAT_BITS
 #define SECSPERREPEAT_BITS	34	/* ceil(log2(SECSPERREPEAT)) */
-#endif /* !defined SECSPERREPEAT_BITS */
-
-/*
-** UNIX was a registered trademark of The Open Group in 2003.
-*/
 
 #endif /* !defined PRIVATE_H */
