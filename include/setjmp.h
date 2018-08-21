@@ -47,6 +47,7 @@ _longjmp (sigjmp_buf env, int val)
 #endif /* __USE_BSD */
 
 #ifdef	__USE_POSIX
+#undef setjmp
 #define setjmp(__jb)		(sigsetjmp(__jb, 1))
 #endif
 
