@@ -904,8 +904,8 @@ extern int brk (void *__addr) __THROW;
    If successful, returns the address the previous end of data space
    (i.e. the beginning of the new space, if DELTA > 0);
    returns (void *) -1 for errors (with errno set).  */
-extern void *sbrk (size_t __delta) __THROW;
-extern void *__sbrk (size_t __delta) __THROW;
+extern void *sbrk (__intptr_t __delta) __THROW;
+extern void *__sbrk (__intptr_t __delta) __THROW;
 #endif
 
 

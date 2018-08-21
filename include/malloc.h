@@ -26,7 +26,7 @@ __EXTERN void *_malloc __P ((unsigned long __n));
 __EXTERN void *_realloc __P ((void *_r, unsigned long __n));
 __EXTERN void *_calloc __P ((unsigned long n, unsigned long __size));
 
-__EXTERN void *sbrk __P ((size_t __size));
+__EXTERN void *sbrk __P ((long __size));
 __EXTERN void *lsbrk __P ((long __size));
 __EXTERN void *_sbrk __P ((long __size));
 

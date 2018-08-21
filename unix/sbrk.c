@@ -47,7 +47,7 @@ HeapAlloc (unsigned long sz)
 
 /* provided for compilers with sizeof(int) == 2 */
 void *
-__sbrk (size_t n)
+__sbrk (intptr_t n)
 {
 	void *rval;
 
