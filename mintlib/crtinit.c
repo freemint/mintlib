@@ -105,10 +105,8 @@ _acc_main(void)
 	/* stack on word boundary */
 	_stksize &= 0xfffffffeL;
 
-	if (_heapbase == 0) {
-		_heapbase = (void *)Malloc(_stksize);
-	}
-	_setstack((char *) _heapbase + _stksize);
+	s = (char *)Malloc(_stksize);
+	_setstack(s + _stksize);
 
 	/* this is an accessory */
 	_app = 0;
