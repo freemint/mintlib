@@ -212,6 +212,12 @@ The options `-u' and `-l' are mutually exclusive."));
 	{
 		int clockmode = do_utc ? 0 : 1;
 
+		/* Department of unclean tricks (setting errno).  */
+		__set_errno(-Ssystem(S_CLOCKUTC, clockmode, 0));
+		if (errno != 0)
+			error(EXIT_FAILURE, errno, _("can\'t set kernel clock mode"));
+		__set_errno(0);
+
 		/* Now set the kernel timezone.  */
 		now = time(NULL);
 		if (now == (time_t) - 1)
@@ -223,21 +229,17 @@ The options `-u' and `-l' are mutually exclusive."));
 			error(EXIT_FAILURE, errno, _("can\'t get current time.\n"));
 		}
 
-		tm = localtime(&now);
-		if (tm == NULL)
-			error(EXIT_FAILURE, errno, _("can\'t convert to localtime.\n"));
+		if(do_utc)
+		{
+			tm = localtime(&now);
+			if (tm == NULL)
+				error(EXIT_FAILURE, errno, _("can\'t convert to localtime.\n"));
 
-		tz.tz_minuteswest = tm->TM_GMTOFF / (-60);
-		tz.tz_dsttime = tm->tm_isdst;
-
-		if (Tsettimeofday(NULL, &tz) != 0)
-			error(EXIT_FAILURE, errno, _("settimeofday failed"));
-
-		/* Department of unclean tricks (setting errno).  */
-		__set_errno(-Ssystem(S_CLOCKUTC, clockmode, 0));
-		if (errno != 0)
-			error(EXIT_FAILURE, errno, _("can\'t set kernel clock mode"));
-		__set_errno(0);
+			tz.tz_minuteswest = tm->TM_GMTOFF / (-60);
+			tz.tz_dsttime = tm->tm_isdst;
+			if (Tsettimeofday(NULL, &tz) != 0)
+				error(EXIT_FAILURE, errno, _("settimeofday failed"));
+		}
 	}
 
 	/* If nothing to do, display current settings.  */
