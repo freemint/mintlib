@@ -4,5 +4,4 @@
 SRCFILES += BINFILES EXTRAFILES Makefile SRCFILES \
 	\
 	features.h.in \
-	linker.h.in \
-	math.h
+	linker.h.in
