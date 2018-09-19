@@ -28,6 +28,8 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
       	retval = -EPERM;
       __set_errno (-retval);
       return -1;
+    } else {
+      return 0;
     }
   }
   

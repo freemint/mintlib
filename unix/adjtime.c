@@ -28,6 +28,8 @@ int __adjtime (__const struct timeval *__delta,
       	retval = -EPERM;
       __set_errno (-retval);
       return -1;
+    } else {
+      return 0;
     }
   }
   
