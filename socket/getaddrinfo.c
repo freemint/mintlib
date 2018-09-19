@@ -181,12 +181,20 @@ int __getaddrinfo(const char *node, const char *service, const struct addrinfo *
 	{
 		unsigned long d;
 		char *end;
+		struct servent *sp;
 
 		d = strtoul(service, &end, 0);
-		if (end[0] || d > 65535u)
-			return EAI_SERVICE;
-
-		port = htons((uint16_t) d);
+		if (!end[0]) {
+			if (d > 65535)
+				return (EAI_SERVICE);
+			port = htons((unsigned short) d);
+		} else
+		{
+			sp = getservbyname(service, NULL);
+			if (sp == NULL)
+				return (EAI_SERVICE);
+			port = sp->s_port;
+		}
 	}
 
 	/* building results... */
