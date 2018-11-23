@@ -120,7 +120,7 @@ typedef struct _osheader
 
 /* zzzz to-do more */
 
-extern long get_sysvar (void *var) __THROW;
+extern long get_sysvar (volatile void *var) __THROW;
 extern void set_sysvar_to_long (void *var, long val) __THROW;
 
 
