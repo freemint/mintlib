@@ -97,5 +97,5 @@ SRCFILES = \
 	wmemcmp.c \
 	wmemcpy.c \
 	wmemmove.c \
-	wmemset.c
-	
+	wmemset.c \
+	xpg-strerror.c

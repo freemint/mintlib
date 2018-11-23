@@ -191,11 +191,34 @@ __EXTERN size_t strnlen __P ((const char* __string, size_t __maxlen));
 
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 __EXTERN char* strerror __P ((int __errnum));
-#ifdef	__USE_MISC
-/* Reentrant version of `strerror'.  If a temporary buffer is required, at
-   most BUFLEN bytes of BUF will be used.  */
-__EXTERN char* __strerror_r __P ((int __errnum, char* __buf, size_t __buflen));
-__EXTERN char* strerror_r __P ((int __errnum, char* __buf, size_t __buflen));
+#if defined __USE_XOPEN2K || defined __USE_MISC
+/* Reentrant version of `strerror'.
+   There are 2 flavors of `strerror_r', GNU which returns the string
+   and may or may not use the supplied temporary buffer and POSIX one
+   which fills the string into the buffer.
+   To use the POSIX version, -D_XOPEN_SOURCE=600 or -D_POSIX_C_SOURCE=200112L
+   without -D_GNU_SOURCE is needed, otherwise the GNU version is
+   preferred.  */
+# if defined __USE_XOPEN2K && !defined __USE_GNU
+/* Fill BUF with a string describing the meaning of the `errno' code in
+   ERRNUM.  */
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (strerror_r,
+			   (int __errnum, char *__buf, size_t __buflen),
+			   __xpg_strerror_r) __nonnull ((2));
+#  else
+extern int __xpg_strerror_r (int __errnum, char *__buf, size_t __buflen)
+     __THROW __nonnull ((2));
+#   define strerror_r __xpg_strerror_r
+#  endif
+# else
+/* If a temporary buffer is required, at most BUFLEN bytes of BUF will be
+   used.  */
+extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
+     __THROW __nonnull ((2));
+extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen)
+     __THROW __nonnull ((2));
+# endif
 #endif
 
 /* We define this function always since `bzero' is sometimes needed when

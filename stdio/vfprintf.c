@@ -1159,7 +1159,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_strerror):						      \
       /* Print description of error ERRNO.  */				      \
       string =								      \
-	(char *) __strerror_r (save_errno, work_buffer, sizeof work_buffer);  \
+	__strerror_r (save_errno, work_buffer, sizeof work_buffer);  \
       is_long = 0;		/* This is no wide-char string.  */	      \
       goto LABEL (print_string)
 
