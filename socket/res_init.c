@@ -51,6 +51,10 @@ static char sccsid[] = "@(#)res_init.c	6.15 (Berkeley) 2/24/91";
 #include <string.h>
 #include <support.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 /*
  * Resolver state default settings
  */
@@ -74,8 +78,7 @@ struct state _res = {
  *
  * Return 0 if completes successfully, -1 on error
  */
-int
-res_init()
+int res_init(void)
 {
 	register FILE *fp;
 	register char *cp, **pp;

@@ -11,12 +11,14 @@
 #include <unistd.h>
 #include <utmp.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 link_warning (_write_utmp, 
 	      "using `_write_utmp' is obsolete and dangerous")
 	    
-void _write_utmp(line, name, host, time)
-const char *line, *name, *host;
-unsigned long time;
+void _write_utmp(const char *line, const char *name, const char *host, unsigned long time)
 {
 	register int returned_val;
 	int counter;
@@ -57,9 +59,9 @@ unsigned long time;
 	printf("counter = %d\nline = %s\nname = %s\nhost = %s\ntime = %lu\n",
 		counter, line, name, host, time);
 #endif
-	strncpy(entry.ut_line, line, 8);
-	strncpy(entry.ut_name, name, 8);
-	strncpy(entry.ut_host, host, 16);
+	strncpy(entry.ut_line, line, sizeof(entry.ut_line));
+	strncpy(entry.ut_name, name, sizeof(entry.ut_name));
+	strncpy(entry.ut_host, host, sizeof(entry.ut_host));
 	entry.ut_time = time;
 
 	if ((returned_val = write(fd, &entry, (unsigned) sizeof(struct utmp))) == -1)

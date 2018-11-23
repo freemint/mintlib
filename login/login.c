@@ -24,6 +24,10 @@
 #include <stdlib.h>
 #include <utmp.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 
 /* Return the result of ttyname in the buffer pointed to by TTY, which should
    be of length BUF_LEN.  If it is too long to fit in this buffer, a

@@ -26,6 +26,10 @@
 #include <unistd.h>
 #include <utmp.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 extern int gettimeofday (struct timeval*, struct timezone*);
 
 void

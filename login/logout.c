@@ -26,6 +26,10 @@
 #include <time.h>
 #include <sys/time.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 int
 logout (const char *line)
 {

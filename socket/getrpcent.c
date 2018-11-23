@@ -48,6 +48,11 @@ extern struct rpcent *__getrpcbyname (__const char *__name) __THROW;
 extern struct rpcent *__getrpcbynumber (int __number) __THROW;
 extern struct rpcent *__getrpcent (void) __THROW;
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
+
 /*
  * Internet version.
  */
@@ -65,8 +70,7 @@ struct rpcdata {
 
 static char RPCDB[] = "/etc/rpc";
 
-static struct rpcdata *
-_rpcdata(void)
+static struct rpcdata *_rpcdata(void)
 {
 	register struct rpcdata *d = rpcdata;
 
@@ -77,14 +81,10 @@ _rpcdata(void)
 	return (d);
 }
 
-struct rpcent *
-__getrpcbynumber (int number)
+struct rpcent *__getrpcbynumber (int number)
 {
 	register struct rpcdata *d = _rpcdata();
 	register struct rpcent *p;
-//	int reason;
-//	char adrstr[16], *val = NULL;
-//	int vallen;
 
 	if (d == 0)
 		return (0);
@@ -98,8 +98,7 @@ __getrpcbynumber (int number)
 }
 weak_alias (__getrpcbynumber, getrpcbynumber)
 
-struct rpcent *
-__getrpcbyname (const char *name)
+struct rpcent *__getrpcbyname (const char *name)
 {
 	struct rpcent *rpc;
 	char **rp;
@@ -118,8 +117,7 @@ __getrpcbyname (const char *name)
 }
 weak_alias (__getrpcbyname, getrpcbyname)
 
-void
-__setrpcent (int f)
+void __setrpcent (int f)
 {
 	register struct rpcdata *d = _rpcdata();
 
@@ -136,8 +134,7 @@ __setrpcent (int f)
 }
 weak_alias (__setrpcent, setrpcent)
 
-void
-__endrpcent (void)
+void __endrpcent (void)
 {
 	register struct rpcdata *d = _rpcdata();
 
@@ -156,13 +153,8 @@ weak_alias (__endrpcent, endrpcent)
 
 static struct rpcent *interpret (char *val, int len);
 
-struct rpcent *
-__getrpcent (void)
+struct rpcent *__getrpcent (void)
 {
-//	struct rpcent *hp;
-//	int reason;
-//	char *key = NULL, *val = NULL;
-//	int keylen, vallen;
 	register struct rpcdata *d = _rpcdata();
 
 	if (d == 0)
@@ -175,8 +167,7 @@ __getrpcent (void)
 }
 weak_alias (__getrpcent, getrpcent)
 
-static struct rpcent *
-interpret (char *val, int len)
+static struct rpcent *interpret (char *val, int len)
 {
 	register struct rpcdata *d = _rpcdata();
 	char *p;

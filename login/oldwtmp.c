@@ -11,6 +11,10 @@
 #include <string.h>
 #include <utmp.h>
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 link_warning (_write_wtmp,
 	      "using `_write_wtmp' is obsolete and dangerous")
 
@@ -34,9 +38,9 @@ unsigned long time;
  * bytes strncpy adds the the strings if they are greater than 8/16 bytes!
  */
 
-	strncpy(entry.ut_line, line, 8);
-	strncpy(entry.ut_name, name, 8);
-	strncpy(entry.ut_host, host, 16);
+	strncpy(entry.ut_line, line, sizeof(entry.ut_line));
+	strncpy(entry.ut_name, name, sizeof(entry.ut_name));
+	strncpy(entry.ut_host, host, sizeof(entry.ut_host));
 	entry.ut_time = time;
 
 	write(fd, &entry, (unsigned) sizeof(struct utmp));

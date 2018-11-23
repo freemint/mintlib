@@ -18,12 +18,16 @@
 #include <limits.h>
 #include "lib.h" /* _unx2dos */
 
+#if __GNUC_PREREQ(8, 0)
+# pragma GCC diagnostic ignored "-Wstringop-truncation"
+# pragma GCC diagnostic ignored "-Wsizeof-pointer-memaccess"
+#endif
+
 /*
  * link device to network interface.
  */
 int
-if_link (device, ifname)
-	char *device, *ifname;
+if_link (char *device, char *ifname)
 {
 	struct iflink ifl;
 	int sockfd;
