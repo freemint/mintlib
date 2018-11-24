@@ -52,6 +52,10 @@
 #endif
 #endif
 
+#ifdef __MINT__
+#define STD_INSPIRED 1
+#endif
+
 #ifndef HAVE_ADJTIME
 #define HAVE_ADJTIME		1
 #endif
