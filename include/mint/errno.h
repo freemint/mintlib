@@ -756,7 +756,9 @@
 #define ENOTSUP			__KERNEL_NEG(350)		/* Function not implemented.  */
 
 /* aio request was canceled before complete (POSIX.4 / HPUX) */
-#define ECANCELLED      __KERNEL_NEG(351)       /* aio request was canceled before complete */
+#define ECANCELED       __KERNEL_NEG(351)       /* aio request was canceled before complete */
+/* old name for compatibility */
+#define ECANCELLED ECANCELED
 
 /* Owner died */
 #define EOWNERDEAD      __KERNEL_NEG(352)       /* Owner died */
