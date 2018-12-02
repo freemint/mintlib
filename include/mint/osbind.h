@@ -943,7 +943,7 @@ __extension__								\
 #define	       Cconws(s)					       \
        (short)trap_1_wl((short)(0x09),(long)(s))
 #define	       Cconrs(buf)					       \
-       (void)trap_1_wl((short)(0x0A),(long)(buf))
+       trap_1_wl((short)(0x0A),(long)(buf))
 #define	       Cconis()						       \
        (short)trap_1_w((short)(0x0B))
 #define	       Dsetdrv(d)					       \

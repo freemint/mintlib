@@ -84,7 +84,7 @@ opcode	ret	class name	args */
 0x007	long	Crawcin		(void)
 0x008	long	Cnecin		(void)
 0x009	short	Cconws		(const char *str)
-0x00a	void	Cconrs		(char *buf)
+0x00a	long	Cconrs		(char *buf)
 0x00b	short	Cconis		(void)
 0x00c		undefined
 0x00d		undefined
