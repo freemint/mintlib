@@ -61,14 +61,10 @@
 #ifndef _CDROMIO_H
 #define _CDROMIO_H
 
-#ifndef BYTE
-#define BYTE unsigned char
-#endif
-
 typedef union
 { 
 	struct {
-    	BYTE  reserved, minute, second, frame;
+    	unsigned char  reserved, minute, second, frame;
     } msf;
 	long lba;
 } cd_ad;
@@ -77,34 +73,34 @@ typedef union
 
 struct cdrom_msf 
 {
-    BYTE    cdmsf_min0;     /* start minute */
-    BYTE    cdmsf_sec0;     /* start second */
-    BYTE    cdmsf_frame0;   /* start frame */
-    BYTE    cdmsf_min1;     /* end minute */
-    BYTE    cdmsf_sec1;     /* end second */
-    BYTE    cdmsf_frame1;   /* end frame */
+    unsigned char    cdmsf_min0;     /* start minute */
+    unsigned char    cdmsf_sec0;     /* start second */
+    unsigned char    cdmsf_frame0;   /* start frame */
+    unsigned char    cdmsf_min1;     /* end minute */
+    unsigned char    cdmsf_sec1;     /* end second */
+    unsigned char    cdmsf_frame1;   /* end frame */
 };
 
 struct cdrom_ti 
 {
-    BYTE    cdti_trk0;      /* start track */
-    BYTE    cdti_ind0;      /* start index */
-    BYTE    cdti_trk1;      /* end track */
-    BYTE    cdti_ind1;      /* end index */
+    unsigned char    cdti_trk0;      /* start track */
+    unsigned char    cdti_ind0;      /* start index */
+    unsigned char    cdti_trk1;      /* end track */
+    unsigned char    cdti_ind1;      /* end index */
 };
 
 struct cdrom_tochdr     
 {
-    BYTE    cdth_trk0;      /* start track */
-    BYTE    cdth_trk1;      /* end track */
+    unsigned char    cdth_trk0;      /* start track */
+    unsigned char    cdth_trk1;      /* end track */
 };
 
 struct cdrom_tocentry 
 {
     /* input parameters */
 
-    BYTE    cdte_track;     /* track number or CDROM_LEADOUT */
-    BYTE    cdte_format;    /* CDROM_LBA or CDROM_MSF */
+    unsigned char    cdte_track;     /* track number or CDROM_LEADOUT */
+    unsigned char    cdte_format;    /* CDROM_LBA or CDROM_MSF */
     
     /* output parameters */
 
@@ -115,7 +111,7 @@ struct cdrom_tocentry
                                     bit 1: digital copy permitted,
                                     bit 2: data track,
                                     bit 3: four channel */
-    BYTE    cdte_datamode;		/* currently not set */
+    unsigned char    cdte_datamode;		/* currently not set */
 	unsigned	short dummy;	/* PM: what is this for ? */
 	cd_ad	cdte_addr;			/* track start */
 };
@@ -124,45 +120,45 @@ struct cdrom_subchnl
 {
 	/* input parameters */
 
-    BYTE    cdsc_format;		/* CDROM_MSF or CDROM_LBA */
+    unsigned char    cdsc_format;		/* CDROM_MSF or CDROM_LBA */
     
     /* output parameters */
     
-    BYTE    cdsc_audiostatus;	/* see below */
+    unsigned char    cdsc_audiostatus;	/* see below */
     unsigned	cdsc_resvd:	8;	/* reserved */
     unsigned	cdsc_adr:   4;	/* see above */
     unsigned	cdsc_ctrl:  4;	/* see above */
-    BYTE    cdsc_trk;			/* current track */
-    BYTE    cdsc_ind;			/* current index */
+    unsigned char    cdsc_trk;			/* current track */
+    unsigned char    cdsc_ind;			/* current index */
 	cd_ad	cdsc_absaddr;		/* absolute address */
 	cd_ad	cdsc_reladdr;		/* track relative address */
 };
 
 struct cdrom_mcn 
 {
-    BYTE    mcn_audiostatus;	/* see above */
-    BYTE    mcn_mcn[23];		/* Media catalog number as ASCII string */
+    unsigned char    mcn_audiostatus;	/* see above */
+    unsigned char    mcn_mcn[23];		/* Media catalog number as ASCII string */
 };
 
 struct cdrom_tisrc
 {
 	/* input parameters */
 
-    BYTE    tisrc_track;		/* track number */
+    unsigned char    tisrc_track;		/* track number */
     
     /* output parameters */
     
-    BYTE    tisrc_audiostatus;	/* see above */
-    BYTE    tisrc_tisrc[23];	/* Track International Standard
+    unsigned char    tisrc_audiostatus;	/* see above */
+    unsigned char    tisrc_tisrc[23];	/* Track International Standard
     								Recording Code (ASCII) */
 };
 
 struct cdrom_volctrl
 {
-    BYTE    channel0;			/* volume level 0..255 */
-    BYTE    channel1;
-    BYTE    channel2;
-    BYTE    channel3;
+    unsigned char    channel0;			/* volume level 0..255 */
+    unsigned char    channel1;
+    unsigned char    channel2;
+    unsigned char    channel3;
 };
 
 struct cdrom_audioctrl
@@ -174,8 +170,8 @@ struct cdrom_audioctrl
     /* input/output parameters */
     
     struct {
-        BYTE selection;
-        BYTE volume;
+        unsigned char selection;
+        unsigned char volume;
     } channel[4];
 };
 
@@ -273,6 +269,9 @@ struct cdrom_read
 /* Read Digital Audio (red book) sectors. Argument points to
    cdrom_read structure. Blocks have 2352 bytes. */
 #define CDROMREADDA         (('C'<<8)|0x11)
+
+/* hard-reset the drive */
+#define CDROMRESET          (('C'<<8)|0x12)
 
 /* Read media catalog number. Argument points to cdrom_mcn
    structure */
