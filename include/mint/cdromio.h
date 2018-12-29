@@ -111,7 +111,7 @@ struct cdrom_tocentry
                                     bit 1: digital copy permitted,
                                     bit 2: data track,
                                     bit 3: four channel */
-    unsigned char    cdte_datamode;		/* currently not set */
+    unsigned int cdte_datamode:8;	/* currently not set */
 	unsigned	short dummy;	/* PM: what is this for ? */
 	cd_ad	cdte_addr;			/* track start */
 };
