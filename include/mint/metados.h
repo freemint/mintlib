@@ -109,7 +109,7 @@ __extension__	\
 #define Metadiscinfo(drive,metadiscinfo_t_p)	\
 	(long)trap_14_wwl((short)(0x3f),(short)(drive),(long)(metadiscinfo_t_p))
 
-#define METADOS_IOCTL_MAGIC	(('F'<<24)|('C'<<16)|('T'<<8)|'L')
+#define METADOS_IOCTL_MAGIC	0x4643544CL /* 'FCTL' */
 
 #define CDROM_LEADOUT_CDAR	0xa2
 
