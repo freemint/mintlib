@@ -272,6 +272,12 @@ extern double modf (double, double *) __THROW;
 extern double acosh (double) __THROW;
 extern double asinh (double) __THROW;
 
+/* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
+extern double nextafter(double __x, double __y);
+#ifdef __USE_ISOC99
+extern double nexttoward(double __x, long double __y);
+#endif
+
 #ifdef __USE_ISOC99
 /* Return X with its signed changed to Y's.  */
 extern double copysign (double, double) __THROW;
