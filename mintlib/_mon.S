@@ -11,12 +11,15 @@
 | Dummy interfaces for gprof if not linked against (g)crt0.o.
 
 #ifndef PROFILING
-	.globl 	__monstartup
-	.globl	__moncontrol
-	.globl 	___mcleanup
 
-__monstartup:
-__moncontrol:
-___mcleanup:
+#include "libc-symbols.h"
+
+	.globl 	C_SYMBOL_NAME(_monstartup)
+	.globl	C_SYMBOL_NAME(_moncontrol)
+	.globl 	C_SYMBOL_NAME(__mcleanup)
+
+C_SYMBOL_NAME(_monstartup):
+C_SYMBOL_NAME(_moncontrol):
+C_SYMBOL_NAME(__mcleanup):
 	rts
 #endif

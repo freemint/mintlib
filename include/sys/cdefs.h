@@ -93,6 +93,7 @@
 
 #define __CONCAT(x,y)	x ## y
 #define __STRING(x)	#x
+#define __STRINGIFY(x)	__STRING(x)
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
 #define __ptr_t void *

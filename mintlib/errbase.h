@@ -5,13 +5,13 @@
 
 #include "errno.h"
 
-	.globl	_errno
+	.globl	C_SYMBOL_NAME(errno)
 
 Edom	= EDOM
 Erange	= ERANGE
 
-#define Errno	_errno
-#define Stderr	__iob+52
+#define Errno	C_SYMBOL_NAME(errno)
+#define Stderr	C_SYMBOL_NAME(stderr)
 
 #ifdef __MSHORT__
 #define Emove	movew

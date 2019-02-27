@@ -27,23 +27,42 @@
 # define HAVE_WEAK_SYMBOLS
 #endif
 
-# define C_SYMBOL_NAME(name) _##name
+#ifndef C_SYMBOL_NAME
+# ifdef __ASSEMBLER__
+#   define C_SYMBOL_NAME2(pref, name) pref##name
+#   define C_SYMBOL_NAME1(pref, name) C_SYMBOL_NAME2(pref, name)
+#   define C_SYMBOL_NAME(name) C_SYMBOL_NAME1(__ASM_SYMBOL_PREFIX, name)
+# else
+#   define C_SYMBOL_NAME(name) __SYMBOL_PREFIX #name
+# endif
+#endif
 
 #ifndef __ASSEMBLER__
 
 # ifdef __GNUC__
 
 /* Define ALIAS as a strong alias for ORIGINAL.  */
-#  define strong_alias(original, alias) \
-  __asm__ (".globl _" #alias "\n\t" \
-       ".set _" #alias ",_" #original);
+#  define strong_alias(name, aliasname) _strong_alias(name, aliasname)
+#  define _strong_alias(original, alias) \
+  __asm__ (".globl " C_SYMBOL_NAME(alias) "\n\t" \
+       ".set " C_SYMBOL_NAME(alias) "," C_SYMBOL_NAME(original));
 
 /* Define ALIAS as a weak alias for ORIGINAL.  */
 #  ifdef HAVE_WEAK_SYMBOLS
-#   define weak_alias(original, alias) \
-  __asm__ (".weak _" #alias "\n\t" \
-       "_" #alias " = " "_" #original);
-#   define weak_extern(symbol) __asm__ (".weak _" #symbol);
+#   define weak_alias(name, aliasname) _weak_alias (name, aliasname)
+#   define _weak_alias(original, alias) \
+  __asm__ (".weak " C_SYMBOL_NAME(alias) "\n\t" \
+       C_SYMBOL_NAME(alias) " = " C_SYMBOL_NAME(original));
+
+/* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
+# define weak_extern(symbol) _weak_extern (weak symbol)
+# define _weak_extern(expr) _Pragma (#expr)
+
+/* This comes between the return type and function name in
+   a function definition to make that definition weak.  */
+# define weak_function __attribute__ ((weak))
+# define weak_const_function __attribute__ ((weak, __const__))
+
 #  endif  /* !__HAVE_WEAK_SYMBOLS */
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
