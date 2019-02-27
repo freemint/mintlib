@@ -20,7 +20,19 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
   static int have_Tsettimeofday = 1;
 
   if (have_Tsettimeofday != 0) {
-    retval = Tsettimeofday (tp, tzp);
+    /*
+     * MiNTs timezone structure is different than ours
+     */
+    struct __mint_timezone minttz;
+    struct __mint_timezone *minttzp = NULL;
+
+    if (tzp != NULL)
+    {
+      minttz.tz_minuteswest = tzp->tz_minuteswest;
+      minttz.tz_dsttime = tzp->tz_dsttime;
+      minttzp = &minttz;
+    }
+    retval = Tsettimeofday(tp, minttzp);
     if (retval == -ENOSYS) {
       have_Tsettimeofday = 0;
     } else if (retval < 0) {
