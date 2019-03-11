@@ -730,6 +730,7 @@ opcode	ret	class name	args */
 0x085	long	Settracks	(short play, short rec) passthrough
 0x086	long	Setmontracks	(short montrack) passthrough
 0x087	long	Setinterrupt	(short src_inter, short cause) passthrough
+0x087	long	NSetinterrupt	(short src_inter, short cause, long inth_addr) passthrough
 0x088	long	Buffoper	(short mode) passthrough
 0x089	long	Dsptristate	(short dspxmit, short dsprec) passthrough
 0x08a	long	Gpio		(short mode, short data) passthrough

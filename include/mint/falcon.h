@@ -470,6 +470,9 @@ typedef struct SndBufPtr {
 #define Setinterrupt(src_inter,cause)					\
 	(long)trap_14_www((short)135,(short)(src_inter),		\
 		(short)(cause))
+#define NSetinterrupt(src_inter,cause,inth_addr)			\
+		(long)trap_14_wwwl((short)135,(short)(src_inter),	\
+		(short)(cause),(long)(inth_addr))
 #define Buffoper(mode)							\
 	(long)trap_14_ww((short)136,(short)(mode))
 #define Dsptristate(dspxmit,dsprec)					\
