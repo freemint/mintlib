@@ -2,6 +2,8 @@
 #error "Never use <math_ldbl.h> directly; include <math_private.h> instead."
 #endif
 
+#include <stdint.h>
+
 #ifdef __mcoldfire__
 #  define NO_LONG_DOUBLE 1
 #endif
@@ -18,13 +20,20 @@ typedef union
   long double value;
   struct
   {
-    u_int64_t msw;
-    u_int64_t lsw;
+    uint64_t msw;
+    uint64_t lsw;
   } parts64;
   struct
   {
-    u_int32_t w0, w1, w2, w3;
+    uint32_t w0, w1, w2, w3;
   } parts32;
+  struct
+  {
+    int16_t sign_exponent;
+    uint16_t empty;
+    uint32_t msw;
+    uint32_t lsw;
+  } parts;
 } ieee854_long_double_shape_type;
 
 #endif
@@ -36,13 +45,20 @@ typedef union
   long double value;
   struct
   {
-    u_int64_t lsw;
-    u_int64_t msw;
+    uint64_t lsw;
+    uint64_t msw;
   } parts64;
   struct
   {
-    u_int32_t w3, w2, w1, w0;
+    uint32_t w3, w2, w1, w0;
   } parts32;
+  struct
+  {
+    uint32_t lsw;
+    uint32_t msw;
+    int sign_exponent:16;
+    unsigned int empty:16;
+  } parts;
 } ieee854_long_double_shape_type;
 
 #endif
@@ -55,6 +71,15 @@ do {								\
   qw_u.value = (d);						\
   (ix0) = qw_u.parts64.msw;					\
   (ix1) = qw_u.parts64.lsw;					\
+} while (0)
+
+#define GET_LDOUBLE_WORDS(exp,ix0,ix1,d)			\
+do {								\
+  ieee854_long_double_shape_type ew_u;				\
+  ew_u.value = (d);						\
+  (exp) = ew_u.parts.sign_exponent;				\
+  (ix0) = ew_u.parts.msw;					\
+  (ix1) = ew_u.parts.lsw;					\
 } while (0)
 
 /* Set a long double from two 64 bit ints.  */

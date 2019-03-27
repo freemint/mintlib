@@ -16,11 +16,13 @@
 int
 __isinfl (long double x)
 {
-	int64_t hx,lx;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
+	int32_t se, hx, lx;
+
+	GET_LDOUBLE_WORDS(se, hx, lx, x);
+	lx |= (hx & 0x7fffffffL) | ((se & 0x7fff) ^ 0x7fff);
 	lx |= -lx;
-	return ~(lx >> 63) & (hx >> 62);
+	se &= 0x8000;
+	return (int)(~(lx >> 31) & (1 - (se >> 14)));
 }
 weak_alias (__isinfl, isinfl)
 #endif
