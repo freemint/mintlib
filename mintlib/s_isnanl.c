@@ -25,12 +25,14 @@
 int
 __isnanl (long double x)
 {
-	int64_t hx,lx;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	hx &= 0x7fffffffffffffffLL;
-	hx |= (u_int64_t)(lx|(-lx))>>63;
-	hx = 0x7fff000000000000LL - hx;
-	return (int)((u_int64_t)hx>>63);
+	int32_t se, hx, lx;
+
+	GET_LDOUBLE_WORDS(se, hx, lx, x);
+	se = (se & 0x7fff) << 1;
+	lx |= hx & 0x7fffffffL;
+	se |= (uint32_t) (lx | (-lx)) >> 31;
+	se = 0xfffe - se;
+	return (int) (((uint32_t) (se)) >> 31);
 }
 weak_alias (__isnanl, isnanl)
 #endif
