@@ -120,6 +120,7 @@ CFLAGS-profil-posix.c = -fno-omit-frame-pointer --no-profile
 #DEFS-vfscanf.c = -DNO_BUG_IN_ISO_C_CORRIGENDUM_1
 CFLAGS-nanosleep.c = -fwrapv
 CFLAGS-vfprintf.c = -Wno-uninitialized
+CFLAGS-vfwprintf.c = -Wno-uninitialized
 CFLAGS-ivfprintf.c = -Wno-uninitialized
 DEFS-ident.c = -DVERSION=\"$(VERSION)\"
 DEFS-ident_sock.c = -DVERSION=\"$(VERSION)\"

@@ -90,7 +90,20 @@ unsigned long long wcstoull (const wchar_t *__restrict, wchar_t **__restrict, in
 
 
 
-#ifndef __MINT__ /* not yet */
+#ifndef	__FILE_defined
+
+/* The opaque type of streams.  */
+typedef struct __stdio_file FILE;
+
+#define	__FILE_defined	1
+#endif /* FILE not defined.  */
+
+#define	__need___va_list
+#include <stdarg.h>
+#ifndef	__GNUC_VA_LIST
+#define	__gnuc_va_list	__ptr_t
+#endif
+
 int fwide (FILE *, int);
 
 
@@ -102,6 +115,11 @@ int vwprintf (const wchar_t *__restrict, __gnuc_va_list);
 int vfwprintf (FILE *__restrict, const wchar_t *__restrict, __gnuc_va_list);
 int vswprintf (wchar_t *__restrict, size_t, const wchar_t *__restrict, __gnuc_va_list);
 
+wint_t fputwc (wchar_t, FILE *);
+wint_t putwc (wchar_t, FILE *);
+wint_t putwchar (wchar_t);
+
+#ifndef __MINT__ /* not yet */
 int wscanf (const wchar_t *__restrict, ...);
 int fwscanf (FILE *__restrict, const wchar_t *__restrict, ...);
 int swscanf (const wchar_t *__restrict, const wchar_t *__restrict, ...);
@@ -113,10 +131,6 @@ int vswscanf (const wchar_t *__restrict, const wchar_t *__restrict, __gnuc_va_li
 wint_t fgetwc (FILE *);
 wint_t getwc (FILE *);
 wint_t getwchar (void);
-
-wint_t fputwc (wchar_t, FILE *);
-wint_t putwc (wchar_t, FILE *);
-wint_t putwchar (wchar_t);
 
 wchar_t *fgetws (wchar_t *__restrict, int, FILE *__restrict);
 int fputws (const wchar_t *__restrict, FILE *__restrict);

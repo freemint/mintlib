@@ -1,30 +1,27 @@
 /* Internal header for parsing printf format strings.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-2013 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Modified for MiNTLib by Guido Flohr, <guido@freemint.de>.  */
 
 #include <ctype.h>
 #include <printf.h>
 #include <stdint.h>
-#ifdef __MINT__
-# include <limits.h>
-#endif
+#include <limits.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -38,7 +35,7 @@ struct printf_spec
 
     /* Pointers into the format string for the end of this format
        spec and the next (or to the end of the string if no more).  */
-    const char *end_of_fmt, *next_fmt;
+    const UCHAR_T *end_of_fmt, *next_fmt;
 
     /* Position of arguments for precision and width, or -1 if `info' has
        the constant value.  */
@@ -48,35 +45,34 @@ struct printf_spec
     int data_arg_type;		/* Type of first argument.  */
     /* Number of arguments consumed by this format specifier.  */
     size_t ndata_args;
+    /* Size of the parameter for PA_USER type.  */
+    int size;
   };
 
 
 /* The various kinds off arguments that can be passed to printf.  */
 union printf_arg
   {
-    unsigned char pa_char;
     wchar_t pa_wchar;
-    short int pa_short_int;
     int pa_int;
     long int pa_long_int;
     long long int pa_long_long_int;
-    unsigned short int pa_u_short_int;
     unsigned int pa_u_int;
     unsigned long int pa_u_long_int;
     unsigned long long int pa_u_long_long_int;
-    float pa_float;
     double pa_double;
     long double pa_long_double;
     const char *pa_string;
     const wchar_t *pa_wstring;
     void *pa_pointer;
+    void *pa_user;
   };
 
 
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */
 static inline unsigned int
-read_int (const char * *pstr)
+read_int (const UCHAR_T * *pstr)
 {
   unsigned int retval = **pstr - L_('0');
 
@@ -93,36 +89,17 @@ read_int (const char * *pstr)
 
 /* Find the next spec in FORMAT, or the end of the string.  Returns
    a pointer into FORMAT, to a '%' or a '\0'.  */
-#ifndef __MINT__
-static inline const char *
-find_spec (const char *format, mbstate_t *ps)
-{
-  while (*format != '\0' && *format != '%')
-    {
-      int len;
-
-      /* Remove any hints of a wrong encoding.  */
-      ps->count = 0;
-      if (isascii (*format) || (len = mbrlen (format, MB_CUR_MAX, ps)) <= 0)
-	++format;
-      else
-	format += len;
-    }
-  return format;
-}
-#else
-static inline const char *
-find_spec (const char *format)
+static inline const UCHAR_T *
+find_spec (const UCHAR_T *format)
 {
   while (*format != '\0' && *format != '%')
     ++format;
   return format;
 }
-#endif
 
 
 /* These are defined in reg-printf.c.  */
-extern printf_arginfo_function *__printf_arginfo_table[];
+extern printf_arginfo_size_function *__printf_arginfo_table[];
 extern printf_function **__printf_function_table;
 
 
@@ -131,15 +108,9 @@ extern printf_function **__printf_function_table;
    consumed.  At most MAXTYPES - POSN types are filled in TYPES.  Return
    the number of args consumed by this spec; *MAX_REF_ARG is updated so it
    remains the highest argument index used.  */
-#ifndef __MINT__
 static inline size_t
-parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
-		size_t *max_ref_arg, mbstate_t *ps)
-#else
-static inline size_t
-parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
+parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 		size_t *max_ref_arg)
-#endif
 {
   unsigned int n;
   size_t nargs = 0;
@@ -159,7 +130,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
   /* Test for positional argument.  */
   if (ISDIGIT (*format))
     {
-      const char *begin = format;
+      const UCHAR_T *begin = format;
 
       n = read_int (&format);
 
@@ -218,7 +189,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
     {
       /* The field width is given in an argument.
 	 A negative field width indicates left justification.  */
-      const char *begin = ++format;
+      const UCHAR_T *begin = ++format;
 
       if (ISDIGIT (*format))
 	{
@@ -255,7 +226,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
       if (*format == L_('*'))
 	{
 	  /* The precision is given in an argument.  */
-	  const char *begin = ++format;
+	  const UCHAR_T *begin = ++format;
 
 	  if (ISDIGIT (*format))
 	    {
@@ -348,7 +319,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
     /* We don't try to get the types for all arguments if the format
        uses more than one.  The normal case is covered though.  */
     spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
-      (&spec->info, 1, &spec->data_arg_type);
+      (&spec->info, 1, &spec->data_arg_type, &spec->size);
   else
     {
       /* Find the data argument types of a built-in spec.  */
@@ -425,11 +396,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
     {
       /* Find the next format spec.  */
       spec->end_of_fmt = format;
-#ifndef __MINT__
-      spec->next_fmt = find_spec (format, ps);
-#else
       spec->next_fmt = find_spec (format);
-#endif
     }
 
   return nargs;

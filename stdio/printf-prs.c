@@ -1,20 +1,19 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Modified for MiNTLib by Guido Flohr, <guido@freemint.de>.  */
 
@@ -22,9 +21,7 @@
 #include <printf.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef __MINT__
-# include <wchar.h>
-#endif
+#include <wchar.h>
 #include <sys/param.h>
 
 #ifndef COMPILE_WPRINTF
@@ -33,6 +30,8 @@
 # define INT_T		int
 # define L_(Str)	Str
 # define ISDIGIT(Ch)	isdigit (Ch)
+# define ISASCII(Ch)	isascii (Ch)
+# define MBRLEN(Cp, L, St) mbrlen (Cp, L, St)
 
 # ifdef USE_IN_LIBIO
 #  define PUT(F, S, N)	_IO_sputn (F, S, N)
@@ -70,6 +69,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # endif
 #endif
 
+#define DONT_NEED_READ_INT
 #include "printf-parse.h"
 
 
@@ -82,26 +82,17 @@ parse_printf_format (fmt, n, argtypes)
   size_t nargs;			/* Number of arguments.  */
   size_t max_ref_arg;		/* Highest index used in a positional arg.  */
   struct printf_spec spec;
-#ifndef __MINT__
-  mbstate_t mbstate;
-#endif
+  const unsigned char *f = (const unsigned char *) fmt;
 
   nargs = 0;
   max_ref_arg = 0;
 
   /* Search for format specifications.  */
-#ifndef __MINT__
-  for (fmt = find_spec (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
-#else
-  for (fmt = find_spec (fmt); *fmt != '\0'; fmt = spec.next_fmt)
-#endif
+  for (f = find_spec (f); *f != '\0'; f = spec.next_fmt)
     {
       /* Parse this spec.  */
-#ifndef __MINT__
-      nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg, &mbstate);
-#else
-      nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg);
-#endif
+      nargs += parse_one_spec (f, nargs, &spec, &max_ref_arg);
+
       /* If the width is determined by an argument this is an int.  */
       if (spec.width_arg != -1 && (size_t) spec.width_arg < n)
 	argtypes[spec.width_arg] = PA_INT;
@@ -122,7 +113,8 @@ parse_printf_format (fmt, n, argtypes)
 	    /* We have more than one argument for this format spec.  We must
                call the arginfo function again to determine all the types.  */
 	    (void) (*__printf_arginfo_table[spec.info.spec])
-	      (&spec.info, n - spec.data_arg, &argtypes[spec.data_arg]);
+	      (&spec.info, n - spec.data_arg, &argtypes[spec.data_arg],
+	       &spec.size);
 	    break;
 	  }
     }

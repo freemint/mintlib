@@ -24,6 +24,7 @@
 #include <stdlib/gmp.h>
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
+#include <wchar.h>
 
 #include "_itoa.h"
 
@@ -162,16 +163,16 @@ extern const char _itoa_lower_digits[];
 /* Upper-case digits.  */
 extern const char _itoa_upper_digits[];
 
+#ifdef COMPILE_WPRINTF
+# define _itoa _witoa
+#endif
 
-char *
-_itoa (value, buflim, base, upper_case)
-     unsigned long long int value;
-     char *buflim;
-     unsigned int base;
-     int upper_case;
+
+CHAR_T *
+_itoa (unsigned long long int value, CHAR_T *buflim, unsigned int base, int upper_case)
 {
   const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
-  char *bp = buflim;
+  CHAR_T *bp = buflim;
   const struct base_table_t *brec = &base_table[base - 2];
 
   switch (base)

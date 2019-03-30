@@ -6,6 +6,7 @@
 
 SRCFILES = \
 	_itoa.c \
+	_witoa.c \
 	asprintf.c \
 	binmode.c \
 	clearerr.c \
@@ -88,4 +89,14 @@ SRCFILES = \
 	vscanf.c \
 	vsnprintf.c \
 	vsprintf.c \
-	vsscanf.c
+	vsscanf.c \
+	\
+	wprintf.c \
+	fwprintf.c \
+	swprintf.c \
+	vwprintf.c \
+	vfwprintf.c \
+	vswprintf.c \
+	fwide.c \
+	putwc.c \
+	$(empty)

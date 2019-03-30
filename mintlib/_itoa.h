@@ -17,19 +17,25 @@
 
 #include <support.h>
 
+#ifndef CHAR_T
+# define CHAR_T		char
+# define _witoa     _itoa
+#endif
+CHAR_T * _witoa (unsigned long long int, CHAR_T *, unsigned int, int);
+
 /* Convert VALUE into ASCII in base BASE (2..36).
    Write backwards starting the character just before BUFLIM.
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-_EXTERN_INLINE char * __attribute__ ((unused))
-_itoa_word (unsigned long value, char *buflim,
+_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+_itoa_word (unsigned long value, CHAR_T *buflim,
 	    unsigned int base, int upper_case)
 {
   extern const char _itoa_upper_digits[];
   extern const char _itoa_lower_digits[];
   const char* digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
-  char *bp = buflim;
+  CHAR_T *bp = buflim;
 
   switch (base)
     {
@@ -51,21 +57,21 @@ _itoa_word (unsigned long value, char *buflim,
   return bp;
 }
 
-_EXTERN_INLINE char * __attribute__ ((unused))
-_fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
+_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+_fitoa_word (unsigned long value, CHAR_T *buf, unsigned int base, int upper_case)
 {
-  char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
-  char* cp = _itoa_word (value, tmpbuf + sizeof value * 4, base, upper_case);
+  CHAR_T tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
+  CHAR_T* cp = _itoa_word (value, tmpbuf + sizeof value * 4, base, upper_case);
   while (cp < tmpbuf + sizeof value * 4)
     *buf++ = *cp++;
   return buf;
 }
 
-_EXTERN_INLINE char * __attribute__ ((unused))
-_fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
+_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+_fitoa (unsigned long long value, CHAR_T *buf, unsigned int base, int upper_case)
 {
-  char tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
-  char* cp = _itoa (value, tmpbuf + sizeof value * 4, base, upper_case);
+  CHAR_T tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
+  CHAR_T* cp = _witoa (value, tmpbuf + sizeof value * 4, base, upper_case);
   while (cp < tmpbuf + sizeof value * 4)
     *buf++ = *cp++;
   return buf;
