@@ -10,6 +10,10 @@
 
 #include <string.h>
 
+#if __GNUC_PREREQ(7, 0)
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /* The MiNTLib is actually reentrant.  The thread-safe version is
    provided here for compatibility with the GNU libc.  */
 char* __strerror_r (errnum, buf, bufsize)
