@@ -26,7 +26,7 @@ __isnan (double x)
 	hx &= 0x7fffffff;
 	hx |= (u_int32_t)(lx|(-lx))>>31;
 	hx = 0x7ff00000 - hx;
-	return (int)((u_int32_t)(hx))>>31;
+	return (int)(((u_int32_t)(hx))>>31);
 }
 weak_alias (__isnan, isnan)
 #ifdef NO_LONG_DOUBLE
