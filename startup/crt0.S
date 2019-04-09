@@ -35,6 +35,7 @@
 	.globl	C_SYMBOL_NAME(__Ident_gnulib)
 	.globl	C_SYMBOL_NAME(__Ident_socketlib)
 	.globl	C_SYMBOL_NAME(__Ident_gem)
+	.globl	C_SYMBOL_NAME(__Ident_math)
 
 |
 | Functions defined elsewhere.

@@ -46,6 +46,7 @@ SRCFILES = \
 	heapbase.c \
 	ident.c \
 	ident_dummy_gem.c \
+	ident_dummy_math.c \
 	iflink.c \
 	inistack.c \
 	inode.c \
