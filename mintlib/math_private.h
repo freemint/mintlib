@@ -316,4 +316,82 @@ extern double __slowexp (double __x);
 extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
 
+int __finite(double x);
+int finite(double x);
+int __finitef(float x);
+int finitef(float x);
+int __finitel(long double x);
+int finitel(long double x);
+int __isinf (double x);
+int isinf (double x);
+int __isinff (float x);
+int isinff (float x);
+int __isinfl (long double x);
+int isinfl (long double x);
+int __isnan (double x);
+int isnan (double x);
+int __isnanf (float x);
+int isnanf (float x);
+int __isnanl (long double x);
+int isnanl (long double x);
+int __signbit (double x);
+int signbit (double x);
+int __signbitf (float x);
+int signbitf (float x);
+int __signbitl (long double x);
+int signbitl (long double x);
+
+#undef signbit
+/* Return nonzero value if sign of X is negative.  */
+# if defined(__NO_LONG_DOUBLE_MATH) || defined(NO_LONG_DOUBLE)
+#  define signbit(x) \
+     (sizeof (x) == sizeof (float) ? __signbitf (x) : __signbit (x))
+# else
+#  define signbit(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __signbitf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __signbit (x) : __signbitl (x))
+# endif
+
+#undef isfinite
+/* Return nonzero value if X is not +-Inf or NaN.  */
+# if defined(__NO_LONG_DOUBLE_MATH) || defined(NO_LONG_DOUBLE)
+#  define isfinite(x) \
+     (sizeof (x) == sizeof (float) ? __finitef (x) : __finite (x))
+# else
+#  define isfinite(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __finitef (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __finite (x) : __finitel (x))
+# endif
+
+#undef isnan
+/* Return nonzero value if X is a NaN.  We could use `fpclassify' but
+   we already have this functions `__isnan' and it is faster.  */
+# if defined(__NO_LONG_DOUBLE_MATH) || defined(NO_LONG_DOUBLE)
+#  define isnan(x) \
+     (sizeof (x) == sizeof (float) ? __isnanf (x) : __isnan (x))
+# else
+#  define isnan(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __isnanf (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isnan (x) : __isnanl (x))
+# endif
+
+#undef isinf
+/* Return nonzero value is X is positive or negative infinity.  */
+# if defined(__NO_LONG_DOUBLE_MATH) || defined(NO_LONG_DOUBLE)
+#  define isinf(x) \
+     (sizeof (x) == sizeof (float) ? __isinff (x) : __isinf (x))
+# else
+#  define isinf(x) \
+     (sizeof (x) == sizeof (float)					      \
+      ? __isinff (x)							      \
+      : sizeof (x) == sizeof (double)					      \
+      ? __isinf (x) : __isinfl (x))
+# endif
+
 #endif /* _MATH_PRIVATE_H_ */

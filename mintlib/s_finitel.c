@@ -18,7 +18,6 @@
  * no branching!
  */
 
-#include "math.h"
 #include "math_private.h"
 
 #ifndef NO_LONG_DOUBLE

@@ -26,7 +26,7 @@
 
 #include <ctype.h>
 #include <ieee754.h>
-#include <math.h>
+#include "math_private.h"
 #include <printf.h>
 #include <stdlib.h>
 #include <stdio.h>

@@ -40,7 +40,8 @@
 #  endif
 # endif
 # define MPN2FLOAT	__mpn_construct_double
-# define FLOAT_HUGE_VAL	HUGE_VAL
+# define FLOAT_HUGE_VAL	__builtin_inf()
+# define FLOAT_NAN_VAL	__builtin_nan("")
 # define SET_MANTISSA(flt, mant) \
   do { union ieee754_double u;						      \
        u.d = (flt);							      \
@@ -60,7 +61,7 @@
 #ifndef __MINT__
 # include "../locale/localeinfo.h"
 #endif
-#include <math.h>
+#include "math_private.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -573,7 +574,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
 	  /* Return NaN.  */
-	  FLOAT retval = NAN;
+	  FLOAT retval = FLOAT_NAN_VAL;
 
 	  cp += 3;
 

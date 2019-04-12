@@ -22,19 +22,12 @@
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 #include <ctype.h>
 #include <ieee754.h>
-#include <math.h>
+#include "math_private.h"
 #include <printf.h>
 #ifdef USE_IN_LIBIO
 #  include <libioP.h>
 #else
 #  include <stdio.h>
-#endif
-
-#ifdef __MINT__
-extern int __isnan (double);
-extern int __isnanl (long double);
-extern int __isinf (double);
-extern int __isinfl (long double);
 #endif
 
 /* This defines make it possible to use the same code for GNU C library and

@@ -9,7 +9,8 @@
 # define STRTOF		strtof
 #endif
 #define	MPN2FLOAT	__mpn_construct_float
-#define	FLOAT_HUGE_VAL	HUGE_VALF
+#define	FLOAT_HUGE_VAL	__builtin_inff()
+#define FLOAT_NAN_VAL	__builtin_nanf("")
 #define SET_MANTISSA(flt, mant) \
   do { union ieee754_float u;						      \
        u.f = (flt);							      \

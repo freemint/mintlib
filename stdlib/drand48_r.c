@@ -20,7 +20,6 @@
 /* Modified by Guido Flohr <guido@freemint.de> for MiNTLib.  */
 
 #include <errno.h>
-#include <math.h>
 #include <stdlib.h>
 
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */

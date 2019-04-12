@@ -2,7 +2,7 @@
 # define DENORM_EXP (MIN_EXP - 1)
 #endif
 
-#include <math.h>
+#include "math_private.h"
 
 #if !defined(__NO_LONG_DOUBLE_MATH) && !defined(__mcoldfire__)
 /* The actual implementation for all floating point sizes is in strtod.c.
@@ -16,7 +16,8 @@
 #  define STRTOF	strtold
 # endif
 # define MPN2FLOAT	__mpn_construct_long_double
-# define FLOAT_HUGE_VAL	HUGE_VALL
+# define FLOAT_HUGE_VAL	__builtin_infl()
+# define FLOAT_NAN_VAL	__builtin_nanl("")
 # define SET_MANTISSA(flt, mant) \
   do { union ieee854_long_double u;					      \
        u.d = (flt);							      \

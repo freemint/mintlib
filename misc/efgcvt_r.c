@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
+#include "math_private.h"
 #include <stdlib.h>
 #include <sys/param.h>
 

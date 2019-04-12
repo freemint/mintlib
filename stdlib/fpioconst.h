@@ -21,7 +21,6 @@
 #define	_FPIOCONST_H
 
 #include <float.h>
-#include <math.h>
 #include "gmp.h"
 
 

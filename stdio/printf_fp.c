@@ -40,7 +40,7 @@
 # include <locale/localeinfo.h>
 #endif
 #include <limits.h>
-#include <math.h>
+#include "math_private.h"
 #include <printf.h>
 #include <string.h>
 #include <unistd.h>
@@ -124,8 +124,6 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n)); /* In vfprintf.c.  */
   memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
 #define MPN_GE(u,v) \
   (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
-
-extern int __isinfl (long double), __isnanl (long double);
 
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 				       int *expt, int *is_neg,
