@@ -16,7 +16,6 @@
 #include <mint/osbind.h> /* For Random ().  */
 #include <sys/types.h>
 
-extern int __diraccess (const char* dir);
 extern const char __tmp_letters[62];
 
 /* The `mkstemp' function generates a unique file name just as `mktemp' 

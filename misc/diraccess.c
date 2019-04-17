@@ -43,23 +43,22 @@ __get_tmpdir (const char* preferred, int try_tmpdir)
   
   	/* If we have a preferred directory try this one.  */
   	if (preferred != NULL && strlen (preferred) < L_tmpnam  
-  	    && __diraccess (preferred))
-    		return (const char*) preferred;
+  	    && __diraccess (preferred) == 0)
+    		return preferred;
     
   	/* Next try: $TMPDIR but only if try_tmpdir.  */
   	if (try_tmpdir) {
   		trydir =  __secure_getenv ("TMPDIR");
-  		if (trydir != NULL && strlen (trydir) < L_tmpnam 
-      		    && __diraccess (trydir))
+		if (trydir != NULL && strlen (trydir) < L_tmpnam && __diraccess (trydir) == 0)
     			return trydir;
   	}
   
   	/* Next try: P_tmpdir.  */
-  	if (strcmp (trydir, P_tmpdir) && __diraccess (__ugly_tos_P_tmpdir))
+	if ((trydir == NULL || strcmp (trydir, P_tmpdir) != 0) && __diraccess (__ugly_tos_P_tmpdir) == 0)
     		return __mint ? P_tmpdir : __ugly_tos_P_tmpdir;
   
   	/* Try "/tmp" if it exists.  */
-  	if (strcmp (P_tmpdir, "/tmp") && __diraccess ("/tmp"))
+  	if (strcmp (P_tmpdir, "/tmp") && __diraccess ("/tmp") == 0)
     		return __mint ? "/tmp" : "\\tmp";
 
 #if 0  
@@ -68,15 +67,15 @@ __get_tmpdir (const char* preferred, int try_tmpdir)
   	if (try_tmpdir && getenv ("POSIXLY_CORRECT")) {  
   		trydir = __secure_getenv ("TEMPDIR");
   		if (trydir != NULL  && strlen (trydir) < L_tmpnam 
-  		    && __diraccess (trydir))
+  		    && __diraccess (trydir) == 0)
     			return trydir;
   		trydir = __secure_getenv ("TMP");
   		if (trydir != NULL && strlen (trydir) < L_tmpnam  
-  		    && __diraccess (trydir))
+  		    && __diraccess (trydir) == 0)
     			return trydir;
   		trydir = __secure_getenv ("TEMP");
   		if (trydir != NULL && strlen (trydir) < L_tmpnam  
-  		    && __diraccess (trydir))
+  		    && __diraccess (trydir) == 0)
     			return trydir;
     	}
 #endif
@@ -95,7 +94,7 @@ int __diraccess (const char* name)
   	int retval = -1;
   	int __saved_errno = errno;  
   
-  	if (__quickstat (name, &statbuf, 0) != 0) {
+  	if (__quickstat (name, &statbuf, 0) == 0) {
       		uid_t euid = geteuid ();
       		gid_t egid = getegid ();
       
