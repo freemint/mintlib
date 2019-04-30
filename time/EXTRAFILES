@@ -4,7 +4,5 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES new_york.h \
-test-clock.c test-time.args test-time.c test-posixtz.c \
-tzfile.h
-
+SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES \
+test-clock.c test-time.args test-time.c test-posixtz.c

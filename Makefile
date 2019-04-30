@@ -97,7 +97,7 @@ dist-check:
 		&& echo "##################################################" \
 		&& echo "# $(distdir) is ready for distribution." \
 		&& echo "##################################################"
-	@rm -f $(distdir)
+	@rm -rf $(distdir)
 
 dist: $(top_srcdir)/CFILES $(top_srcdir)/include/features.h \
   $(top_srcdir)/include/linker.h distdir

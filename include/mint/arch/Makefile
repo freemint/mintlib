@@ -12,7 +12,7 @@ SHELL = /bin/sh
 srcdir = .
 top_srcdir = ../../..
 csrcdir = $(top_srcdir)/src
-subdir = mint/arch
+subdir = arch
 
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist

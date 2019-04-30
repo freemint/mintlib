@@ -4,4 +4,5 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 
-SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES 
+SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES \
+internal.h
