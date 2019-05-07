@@ -61,7 +61,12 @@ __gettimeofday (struct timeval *tp, struct timezone *tzp)
      
   if (tp != NULL) {
     tp->tv_sec = mktime (&now);
-    tp->tv_usec = 0;
+    tp->tv_usec = (clock() * (1000000UL / CLOCKS_PER_SEC)) % 2000000UL;
+    if (tp->tv_usec >= 1000000UL)
+    {
+      tp->tv_usec -= 1000000UL;
+      tp->tv_sec++;
+    }
   }
     
   if (tzp != NULL) {
