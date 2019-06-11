@@ -73,6 +73,10 @@ __getdomainname(char *buf, size_t len)
 		/* Changed by Guido Flohr: Warn if buffer was too small.  */
 		real_length = foo ? strlen (foo) : 1;
 
+#if __GNUC_PREREQ(8, 0)
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
 		strncpy(buf, foo ? foo : "", len < MAXHOSTNAMELEN  ? 
 			len : MAXHOSTNAMELEN);
 		
