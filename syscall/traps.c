@@ -181,20 +181,20 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 			size += 4;
 		}
 
-		fprintf(out, "\t%%%i,%%sp@-\\n\\t\"%s\n", i + 2 - split_flag, macro0);
+		fprintf(out, "\t%%%i,%%%%sp@-\\n\\t\"%s\n", i + 2 - split_flag, macro0);
 
 		--i;
 	}
 
-	fprintf(out, "\t\t\"movw\t%%%i,%%sp@-%s\"%s\n", split_flag ? 0 : 1, split_flag ? "" : "\\n\\t", macro0);
+	fprintf(out, "\t\t\"movw\t%%%i,%%%%sp@-%s\"%s\n", split_flag ? 0 : 1, split_flag ? "" : "\\n\\t", macro0);
 
 	if (!split_flag)
 	{
 		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
 		if (size <= 8)
-			fprintf(out, "\t\t\"addql\t#%i,%%sp\"%s\n", size, macro0);
+			fprintf(out, "\t\t\"addql\t#%i,%%%%sp\"%s\n", size, macro0);
 		else
-			fprintf(out, "\t\t\"lea\t%%sp@(%i),%%sp\"%s\n", size, macro0);
+			fprintf(out, "\t\t\"lea\t%%%%sp@(%i),%%%%sp\"%s\n", size, macro0);
 
 		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
 	}
@@ -224,7 +224,7 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 		fprintf(out, "\t__asm__ volatile%s\n", macro0);
 		fprintf(out, "\t(%s\n", macro0);
 		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
-		fprintf(out, "\t\t\"lea\t%%sp@(%i),%%sp\"%s\n", size, macro0);
+		fprintf(out, "\t\t\"lea\t%%%%sp@(%i),%%%%sp\"%s\n", size, macro0);
 		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
 		fprintf(out, "\t: /* inputs */%s\n", macro0);
 		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\", \"cc\" /* clobbered regs */%s\n", macro0);

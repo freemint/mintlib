@@ -88,9 +88,9 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT \
-  move.l %fp, -(%sp); move.l %sp, %fp;					      \
+  move.l %%fp, -(%%sp); move.l %%sp, %%fp;					      \
   jbsr JUMPTARGET (mcount);						      \
-  move.l (%sp)+, %fp;
+  move.l (%%sp)+, %%fp;
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
