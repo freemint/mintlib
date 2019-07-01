@@ -20,7 +20,6 @@ bakclean:
 clean:
 	rm -f *.o lib*.a *.tmp
 	rm -f core report nohup.out errlog
-	rm -f foobar foo bar baz junk schrott muell
 	rm -rf .deps 
 
 install: all-here install-include install-lib install-man \
