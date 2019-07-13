@@ -137,7 +137,7 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 		fprintf(out, "{\n");
 	}
 
-	fprintf(out, "\tregister long retvalue __asm__(\"d0\");%s\n", macro0);
+	fprintf(out, "\tregister long __retvalue __asm__(\"d0\");%s\n", macro0);
 
 	if (macro)
 	{
@@ -196,7 +196,7 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 		else
 			fprintf(out, "\t\t\"lea\t%%%%sp@(%i),%%%%sp\"%s\n", size, macro0);
 
-		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
+		fprintf(out, "\t: \"=r\"(__retvalue) /* outputs */%s\n", macro0);
 	}
 	else
 		fprintf(out, "\t: /* outputs */%s\n", macro0);
@@ -225,7 +225,7 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 		fprintf(out, "\t(%s\n", macro0);
 		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
 		fprintf(out, "\t\t\"lea\t%%%%sp@(%i),%%%%sp\"%s\n", size, macro0);
-		fprintf(out, "\t: \"=r\"(retvalue) /* outputs */%s\n", macro0);
+		fprintf(out, "\t: \"=r\"(__retvalue) /* outputs */%s\n", macro0);
 		fprintf(out, "\t: /* inputs */%s\n", macro0);
 		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\", \"cc\" /* clobbered regs */%s\n", macro0);
 		fprintf(out, "\t  AND_MEMORY%s\n", macro0);
@@ -234,13 +234,13 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 
 	if (macro)
 	{
-		fprintf(out, "\tretvalue;%s\n", macro0);
+		fprintf(out, "\t__retvalue;%s\n", macro0);
 		fprintf(out, "})\n");
 	}
 	else
 	{
 		fprintf(out, "\t\n");
-		fprintf(out, "\treturn retvalue;\n");
+		fprintf(out, "\treturn __retvalue;\n");
 		fprintf(out, "}\n");
 	}
 }

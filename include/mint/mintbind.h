@@ -17,7 +17,7 @@ __BEGIN_DECLS
 #define trap_1_wllw(n, a, b, c)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long)(a);						\
 	long  _b = (long) (b);						\
 	short  _c = (short) (c);					\
@@ -30,18 +30,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(12),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwlw(n, a, b, c)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	long  _b = (long) (b);						\
 	short  _c = (short) (c);					\
@@ -54,18 +54,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(10),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwww(n, a, b, c)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	short  _b = (short)(b);						\
 	short  _c = (short)(c);						\
@@ -78,18 +78,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"addql	#8,%%sp"						\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwwl(n, a, b, c)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	short  _b = (short)(b);						\
 	long  _c = (long)(c);						\
@@ -102,18 +102,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(10),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)     /* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwl(n, a, b)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	long  _b = (long) (b);						\
 	    								\
@@ -124,18 +124,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"addql	#8,%%sp"						\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wlllw(n, a, b, c, d)					\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long) (a);						\
 	long _b = (long) (b);						\
 	long _c = (long) (c);						\
@@ -150,18 +150,46 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(16),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d) /* inputs  */	\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
+})
+
+#define trap_1_wllwwl(n,a,b,c,d,e) \
+__extension__ \
+({ \
+	register long __retvalue __asm__("d0"); \
+	long _a = (long)(a); \
+	long _b = (long)(b); \
+	short _c = (short)(c); \
+	short _d = (short)(d); \
+	long _e = (long)(e); \
+	 \
+	__asm__ volatile \
+	( \
+		"movl	%6,%%sp@-\n\t" \
+		"movw	%5,%%sp@-\n\t" \
+		"movw	%4,%%sp@-\n\t" \
+		"movl	%3,%%sp@-\n\t" \
+		"movl	%2,%%sp@-\n\t" \
+		"movw	%1,%%sp@-\n\t" \
+		"trap	#1\n\t" \
+		"lea	%%sp@(18),%%sp" \
+	: "=r"(__retvalue) /* outputs */ \
+	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e) /* inputs  */ \
+	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc" /* clobbered regs */ \
+	  AND_MEMORY \
+	); \
+	__retvalue; \
 })
 
 #define trap_1_wlll(n, a, b, c)						\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long)(a);						\
 	long _b = (long)(b);						\
 	long _c = (long)(c);						\
@@ -174,19 +202,19 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(14),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c)	/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 									\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwllll(n, a, b, c, d, e)					\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	long  _b = (long) (b);						\
 	long  _c = (long) (c);						\
@@ -203,18 +231,18 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(20),%%sp "					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c), "r"(_d), "r"(_e) /* inputs  */ \
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wllll(n, a, b, c, d)					\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long)(a);						\
 	long _b = (long)(b);						\
 	long _c = (long)(c);						\
@@ -229,20 +257,20 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(18),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d)				/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 									\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wwlllll(n, a, b, c, d, e, f)					\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	short _a = (short)(a);						\
 	long _b = (long)(b);						\
 	long _c = (long)(c);						\
@@ -261,20 +289,20 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(24),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d), "r"(_e), "r"(_f)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 									\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wlllll(n, a, b, c, d, e)					\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long)(a);						\
 	long _b = (long)(b);						\
 	long _c = (long)(c);						\
@@ -291,20 +319,20 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(22),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d), "r"(_e)			/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 									\
-	retvalue;							\
+	__retvalue;							\
 })
 
 #define trap_1_wllllll(n, a, b, c, d, e, f)				\
 __extension__								\
 ({									\
-	register long retvalue __asm__("d0");				\
+	register long __retvalue __asm__("d0");				\
 	long _a = (long)(a);						\
 	long _b = (long)(b);						\
 	long _c = (long)(c);						\
@@ -323,14 +351,14 @@ __extension__								\
 		"movw	%1,%%sp@-\n\t"					\
 		"trap	#1\n\t"						\
 		"lea	%%sp@(26),%%sp"					\
-	: "=r"(retvalue)			/* outputs */		\
+	: "=r"(__retvalue)			/* outputs */		\
 	: "g"(n), "r"(_a), "r"(_b), "r"(_c),				\
 	  "r"(_d), "r"(_e), "r"(_f)		/* inputs  */		\
 	: __CLOBBER_RETURN("d0") "d1", "d2", "a0", "a1", "a2", "cc"    /* clobbered regs */	\
 	  AND_MEMORY							\
 	);								\
 									\
-	retvalue;							\
+	__retvalue;							\
 })
 
 
