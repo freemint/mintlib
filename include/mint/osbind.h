@@ -256,10 +256,10 @@ __extension__								\
 __extension__								\
 ({									\
 	register long retvalue __asm__("d0");				\
-	short _a = (short)(a);						\
-	short _b = (long)(b);						\
-	long  _c = (short) (c);						\
-	long  _d = (short) (d);						\
+	long _a = (long)(a);						\
+	short _b = (short)(b);						\
+	short _c = (short)(c);						\
+	short _d = (short)(d);						\
 	    								\
 	__asm__ volatile						\
 	(								\
