@@ -23,15 +23,18 @@
 #include <errno.h>
 
 
-/* Close a stream.  */
+/* Close all streams.  */
 int
-__fcloseall ()
+__fcloseall (void)
 {
   /* Close all streams.  */
-  register FILE *f;
-  for (f = __stdio_head; f != NULL; f = f->__next)
+  register FILE *f, *next;
+  for (f = __stdio_head; f != NULL; f = next)
+  {
+  	next = f->__next;
     if (__validfp(f))
       (void) fclose(f);
+  }
   return 0;
 }
 weak_alias (__fcloseall, fcloseall)
