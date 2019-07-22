@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include "support.h"
 
 #ifndef N_
 # define N_(String) String
@@ -265,46 +266,14 @@ int _sys_nerr = (int) (sizeof (_sys_errlist) / sizeof (_sys_errlist[0]));
 
 /* Map error number to descriptive string.  */
 
-static char* unknown = NULL;
-static size_t unknown_size = 1;
-static char unknown_error2[] = N_("Unknown error");
+static char unknown_error2[] = N_("Unknown error 1234567890");
 
-char*
-strerror (errnum)
-     int errnum;
+char* strerror (int errnum)
 {
-  if (errnum >= 0 && errnum < _sys_nerr && _sys_errlist[errnum] != unknown_error)
-    return ((char*) _(_sys_errlist[errnum]));
-  else
-    {
-      /* Unknown error.  */
-      if (unknown == NULL)
-        unknown = malloc (unknown_size);
-      if (unknown == NULL)
-        {
-          strcpy (unknown_error2, _("Unknown error"));
-          return unknown_error2;
-        }
-        
-      while (1)
-        {
-          int stored = snprintf (unknown, unknown_size,
-          			 _("Unknown error %u"), errnum);
-          char* newbuf;
-          
-          /* Did that work?  */
-          if (stored < unknown_size)
-            return unknown;
-          newbuf = realloc (unknown, unknown_size * 2);
-          if (newbuf == NULL)
-            {
-              strcpy (unknown_error2, _("Unknown error"));
-              return unknown_error2;
-            }
-          unknown_size *= 2;
-          unknown = newbuf;
-        }
-    }
+   if (errnum >= 0 && errnum < _sys_nerr && _sys_errlist[errnum] != unknown_error)
+     return ((char*) _(_sys_errlist[errnum]));
+  _ultoa(errnum, unknown_error2 + sizeof("Unknown error ") - 1, 10);
+  return unknown_error2;
 }
 
 weak_alias (_sys_errlist, sys_errlist)
