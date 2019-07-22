@@ -161,10 +161,7 @@ vsyslog(int pri, const char* fmt, va_list argp)
 			*b++ = c;
 			continue;
 		}
-		if (olderrno > _sys_nerr)
-			(void)sprintf(b, "error %d", olderrno);
-		else
-			strcpy(b, _sys_errlist[olderrno]);
+		strcpy(b, strerror(olderrno));
 		b += strlen(b);
 	}
 	*b++ = '\n';
