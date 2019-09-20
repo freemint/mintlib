@@ -113,4 +113,12 @@ SRCFILES = \
 	wctype.c \
 	wcwidth.c \
 	wcscoll.c \
+	\
+	nf_debug.c \
+	nf_name.c \
+	nf_ops.c \
+	nf_stder.c \
+	nf_shutd.c \
+	nf_vers.c \
+	nf_exec.c \
 	$(empty)
