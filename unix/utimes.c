@@ -19,7 +19,7 @@ int __utime (const char *_filename, const struct utimbuf *_tset);
  * operating system doesn't support for now.
  */
 int
-__utimes (const char *filename, struct timeval tvp[2])
+__utimes (const char *filename, const struct timeval tvp[2])
 {
 	struct utimbuf utimbuf;
 

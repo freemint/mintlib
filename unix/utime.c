@@ -130,7 +130,7 @@ __utime (const char *_filename, const struct utimbuf *_tset)
 	}
 	
 	if (retval != 0) {
-		__set_errno (-fh);
+		__set_errno (-(int)retval);
 		return -1;
 	}
 	

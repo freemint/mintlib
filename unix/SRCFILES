@@ -28,6 +28,7 @@ SRCFILES = \
 	fstat.c \
 	fsync.c \
 	ftruncate.c \
+	futimes.c \
 	getdomainname.c \
 	getdtabl.c \
 	getegid.c \

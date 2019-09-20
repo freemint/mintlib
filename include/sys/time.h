@@ -139,10 +139,20 @@ extern int setitimer (__itimer_which_t __which,
 		      __const struct itimerval *__restrict __new,
 		      struct itimerval *__restrict __old) __THROW;
 
-/* Change the access time of FILE to TVP[0] and
-   the modification time of FILE to TVP[1].  */
+/* Change the access time of FILE to TVP[0] and the modification time of
+   FILE to TVP[1].  If TVP is a null pointer, use the current time instead.
+   Returns 0 on success, -1 on errors.  */
 extern int utimes (__const char *__file, __const struct timeval __tvp[2])
      __THROW;
+
+#ifdef __USE_MISC
+/* Same as `utimes', but does not follow symbolic links.  */
+extern int lutimes (const char *__file, const struct timeval __tvp[2])
+     __THROW __nonnull ((1));
+
+/* Same as `utimes', but takes an open file descriptor instead of a name.  */
+extern int futimes (int __fd, const struct timeval __tvp[2]) __THROW;
+#endif
 
 
 #ifdef __USE_BSD
