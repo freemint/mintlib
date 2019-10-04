@@ -17,6 +17,20 @@ VERSION=0.60.1
 # Silent build or verbose
 AM_DEFAULT_VERBOSITY = 1
 
+# 
+# cross compiling
+#
+ifneq (yes,$(M68K_ATARI_MINT_CROSS))
+ifeq (no,$(M68K_ATARI_MINT_CROSS))
+CROSS = no
+else
+EVAL_CROSS := case `uname -s` in *MiNT*) echo no;; *) echo yes; esac
+CROSS := $(shell $(EVAL_CROSS))
+endif
+else
+CROSS = yes
+endif
+
 # Define this to "m68k-atari-mint" if you cross compile.
 ifneq ($(CROSS_TOOL),)
  toolprefix=$(CROSS_TOOL)-
