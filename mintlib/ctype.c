@@ -167,7 +167,7 @@ int
 islower(c)	
      register int c;
 {	
-  return (int) (_ctype[(unsigned char) (c + 1)] & _CTg);
+  return (int) (_ctype[(unsigned char) (c + 1)] & _CTl);
 }
 
 int  
