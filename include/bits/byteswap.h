@@ -1,5 +1,5 @@
-/* Macros to swap the order of bytes in integer values.  m68k version.
-   Copyright (C) 1997, 2002, 2008, 2011 Free Software Foundation, Inc.
+/* Macros and inline functions to swap the order of bytes in integer values.
+   Copyright (C) 1997-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
 #if !defined _BYTESWAP_H && !defined _NETINET_IN_H && !defined _ENDIAN_H
@@ -25,19 +25,21 @@
 
 #include <bits/types.h>
 
-/* Swap bytes in 16 bit value.  We don't provide an assembler version
-   because GCC is smart enough to generate optimal assembler output, and
-   this allows for better cse.  */
+/* Swap bytes in 16-bit value.  */
 #define __bswap_constant_16(x) \
   ((((x) >> 8) & 0xffu) | (((x) & 0xffu) << 8))
 
 static __inline __uint16_t
 __bswap_16 (__uint16_t __bsx)
 {
+#if __GNUC_PREREQ (4, 8)
+  return __builtin_bswap16 (__bsx);
+#else
   return __bswap_constant_16 (__bsx);
+#endif
 }
 
-/* Swap bytes in 32 bit value.  */
+/* Swap bytes in 32-bit value.  */
 #define __bswap_constant_32(x) \
   ((((x) & 0xff000000ul) >> 24) | (((x) & 0x00ff0000ul) >>  8) |		      \
    (((x) & 0x0000ff00ul) <<  8) | (((x) & 0x000000fful) << 24))
@@ -58,7 +60,11 @@ __bswap_32 (__uint32_t __bsx)
 static __inline __uint32_t
 __bswap_32 (__uint32_t __bsx)
 {
+#if __GNUC_PREREQ (4, 3)
+  return __builtin_bswap32 (__bsx);
+#else
   return __bswap_constant_32 (__bsx);
+#endif
 }
 #endif
 
@@ -76,13 +82,14 @@ __bswap_32 (__uint32_t __bsx)
    | (((x) & 0x00000000000000ffull) << 56))
 
 /* Swap bytes in 64 bit value.  */
-static __inline __uint64_t
+__extension__ static __inline __uint64_t
 __bswap_64 (__uint64_t __bsx)
 {
-  if (__builtin_constant_p (__bsx))
-    return __bswap_constant_64 (__bsx);
-  return (__bswap_32 (__bsx >> 32)
-	  | ((__uint64_t) __bswap_32 (__bsx) << 32));
+#if __GNUC_PREREQ (4, 3)
+  return __builtin_bswap64 (__bsx);
+#else
+  return __bswap_constant_64 (__bsx);
+#endif
 }
 #endif
 
