@@ -370,7 +370,7 @@ opcode	ret	class name	args */
 0x0fe		undefined
 0x0ff	short	Syield		(void)
 
-0x100	short	Fpipe		(short *usrh)
+0x100	long	Fpipe		(short *usrh)
 0x101	short	Ffchown		(short fh, short uid, short gid)	/* since 1.15.2  */
 0x102	short	Ffchmod		(short fh, ushort mode)			/* since 1.15.2  */
 0x103	short	Fsync		(short fh)				/* since 1.15.10 */
@@ -401,7 +401,7 @@ opcode	ret	class name	args */
 0x11b	long	Pfork		(void)
 0x11c	long	Pwait3		(short nohang, long *rusage)
 0x11d	short	Fselect		(ushort timeout, long *rfdp, long *wfdp, long *xfdp)
-0x11e	short	Prusage		(long *r)
+0x11e	long	Prusage		(long *r)
 0x11f	long	Psetlimit	(short i, long v)
 
 0x120	long	Talarm		(long secs)

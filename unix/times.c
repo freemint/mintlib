@@ -28,7 +28,7 @@ __times (struct tms *buf)
 
 	if (__mint != 0) {
 		long int r[8];
-		(void) Prusage (r);
+		(long) Prusage (r);
 		buf->tms_utime = (r[1] * CLOCKS_PER_SEC) / 1000;
 		buf->tms_stime = (r[0] * CLOCKS_PER_SEC) / 1000;
 		buf->tms_cutime = (r[3] * CLOCKS_PER_SEC) / 1000;
