@@ -9,7 +9,7 @@
  * - iscntrl(EOF) should return false, argh, stupid but that's the
  *   the opinion of the majority.
  */
- 
+
 #define __NO_CTYPE
 
 #include <ctype.h>
@@ -49,49 +49,49 @@ static unsigned int _myctype[UCHAR_MAX + 1] =
 	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP, _CTp|_CTg|_CTP, _CTp|_CTg|_CTP,				/* 0x28..0x2B */
 	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP, _CTp|_CTg|_CTP, _CTp|_CTg|_CTP,				/* 0x2C..0x2F */
 
-	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP, 
+	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP,
 	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP,	/* 0x30..0x33 */
-	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP, 
+	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP,
 	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP,	/* 0x34..0x37 */
-	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP, 
+	_CTd|_CTx|_CTg|_CTP, _CTd|_CTx|_CTg|_CTP,
 	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,			/* 0x38..0x3B */
-	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP, 
+	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,
 	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,			/* 0x3C..0x3F */
 
-	_CTp|_CTg|_CTP, _CTu|_CTx|_CTg|_CTP, 
+	_CTp|_CTg|_CTP, _CTu|_CTx|_CTg|_CTP,
 	_CTu|_CTx|_CTg|_CTP, _CTu|_CTx|_CTg|_CTP,	/* 0x40..0x43 */
-	_CTu|_CTx|_CTg|_CTP, _CTu|_CTx|_CTg|_CTP, 
+	_CTu|_CTx|_CTg|_CTP, _CTu|_CTx|_CTg|_CTP,
 	_CTu|_CTx|_CTg|_CTP, _CTu|_CTg|_CTP,		/* 0x44..0x47 */
-	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP, 
+	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,
 	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,			/* 0x48..0x4B */
-	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP, 
+	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,
 	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,			/* 0x4C..0x4F */
 
-	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP, 
+	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,
 	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,			/* 0x50..0x53 */
-	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP, 
+	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,
 	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,			/* 0x54..0x57 */
-	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP, 
+	_CTu|_CTg|_CTP, _CTu|_CTg|_CTP,
 	_CTu|_CTg|_CTP, _CTp|_CTg|_CTP,			/* 0x58..0x5B */
-	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP, 
+	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,
 	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,			/* 0x5C..0x5F */
 
-	_CTp|_CTg|_CTP, _CTl|_CTx|_CTg|_CTP, 
+	_CTp|_CTg|_CTP, _CTl|_CTx|_CTg|_CTP,
 	_CTl|_CTx|_CTg|_CTP, _CTl|_CTx|_CTg|_CTP,	/* 0x60..0x63 */
-	_CTl|_CTx|_CTg|_CTP, _CTl|_CTx|_CTg|_CTP, 
+	_CTl|_CTx|_CTg|_CTP, _CTl|_CTx|_CTg|_CTP,
 	_CTl|_CTx|_CTg|_CTP, _CTl|_CTg|_CTP,		/* 0x64..0x67 */
-	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP, 
+	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,
 	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,			/* 0x68..0x6B */
-	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP, 
+	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,
 	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,			/* 0x6C..0x6F */
 
-	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP, 
+	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,
 	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,			/* 0x70..0x73 */
-	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP, 
+	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,
 	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,			/* 0x74..0x77 */
-	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP, 
+	_CTl|_CTg|_CTP, _CTl|_CTg|_CTP,
 	_CTl|_CTg|_CTP, _CTp|_CTg|_CTP,			/* 0x78..0x7B */
-	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP, 
+	_CTp|_CTg|_CTP, _CTp|_CTg|_CTP,
 	_CTp|_CTg|_CTP, _CTc,				/* 0x7C..0x7F */
 
 	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, /* 0x80..0x87 */
@@ -114,101 +114,87 @@ static unsigned int _myctype[UCHAR_MAX + 1] =
 
 unsigned int* _ctype = &(_myctype[0]);
 
-int isalnum (c)
-     register int c;
+int isalnum (int c)
 {
  return (int) (_ctype[(unsigned char) (c + 1)] & (_CTu|_CTl|_CTd));
 }
 
-int 	
-isalpha (c)
-     register int c;
-{	
+int
+isalpha (int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & (_CTu|_CTl));
 }
 
-int 	
-isascii (c)	
-     register int c;
-{	
+int
+isascii (int c)
+{
   return (int) !((c) & ~0x7F);
 }
 
-int 	
-toascii(c)	
-     register int c;
-{	
+int
+toascii(int c)
+{
   return (int) ((c) & 0x7F);
 }
 
-int 	
-iscntrl(c)	
-     register int c;
-{	
-  return c == -1 ? 0 : (unsigned char) (c) == 255 ? 1 : 
+int
+iscntrl(int c)
+{
+  return c == -1 ? 0 : (unsigned char) (c) == 255 ? 1 :
   	                       (int) (_ctype[(unsigned char) (c + 1)] & _CTc);
 }
 
-int 	
-isdigit(c)	
-     register int c;
-{	
+int
+isdigit(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTd);
 }
 
-int 	
-isgraph(c)	
-     register int c;
-{	
+int
+isgraph(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTg);
 }
 
-int 	
-islower(c)	
-     register int c;
-{	
+int
+islower(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTl);
 }
 
-int  
-isprint(c)      
-     register int c;
-{	
+int
+isprint(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTP);
 }
 
-int 	
-ispunct(c)	
-     register int c;
-{	
+int
+ispunct(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTp);
 }
 
-int 	
-isspace(c)	
-     register int c;
-{	
+int
+isspace(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTs);
 }
 
-int 	
-isupper(c)	
-     register int c;
-{	
+int
+isupper(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTu);
 }
 
-int 	
-isxdigit(c)	
-     register int c;
-{	
+int
+isxdigit(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTx);
 }
 
-int 
-__isblank(c)	
-     register int c;
-{	
+int
+__isblank(int c)
+{
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTb);
 }
 weak_alias (__isblank, isblank)
