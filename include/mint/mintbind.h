@@ -371,7 +371,7 @@ __extension__								\
 #define	Syield()						\
 		(int)trap_1_w(0xff)
 #define Fpipe(ptr)						\
-		(int)trap_1_wl(0x100, (long)(ptr))
+		trap_1_wl(0x100, (long)(ptr))
 #define Ffchown(f, uid, gid)					\
 		trap_1_wwww(0x101, (short)(f), (short)(uid), (short)(gid))
 #define Ffchmod(f, mode)					\
@@ -433,7 +433,7 @@ __extension__								\
 		(int)trap_1_wwlll(0x11d, (unsigned short)(time), (long)(rfd), \
 				(long)(wfd), (long)(xfd))
 #define Prusage(rsp)						\
-		(int)trap_1_wl(0x11e, (long)(rsp))
+		trap_1_wl(0x11e, (long)(rsp))
 #define Psetlimit(i, val)					\
 		trap_1_wwl(0x11f, (short)(i), (long)(val))
 
