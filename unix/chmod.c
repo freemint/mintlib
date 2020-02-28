@@ -30,13 +30,13 @@ __chmod (const char *_path, mode_t mode)
 	    (Fattrib(path, 0, 0) == FA_DIR))
 		return 0;
 #endif
-	if (r && (r != -ENOSYS)) {
-		__set_errno (-r);
+	if (r == 0)			/* call was successfull */
+		return 0;
+	if (r != -ENOSYS)
+	{
+		__set_errno(-r);
 		return -1;
 	}
-	else if (r != -ENOSYS)   /* call was successfull */
-		return 0;
-
 
 /* The following lines ensure that the archive bit isn't cleared */
 	r = Fattrib(path, 0, 0);

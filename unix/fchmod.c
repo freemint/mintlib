@@ -21,15 +21,24 @@ __fchmod (int fd, mode_t mode)
 	int r;
 
 #ifndef __MSHORT__
-	if (fd > SHRT_MAX) {
-		__set_errno (EBADF);
+	if (fd > SHRT_MAX)
+	{
+		__set_errno(EBADF);
 		return -1;
 	}
 #endif
-	r = Ffchmod (fd, mode);
-	if (r != 0) {
-		__set_errno (-r);
-		return -1;
+	r = Ffchmod(fd, mode);
+	if (r != 0)
+	{
+		/*
+		 * if the function is not available, silently ignore the error.
+		 * we won't be able to set unix modes in SingleTOS, anyway.
+		 */
+		if (r != -ENOSYS)
+		{
+			__set_errno(-r);
+			return -1;
+		}
 	}
 	return 0;
 }
