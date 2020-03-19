@@ -1,4 +1,4 @@
-/*  time.c -- MiNTLib.
+/*  strerror.c -- MiNTLib.
     Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 
     This file is part of the MiNTLib project, and may only be used
