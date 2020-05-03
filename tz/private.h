@@ -141,6 +141,21 @@
 #include "time.h"
 #include "stdlib.h"
 
+/*
+** Header files above silently include either "../include/features.h" or <features.h>
+** what is a mintlib/glibc specific file and may not be present in other libc
+** implementations. As we use __GNUC_PREREQ below (which is defined in features.h)
+** we must provide it here.
+*/
+#ifndef __GNUC_PREREQ
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+        ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
+#endif
+
 #ifdef ENABLE_NLS
 #include "locale.h"	/* for setlocale */
 #include "libintl.h"
