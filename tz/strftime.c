@@ -440,8 +440,9 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 				{
 					pt = _add(t->TM_ZONE, pt, ptlim);
 				} else
+#endif
 				{
-#elif HAVE_TZNAME
+#if HAVE_TZNAME
 					if (t->tm_isdst >= 0)
 						pt = _add(tzname[t->tm_isdst != 0], pt, ptlim);
 #endif
