@@ -462,6 +462,15 @@ extern char *mktemp (char* __template) __THROW;
 extern int mkstemp (char* __template) __THROW;
 #endif
 
+#ifdef __USE_XOPEN2K8
+/* Create a unique temporary directory from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the directory name unique.
+   Returns TEMPLATE, or a null pointer if it cannot get a unique name.
+   The directory is created mode 700.  */
+extern char *mkdtemp (char *__template) __THROW __nonnull ((1));
+#endif
+
 #ifdef __USE_GNU
 /* Return a malloc'd string containing the canonical absolute name of the
    named file.  The last file name component need not exist, and may be a
