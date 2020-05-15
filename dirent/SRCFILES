@@ -11,6 +11,7 @@ SRCFILES = \
 	fdopendir.c \
 	opendir.c \
 	readdir.c \
+	rewinddi.c \
 	scandir.c \
 	seekdir.c \
 	telldir.c \

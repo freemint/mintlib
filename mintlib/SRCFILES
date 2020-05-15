@@ -75,7 +75,6 @@ SRCFILES = \
 	realloc.c \
 	regexp.c \
 	regsup.c \
-	rewinddi.c \
 	rtent.c \
 	s_finite.c \
 	s_finitef.c \
