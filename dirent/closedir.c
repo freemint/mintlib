@@ -42,6 +42,7 @@ __closedir(DIR *dirp)
 		/* hmm, something went wrong, just ignore it. */
 		r = 0;
 	}
+	free(dirp->dirname);
 	free(dirp);
 	return r;
 }
