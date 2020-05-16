@@ -36,19 +36,20 @@ __opendir(const char *uname)
 	char namebuf[PATH_MAX];
 	char dirpath[PATH_MAX];
 	char *p;
-	char* name = (char*) uname;
-	
+	char *name;
+
 	d = malloc(sizeof(DIR));
 	if (!d) {
 		__set_errno (ENOMEM);
 		return NULL;
 	}
+	d->dirname = NULL;
 
+	name = namebuf;
 	if (!__libc_unix_names)
-	  {
-	    name = namebuf;
-	    _unx2dos(uname, name, sizeof (namebuf));
-	  }
+		_unx2dos(uname, name, sizeof (namebuf));
+	else
+		strcpy(name, uname);
 	  
 	r = Dopendir(name, 0);
 	if (r != -ENOSYS) {
@@ -79,10 +80,12 @@ __opendir(const char *uname)
 	p = name;
 	if (p) {
 	/* find the end of the string */
-		for (p = name; *p; p++) ;
+		for (p = name; *p; p++)
+			if (*p == '/')
+				*p = '\\';
 
 	/* make sure the string ends in '\' */
-		if (*(p-1) != '\\') {
+		if (p != name && *(p-1) != '\\') {
 			*p++ = '\\';
 		}
 	}
