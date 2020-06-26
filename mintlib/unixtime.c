@@ -25,6 +25,7 @@ __unixtime (unsigned timestamp, unsigned datestamp)
 	tm->tm_mday  = datestamp & 31;
 	tm->tm_mon = ((datestamp >> 5) & 15) - 1;
 	tm->tm_year  = 80 + ((datestamp >> 9) & 127);
+	tm->tm_isdst = -1;
 
 	return mktime (tm);
 }
