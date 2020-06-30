@@ -9,7 +9,9 @@
 #define C_3DMN 0x33444D4EL     /* 3D-Menu */
 #define C_3RDB 0x33524442L     /* Third Button */
 #define C_60Hz 0x3630487AL     /* 60Hz resident */
+#define C_8x8  0x382a3820L     /* Font switching for GEM-programs */
 #define C_A2sv 0x41327376L     /* Trapsave */
+#define C_AB40 0x41423430L     /* Afterburner040 present */
 #define C_ACCS 0x41434353L     /* ACC.PRG */
 #define C_AFnt 0x41466E74L     /* AES Font Loader */
 #define C_AgK0 0x41674B30L     /* AusGuck RAMdisk */
@@ -20,29 +22,31 @@
 #define C_AmAN 0x416D414EL     /* A-MAN */
 #define C_AMC1 0x414D4331L     /* Monitor Switchbox */
 #define C_AMC2 0x414D4332L     /* PC Keyboard Driver Software */
+#define C_AMCG 0x414D4347L     /* AMC-GDOS */
 #define C_ANSe 0x414E5365L     /* ANSI-Emulation */
 #define C_APGM 0x4150474DL     /* SysGem by Andreas Pietsch */
 #define C_ARTS 0x41525453L     /* Screen-Artist screensaver */
 #define C_asGT 0x61734754L     /* Wacom Graphiktablett Driver */
-#define C_ASum 0x4153756DL     /* ASUNLENK */
+#define C_ASum 0x4153756DL     /* ASUMLENK redirect screen output */
 #define C_AVmw 0x41566D77L     /* Virus Warning Program */
 #define C_AVOJ 0x41564F4AL     /* Oliver Joppich's Anti Virus program */
 #define C_BASH 0x42415348L     /* Bourne Again Shell */
-#define C_BBD2 0x42424432L     /* Bastel-Bus-Treiber V2.xx */
+#define C_BBD2 0x42424432L     /* Bastel-Bus-Driver V2.xx */
 #define C_BCKW 0x42434B57L     /* BackWard */
 #define C_BGEM 0x4247454DL     /* BubbleGEM */
-#define C_BGHD 0x42474844L     /* BubbleGEM-Help-D„mon */
+#define C_BGHD 0x42474844L     /* BubbleGEM-Help-Demon */
 #define C_BHdl 0x4248646CL     /* BadHandle */
-#define C_BHLP 0x42484C50L     /* BubbleGEM Konficookie */
+#define C_BHLP 0x42484C50L     /* BubbleGEM config cookie */
 #define C_BIGS 0x42494753L     /* Big Screen */
 #define C_BIOC 0x42494F43L     /* Pirosca */
 #define C_BLNK 0x424C4E4BL     /* Screenblanker */
 #define C_BLOW 0x424C4F57L     /* Blowup030 */
 #define C_BSIM 0x4253494DL     /* Drive B Simulator */
+#define C_BSTE 0x42535445L     /* BigSTE */
 #define C_BUG1 0x42554731L     /* Bugaboo Debugger */
 #define C_C24P 0x43323450L     /* CyRel 24Bit-Patch */
 #define C_CACH 0x43414348L     /* Cache-Control */
-#define C_CALD 0x43414C44L     /* Computer Aided Loudspeaker Desgin */
+#define C_CALD 0x43414C44L     /* Computer Aided Loudspeaker Design */
 #define C_CASE 0x43415345L     /* Casing Type Gemini */
 #define C_CatS 0x43617453L     /* CatStick */
 #define C_CaTT 0x43615454L     /* CyRel Cattamaran */
@@ -54,16 +58,20 @@
 #define C_CBIT 0x43424954L     /* C'T Bus Interface Driver */
 #define C_CCDA 0x43434441L     /* Tempus Word */
 #define C_cdMC 0x63644D43L     /* CDROM.XFS */
+#define C_CDOT 0x43444F54L     /* Crazy-Dots graphic driver */
+#define C_ceci 0x63656369L     /* Cecile disk drive driver */
 #define C_CFIX 0x43464958L     /* Console Fix */
 #define C_CFsl 0x4346736CL     /* Compo FSel */
+#define C_CHam 0x4348616DL     /* Chameleon */
 #define C_CHAM 0x4348414DL     /* Chameleon */
 #define C_CHN1 0x43484E31L     /* Changes */
 #define C_CHNG 0x43484E47L     /* Changes */
 #define C_CHTW 0x43485457L     /* Chatwin */
+#define C_CICN 0x4349434EL     /* C-ICON */
 #define C_CISY 0x43495359L     /* CISYSTEM */
-#define C_CISY 0x43495359L     /* Cisystem */
 #define C_CJAR 0x434A4152L     /* Cookie.prg */
 #define C_CJar 0x434A6172L     /* JarXXX Program */
+#define C_ck01 0x636B3031L     /* Cookie library */
 #define C_CKBD 0x434B4244L     /* Composed Character Deluxe Keyboard Driver */
 #define C_CKJR 0x434B4A52L     /* Create Cookie Jar Program */
 #define C_CLCK 0x434C434BL     /* Mega-ST Hardware clock TSR Utilities */
@@ -71,11 +79,12 @@
 #define C_CLOK 0x434C4F4BL     /* CLOK for GMT settings (?) */
 #define C_CM16 0x434D3136L     /* CyReL's M16 Versatile Installation Program */
 #define C_CNTS 0x434E5453L     /* CentScreen */
-#define C_COLO 0x434F4C4FL     /* Colos Mono-Colour Converter */
+#define C_COLO 0x434F4C4FL     /* Colos Mono-Color Converter */
 #define C_CPSL 0x4350534CL     /* Caps Lock Display */
 #define C_CRAC 0x43524143L     /* Protar HD Driver */
 #define C_CRIT 0x43524954L     /* Crypt-It */
 #define C_CSMD 0x43534D44L     /* CyReL's Serial Mouse Manager */
+#define C_CT40 0x43543430L     /* CT40 present */
 #define C_CT60 0x43543630L     /* CT60 present */
 #define C_CTCH 0x43544348L     /* Master-Module Catch.mmx */
 #define C_CtCp 0x43744370L     /* CapsLock Display */
@@ -88,38 +97,47 @@
 #define C_DBFX 0x44424658L     /* Diabalo Emulator patch fix for MiNT */
 #define C_DCdd 0x44436464L     /* Double-Click Software Data Diet */
 #define C_DCF7 0x44434637L     /* DCF77 */
+#define C_DCSD 0x44445344L     /* Calamus screen driver */
 #define C_DECD 0x44454344L     /* DECDriver Cookie */
 #define C_DEPI 0x44455049L     /* DeskPic */
 #define C_DHST 0x44485354L     /* Document History Protocol */
 #define C_DIG2 0x44494732L     /* Digiplay by Emmanuel Jaccard */
-#define C_DJBX 0x444A4258L     /* DeskJet-Init BIOS-Erweiterung */
+#define C_DJBX 0x444A4258L     /* DeskJet-Init BIOS extension */
 #define C_DKEY 0x444B4559L     /* Dead Key from Brainstorm */
+#define C_DMAC 0x444D4143L     /* FireTOS DMA API */
 #define C_DNTR 0x444E5452L     /* DNT ramdisk */
+#define C_DPAT 0x44504154L     /* Desktop Patterns */
 #define C_DPRS 0x44505253L     /* Printer Buffer */
 #define C_DRIV 0x44524956L     /* Drive Edit */
 #define C_DRRH 0x44525248L     /* Wodan Keyboard Layout Program */
-#define C_Dsel 0x4473656CL     /* Dsel - Systemkern fr Fileselector */
+#define C_Dsel 0x4473656CL     /* System kernel for file-selector */
 #define C_DSSO 0x4453534FL     /* Sokrates Keyboard Driver */
 #define C_DYJA 0x44594A41L     /* CCONRS.PRG */
 #define C_DYJD 0x44594A44L     /* Dosound */
 #define C_DYJT 0x44594A54L     /* ToBig */
+#define C_DYDL 0x4459444CL     /* DIR_LWR */
 #define C_DYNL 0x44594E4CL     /* Dynamic Link Library Driver */
 #define C_DYWL 0x4459574CL     /* WIN_LNK */
+#define C_DYwl 0x4459776CL     /* WIN_LNK */
 #define C_EADC 0x45414443L     /* Easydisc - Ramdisk */
 #define C_EBPO 0x4542504FL     /* EB Modeleur Universel Modeler */
 #define C_EdDI 0x45644449L     /* EdDI by Sven&Wilfried Behne, BELA */
+#define C_EDfh 0x42446668L     /* BetaDOS Host Filesystem */
 #define C_EDFX 0x45444658L     /* EDPBFIX.PRG */
 #define C_EGON 0x45474F4EL     /* EGON! CD-ROM Driver */
 #define C_EMNP 0x454D4E50L     /* MNP emulator */
-#define C_ENV_ 0x454E565FL     /* Desktop environment manager */
-#define C_ENVN 0x454E564EL     /* Environ.prg - setzt GEM-Environment */
+#define C_ENV_ 0x454E5624L     /* Desktop environment manager */
+#define C_ENVN 0x454E564EL     /* Environ.prg - sets GEM environment */
 #define C_ENVR 0x454E5652L     /* Environment manager */
 #define C_EPro 0x4550726FL     /* Extendos Pro CD-ROM Driver */
-#define C_EURO 0x4555524FL     /* Euro-Zeichen */
+#define C_ETM  0x45544D00L     /* Demouser */
+#define C_EUSB 0x45555342L     /* Ethernet USB API exported by inet4 */
+#define C_EURO 0x4555524FL     /* Euro character */
 #define C_EXRA 0x45585241L     /* Extra RAM Speeder Card Software */
 #define C_EXTD 0x45585444L     /* TOS File Name Extender */
 #define C_FaKE 0x46614B45L     /* FakeMiNT */
-#define C_FALT 0x46414C54L     /* Faltoff Screen() MEGA STE bufixer */
+#define C_FALT 0x46414C54L     /* Faltoff Screen() MEGA STE bugfixer */
+#define C_FAX_ 0x46415821L     /* STarFax */
 #define C_FAXR 0x46415852L     /* FaxRedirector */
 #define C_FHFX 0x46484658L     /* F030HFIX - Falcon-GEMDOS-Handle-Fix */
 #define C_FIX2 0x46495832L     /* FIX24 68030 -> 24 bits */
@@ -129,12 +147,11 @@
 #define C_FOse 0x464F7365L     /* Fontselector */
 #define C_Fose 0x466F7365L     /* Font Selector */
 #define C_FrmD 0x46726D44L     /* Form_do_it */
-#define C_FSEL 0x4653454CL     /* Extended File Selector (e.g. Selectric¿,Freedom¿) */
+#define C_FSEL 0x4653454CL     /* Extended File Selector (e.g. Selectric,Freedom) */
 #define C_FSER 0x46534552L     /* Fast Serial Interface Routines */
 #define C_FSMC 0x46534D43L     /* Advanced GDOS */
-#define C_FSmp 0x46536D70L     /* Fileselector */
 #define C_FSmp 0x46536D70L     /* Martin Patzel File Selector */
-#define C_fVDI 0x66564449L     /* fVDI */
+#define C_fVDI 0x66564449L     /* fVDI free VDI */
 #define C_F_3D 0x465F3344L     /* Focus 3D */
 #define C_GABI 0x47414249L     /* Gabrielle Serial Port Typewriter Emulator */
 #define C_GBel 0x4742656CL     /* GemBell */
@@ -147,7 +164,7 @@
 #define C_Gfix 0x47666978L     /* Gamefix for Falcon030 */
 #define C_GI30 0x47493330L     /* Gandhi */
 #define C_GIGA 0x47494741L     /* Giga Box ST Driver */
-#define C_gk5_ 0x676B3522L     /* 'gk5"', Treiber fr 5.25" HIGH-Density-Drittlaufwerk  */
+#define C_gk5_ 0x676B3522L     /* Driver for 5.25" HIGH-density third drive */
 #define C_gkCO 0x676B434FL     /* Calamus Thingy */
 #define C_GLAS 0x474C4153L     /* Free memorydisplay */
 #define C_GLBL 0x474C424CL     /* GEMLABEL System Extension */
@@ -167,7 +184,7 @@
 #define C_HBFS 0x48424653L     /* BoxKite File Selector */
 #define C_HcP6 0x48635036L     /* NEC P6 Hardcopy Driver */
 #define C_HDDR 0x48444452L     /* HD Driver */
-#define C_HDEX 0x48444558L     /* HDDriver-eigenes Interface */
+#define C_HDEX 0x48444558L     /* HDDriver's own interface */
 #define C_HDEY 0x48444559L     /* Hard Disc Eye */
 #define C_HDJR 0x48444A52L     /* Hushi HD Interface Driver */
 #define C_HDLD 0x48444C44L     /* 'HD-LED' */
@@ -176,15 +193,16 @@
 #define C_HDST 0x48445354L     /* Eickmann HD Driver */
 #define C_HDSW 0x48445357L     /* High Density Switcher */
 #define C_HFIX 0x48464958L     /* Handle Bug Fix */
-#define C_hFRB 0x68465242L     /* BIOS-Treiber fr Rwabs-Transfers */
+#define C_hFRB 0x68465242L     /* BIOS driver for Rwabs-transfers */
 #define C_HIDS 0x48494453L     /* High Density Disk Driver */
 #define C_HMDU 0x484D4455L     /* HM2 System Memory Dump */
-#define C_HMOC 0x484D4F43L     /* H„nisch Modula Object Cache */
-#define C_HMRD 0x484D5244L     /* H„nisch Modula Run-Time Debugger */
+#define C_HMOC 0x484D4F43L     /* Haenisch Modula Object Cache */
+#define C_HMRD 0x484D5244L     /* Haenisch Modula Run-Time Debugger */
 #define C_HMRS 0x484D5253L     /* HM2 Run-Time System */
 #define C_HPHC 0x48504843L     /* HP Deskjet Hardcopy */
 #define C_HPLJ 0x48504C4AL     /* HP-Laserjet-Emulator V1.04 */
 #define C_HSCD 0x48534344L     /* MiNT-CDROM-Treiber */
+#define C_HSND 0x48534E44L     /* CrazySounds */
 #define C_HSnd 0x48536E64L     /* CrazySounds */
 #define C_HWAM 0x4857414DL     /* Cookie Jar creator program */
 #define C_IBMP 0x49424D50L     /* Norwegian->IBM Printer Converter */
@@ -197,7 +215,7 @@
 #define C_INXR 0x494E5852L     /* Index generator */
 #define C_iPRN 0x6950524EL     /* iPRN */
 #define C_IRSB 0x49525342L     /* SEGA Shutterbrille */
-#define C_iTMA 0x69544D41L     /* E-Copy ab 2.0, E-Backup ab 2.0, Kobold ab 3.0 */
+#define C_iTMA 0x69544D41L     /* MFP Timer A interrupt handler */
 #define C_JAM1 0x4A414D31L     /* Butler James */
 #define C_JB2G 0x4A423247L     /* Bios2Gdos */
 #define C_JCLK 0x4A434C4BL     /* Clocky Multiutility */
@@ -212,20 +230,26 @@
 #define C_JSHD 0x4A534844L     /* High Density Control Program */
 #define C_JUST 0x4A555354L     /* Justify */
 #define C_J_Sc 0x4A5F5363L     /* SECURE.PRG */
+#define C_KAOS 0x4B614f53L     /* KAOS TOS 1.4 */
 #define C_KbEv 0x4B624576L     /* MM2 Keyboard Handling Module */
 #define C_KEYT 0x4B455954L     /* KEYTAB */
 #define C_KGTF 0x4B475446L     /* Tos Fix */
 #define C_KIDI 0x4B494449L     /* RAMdisk */
 #define C_KREG 0x4B524547L     /* KillRegisters */
 #define C_KyMp 0x4B794D70L     /* Keyboard Macro & Remapping Utility */
+#define C_Lace 0x4C616365L     /* LaceScan */
 #define C_LACY 0x4C414359L     /* LAZy-Shell-III */
 #define C_LALA 0x4C414C41L     /* Albolala BellHook Sample Player */
 #define C_lanc 0x6C616E63L     /* MiNT-Net ethernet driver for AMD LANCE */
 #define C_LASB 0x4C415342L     /* Laserbrain */
 #define C_LAWC 0x4C415743L     /* Look-Ahead-Write-Cache */
 #define C_LDGE 0x4C444745L     /* GEM Dynamical Libraries (LDG) */
+#define C_LDGM 0x4C44474DL     /* GEM Dynamical Libraries (LDG) */
 #define C_LEDP 0x4C454450L     /* LED-Panel */
+#define C_LEmu 0x4C456d75L     /* LaceScan command-keys */
+#define C_Lity 0x4C697479L     /* Liberty */
 #define C_LLCR 0x4C4C4352L     /* Logilex 1st Lock */
+#define C_LMus 0x4C4d7573L     /* LaceScan mouse accelerators */
 #define C_LOGB 0x4C4F4742L     /* Logbuch */
 #define C_LoSe 0x4C6F5365L     /* SER-LOG */
 #define C_LP_2 0x4C502F32L     /* 'LP/2', Malloc 2 Gemdos Vector */
@@ -238,12 +262,15 @@
 #define C_MADD 0x4D414444L     /* Add mem for TT */
 #define C_MADN 0x4D41444EL     /* NEX-Output */
 #define C_MagC 0x4D616743L     /* Magic Dials Configuration program */
-#define C_MagX 0x4D616758L     /* MagiC */
+#define C_MAGN 0x4D41474EL     /* MAGNUM card */
+#define C_MagX 0x4D616758L     /* MagX */
 #define C_MAST 0x4D415354L     /* Master */
-#define C_MaTC 0x4D615443L     /* Matrix True Colour Graphics Card */
+#define C_MaTC 0x4D615443L     /* Matrix True Color Graphics Card */
+#define C_MbAr 0x4D624172L     /* MenuBar */
 #define C_MBRD 0x4D425244L     /* Blit_RD: Ramdisk */
 #define C_MCL_ 0x4D434C5FL     /* MiNT control */
 #define C_McSn 0x4D63536EL     /* MacSound */
+#define C_MCSP 0x4D435350L     /* Unimplemented integer instruction and floating point handler */
 #define C_MCWR 0x4D435752L     /* Microwire DMA sound interface */
 #define C_MDIA 0x4D444941L     /* Multi-Dialog */
 #define C_MDRK 0x4D44524BL     /* MegaDark */
@@ -251,21 +278,25 @@
 #define C_MFAC 0x4D464143L     /* Multi Accessory */
 #define C_MFFM 0x4D46464DL     /* Marcus' file selector for MiNT */
 #define C_MFIX 0x4D464958L     /* MONOFIX.PRG */
+#define C_MFMV 0x4D464D56L     /* From Magic installed */
 #define C_MFNT 0x4D464E54L     /* Fontloader */
 #define C_MGEM 0x4D47454DL     /* MultiGEM */
 #define C_MgMc 0x4D674D63L     /* MagiCMac */
 #define C_MgMx 0x4D674D78L     /* MagiCMac X */
-#define C_MgPC 0x4D675067L     /* MagiC PC */
+#define C_MgPC 0x4D675043L     /* MagiCPC */
+#define C_MgSn 0x4D67536eL     /* Z Magix Sound */
 #define C_MID3 0x4D494433L     /* MIDINET3 */
 #define C_MIMA 0x4D494D41L     /* MIDI Manager */
 #define C_MiNT 0x4D694E54L     /* Mint/MultiTOS */
-#define C_MIPS 0x4D495053L     /* SPOOL120.PRG -  Druckerspooler */
+#define C_MIPS 0x4D495053L     /* SPOOL120.PRG - Printer spooler */
 #define C_MJAF 0x4D4A4146L     /* AUTOFONT */
 #define C_MKHC 0x4D4B4843L     /* Hardcopy Fixer */
 #define C_MkJr 0x4D6B4A72L     /* Cookie Jar creator program */
+#define C_MM2X 0x4D4D3258L     /* Megamax Modula */
 #define C_MMAC 0x4D4D4143L     /* Magic Mouse Accelerator */
 #define C_MMUT 0x4D4D5554L     /* Midi Maze II Utility */
 #define C_MM_2 0x4D4D5F32L     /* Midimaze 2 */
+#define C_MN3D 0x4D4E3344L     /* Menus and submenus in 3D-look */
 #define C_MNAM 0x4D4E414DL     /* Name cookie */
 #define C_MOAF 0x4D4F4146L     /* ARROWFIX */
 #define C_MOGR 0x4D4F4752L     /* GEMRAM */
@@ -278,6 +309,7 @@
 #define C_MUPF 0x4D555046L     /* Mupfel */
 #define C_MWHL 0x4D57484CL     /* MHweel */
 #define C_MZTR 0x4D5A5452L     /* TRASH */
+#define C_MZVT 0x4D5A5654L     /* Driver videotext decoder from Print-Technik */
 #define C_N203 0x4E323033L     /* Multi Accessory */
 #define C_nAES 0x6E414553L     /* N.AES, the AES for MiNT */
 #define C_NBEL 0x4E42454CL     /* SOUND.PRG */
@@ -290,27 +322,30 @@
 #define C_NEXK 0x4E45584BL     /* NEX-Toolkit */
 #define C_NFMT 0x4E464D54L     /* INFOMAT */
 #define C_NFnt 0x4E466E74L     /* Neodesk Font Loader */
-#define C_NKCC 0x4E4B4343L     /* NKCC - Normalized Key Code Converter */
+#define C_NKCC 0x4E4B4343L     /* Normalized Key Code Converter */
 #define C_NLdr 0x4E4C6472L     /* Neodesk Loader */
+#define C_NMGE 0x4E4d4745L     /* No More amc-Gdos Errors */
 #define C_NO7P 0x4E4F3750L     /* Norwegian->7 bit printer converter */
 #define C_noCF 0x6E6F4346L     /* noSystem */
 #define C_NOR5 0x4E4F5235L     /* Norwegian Keyboard Driver */
 #define C_NOVA 0x4E4F5641L     /* NOVA graphics card */
 #define C_NSC1 0x4E534331L     /* N_Syscom accessory */
-#define C_nTAS 0x6E544153L     /* TAS-Instruktionen */
+#define C_Nspd 0x4E737064L     /* Nemesis */
+#define C_nTAS 0x6E544153L     /* TAS-instructions */
 #define C_NTK4 0x4E544B34L     /* NTK4 Falcon MOD player */
+#define C_nTOS 0x6E544F53L     /* MilanBlaster */
 #define C_NUL_ 0x4E554C3EL     /* 'NUL>', System startup utility */
 #define C_NVDI 0x4E564449L     /* NewVDI */
-#define C_OBNL 0x4F424E4CL     /* Load-Time-Linking (kurz "LTL") Protokoll */
+#define C_OBNL 0x4F424E4CL     /* Load-Time Linking protocol */
 #define C_OFLS 0x4F464C53L     /* Check Open Files */
 #define C_OPMM 0x4F504D4DL     /* Open Helper */
 #define C_OSBL 0x4F53424CL     /* Screen Blaster */
 #define C_OSTT 0x4F535454L     /* OverScan TT */
+#define C_OTOS 0x4F544F53L     /* oTOSis - TOS emulator for Linux/68k */
 #define C_OV24 0x4F563234L     /* OverScan Hardcopy Driver 24 pins */
 #define C_oVDI 0x6F564449L     /* oVDI */
-#define C_OVDJ 0x4F56444AL     /* Overscan Hardcopytreiber fr HP-DeskJet */
-#define C_OVDJ 0x4F56444AL     /* OverScan Hardcopy Driver HP Deskjet */
-#define C_OVEP 0x4F564550L     /* OverScan Hardcopy Driver 9 pins */
+#define C_OVDJ 0x4F56444AL     /* OverScan Hardcopy Driver for HP Deskjet */
+#define C_OVEP 0x4F564550L     /* OverScan Hardcopy Driver for 9 pins */
 #define C_OVER 0x4F564552L     /* AutoSwitch OverScan Hardware Driver */
 #define C_OVEX 0x4F564558L     /* OverScan Exception Patch */
 #define C_OVFS 0x4F564653L     /* OverScan Fileselector Patch */
@@ -320,14 +355,17 @@
 #define C_OVUT 0x4F565554L     /* OverScan Screen Blanker */
 #define C_OVWI 0x4F565749L     /* OverScan Window-Size Patch */
 #define C_PAMN 0x50414D4EL     /* PAM Network Driver */
+#define C_PAUL 0x5041554CL     /* Paula 2, Amiga MODfile player */
 #define C_PBUG 0x50425547L     /* PeaceBug */
 #define C_PCI_ 0x5043495FL     /* PCI-BIOS */
-#define C_PDeb 0x50446562L     /* PureDebuggger */
+#define C_PDeb 0x50446562L     /* PureDebugger */
+#define C_PDEB 0x50444542L     /* PureDebugger */
 #define C_PDOS 0x50444F53L     /* PowerDOS */
 #define C_PDRZ 0x5044525AL     /* LockGetrez */
 #define C_PFIX 0x50464958L     /* PTSINFIX Fix */
 #define C_Pinp 0x50696E70L     /* Parallel Input Port Driver */
 #define C_PKSH 0x504B5348L     /* PKS-Shell */
+#define C_PlFn 0x506C466EL     /* POLFONT Polish National Character set installed */
 #define C_PMMU 0x504D4D55L     /* PMMU reprogrammed */
 #define C_POIS 0x504F4953L     /* Poison! */
 #define C_POWM 0x504F574DL     /* PowerMouse */
@@ -335,8 +373,8 @@
 #define C_PRDS 0x50524453L     /* Peter Rohde Disk Speeder */
 #define C_PRMD 0x50524D44L     /* MIDIPRT */
 #define C_PRN_ 0x50524E21L     /* 'PRN!', WandelSZ */
-#define C_PRNS 0x50524E9EL     /* 'PRNž', WandelSZ */
-#define C_PRO5 0x50524F35L     /* Resident virus check/kill/prtotect program */
+#define C_PRNS 0x50524E9EL     /* WandelSZ */
+#define C_PRO5 0x50524F35L     /* Resident virus check/kill/protect program */
 #define C_PROB 0x50524F42L     /* Profibase */
 #define C_PROT 0x50524F54L     /* Protos Screen Utility */
 #define C_PRTD 0x50525444L     /* Print to Disk V1.10 */
@@ -354,25 +392,28 @@
 #define C_QUAN 0x5155414EL     /* QuanTOS Multiutility */
 #define C_RAIL 0x5241494CL     /* Rail Manager */
 #define C_RaSn 0x5261536EL     /* Rational Sounds */
+#define C_RDCT 0x52444354L     /* part of NVDI et4k (redirect) */
 #define C_RESG 0x52455347L     /* RESET GUARD */
 #define C_RFLX 0x52464C58L     /* AutoSwitch Driver for Reflex Graphics Card */
 #define C_RFUS 0x52465553L     /* Rufus terminal program */
 #define C_RGUS 0x52475553L     /* Argus */
-#define C_RING 0x52494E47L     /* Telefonklingel Detektor */
+#define C_RING 0x52494E47L     /* Telephone-bell detector */
 #define C_ROT8 0x524F5438L     /* Rotate */
 #define C_RREG 0x52524547L     /* Restore Register */
-#define C_RSLT 0x52534C54L     /* GengTEC VGA Monochrome/16 Colour Driver */
+#define C_RSLT 0x52534C54L     /* GengTEC VGA Monochrome/16 Color Driver */
 #define C_RSpd 0x52537064L     /* RS_SPEED (Serial Fix) */
 #define C_RSVE 0x52535645L     /* RSVE Patch */
 #define C_RSVF 0x52535646L     /* RS232 Version Fast (HSMODEM) */
 #define C_RTKC 0x52544B43L     /* Keyclick */
 #define C_RTOB 0x52544F42L     /* Optobell */
 #define C_RWIN 0x5257494EL     /* RootWindow */
+#define C_SAM_ 0x53414d20L     /* System Audio Manager */
 #define C_SBKM 0x53424B4DL     /* Ring Recognition in Modem Routs */
 #define C_SBTE 0x53425445L     /* Terminal Program */
 #define C_SBTS 0x53425453L     /* Trap Spy */
 #define C_SCAH 0x53434148L     /* Speed Cache */
 #define C_SCKM 0x53434B4DL     /* MagXNet (SOCKET.DEV) */
+#define C_SCPN 0x5343504EL     /* Screen Blaster 3 screen enhancer */
 #define C_SCRD 0x53435244L     /* Screen To Disk */
 #define C_SCRN 0x5343524EL     /* Screen Scroll */
 #define C_SCRS 0x53435253L     /* Screen Blanker */
@@ -391,7 +432,7 @@
 #define C_ShLk 0x53684C6BL     /* Shift Lock */
 #define C_shlp 0x73686C70L     /* shelhelp */
 #define C_SKEY 0x534B4559L     /* SpecialKeys */
-#define C_SLCT 0x534C4354L     /* Selectric */
+#define C_SLCT 0x534C4354L     /* Selectric File Selector */
 #define C_SLif 0x534C6966L     /* SoundLifter */
 #define C_SLIP 0x534C4950L     /* Socket library */
 #define C_SM00 0x534D3030L     /* SOTA Printer Spooler */
@@ -407,25 +448,29 @@
 #define C_SpcE 0x53706345L     /* Space */
 #define C_SPCK 0x5350434BL     /* RAMdisk for SPC Modula */
 #define C_SPEE 0x53504545L     /* Mouse Speeder */
-#define C_SPEK 0x5350454BL     /* Spektrum-Grafikkarten */
+#define C_SPEK 0x5350454BL     /* Spektrum graphics cards */
 #define C_SPEX 0x53504558L     /* Steve's Printing Exzessory */
+#define C_spMR 0x73704d53L     /* Printer- and file-spooler */
 #define C_Spol 0x53706F6CL     /* Flexible Printer Spooler */
 #define C_SPRG 0x53505247L     /* STARTER.ACC */
 #define C_SSND 0x53534E44L     /* Petra */
 #define C_ST_C 0x53542D43L     /* Cache Program */
 #define C_ST17 0x53543137L     /* ST-68017 */
 #define C_STAT 0x53544154L     /* StaTOS */
+#define C_STEM 0x5354454DL     /* STEmulator */
 #define C_STEW 0x53544557L     /* Stewart */
-#define C_STFA 0x53544641L     /* Sound treiber fur Atari */
+#define C_STFA 0x53544641L     /* Sound driver for Atari */
 #define C_StIc 0x53744963L     /* Stewart Iconserver */
 #define C_STiK 0x5354694BL     /* ST Internet Kit */
 #define C_STMS 0x53544D53L     /* ST Magazine Screendump */
+#define C_STon 0x53546f6eL     /* STonX emulator */
+#define C_strk 0x7374726bL     /* StarTrack XBIOS extension */
 #define C_STRX 0x53545258L     /* SAT-Trax Antenna driver */
 #define C_SupV 0x53757056L     /* SuperVidel XBIOS */
 #define C_SVAR 0x53564152L     /* Shows MacMiNT */
 #define C_SVGA 0x53564741L     /* Super VGA Emulator */
 #define C_SWAP 0x53574150L     /* Outside */
-#define C_SwTm 0x5377546DL     /* Uhr */
+#define C_SwTm 0x5377546DL     /* Show Time clock */
 #define C_SYMB 0x53594D42L     /* Symbol driver */
 #define C_SYNL 0x53594E4CL     /* Dynamic Link Library Driver */
 #define C_SYNT 0x53594E54L     /* Syntex */
@@ -443,21 +488,23 @@
 #define C_Tenv 0x54656E76L     /* Environment Set Program for Terminal */
 #define C_TFIX 0x54464958L     /* TOS 1.04 fix */
 #define C_THNX 0x54484E58L     /* Thinx */
-#define C_THRM 0x5448524DL     /* Temoeraturdatenauswertung */
+#define C_THRM 0x5448524DL     /* Temperature-data evaluation */
 #define C_THST 0x54485354L     /* TurboHST */
 #define C_TIM3 0x54494D33L     /* Time Driver */
 #define C_TIM5 0x54494D35L     /* Time Driver plus Screen Blanker */
 #define C_TIME 0x54494D45L     /* Led Panel Time */
 #define C_TK40 0x544B3430L     /* MC68040 ToolKit */
-#define C_TL3D 0x544C3344L     /* Dritte Floppy */
+#define C_TL3D 0x544C3344L     /* Third Floppy */
 #define C_TLWV 0x544C5756L     /* STGAWVBL */
 #define C_TMon 0x544D6F6EL     /* TempleMon */
+#define C_TMON 0x544D4F4EL     /* TempleMon */
 #define C_TOpW 0x544F7057L     /* Top Manager Watcher */
 #define C_TOUC 0x544F5543L     /* Touch */
 #define C_TPat 0x54506174L     /* Tos Patch */
 #define C_TPGM 0x5450474DL     /* TraPatch */
 #define C_TRAK 0x5452414BL     /* Track Speed */
 #define C_TraP 0x54726150L     /* TraPatch */
+#define C_Trpp 0x54727070L     /* Trapper */
 #define C_TRUE 0x54525545L     /* TrueDisk */
 #define C_TSEN 0x5453454EL     /* TSE Net */
 #define C_TSWP 0x54535750L     /* TonySoft Write Protection */
@@ -472,10 +519,13 @@
 #define C_UN_X 0x554E2A58L     /* 'UN*X', Unixname (/->\ Converter) */
 #define C_USCK 0x5553434BL     /* CHECKIT */
 #define C_USHD 0x55534844L     /* Diskus HD driver */
+#define C_UsNm 0x55734E6dL     /* User-Name cookie */
 #define C_USPK 0x5553504BL     /* Hard Disk Auto Parker */
 #define C_USRS 0x55535253L     /* Romspeed */
+#define C_USSC 0x55535343L     /* HAT_SCSI NF SCSI Interface */
 #define C_UTRK 0x5554524BL     /* Ultimate Tracker */
 #define C_VBLF 0x56424C46L     /* VBLFIX.PRG */
+#define C_VDIp 0x56444970L     /* VDI performance logger */
 #define C_VDLY 0x56444C59L     /* Videlity */
 #define C_VECS 0x56454353L     /* Vecshow */
 #define C_VeiL 0x5665694CL     /* Turbo Veille */
@@ -506,16 +556,17 @@
 #define C_WICO 0x5749434FL     /* WinCom */
 #define C_WinK 0x57696E4BL     /* WinKeys */
 #define C_WINX 0x57494E58L     /* WINX */
-#define C_WINZ 0x57494E5AL     /* Luftschož/WinzRAM RAMdisk */
+#define C_WINZ 0x57494E5AL     /* Luftschloss/WinzRAM RAMdisk */
 #define C_WPRO 0x5750524FL     /* Write Protect */
-#define C_WrAp 0x57724170L     /* WarpMouse */
+#define C_WrAp 0x57724170L     /* WrapMouse */
+#define C_WRAP 0x57724170L     /* WrapMouse */
 #define C_XALT 0x58414C54L     /* AlberTT GFX card driver */
-#define C_XBTN 0x5842544EL     /* Maus-Routine in 'XBOOT' */
 #define C_XBTN 0x5842544EL     /* Mouse speeder routine from XBOOT */
 #define C_XDsk 0x5844736BL     /* X-DISK ramdisk */
 #define C_XFRB 0x58465242L     /* Extended Fast Ram Buffer */
 #define C_XFS1 0x58465331L     /* Master Module for extended TOS File System */
 #define C_xFSL 0x7846534CL     /* Extended Font Selector */
+#define C_Xgem 0x5867656dL     /* Windframe Xgem */
 #define C_XHDI 0x58484449L     /* XHDI driver */
 #define C_XKBD 0x584B4244L     /* Extended Keyboard */
 #define C_XMMU 0x584D4D55L     /* TK40's interface for PMMU setting */
@@ -523,17 +574,21 @@
 #define C_xNet 0x784E6574L     /* xNet-ST */
 #define C_XPCI 0x58504349L     /* Xbios functions for PCIbios */
 #define C_xRmt 0x78526D74L     /* XREMOTE */
+#define C_XSDD 0x58534444L     /* Extended Serial Device Driver */
 #define C_XSND 0x58534E44L     /* Digi-Sound */
 #define C_XSSI 0x58535349L     /* Extended Screen Saver Information */
 #define C_XTOS 0x58544F53L     /* Extend TOS */
+#define C_xUAG 0x78554147L     /* MegaVision300 */
 #define C_xUFC 0x78554643L     /* Extended Universal Font Selector Configuration Program */
-#define C_XWin 0x5857696EL     /* Extended Windows moudle */
+#define C_XWin 0x5857696EL     /* Extended Windows module */
 #define C_zCAC 0x7A434143L     /* 680x0 Cache Control CPX */
 #define C_zDCF 0x7A444346L     /* DCF-Time receiver */
+#define C__5MS 0x5F354D53L     /* 200hz system timer hook */
 #define C__AFM 0x5F41464DL     /* Audio Fun Machine */
 #define C__AKP 0x5F414B50L     /* Keyboard/Language Configuration */
-#define C__CF_ 0x5F43465FL     /* ColdFire CPU */
+#define C__CF_ 0x5F43465FL     /* ColdFire, set by FireTOS and EmuTOS */
 #define C__CPU 0x5F435055L     /* Central Processor Unit Type */
+#define C__CT2 0x5F435432L     /* Centurbo II card present */
 #define C__DOS 0x5F444F53L     /* GEMDOS-Einsprung (im GEMDOS 0.30) */
 #define C__FDC 0x5F464443L     /* Disk Drive Type */
 #define C__FLK 0x5F464C4BL     /* File Locking Extension */
@@ -542,9 +597,10 @@
 #define C__FSR 0x5F465352L     /* Patch program for serial (TOS 4.00->4.04) */
 #define C__IDT 0x5F494454L     /* International Date/Time Format */
 #define C__INF 0x5F494E46L     /* STEFIX Program */
-#define C__ISO 0x5F49534FL     /* specifies the real keyboard/font nationality  */
+#define C__INU 0x5F494E55L     /* Format for numbers */
+#define C__ISO 0x5F49534FL     /* specifies the real keyboard/font nationality */
 #define C__JPD 0x5F4A5044L     /* Falcon030 JPEG Decoder by Brainstorm */
-#define C__MCF 0x5F4D4346      /* ColdFire features */
+#define C__MCF 0x5F4D4346L     /* ColdFire features */
 #define C__MCH 0x5F4D4348L     /* Machine Type */
 #define C__MET 0x5F4D4554L     /* MetaDOS */
 #define C__MIL 0x5F4D494CL     /* Milan computer */
@@ -555,13 +611,16 @@
 #define C__PWR 0x5F505752L     /* Power Management unit */
 #define C__SLM 0x5F534C4DL     /* SLM Driver */
 #define C__SND 0x5F534E44L     /* Sound Hardware */
+#define C__SPD 0x5F535044L     /* SpeedoGDOS */
 #define C__SWI 0x5F535749L     /* Configuration Switches */
 #define C__T2W 0x5F543257L     /* TOS2WIN Emulator */
 #define C__T30 0x5F543330L     /* KAOS TOS */
 #define C__VDI 0x5F564449L     /* Milan VDI */
 #define C__VDO 0x5F56444FL     /* Video Type */
 #define C___NF 0x5F5F4E46L     /* Native features proposal */
-#define C__FSC 0x5F465343L     /* Falcon Screen */
+#define C__FSC 0xE4465343L     /* Falcon Screen */
+#define C__VID 0x5F564944L     /* Installed by CENTscreen */
+#define C__USB 0x5F555342L     /* USB core API driver */
 
 
 #define C_MACCEL 0x00AA006EL		/* MACCELL */
@@ -640,7 +699,7 @@ typedef struct {
 
 __BEGIN_DECLS
 
-extern int 	Getcookie(long cookie, long *val);
+extern int Getcookie(long cookie, long *val);
 
 __END_DECLS
 
