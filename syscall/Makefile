@@ -1,6 +1,5 @@
 # syscall/Makefile -- MiNTLib.
 # Copyright (C) 2001 Frank Naumann <fnaumann@freemint.de>
-# $Id$
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project

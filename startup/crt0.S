@@ -1,8 +1,4 @@
 |
-| $Id$
-|
-
-|
 | Initialization code; this is common to both 16 and 32 bit libraries,
 | so be careful!
 |

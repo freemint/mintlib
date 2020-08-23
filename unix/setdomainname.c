@@ -8,8 +8,6 @@
     understand and accept it fully.
 */
 
-/* $Id$ */
-
 #include <errno.h>
 #include <stdlib.h>
 #include <mint/sysctl.h>

@@ -1,6 +1,5 @@
 # Makefile -- MiNTLib.
 # Copyright (C) 1999-2001 Guido Flohr <guido@freemint.de>
-# $Id$
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project

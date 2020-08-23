@@ -1,5 +1,3 @@
-# $Id$
-#
 # This file is being included into all Makefiles and into the
 # installation script "libinstall".  Please make sure that it can
 # serve both as input to "make" and a Bourne shell.

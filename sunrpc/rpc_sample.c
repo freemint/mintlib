@@ -31,8 +31,6 @@
 /*
  * From: @(#)rpc_sample.c  1.1  90/08/30  (C) 1987 SMI
  */
-char sample_rcsid[] =
-  "$Id$";
 
 /*
  * rpc_sample.c, Sample client-server code outputter for the RPC protocol compiler

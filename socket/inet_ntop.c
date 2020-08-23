@@ -16,10 +16,7 @@
  */
 
 /* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
-
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$BINDId: inet_ntop.c,v 1.8 1999/10/13 16:39:28 vixie Exp $";
-#endif /* LIBC_SCCS and not lint */
+/* $BINDId: inet_ntop.c,v 1.8 1999/10/13 16:39:28 vixie Exp $ */
 
 #include <sys/param.h>
 #include <sys/types.h>

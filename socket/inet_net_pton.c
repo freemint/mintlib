@@ -15,9 +15,7 @@
  * SOFTWARE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$BINDId: inet_net_pton.c,v 1.11 1999/01/08 19:23:44 vixie Exp $";
-#endif
+/* $BINDId: inet_net_pton.c,v 1.11 1999/01/08 19:23:44 vixie Exp $ */
 
 #include <sys/types.h>
 #include <sys/socket.h>

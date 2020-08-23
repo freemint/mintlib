@@ -1,5 +1,3 @@
-# $Id$
-#
 # These are some standard rules common to all Makefiles that perform
 # tests.  If you change this file please read README.tests in the
 # toplevel directory first.

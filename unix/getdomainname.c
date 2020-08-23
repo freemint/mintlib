@@ -1,8 +1,6 @@
 /* gethostname -- for now, fake by looking in environment */
 /* (written by Eric R. Smith, placed in the public domain) */
 
-/* $Id$ */
-
 /* Modified by Guido Flohr: If no domain name available
    return the empty string instead of "(none)".  */
 #include <errno.h>

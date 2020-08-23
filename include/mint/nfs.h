@@ -4,7 +4,6 @@
 
 /* This is stolen from the linux sources since rpcsvc/bootparam.h needs
    the file.  Hope it is ok for MiNT.  */
-/* $Id$ */
 
 #ifndef _MINT_NFS_H
 #define _MINT_NFS_H 1

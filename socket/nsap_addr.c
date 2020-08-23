@@ -15,9 +15,7 @@
  * SOFTWARE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$BINDId: nsap_addr.c,v 8.10 1999/10/13 16:39:28 vixie Exp $";
-#endif /* LIBC_SCCS and not lint */
+/* $BINDId: nsap_addr.c,v 8.10 1999/10/13 16:39:28 vixie Exp $ */
 
 #include <sys/types.h>
 #include <sys/param.h>

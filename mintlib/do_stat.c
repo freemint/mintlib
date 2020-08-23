@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * stat, fstat, lstat emulation for TOS
  * written by Eric R. Smith and placed in the public domain
  */

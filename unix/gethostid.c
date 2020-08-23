@@ -9,8 +9,6 @@
     understand and accept it fully.
 */
 
-/* $Id */
-
 #include <netdb.h>             /* for INADDR_NONE & hostent */
 #include <netinet/in.h>        /* for gethostbyname         */
 #include <sys/utsname.h>       /* for uname                 */
