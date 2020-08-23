@@ -1104,9 +1104,9 @@ __extension__								\
        (long)trap_1_wlw((short)(0x4E),(long)(filespec),(short)(attr))
 #define	       Fsnext()						       \
        (long)trap_1_w((short)(0x4F))
-#define	       Frename(zero,old,new)				       \
+#define	       Frename(zero,old,_new)				       \
        (short)trap_1_wwll((short)(0x56),(short)(zero),	       \
-			  (long)(old),(long)(new))
+			  (long)(old),(long)(_new))
 #define	       Fdatime(timeptr,handle,rwflag)			       \
        (long)trap_1_wlww((short)(0x57),(long)(timeptr),	       \
 			 (short)(handle),(short)(rwflag))

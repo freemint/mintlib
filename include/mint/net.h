@@ -102,7 +102,7 @@ struct dom_ops
 				 short addrlen, short flags);
 	
 	long	(*socketpair)	(struct socket *s1, struct socket *s2);
-	long	(*accept)	(struct socket *s, struct socket *new,
+	long	(*accept)	(struct socket *s, struct socket *_new,
 			 	 short flags);
 	
 	long	(*getname)	(struct socket *s, struct sockaddr *addr,

@@ -464,10 +464,10 @@ __extension__								\
 		trap_1_wl(0x12b, (long)(handle))
 #define Fxattr(flag, name, buf)					\
 		trap_1_wwll(0x12c, (short)(flag), (long)(name), (long)(buf))
-#define Flink(old, new)						\
-		trap_1_wll(0x12d, (long)(old), (long)(new))
-#define Fsymlink(old, new)					\
-		trap_1_wll(0x12e, (long)(old), (long)(new))
+#define Flink(old, _new)						\
+		trap_1_wll(0x12d, (long)(old), (long)(_new))
+#define Fsymlink(old, _new)					\
+		trap_1_wll(0x12e, (long)(old), (long)(_new))
 #define Freadlink(siz, buf, linknm)				\
 		trap_1_wwll(0x12f, (short)(siz), (long)(buf), (long)(linknm))
 #define Dcntl(cmd, name, arg)					\
@@ -568,8 +568,8 @@ __extension__								\
 		trap_1_wwll(0x15c,(short)(fh),(long)(iovp),(long)(iovcnt))
 #define Ffstat64(fh, stat) \
 		trap_1_wwl(0x15d,(short)(fh),(long)(stat))
-#define Psysctl(name, namelen, old, oldlenp, new, newlen) \
-		trap_1_wllllll(0x15e,(long)(name),(long)(namelen),(long)(old),(long)(oldlenp),(long)(new),(long)(newlen))
+#define Psysctl(name, namelen, old, oldlenp, _new, newlen) \
+		trap_1_wllllll(0x15e,(long)(name),(long)(namelen),(long)(old),(long)(oldlenp),(long)(_new),(long)(newlen))
 #define Pemulation(which, op, a1, a2, a3, a4, a5, a6, a7) \
 		trap_1_wwwlllllll(0x15f,(short)(which),(short)(op),(long)(a1),(long)(a2),(long)(a3),(long)(a4),(long)(a5),(long)(a6),(long)(a7))
 #define Fsocket(domain, type, protocol) \

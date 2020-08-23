@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * This file belongs to FreeMiNT. It's not in the original MiNT 1.12
  * distribution. See the file CHANGES for a detailed log of changes.
  * 
@@ -181,9 +179,9 @@ struct ctlname
 # ifndef __KERNEL__
 
 int __sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
-              const void *new, unsigned long newlen);
+              const void *_new, unsigned long newlen);
 int sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
-            const void *new, unsigned long newlen);
+            const void *_new, unsigned long newlen);
 
 # endif
 
