@@ -71,6 +71,8 @@ install-lib: all install-lib-recursive
 
 install-include: all install-include-recursive
 
+install-headers: install-include-recursive
+
 install-man: all install-man-recursive
 
 clean: clean-recursive
