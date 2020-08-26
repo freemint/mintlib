@@ -76,8 +76,7 @@ syscall-list.h: $(csrcdir)/syscalls.list $(csrcdir)/gensys
 	$(GENSYS) -header $(csrcdir)/syscalls.list >$@.tmp \
 		&& $(MOVEIFCHANGE) $@.tmp $@
 
-includefiles = $(filter %.h, $(MISCFILES)) stab.def COPYMINT COPYING.LIB \
-syscall-list.h
+includefiles = $(filter %.h, $(MISCFILES)) stab.def syscall-list.h
 
 install-include: remove-stale
 	$(mkinstalldirs) $(DESTDIR)$(includedir)
