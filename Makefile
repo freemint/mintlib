@@ -160,6 +160,11 @@ install-recursive uninstall-recursive install-lib-recursive \
 install-include-recursive install-man-recursive uninstall-lib-recursive \
 uninstall-include-recursive uninstall-man-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
+	echo $@ | grep -q install; \
+	if test $$? = 0 -a "${CROSS}" = yes -a "${prefix}" = "/usr"; then \
+	   echo "attempting to install on host; aborting" >&2; \
+           exit 1; \
+	fi; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
 	  target=`echo $@ | sed s/-recursive//`; \
 	  echo "Making $$target in $$subdir"; \
