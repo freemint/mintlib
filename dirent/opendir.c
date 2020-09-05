@@ -43,6 +43,7 @@ __opendir(const char *uname)
 		__set_errno (ENOMEM);
 		return NULL;
 	}
+	d->magic = __DIR_MAGIC;
 	d->dirname = NULL;
 
 	name = namebuf;

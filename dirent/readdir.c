@@ -43,6 +43,11 @@ __readdir(DIR *d)
 		__set_errno (EBADF);
 		return NULL;
 	}
+	if (d->magic != __DIR_MAGIC)
+	{
+		__set_errno (EFAULT);
+		return NULL;
+	}
 	
 	if (d->handle != 0xff000000L)  {
 		/* The directory descriptor was optained by calling Dopendir(), as

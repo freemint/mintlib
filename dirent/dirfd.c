@@ -20,6 +20,11 @@ __dirfd (DIR *dir)
 		__set_errno(EBADF);
 		return -1;
 	}
+	if (dir->magic != __DIR_MAGIC)
+	{
+		__set_errno (EFAULT);
+		return -1;
+	}
 
 	r = Fdirfd(dir->handle);
 

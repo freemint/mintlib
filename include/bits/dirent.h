@@ -25,6 +25,8 @@ struct dirent {
 #endif
 
 struct __dirstream {
+	unsigned long magic;
+#define __DIR_MAGIC 0x4d444952L
 	short	status;		/* status of the search so far: */
 #define _INSEARCH	0	/* need to call Fsnext for a new entry */
 #define _STARTSEARCH	1	/* Fsfirst called once, successfully */

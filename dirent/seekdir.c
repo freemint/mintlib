@@ -15,10 +15,10 @@
 /* not POSIX */
 
 void
-seekdir(dirp, pos)
-	DIR *dirp;
-	long int pos;
+seekdir(DIR *dirp, long pos)
 {
+	if (dirp == NULL)
+	   return;
 	rewinddir(dirp);
 	while (dirp->buf.d_off != pos) {
 		if (!readdir(dirp))

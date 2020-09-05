@@ -33,7 +33,11 @@ __closedir(DIR *dirp)
 		__set_errno (EBADF);
 		return -1;
 	}
-	
+	if (dirp->magic != __DIR_MAGIC)
+	{
+		__set_errno (EFAULT);
+		return -1;
+	}
 	if (dirp->handle != 0xff000000L)
 		r = Dclosedir(dirp->handle);
 	else
@@ -43,6 +47,8 @@ __closedir(DIR *dirp)
 		r = 0;
 	}
 	free(dirp->dirname);
+	dirp->dirname = 0;
+	dirp->magic = 0;
 	free(dirp);
 	return r;
 }

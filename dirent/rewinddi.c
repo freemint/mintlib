@@ -26,6 +26,15 @@ rewinddir(DIR *dirp)
 	long r;
 	_DTA *olddta;
 
+	if (dirp == NULL) {
+		__set_errno (EBADF);
+		return;
+	}
+	if (dirp->magic != __DIR_MAGIC)
+	{
+		__set_errno (EFAULT);
+		return;
+	}
 	if (dirp->handle != 0xff000000L)  {
 		(void)Drewinddir(dirp->handle);
 		dirp->buf.d_off = 0;

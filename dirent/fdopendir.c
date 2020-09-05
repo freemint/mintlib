@@ -22,6 +22,8 @@ __fdopendir (int fd)
 		__set_errno (ENOMEM);
 		return d;
 	}
+	d->magic = __DIR_MAGIC;
+	d->dirname = NULL;
 
 	r = Ffdopendir(fd);
 	if (r < 0) {
