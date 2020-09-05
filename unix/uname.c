@@ -11,21 +11,40 @@
 #include <errno.h>
 #include <sys/systeminfo.h>
 #include <sys/utsname.h>
+#include <string.h>
 
-int
-__uname (struct utsname *info)
+int __uname(struct utsname *info)
 {
-	if (info == (struct utsname *) 0) {
-		__set_errno (EFAULT);
+	if (info == 0)
+	{
+		__set_errno(EFAULT);
 		return -1;
 	}
 
-	sysinfo (SI_SYSNAME, info->sysname, sizeof (info->sysname));
-	sysinfo (SI_HOSTNAME, info->nodename, sizeof (info->nodename));
-	sysinfo (SI_RELEASE, info->release, sizeof (info->release));
-	sysinfo (SI_VERSION, info->version, sizeof (info->version));
-	sysinfo (SI_PLATFORM, info->machine, sizeof (info->machine));
-//	sysinfo (SI_ARCHITECTURE, info->architecture, sizeof (info->architecture));
+	/*
+	 * assumes that if sysinfo(SI_SYSNAME) fails, the other will fail, too
+	 */
+	if (sysinfo(SI_SYSNAME, info->sysname, sizeof (info->sysname)) < 0)
+	{
+		if (errno != ENOSYS)
+			return -1;
+		strcpy(info->sysname, "atari");
+		strcpy(info->nodename, "localhost");
+		strcpy(info->release, "1.0");
+		strcpy(info->version, "1.0");
+		strcpy(info->machine, "m68k");
+		return 0;
+	}
+	sysinfo(SI_HOSTNAME, info->nodename, sizeof(info->nodename));
+	sysinfo(SI_RELEASE, info->release, sizeof(info->release));
+	sysinfo(SI_VERSION, info->version, sizeof(info->version));
+	sysinfo(SI_PLATFORM, info->machine, sizeof(info->machine));
+#ifdef _UTSNAME_DOMAIN_LENGTH
+	sysinfo(SI_DOMAINNAME, info->domainname, sizeof(info->domainname));
+#endif
+#ifdef _UTSNAME_ARCHITECTURE_LENGTH
+	sysinfo(SI_ARCHITECTURE, info->architecture, sizeof(info->architecture));
+#endif
 
 	return 0;
 }
