@@ -240,7 +240,7 @@ int nf_debugvprintf(const char *format, va_list args)
 #if EMULATE_DEBUGPRINTF
 	{
 		struct msgbuf msg;
-		char buf[2048];
+		static char buf[2048];
 		
 		msg.buf = buf;
 		msg.bufsize = sizeof(buf);
@@ -254,7 +254,7 @@ int nf_debugvprintf(const char *format, va_list args)
 #else
 	{
 #if defined(_PUREC_SOURCE) || !defined(HAVE_VASPRINTF)
-		char buf[2048];
+		static char buf[2048];
 		
 #ifdef HAVE_VSNPRINTF
 		ret = vsnprintf(buf, sizeof(buf), format, args);
