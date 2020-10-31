@@ -28,13 +28,10 @@ extern __EXITING _exit (int) __NORETURN;
 
 #endif /* __MINT__ */
 
-void _init_signal (void);
 void exit (int status);
 void _main (long argc, char **argv, char **environ);
 void __main (void);
 
-
-void _init_signal (void) { }
 
 __EXITING exit (int status) { __exit(status); }
 

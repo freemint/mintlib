@@ -190,9 +190,6 @@ _crtinit(void)
 	/* keep length of program area */
 	_PgmSize = m;
 
-	/* establish handlers,  call the main routine */
-	_init_signal();
-
 	/* start profiling, if we were linked with gcrt0.o */
 	_monstartup((void *)bp->p_tbase, (void *)((long)etext - 1));
 

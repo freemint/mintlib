@@ -37,7 +37,6 @@ int	_enoent (const char *);
 void	_crtinit	(void);
 void	_main		(long, char **, char **);
 void	_acc_main	(void);
-void	_init_signal	(void);
 void	_setstack	(char *);
 
 void	_monstartup	(void *lowpc, void *highpc);
