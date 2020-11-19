@@ -12,7 +12,8 @@ sighandler_t _sig_handler[NSIG];
  */
 static __inline__ void sig_dfl_check(void)
 {
-	typedef char verify_sig_dfl_0[(SIG_DFL == 0) ? NSIG : -1];
+	char verify_sig_dfl_0[(SIG_DFL == 0) ? NSIG : -1];
+	(void)verify_sig_dfl_0;
 }
 
 /* vector giving which signals are currently blocked from delivery (for TOS) */
