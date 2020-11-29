@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/freemint/mintlib.svg?branch=master)](https://travis-ci.org/freemint/mintlib) [ ![Download](https://api.bintray.com/packages/freemint/freemint/mintlib/images/download.svg) ](https://bintray.com/freemint/freemint/mintlib/_latestVersion)
+[![Build Status](https://travis-ci.org/freemint/mintlib.svg?branch=master)](https://travis-ci.org/freemint/mintlib) [ ![Download](https://api.bintray.com/packages/freemint/lib/mintlib/images/download.svg) ](https://bintray.com/freemint/lib/mintlib/_latestVersion)
 
 This is the MiNTLib.  The MiNTLib is the standard libc for FreeMiNT.
 It will also work to some extent on non-MiNT systems, it tries its 
