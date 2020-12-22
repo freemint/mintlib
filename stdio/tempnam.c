@@ -28,8 +28,8 @@ char*
 tempnam (const char* dir, const char* prefix)
 {
   static char buf[L_tmpnam];
-  pid_t pid = getpid ();
-  unsigned int i0, i1, i2, j0, j1, j2;
+  unsigned short pid = getpid ();
+  unsigned short i0, i1, i2, j0, j1, j2;
   size_t len;
   char* tmpdir = (char*) (dir == NULL || (strlen (dir) > L_tmpnam - 13) ? 
   				__get_tmpdir (NULL, 1)
@@ -63,16 +63,17 @@ tempnam (const char* dir, const char* prefix)
   buf[len - 4] = '.';
 
   /* Create the filename.  */
-  buf[len - 3] = pid / 100 + '0';
-  pid %= 100;
-  buf[len - 2] = pid / 10 + '0';
   buf[len - 1] = pid % 10 + '0';
+  pid /= 10;
+  buf[len - 2] = pid % 10 + '0';
+  pid /= 10;
+  buf[len - 3] = pid % 10 + '0';
 
   /* Choose a random start point to minimize the possibility of
      conflicts.  */
-  i0 = Random () % sizeof __tmp_letters;
-  i1 = Random () % sizeof __tmp_letters;
-  i2 = Random () % sizeof __tmp_letters;
+  i0 = ((unsigned short)Random ()) % sizeof __tmp_letters;
+  i1 = ((unsigned short)Random ()) % sizeof __tmp_letters;
+  i2 = ((unsigned short)Random ()) % sizeof __tmp_letters;
 
   for (j0 = 0; j0 < sizeof __tmp_letters; j0++, i0++)
     {

@@ -22,8 +22,8 @@ char*
 mktemp (char* template)
 {
   size_t len;
-  pid_t pid = getpid ();
-  unsigned int i0, i1, i2, j0, j1, j2;
+  unsigned short pid = (unsigned short)getpid ();
+  unsigned short i0, i1, i2, j0, j1, j2;
   
   if (template == NULL)
     {
@@ -44,16 +44,17 @@ mktemp (char* template)
     }
 
   /* Create the filename.  */
-  template[len - 3] = pid / 100 + '0';
-  pid %= 100;
-  template[len - 2] = pid / 10 + '0';
   template[len - 1] = pid % 10 + '0';
+  pid /= 10;
+  template[len - 2] = pid % 10 + '0';
+  pid /= 10;
+  template[len - 3] = pid % 10 + '0';
 
   /* Choose a random start point to minimize the possibility of
      conflicts.  */
-  i0 = Random () % sizeof __tmp_letters;
-  i1 = Random () % sizeof __tmp_letters;
-  i2 = Random () % sizeof __tmp_letters;
+  i0 = ((unsigned short)Random ()) % sizeof __tmp_letters;
+  i1 = ((unsigned short)Random ()) % sizeof __tmp_letters;
+  i2 = ((unsigned short)Random ()) % sizeof __tmp_letters;
   
   for (j0 = 0; j0 < sizeof __tmp_letters; j0++, i0++)
     {
