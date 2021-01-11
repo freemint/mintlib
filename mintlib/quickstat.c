@@ -10,7 +10,7 @@
 
 /* Modified by Frank Naumann <fnaumann@freemint.de>:
    - Use __sys_stat syscall wrapper  */
-   
+
 #include <alloca.h>
 #include <ctype.h>
 #include <errno.h>
@@ -24,14 +24,14 @@
 
 
 /* A quick stat version that gets everything but the timestamps.  This
-   is often enough and saves a lot of performance.  
-   
+   is often enough and saves a lot of performance.
+
    For symbolic links the size may also be inaccurate.  */
-   
+
 int
 __quickstat (const char *_path, struct stat *st, int lflag)
 {
-	char tmpbuf[PATH_MAX];
+	char pathbuf[PATH_MAX];
 	char *path = (char *) _path;
 	int nval;
 	long r;
@@ -46,18 +46,18 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 		return -1;
 	}
 
-	if (__libc_unix_names) 
+	if (__libc_unix_names) {
 		nval = 0;
-	else {
-	    	/* _unx2dos returns 1 for device names (like /dev/con) */
-	     	path = tmpbuf;
-  	    	nval = _unx2dos(_path, path, sizeof (tmpbuf));
+	} else {
+		/* _unx2dos returns 1 for device names (like /dev/con) */
+		path = pathbuf;
+		nval = _unx2dos(_path, path, sizeof (pathbuf));
 	}
 
 	r = __sys_stat (path, st, lflag, 0);
 	if (r != -ENOSYS) {
 		if (r) {
-			if ((r == -ENOTDIR) && _enoent (path)) {
+			if ((r == -ENOTDIR) && _enoent(path)) {
 				r = -ENOENT;
 			}
 			__set_errno (-r);
@@ -67,15 +67,15 @@ __quickstat (const char *_path, struct stat *st, int lflag)
 	}
 
 	{
+	_DTA	*olddta;
 	char	*ext, drv, *prevdir = NULL;
 	_DTA	d;
-	_DTA	*olddta;
 	int	isdot = 0;
 	int	isdir = 0;
-	
+
 	memset(st, 0, sizeof (*st));
-	
-	/* Otherwise, check to see if we have a name like CON: or AUX: */
+
+	/* otherwise, check to see if we have a name like CON: or AUX: */
 	if (nval == 1) {
 		st->st_mode = S_IFCHR | 0600;
 		st->st_flags = 0;
@@ -109,9 +109,8 @@ rootdir:
 		goto fill_dir;
 	}
 
-
-	/* Forbid wildcards in path names */
-	if (index(path, '*') || index (path, '?')) {
+	/* forbid wildcards in path names */
+	if (strchr(path, '*') || strchr(path, '?')) {
 		__set_errno (ENOENT);
 		return -1;
 	}
@@ -123,7 +122,7 @@ rootdir:
 	 * NOTE2: Some versions of TOS don't like Fsfirst("RCS\\", -1) either,
 	 * so we do the same thing if the path ends in '\\'.
 	 */
-	
+
 	/* Find the end of the string, and previous directory for kludging  */
 	for (ext = path; ext[0] && ext[1]; ext++) {
 		if (ext[1] && ext[1] != '.') {
@@ -131,7 +130,7 @@ rootdir:
 				prevdir = ext;
 			}
 		}
-	};
+	}
 
 	/* Add appropriate kludge if necessary. */
 
@@ -155,7 +154,7 @@ rootdir:
 
 		isdot = 1;
 		if (prevdir) {
-			/* 
+			/*
 			 * In the case of C:\XXXX\YYYY\.., we now have....
 			 * C:\XXXX\*.*
 			 */
@@ -167,7 +166,7 @@ rootdir:
 			 */
 			strcpy(&ext[-2], "\\*.*\0");
 		}
-	} 
+	}
 	/* Finally, Handle C:\XXXX\ */
 	else if (*ext == '\\') {
 		isdot = 1;
@@ -178,7 +177,7 @@ rootdir:
 	r = Fsfirst (path, 0xff);
 	Fsetdta (olddta);
 	if (r < 0) {
-		/* 
+		/*
 		 * This is incorrect. When Fsfirst fails for things such as
 		 * C:\\FOO\\ and appends *.*, to become C:\\FOO\\*.*, and
 		 * we get ENOENT, why did we say it was a directory and return
@@ -191,7 +190,7 @@ rootdir:
 		 */
 		__set_errno (-r);
 		return -1;
-	}	
+	}
 
 	if (isdot && ((d.dta_name[0] != '.') || (d.dta_name[1]))) {
 		goto rootdir;
@@ -202,27 +201,29 @@ rootdir:
 	else
 		st->st_dev = Dgetdrv ();
 
+	isdir = (d.dta_attribute & FA_DIR) != 0;
+
 	st->st_ino = __inode++;
 	st->st_flags = 0;
-	st->st_mode = 0644 | (isdir ? S_IFDIR | 0111 : S_IFREG);
+	st->st_mode = 0644 | ((d.dta_attribute & FA_SYMLINK) ? S_IFLNK : isdir ? S_IFDIR | 0111 : S_IFREG);
 
-	if (st->st_flags & FA_RDONLY)
+	if (d.dta_attribute & FA_RDONLY)
 		st->st_mode &= ~0222;	/* no write permission */
-	if (st->st_flags & FA_HIDDEN)
+	if (d.dta_attribute & FA_HIDDEN)
 		st->st_mode &= ~0444;	/* no read permission */
 
-	/* Check for a file with an executable extension */
+	/* check for a file with an executable extension */
 	ext = strrchr(_path, '.');
 	if (ext) {
-		if (!strcmp (ext, ".app") || !strcmp (ext, ".gtp") ||
-		    !strcmp (ext, ".ttp") || !strcmp (ext, ".prg") ||
-		    !strcmp (ext, ".tos")) {
+		if (!strcmp(ext, ".app") || !strcmp(ext, ".gtp") ||
+		    !strcmp(ext, ".ttp") || !strcmp(ext, ".prg") ||
+		    !strcmp(ext, ".tos")) {
 			st->st_mode |= 0111;
 		}
 	}
 	if ((st->st_mode & S_IFMT) == S_IFREG) {
 		st->st_size = d.dta_size;
-		/* In Unix, blocks are measured in 512 bytes */
+		/* in Unix, blocks are measured in 512 bytes */
 		st->st_blocks = (st->st_size + 511) / 512;
 		st->st_nlink = 1; /* we dont have hard links */
 	} else {
@@ -235,8 +236,8 @@ fill_dir:
 	st->st_uid = geteuid();	/* the current user owns every file */
 	st->st_gid = getegid();
 	st->st_blksize = 1024;
-	
+
 	}
-	
+
 	return 0;
 }

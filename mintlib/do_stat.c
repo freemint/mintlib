@@ -21,9 +21,9 @@
 
 #include "lib.h"
 
-/* 
+/*
  * stat system call wrapper
- * 
+ *
  * first try Fstat64, then fallback to Fxattr and convert
  * to struct stat
  */
@@ -62,8 +62,8 @@ __sys_stat (const char *path, struct stat *st, int lflag, int exact)
 			}
 
 			st->st_size = (__off_t) xattr.st_size;
-			st->st_blocks = 
-				(__off_t) (((__off_t) xattr.st_blocks 
+			st->st_blocks =
+				(__off_t) (((__off_t) xattr.st_blocks
 					 * (__off_t) xattr.st_blksize) >> 9);
 			st->st_blksize = xattr.st_blksize;
 			// st->st_flags = 0;
@@ -109,7 +109,7 @@ int
 __do_stat (const char *_path, struct stat *st, int lflag)
 {
 	char pathbuf[PATH_MAX];
-	char *path = (char*) _path;
+	char *path = (char *) _path;
 	int nval;
 	long r;
 
@@ -128,7 +128,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 	} else {
 		/* _unx2dos returns 1 for device names (like /dev/con) */
 		path = pathbuf;
-		nval = _unx2dos (_path, path, sizeof (pathbuf));
+		nval = _unx2dos(_path, path, sizeof (pathbuf));
 	}
 
 	r = __sys_stat (path, st, lflag, 1);
@@ -160,8 +160,7 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 		st->st_flags = 0;
 		st->st_ino = __inode++;
 		st->st_rdev = 0;
-		st->st_mtime = st->st_ctime = st->st_atime = 
-			time((time_t *)0) - 2;
+		st->st_mtime = st->st_ctime = st->st_atime = time((time_t *)0) - 2;
 		st->st_dev = 0;
 		st->st_nlink = 1;
 		st->st_uid = geteuid();
@@ -174,11 +173,10 @@ __do_stat (const char *_path, struct stat *st, int lflag)
 	/* A file name: check for root directory of a drive */
 	if (path[0] == '\\' && path[1] == 0) {
 		drv = Dgetdrv() + 'A';
-		isdir = 1;
 		goto rootdir;
 	}
 
-	if ( ((drv = path[0]) != 0) && path[1] == ':' &&
+	if (((drv = path[0]) != 0) && path[1] == ':' &&
 	     (path[2] == 0 || (path[2] == '\\' && path[3] == 0)) ) {
 rootdir:
 		isdir = 1;
@@ -191,14 +189,14 @@ rootdir:
 	}
 
 	/* forbid wildcards in path names */
-	if (index(path, '*') || index(path, '?')) {
+	if (strchr(path, '*') || strchr(path, '?')) {
 		__set_errno (ENOENT);
 		return -1;
 	}
 
 	/*
 	 * OK, here we're going to have to do an Fsfirst to get the date
-	 * 
+	 *
 	 * NOTE: Fsfirst(".",-1) or Fsfirst("..",-1) both fail under TOS,
 	 * so we kludge around this by using the fact that Fsfirst(".\*.*"
 	 * or "..\*.*" will return the correct file first (except, of course,
@@ -214,7 +212,7 @@ rootdir:
 				prevdir = ext;
 			}
 		}
-	};
+	}
 
 	/* Add appropriate kludge if necessary. */
 
@@ -238,7 +236,7 @@ rootdir:
 
 		isdot = 1;
 		if (prevdir) {
-			/* 
+			/*
 			 * In the case of C:\XXXX\YYYY\.., we now have....
 			 * C:\XXXX\*.*
 			 */
@@ -250,7 +248,7 @@ rootdir:
 			 */
 			strcpy(&ext[-2], "\\*.*\0");
 		}
-	} 
+	}
 	/* Finally, Handle C:\XXXX\ */
 	else if (*ext == '\\') {
 		isdot = 1;
@@ -261,7 +259,7 @@ rootdir:
 	r = Fsfirst (path, 0xff);
 	Fsetdta (olddta);
 	if (r < 0) {
-		/* 
+		/*
 		 * This is incorrect. When Fsfirst fails for things such as
 		 * C:\\FOO\\ and appends *.*, to become C:\\FOO\\*.*, and
 		 * we get ENOENT, why did we say it was a directory and return
@@ -274,7 +272,7 @@ rootdir:
 		 */
 		__set_errno (-r);
 		return -1;
-	}	
+	}
 
 	if (isdot && ((d.dta_name[0] != '.') || (d.dta_name[1]))) {
 		goto rootdir;
@@ -291,11 +289,11 @@ rootdir:
 
 	st->st_ino = __inode++;
 	st->st_flags = 0;
-	st->st_mode = 0644 | (isdir ? S_IFDIR | 0111 : S_IFREG);
+	st->st_mode = 0644 | ((d.dta_attribute & FA_SYMLINK) ? S_IFLNK : isdir ? S_IFDIR | 0111 : S_IFREG);
 
-	if (st->st_flags & FA_RDONLY)
+	if (d.dta_attribute & FA_RDONLY)
 		st->st_mode &= ~0222;	/* no write permission */
-	if (st->st_flags & FA_HIDDEN)
+	if (d.dta_attribute & FA_HIDDEN)
 		st->st_mode &= ~0444;	/* no read permission */
 
 	/* check for a file with an executable extension */
@@ -307,7 +305,7 @@ rootdir:
 			st->st_mode |= 0111;
 		}
 	}
-	if ( (st->st_mode & S_IFMT) == S_IFREG) {
+	if ((st->st_mode & S_IFMT) == S_IFREG) {
 		if (_x_Bit_set_in_stat) {
 			if ((fd = (int) Fopen(path,0)) < 0) {
 				__set_errno (-fd);
@@ -321,7 +319,7 @@ rootdir:
 				st->st_mode |= 0111;
 		}
 		st->st_size = d.dta_size;
-	/* in Unix, blocks are measured in 512 bytes */
+		/* in Unix, blocks are measured in 512 bytes */
 		st->st_blocks = (st->st_size + 511) / 512;
 		st->st_nlink = 1; /* we dont have hard links */
 	} else {
@@ -334,8 +332,8 @@ fill_dir:
 	st->st_uid = geteuid();	/* the current user owns every file */
 	st->st_gid = getegid();
 	st->st_blksize = 1024;
-	
+
 	}
-	
+
 	return 0;
 }

@@ -140,6 +140,7 @@ typedef struct
 #define        FA_LABEL            0x08
 #define        FA_DIR              0x10
 #define        FA_CHANGED          0x20
+#define        FA_SYMLINK          0x40			/* MagiC 3.0 */
 
 /* Codes used with Pexec */
 
