@@ -218,6 +218,7 @@
 #define C_IRSB 0x49525342L     /* SEGA Shutterbrille */
 #define C_iTMA 0x69544D41L     /* MFP Timer A interrupt handler */
 #define C_JAM1 0x4A414D31L     /* Butler James */
+#define C_JANU 0x4A414E55L     /* Janus Emulator */
 #define C_JB2G 0x4A423247L     /* Bios2Gdos */
 #define C_JCLK 0x4A434C4BL     /* Clocky Multiutility */
 #define C_JCNB 0x4A434E42L     /* JCN Bootselector */
