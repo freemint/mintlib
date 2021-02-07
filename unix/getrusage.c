@@ -49,8 +49,12 @@ __getrusage(enum __rusage_who which, struct rusage *data)
 		return -1;
 	} else if (r == -ENOSYS) {
 		usage[0] = usage[2] = usage[4] = 0;
-		usage[1] = _clock() - _childtime;
-		usage[3] = _childtime;
+		/*
+		 * Both _clock() and _childtime are measured in clock ticks.
+		 * Convert to milliseconds to match Prusage system call.
+		 */
+		usage[1] = (_clock() - _childtime) * (1000L / CLOCKS_PER_SEC);
+		usage[3] = _childtime * (1000L / CLOCKS_PER_SEC);
 	}
 
 	if (which == RUSAGE_SELF) {
