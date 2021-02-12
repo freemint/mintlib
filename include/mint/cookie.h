@@ -314,6 +314,7 @@
 #define C_MZVT 0x4D5A5654L     /* Driver videotext decoder from Print-Technik */
 #define C_N203 0x4E323033L     /* Multi Accessory */
 #define C_nAES 0x6E414553L     /* N.AES, the AES for MiNT */
+#define C_NAH3 0x4E414833L     /* N_ALTHLP snapshot tool */
 #define C_NBEL 0x4E42454CL     /* SOUND.PRG */
 #define C_NBLL 0x4E424C4CL     /* NEWBELL.PRG */
 #define C_NCLN 0x4E434C4EL     /* NiceLine */
