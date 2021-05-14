@@ -228,65 +228,71 @@ parseargs(BASEPAGE *bp)
 
 	environ = envp = (char **)(( (long)bp->p_bbase + bp->p_blen + 4) & (~3));
 	from = bp->p_env;
-	while (*from) {
-
-/* if we find MWC arguments, tie off environment here */
-		if (*from == 'A' && *(from+1) == 'R' && *(from+2) == 'G' &&
-		    *(from+3) == 'V' && *(from+4) == '=')
-		{
-			*envp++ = (char *) 0; count += 4;
-			*from = 0;
-#ifdef STRICTLY_COMPATIBLE_WITH_STANDARD
-			if (bp->p_cmdlin[0] != 127)
-				goto old_cmdlin;
-#endif
-			from += 5;        /* skip ARGV= string */
-
-			/* find list of empty params
-			 */
-			if (*from == 'N' && *(from+1) == 'U'
-			    && *(from+2) == 'L' && *(from+3) == 'L' 
-			    && *(from+4) == ':')
-			{
-				null_list = from + 5;
-			}
-			    
-			while (*from++) ; /* skip ARGV= value */
-			__libc_argv = arg = envp;
-			*arg++ = from; count+= 4;
-			while (*from++) ; /* skip __libc_argv[0] */
-			goto do_argc;
-		}
-		*envp++ = from;
-		count += 4;
-		desktoparg = 1;
+	/*
+	 * when passing (void *)-1 as env when calling Pexec(),
+	 * our environment may be NULL
+	 */
+	if (from) {
 		while (*from) {
-			if (*from == '=') {
-				desktoparg = 0;
+
+	/* if we find MWC arguments, tie off environment here */
+			if (*from == 'A' && *(from+1) == 'R' && *(from+2) == 'G' &&
+			    *(from+3) == 'V' && *(from+4) == '=')
+			{
+				*envp++ = (char *) 0; count += 4;
+				*from = 0;
+#ifdef STRICTLY_COMPATIBLE_WITH_STANDARD
+				if (bp->p_cmdlin[0] != 127)
+					goto old_cmdlin;
+#endif
+				from += 5;        /* skip ARGV= string */
+
+				/* find list of empty params
+				 */
+				if (*from == 'N' && *(from+1) == 'U'
+				    && *(from+2) == 'L' && *(from+3) == 'L'
+				    && *(from+4) == ':')
+				{
+					null_list = from + 5;
+				}
+
+				while (*from++) ; /* skip ARGV= value */
+				__libc_argv = arg = envp;
+				*arg++ = from; count+= 4;
+				while (*from++) ; /* skip __libc_argv[0] */
+				goto do_argc;
 			}
-			from++;
-		}
-		from++;		/* skip 0 */
+			*envp++ = from;
+			count += 4;
+			desktoparg = 1;
+			while (*from) {
+				if (*from == '=') {
+					desktoparg = 0;
+				}
+				from++;
+			}
+			from++;		/* skip 0 */
 
-/* the desktop (and some shells) use the environment in the wrong
-   way, putting in "PATH=\0C:\0" instead of "PATH=C:". so if we
-   find an "environment variable" without an '=' in it, we
-   see if the last environment variable ended with '=\0', and
-   if so we append this one to the last one
- */
-		if(desktoparg && envp > &environ[1]) 
-		{
-		/* launched from desktop -- fix up env */
-		    char *p, *q;
+	/* the desktop (and some shells) use the environment in the wrong
+	   way, putting in "PATH=\0C:\0" instead of "PATH=C:". so if we
+	   find an "environment variable" without an '=' in it, we
+	   see if the last environment variable ended with '=\0', and
+	   if so we append this one to the last one
+	 */
+			if(desktoparg && envp > &environ[1])
+			{
+			/* launched from desktop -- fix up env */
+			    char *p, *q;
 
-		    q = envp[-2];	/* current one is envp[-1] */
-		    while (*q) q++;
-		    if (q[-1] == '=') {
-			p = *--envp;
-			while(*p)
-			   *q++ = *p++;
-		        *q = '\0';
-		   }
+			    q = envp[-2];	/* current one is envp[-1] */
+			    while (*q) q++;
+			    if (q[-1] == '=') {
+				p = *--envp;
+				while(*p)
+				   *q++ = *p++;
+			        *q = '\0';
+			   }
+			}
 		}
 	}
 	*envp++ = (char *)0;
@@ -411,7 +417,7 @@ do_argc:
 	}
 	*arg = (char *) 0;
 
-	/* zero epmty params
+	/* zero empty params
 	 */
 	if (null_list) {
 		char *s;
