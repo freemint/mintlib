@@ -10,13 +10,12 @@
 
 #include <stdlib.h>
 #include <mint/sysctl.h>
+#include <unistd.h>
 
+__typeof__(getpagesize) __getpagesize;
+__typeof__(sysctl) __sysctl;
 
 #define DEF_PAGESIZE 8192	/* default page size for TOS */
-
-int
-__sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
-          const void *new, unsigned long newlen);
 
 int
 __getpagesize (void)

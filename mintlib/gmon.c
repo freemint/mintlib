@@ -377,6 +377,9 @@ write_gmon (void)
 }
 
 
+void write_profiling (void); /* should that be in any header? */
+__typeof__(write_profiling) __write_profiling;
+
 void
 __write_profiling (void)
 {

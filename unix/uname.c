@@ -13,6 +13,8 @@
 #include <sys/utsname.h>
 #include <string.h>
 
+__typeof__(uname) __uname;
+
 int __uname(struct utsname *info)
 {
 	if (info == 0)

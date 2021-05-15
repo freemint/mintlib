@@ -6,6 +6,9 @@
 #include "lib.h"
 
 
+__typeof__(sigsetmask) __sigsetmask;
+
+
 /* checksigs: for TOS: this checks to see if we just unmasked any
  * pending signals
  */
@@ -29,8 +32,7 @@ long
 #else
 int
 #endif
-__sigsetmask(mask)
-	long mask;
+__sigsetmask(long mask)
 {
 	register long omask;
 	long r;

@@ -26,6 +26,10 @@
 
 #include "utmp-private.h"
 
+__typeof__(getutent_r) __getutent_r;
+__typeof__(pututline) __pututline;
+__typeof__(endutent) __endutent;
+
 
 /* Functions defined here.  */
 static int setutent_unknown (void);

@@ -24,11 +24,10 @@
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-extern int __srand48_r (long int, struct drand48_data*);
+__typeof__(srand48_r) __srand48_r;
 
 void
-srand48 (seedval)
-     long seedval;
+srand48 (long seedval)
 {
   (void) __srand48_r (seedval, &__libc_drand48_data);
 }

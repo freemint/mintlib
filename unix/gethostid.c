@@ -13,6 +13,9 @@
 #include <netinet/in.h>        /* for gethostbyname         */
 #include <sys/utsname.h>       /* for uname                 */
 #include <stdlib.h>            /* for NULL                  */
+#include <unistd.h>
+
+__typeof__(gethostid) __gethostid;
 
 long int
 __gethostid (void)

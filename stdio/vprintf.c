@@ -25,9 +25,7 @@
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-vprintf (format, arg)
-     const char *format;
-     __gnuc_va_list arg;
+vprintf (const char *format, __gnuc_va_list arg)
 {
   return vfprintf (stdout, format, arg);
 }

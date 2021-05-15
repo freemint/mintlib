@@ -12,9 +12,10 @@
 #include <mintbind.h>
 #include <signal.h>
 
+__typeof__(sigpending) __sigpending;
+
 int
-__sigpending (set)
-	sigset_t *set;
+__sigpending (sigset_t *set)
 {
   	if (!set) {
     		__set_errno (EINVAL);

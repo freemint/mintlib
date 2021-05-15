@@ -4,10 +4,7 @@
 #include <string.h>
 
 size_t
-strxfrm (to, from, maxsize)
-     char *to;
-     const char *from;
-     size_t maxsize;
+strxfrm (char *to, const char *from, size_t maxsize)
 {
   (void)strncpy (to, from, maxsize - 1);
   to[maxsize] = '\0';

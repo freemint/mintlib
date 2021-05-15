@@ -8,9 +8,7 @@
  */
 
 char *				/* found char, or NULL if none */
-strpbrk(s, breakat)
-const char *s;
-const char *breakat;
+strpbrk(const char *s, const char *breakat)
 {
 	register const char *sscan;
 	register const char *bscan;

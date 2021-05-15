@@ -19,10 +19,11 @@
 
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
-#include <features.h>
+#include <stdio.h>
 
-typedef int FILE;
-
+__typeof__(flockfile) __internal_flockfile;
+__typeof__(funlockfile) __internal_funlockfile;
+__typeof__(ftrylockfile) __internal_ftrylockfile;
 
 void
 __internal_flockfile (FILE *stream)

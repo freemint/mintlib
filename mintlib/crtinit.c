@@ -118,7 +118,7 @@ _acc_main(void)
 void
 _crtinit(void)
 {
-	extern void etext();	/* a "function" to fake out pc-rel addressing */
+	extern void etext(void);	/* a "function" to fake out pc-rel addressing */
 
 	register BASEPAGE *bp;
 	register long m;

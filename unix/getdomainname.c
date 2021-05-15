@@ -17,6 +17,8 @@
 #include <sys/types.h>
 #include <mint/sysctl.h>
 
+__typeof__(getdomainname) __getdomainname;
+
 int
 __getdomainname(char *buf, size_t len)
 {

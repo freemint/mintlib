@@ -21,6 +21,8 @@
 
 #include "lib.h"
 
+__typeof__(statfs) __statfs;
+
 int
 __statfs (const char *path, struct statfs *buf)
 {
@@ -92,8 +94,10 @@ __statfs (const char *path, struct statfs *buf)
 }
 weak_alias (__statfs, statfs)
 
-int
-get_fsname (const char *path, char *xfs_name, char *type_name)
+/* not declared or used anywhere? */
+int get_fsname (const char *path, char *xfs_name, char *type_name);
+
+int get_fsname (const char *path, char *xfs_name, char *type_name)
 {
 	struct fs_info info;
 	char xname[32];

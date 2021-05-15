@@ -21,10 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
 
 
-/* Defined in fopen.c.  */
-extern int __getmode __P ((const char *mode, __io_mode *mptr));
 
 /* Open a new stream that will read and/or write from the buffer in
    S, which is of LEN bytes.  If the mode indicates appending, the
@@ -39,10 +38,7 @@ extern int __getmode __P ((const char *mode, __io_mode *mptr));
    to read, attempted writes always return an output error and attempted
    reads always return end-of-file.  */
 FILE *
-fmemopen (s, len, mode)
-     void *s;
-     size_t len;
-     const char *mode;
+fmemopen (void *s, size_t len, const char *mode)
 {
   __io_mode m;
   register FILE *stream;

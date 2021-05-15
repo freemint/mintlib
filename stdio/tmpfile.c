@@ -22,7 +22,7 @@ static FILE_RECORD	*file_to_delete;
 static int		numtmps = -1;
 
 static void
-delete_tmpfiles()
+delete_tmpfiles(void)
 {
 	int i;
 
@@ -33,7 +33,7 @@ delete_tmpfiles()
 	}
 }
 
-FILE *tmpfile()
+FILE *tmpfile(void)
 {
 	char *junknam = malloc (L_tmpnam);
 	FILE *junkfil;

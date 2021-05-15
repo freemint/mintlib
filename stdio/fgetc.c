@@ -24,8 +24,7 @@
 
 /* Read a character from STREAM.  */
 int
-fgetc (stream)
-     FILE *stream;
+fgetc (FILE *stream)
 {
   if (!__validfp (stream) || !stream->__mode.__read)
     {

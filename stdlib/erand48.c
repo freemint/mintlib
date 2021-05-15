@@ -28,8 +28,7 @@ extern long int __erand48_r (unsigned short int __xsub[3],
                              struct drand48_data*, double*);
 
 double
-erand48 (xsubi)
-     unsigned short int xsubi[3];
+erand48 (unsigned short int xsubi[3])
 {
   double result;
 

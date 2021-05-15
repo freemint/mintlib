@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <time.h>
 #include <mint/mintbind.h>
+#include <unistd.h>
 
 #define USEC_PER_TICK (1000000L / ((unsigned long)CLOCKS_PER_SEC))
 #define	USEC_TO_CLOCK_TICKS(us)	((us) / USEC_PER_TICK )

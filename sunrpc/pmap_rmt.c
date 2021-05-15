@@ -47,6 +47,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <rpc/pmap_rmt.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -58,9 +59,9 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <libintl.h>
 #endif
 
-int __socket (int domain, int type, int proto);
-int __ioctl (int fd, int cmd, void *arg);
-int __close (int fd);
+__typeof__(socket) __socket;
+__typeof__(ioctl) __ioctl;
+__typeof__(close) __close;
 
 #undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
 #include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
@@ -81,13 +82,17 @@ static const struct timeval timeout = {3, 0};
  * programs to do a lookup and call in one step.
  */
 enum clnt_stat
-pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_ptr)
-     struct sockaddr_in *addr;
-     u_long prog, vers, proc;
-     xdrproc_t xdrargs, xdrres;
-     caddr_t argsp, resp;
-     struct timeval tout;
-     u_long *port_ptr;
+pmap_rmtcall (
+	struct sockaddr_in *addr,
+	u_long prog,
+	u_long vers,
+	u_long proc,
+	xdrproc_t xdrargs,
+	caddr_t argsp,
+	xdrproc_t xdrres,
+	caddr_t resp,
+	struct timeval tout,
+	u_long *port_ptr)
 {
   int socket = -1;
   CLIENT *client;
@@ -157,9 +162,7 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
  * written for XDR_DECODE direction only
  */
 bool_t
-xdr_rmtcallres (xdrs, crp)
-     XDR *xdrs;
-     struct rmtcallres *crp;
+xdr_rmtcallres (XDR *xdrs, struct rmtcallres *crp)
 {
   caddr_t port_ptr;
 
@@ -236,15 +239,15 @@ getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
 
 
 enum clnt_stat
-clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
-     u_long prog;		/* program number */
-     u_long vers;		/* version number */
-     u_long proc;		/* procedure number */
-     xdrproc_t xargs;		/* xdr routine for args */
-     caddr_t argsp;		/* pointer to args */
-     xdrproc_t xresults;	/* xdr routine for results */
-     caddr_t resultsp;		/* pointer to results */
-     resultproc_t eachresult;	/* call with each result obtained */
+clnt_broadcast (
+     u_long prog,		/* program number */
+     u_long vers,		/* version number */
+     u_long proc,		/* procedure number */
+     xdrproc_t xargs,		/* xdr routine for args */
+     caddr_t argsp,		/* pointer to args */
+     xdrproc_t xresults,	/* xdr routine for results */
+     caddr_t resultsp,		/* pointer to results */
+     resultproc_t eachresult)	/* call with each result obtained */
 {
   enum clnt_stat stat = RPC_FAILED;
   AUTH *unix_auth = authunix_create_default ();

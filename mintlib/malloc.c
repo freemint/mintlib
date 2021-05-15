@@ -26,6 +26,7 @@ static size_t MINHUNK =	8192L;	/* default */
 static size_t MAXHUNK = 32 * 1024L; /* max. default */
 
 /* tune chunk size */
+__typeof__(_mallocChunkSize) __mallocChunkSize;
 void __mallocChunkSize(size_t siz) { MAXHUNK = MINHUNK = siz; }
 weak_alias(__mallocChunkSize, _mallocChunkSize)
 
@@ -33,6 +34,7 @@ weak_alias(__mallocChunkSize, _mallocChunkSize)
 static int ZeroMallocs = 0;
 
 /* Set zero block after malloc flag */
+__typeof__(_malloczero) __malloczero;
 void __malloczero(int yes) { ZeroMallocs = yes; }
 weak_alias(__malloczero, _malloczero)
 

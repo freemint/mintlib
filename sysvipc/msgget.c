@@ -23,13 +23,13 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(msgget) __msgget;
+
 /* Return descriptor for message queue associated with KEY.  The MSGFLG
    parameter describes how to proceed with clashing of key values.  */
 
 int
-__msgget (key, msgflg)
-     key_t key;
-     int msgflg;
+__msgget (key_t key, int msgflg)
 {
 	int ret;
 	

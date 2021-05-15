@@ -15,6 +15,8 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(sendmsg) __sendmsg;
+
 #ifdef __MSHORT__
 #error struct msghdr is not mshort clean, must be wrapped
 #endif

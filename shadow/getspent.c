@@ -12,8 +12,7 @@
 #include <errno.h>
 #include <stddef.h>
 
-extern int __getspent_r (struct spwd* resultbuf, char* buffer,
-                         size_t buflen, struct spwd** result);
+__typeof__(getspent_r) __getspent_r;
 
 static struct spwd spwd;
 static char buffer[1024];

@@ -16,6 +16,8 @@
 #include "sncpy.h"
 #include "sockets_global.h"
 
+__typeof__(getsockname) __getsockname;
+
 #ifdef __MSHORT__
 #error socklen_t is unsigned int, must be wrapped for the syscall
 #endif

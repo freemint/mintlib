@@ -12,11 +12,10 @@
 #include <stdio.h>
 #include <string.h>
 
-int __ffsl (long int bits);
+__typeof__(ffsl) __ffsl;
 
 int 
-__ffsl (bits)
-	long int bits;
+__ffsl (long int bits)
 {
 	unsigned long int shift;
 	unsigned long int ind = (bits & -bits);

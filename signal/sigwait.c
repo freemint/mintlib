@@ -22,6 +22,8 @@
 #include <signal.h>
 #include <stddef.h>		/* For NULL.  */
 
+__typeof__(sigwait) __sigwait;
+
 /* This is our dummy signal handler we use here.  */
 static void ignore_signal (int sig);
 

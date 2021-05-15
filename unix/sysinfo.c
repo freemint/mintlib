@@ -23,6 +23,9 @@
 #include "lib.h"
 
 
+__typeof__(sysinfo) __sysinfo;
+
+
 /* Helper functions.  */
 static void fast_strncpy (char* to, char* from, long bytes);
 
@@ -106,10 +109,7 @@ weak_alias (__sysinfo, sysinfo)
 
 /* Like strncpy but don't pad with nulls.  */
 static void
-fast_strncpy (to, from, bytes)
-  char* to;
-  char* from;
-  long bytes;
+fast_strncpy (char* to, char* from, long bytes)
 {
   long count = 0;
 
@@ -139,9 +139,7 @@ static char* osnames[] = {
 };
 
 static int
-si_sysname (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_sysname (char* buf, long bufsize)
 {
   if (osname == NULL) {
     int index = OS_TOS;
@@ -168,9 +166,7 @@ si_sysname (buf, bufsize)
  * the result of the lookup is not cached.
  */
 static int
-si_hostname (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_hostname (char* buf, long bufsize)
 {
   int saved_errno = errno;
 
@@ -193,9 +189,7 @@ si_hostname (buf, bufsize)
  * Calls the stubs function sethostname().
  */
 static int
-si_set_hostname (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_set_hostname (char* buf, long bufsize)
 {
   return (sethostname (buf, bufsize));
 }
@@ -205,9 +199,7 @@ si_set_hostname (buf, bufsize)
  */
 
 static int
-si_release (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_release (char* buf, long bufsize)
 {
   /* Cached results.  */
   static char* osrelease = NULL;
@@ -275,9 +267,7 @@ si_release (buf, bufsize)
  */
 
 static int
-si_version (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_version (char* buf, long bufsize)
 {
   /* Cached results.  */
   static char* osversion = NULL;
@@ -370,9 +360,7 @@ static char* isalists[] = {
      "isac", "isab", "isaaplus", "isaa"};
 
 static int
-si_architecture (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_architecture (char* buf, long bufsize)
 {
   if (architecture == NULL) {
     long int value = 0;
@@ -448,9 +436,7 @@ si_architecture (buf, bufsize)
 
 /* SI_ISALIST */
 static int
-si_isalist (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_isalist (char* buf, long bufsize)
 {
   if (isalist == NULL)
     (void) si_architecture (NULL, 0);
@@ -510,9 +496,7 @@ static long platform_len;
 static long hw_provider_len;
 
 static int
-si_platform (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_platform (char* buf, long bufsize)
 {
   if (platform == NULL) {
     long _mch = 0;  /* = AtariST */
@@ -586,9 +570,7 @@ si_platform (buf, bufsize)
 
 /* SI_HW_PROVIDER */
 static int
-si_hw_provider (buf, bufsize)
-  char* buf;
-  long bufsize;
+si_hw_provider (char* buf, long bufsize)
 {
   if (platform == NULL)
     (void) si_platform (NULL, 0);
@@ -620,9 +602,7 @@ static char* abbrev_month_names[] = {
 
 /* _MINT_SI_KERNEL_BUILD_DATE */
 static int
-mint_kernel_build_date (buf, bufsize)
-  char* buf;
-  long bufsize;
+mint_kernel_build_date (char* buf, long bufsize)
 {
   char* rbuf;
 
@@ -675,9 +655,7 @@ static char kernel_build_time_buf[] = "HH:MM:SS";
 #define kernel_build_time_len ((long) sizeof kernel_build_time_buf)
 
 static int
-mint_kernel_build_time (buf, bufsize)
-  char* buf;
-  long bufsize;
+mint_kernel_build_time (char* buf, long bufsize)
 {
   if (no_build_time) {
     __set_errno (ENOSYS);
@@ -707,9 +685,7 @@ mint_kernel_build_time (buf, bufsize)
 
 #include <stdio.h>
 static int
-mint_get_clock_mode (buf, bufsize)
-  char* buf;
-  long bufsize;
+mint_get_clock_mode (char* buf, long bufsize)
 {
   char* clock_mode = NULL;
   long int lclock_mode;
@@ -734,9 +710,7 @@ mint_get_clock_mode (buf, bufsize)
 }
 
 static int
-mint_set_clock_mode (buf, bufsize)
-  char* buf;
-  long bufsize;
+mint_set_clock_mode (char* buf, long bufsize)
 {
   long int lclock_mode = 1;
   long int retval;

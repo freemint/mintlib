@@ -40,19 +40,18 @@ static char sccsid[] = "@(#)sethostent.c	6.9 (Berkeley) 3/19/91";
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv.h>
+#include "sockets_global.h"
 
-extern void _res_close (void);
 
 void
-sethostent(stayopen)
-	int stayopen;
+sethostent(int stayopen)
 {
 	if (stayopen)
 		_res.options |= RES_STAYOPEN | RES_USEVC;
 }
 
 void
-endhostent()
+endhostent(void)
 {
 	_res.options &= ~(RES_STAYOPEN | RES_USEVC);
 	_res_close();

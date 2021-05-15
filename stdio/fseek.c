@@ -25,10 +25,7 @@
    is SEEK_SET, the end of the file is it is SEEK_END,
    or the current position if it is SEEK_CUR.  */
 int
-fseek (stream, offset, whence)
-     register FILE *stream;
-     long int offset;
-     int whence;
+fseek (FILE *stream, long int offset, int whence)
 {
   long int o;
 
@@ -152,10 +149,7 @@ fseek (stream, offset, whence)
 
 /* Just use fseek for now */
 int
-fseeko (stream, offset, whence)
-     register FILE *stream;
-     off_t offset;
-     int whence;
+fseeko (FILE *stream, off_t offset, int whence)
 {
-  return fseek(stream, (long int)offset, whence);
+  return fseek(stream, offset, whence);
 }

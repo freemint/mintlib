@@ -50,9 +50,7 @@ AUTHOR
 
 /* Write a line on the stream f, which matches the format of    */
 /* /etc/passwd. Return non-zero on error, zero if okay.         */
-int putpwent(p, f)
-const struct passwd *p;
-FILE *f;
+int putpwent(const struct passwd *p, FILE *f)
 {
   if ((p->pw_passwd[0] == 0x00) || !p->pw_age || (p->pw_age[0] == 0x00))
   {

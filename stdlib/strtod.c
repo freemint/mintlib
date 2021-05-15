@@ -86,11 +86,11 @@
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM_DECL , __locale_t loc
 # define LOCALE_PARAM , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
 #else
-# define LOCALE_PARAM
 # define LOCALE_PARAM_DECL
+# define LOCALE_PARAM
 #endif
 
 #ifndef __MINT__
@@ -437,6 +437,9 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
 #define INTERNAL(x) INTERNAL1(x)
 #define INTERNAL1(x) __##x##_internal
 
+FLOAT
+INTERNAL (STRTOF) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group LOCALE_PARAM_DECL);
+
 #ifndef __MINT__
 /* This file defines a function to check for correct grouping.  */
 # include "grouping.h"
@@ -449,11 +452,7 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
-INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int group;
-     LOCALE_PARAM_DECL
+INTERNAL (STRTOF) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group LOCALE_PARAM_DECL)
 {
   int negative;			/* The sign of the number.  */
   MPN_VAR (num);		/* MP representation of the number.  */
@@ -1462,10 +1461,7 @@ FLOAT
 #ifdef weak_function
 weak_function
 #endif
-STRTOF (nptr, endptr LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     LOCALE_PARAM_DECL
+STRTOF (const STRING_TYPE *nptr, STRING_TYPE **endptr LOCALE_PARAM_DECL)
 {
   return INTERNAL (STRTOF) (nptr, endptr, 0 LOCALE_PARAM);
 }

@@ -45,10 +45,10 @@ static char sccsid[] = "@(#)login_tty.c	1.2 (Berkeley) 6/21/90";
 #include <fcntl.h>
 #include <sys/param.h>
 #include <sys/ioctl.h>
+#include <utmp.h>
 
 int
-login_tty(fd)
-	int fd;
+login_tty(int fd)
 {
 	long pid = getpid ();
 

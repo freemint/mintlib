@@ -25,11 +25,7 @@
 
 /* Read NMEMB chunks of SIZE bytes each from STREAM into P.  */
 size_t
-fread (p, size, nmemb, stream)
-     void *p;
-     size_t size;
-     size_t nmemb;
-     register FILE *stream;
+fread (void *p, size_t size, size_t nmemb, FILE *stream)
 {
   register char *ptr = (char *) p;
   register size_t to_read = size * nmemb;

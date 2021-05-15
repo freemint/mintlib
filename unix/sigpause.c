@@ -25,9 +25,7 @@
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
 int
-__sigpause (sig_or_mask, is_sig)
-     long sig_or_mask;
-     int is_sig;
+__sigpause (long sig_or_mask, int is_sig)
 {
   sigset_t set;
 
@@ -66,8 +64,7 @@ __sigpause (sig_or_mask, is_sig)
    the BSD version.  So make this the default.  */
 int __default_sigpause __P ((long mask));
 int
-__default_sigpause (mask)
-     long mask;
+__default_sigpause (long mask)
 {
   return __sigpause (mask, 0);
 }

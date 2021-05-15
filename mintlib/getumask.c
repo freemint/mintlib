@@ -11,6 +11,7 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
+__typeof__(getumask) __getumask;
 
 mode_t
 __getumask (void)

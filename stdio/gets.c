@@ -25,8 +25,7 @@ link_warning (gets, "the `gets' function is dangerous and should not be used.")
 /* Read a newline-terminated string from stdin into S,
    removing the trailing newline.  Return S or NULL.  */
 char *
-gets (s)
-     char *s;
+gets (char *s)
 {
   register char *p = s;
   register int c;

@@ -20,22 +20,12 @@
 #define _AVOID_GPL  /* This will rename FUNC to __FUNC_old.  */
 #include <unistd.h>
 
-#ifdef  SYSV
-#define index(s, c)  strchr(s, c)
-extern char *strchr();
-#else
-extern char *index();
-#endif
-
 int  opterr = 1;                /* Error handling flag  */
 int  optind = 1;                /* Index in argv        */
 int  optopt;                    /* Current option       */
 char *optarg;                   /* Option argument      */
 
-int getopt(argc, argv, opts)
-  register int argc;
-  register char * const *argv;
-  register const char* opts;
+int getopt(int argc, char * const *argv, const char* opts)
 {
   static int sp = 1;
   register char *cp;
@@ -50,7 +40,7 @@ int getopt(argc, argv, opts)
     }
   }
   optopt = c = argv[optind][sp];
-  if(c == ':' || (cp = index(opts, c)) == NULL) {
+  if(c == ':' || (cp = strchr(opts, c)) == NULL) {
     if(opterr)
       (void) fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
     else if(argv[optind][++sp] == '\0') {

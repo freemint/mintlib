@@ -20,9 +20,10 @@
 #error socklen_t is unsigned int, must be wrapped for the syscall
 #endif
 
+__typeof__(recvfrom) __recvfrom;
 
 int
-__recvfrom (int fd, void *buf, ssize_t buflen, int flags, struct sockaddr *addr, socklen_t *addrlen)
+__recvfrom (int fd, void *buf, size_t buflen, int flags, struct sockaddr *addr, socklen_t *addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Frecvfrom (fd, buf, buflen, flags, addr, addrlen);

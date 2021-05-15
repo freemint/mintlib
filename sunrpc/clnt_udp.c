@@ -233,12 +233,7 @@ fooy:
 }
 
 CLIENT *
-clntudp_create (raddr, program, version, wait, sockp)
-     struct sockaddr_in *raddr;
-     u_long program;
-     u_long version;
-     struct timeval wait;
-     int *sockp;
+clntudp_create (struct sockaddr_in *raddr, u_long program, u_long version, struct timeval wait, int *sockp)
 {
 
   return clntudp_bufcreate (raddr, program, version, wait, sockp,
@@ -273,14 +268,14 @@ is_network_up (int sock)
 }
 
 static enum clnt_stat
-clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
-     CLIENT *cl;	/* client handle */
-     u_long proc;		/* procedure number */
-     xdrproc_t xargs;		/* xdr routine for args */
-     caddr_t argsp;		/* pointer to args */
-     xdrproc_t xresults;	/* xdr routine for results */
-     caddr_t resultsp;		/* pointer to results */
-     struct timeval utimeout;	/* seconds to wait before giving up */
+clntudp_call (
+     CLIENT *cl,	/* client handle */
+     u_long proc,		/* procedure number */
+     xdrproc_t xargs,		/* xdr routine for args */
+     caddr_t argsp,		/* pointer to args */
+     xdrproc_t xresults,	/* xdr routine for results */
+     caddr_t resultsp,		/* pointer to results */
+     struct timeval utimeout)	/* seconds to wait before giving up */
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
   XDR *xdrs;

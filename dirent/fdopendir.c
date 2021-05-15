@@ -11,6 +11,8 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
+DIR *__fdopendir (int fd);
+
 DIR *
 __fdopendir (int fd)
 {

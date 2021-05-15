@@ -11,8 +11,7 @@
 #include <unistd.h>
 
 char *
-cuserid(s)
-  char *s;
+cuserid(char *s)
 {
   static char name[L_cuserid];
   char *t;

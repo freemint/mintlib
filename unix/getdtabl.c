@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <mint/mintbind.h>
 
+__typeof__(getdtablesize) __getdtablesize;
+
 int
 __getdtablesize (void)
 {

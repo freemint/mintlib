@@ -38,6 +38,7 @@
 # include <sys/types.h>
 # include <string.h>
 #endif
+#include "lib.h"
 
 #if __GNUC_PREREQ(7, 0)
 # pragma GCC diagnostic ignored "-Wnonnull-compare"
@@ -849,8 +850,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_float):							      \
       {									      \
 	/* Floating-point number.  This is handled by printf_fp.c.  */	      \
-	extern int __printf_fp __P ((FILE *, const struct printf_info *,      \
-				     const void **const));		      \
 	const void *ptr;						      \
 	int function_done;						      \
 									      \
@@ -900,8 +899,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_floathex):						      \
       {									      \
 	/* Floating point number printed as hexadecimal number.  */	      \
-	extern int __printf_fphex __P ((FILE *, const struct printf_info *,   \
-					const void **const));		      \
 	const void *ptr;						      \
 	int function_done;						      \
 									      \

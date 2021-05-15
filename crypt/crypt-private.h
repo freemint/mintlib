@@ -57,4 +57,8 @@ extern char *__crypt_r (__const char *__key, __const char *__salt,
 			     struct crypt_data * __restrict __data);
 extern char *fcrypt (__const char *key, __const char *salt);
 
+extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
+			    long int buflen);
+extern char *__md5_crypt (const char *key, const char *salt);
+
 #endif  /* crypt-private.h */

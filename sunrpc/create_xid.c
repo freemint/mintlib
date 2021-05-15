@@ -23,7 +23,7 @@
 #include <bits/libc-lock.h>
 #include <rpc/rpc.h>
 
-int __srand48_r (long int seedval, struct drand48_data *buffer);
+__typeof__(srand48_r) __srand48_r;
 
 /* The RPC code is not threadsafe, but new code should be threadsafe. */
 
@@ -32,8 +32,9 @@ __libc_lock_define_initialized (static, createxid_lock)
 static int is_initialized;
 static struct drand48_data __rpc_lrand48_data;
 
-unsigned long
-_create_xid (void)
+unsigned long _create_xid (void);
+
+unsigned long _create_xid (void)
 {
   long res;
 

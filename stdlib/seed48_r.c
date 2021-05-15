@@ -23,10 +23,10 @@
 #include <string.h>
 #include <limits.h>
 
+__typeof__(seed48_r) __seed48_r;
+
 int
-__seed48_r (seed16v, buffer)
-     unsigned short int seed16v[3];
-     struct drand48_data *buffer;
+__seed48_r (unsigned short int seed16v[3], struct drand48_data *buffer)
 {
   /* Save old value at a private place to be used as return value.  */
   memcpy (buffer->old_x, buffer->x, sizeof (buffer->x));

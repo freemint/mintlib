@@ -296,12 +296,15 @@ extern SVCXPRT *svcraw_create (void) __THROW;
 extern SVCXPRT *svcudp_create (int __sock) __THROW;
 extern SVCXPRT *svcudp_bufcreate (int __sock, u_int __sendsz, u_int __recvsz)
      __THROW;
+int svcudp_enablecache (SVCXPRT *transp, u_long size) __THROW;
+
 
 /*
  * Tcp based rpc.
  */
 extern SVCXPRT *svctcp_create (int __sock, u_int __sendsize, u_int __recvsize)
      __THROW;
+SVCXPRT *svcfd_create (int fd, u_int sendsize, u_int recvsize) __THROW;
 
 
 /*
@@ -309,6 +312,7 @@ extern SVCXPRT *svctcp_create (int __sock, u_int __sendsize, u_int __recvsize)
  */
 extern SVCXPRT *svcunix_create (int __sock, u_int __sendsize, u_int __recvsize,
 				char *__path) __THROW;
+SVCXPRT *svcunixfd_create (int fd, u_int sendsize, u_int recvsize) __THROW;
 
 
 __END_DECLS

@@ -62,11 +62,7 @@ extern int _validuser(FILE *, const char *, const char *, const char *, int);
 static int _checkhost(const char *, const char *, int);
 
 int
-rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
-	char **ahost;
-	u_short rport;
-	const char *locuser, *remuser, *cmd;
-	int *fd2p;
+rcmd(char **ahost, u_short rport, const char *locuser, const char *remuser, const char *cmd, int *fd2p)
 {
 	int s, timo = 1, pid;
 	long oldmask;
@@ -208,8 +204,7 @@ bad:
 }
 
 int
-rresvport(alport)
-	int *alport;
+rresvport(int *alport)
 {
 	struct sockaddr_in sin;
 	int s;
@@ -236,12 +231,10 @@ rresvport(alport)
 	}
 }
 
-int	_check_rhosts_file = 1;
+static int	_check_rhosts_file = 1;
 
 int
-ruserok(rhost, superuser, ruser, luser)
-	const char *rhost, *ruser, *luser;
-	int superuser;
+ruserok(const char *rhost, int superuser, const char *ruser, const char *luser)
 {
 	FILE *hostf;
 	char fhost[MAXHOSTNAMELEN];
@@ -299,10 +292,7 @@ again:
 
 /* don't make static, used by lpd(8) */
 int
-_validuser(hostf, rhost, luser, ruser, baselen)
-	const char *rhost, *luser, *ruser;
-	FILE *hostf;
-	int baselen;
+_validuser(FILE *hostf, const char *rhost, const char *luser, const char *ruser, int baselen)
 {
 	register char *p;
 	char *user, ahost[MAXHOSTNAMELEN];
@@ -332,9 +322,7 @@ _validuser(hostf, rhost, luser, ruser, baselen)
 }
 
 static int
-_checkhost(rhost, lhost, len)
-	const char *rhost, *lhost;
-	int len;
+_checkhost(const char *rhost, const char *lhost, int len)
 {
 	static char ldomain[MAXHOSTNAMELEN + 1];
 	static char *domainp = NULL;

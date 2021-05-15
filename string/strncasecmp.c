@@ -5,6 +5,12 @@
 #include <string.h>
 #include <ctype.h>
 
+__typeof__(strncasecmp) __strncasecmp;
+
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /*
  * strnicmp - compare at most n characters of string s1 to s2 without case
  *           result is equivalent to strcmp(strupr(s1),s2)),
@@ -12,10 +18,7 @@
  */
 
 int                             /* <0 for <, 0 for ==, >0 for > */
-__strncasecmp(scan1, scan2, n)
-register const char *scan1;
-register const char *scan2;
-size_t n;
+__strncasecmp(const char *scan1, const char *scan2, size_t n)
 {
         register unsigned char c1, c2;
         register long count;

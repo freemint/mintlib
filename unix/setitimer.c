@@ -11,8 +11,9 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <mint/mintbind.h>
-
 #include "lib.h"
+
+__typeof__(setitimer) __setitimer;
 
 int 
 __setitimer (enum __itimer_which which, const struct itimerval* new, 

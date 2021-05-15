@@ -41,8 +41,7 @@ static char* shell_name;
 static int system_hack(const char* s);
 
 /* Execute LINE as a shell command, returning its status.  */
-int system (line)
-     register const char* line;
+int system (const char *line)
 {
   int status = 0;
   int save;
@@ -170,8 +169,7 @@ static Argentry *_parseargs (const char *s);
 
 /* allocate an Argentry that will hold the string "s" */
 
-static Argentry *_argalloc(s)
-	const char *s;
+static Argentry *_argalloc(const char *s)
 {
 	Argentry *x;
 
@@ -185,8 +183,7 @@ static Argentry *_argalloc(s)
 
 /* free a list of Argentries */
 
-static void _argfree(p)
-	Argentry *p;
+static void _argfree(Argentry *p)
 {
 	Argentry *oldp;
 
@@ -205,8 +202,7 @@ static void _argfree(p)
  *     "ls > junk" is parsed as 'ls' '>junk'.
  */
 
-static Argentry *_parseargs(s)
-	const char *s;
+static Argentry *_parseargs(const char *s)
 {
 	Argentry *cur, *res;
 	char buf[1024];
@@ -250,8 +246,7 @@ again:
  * also, should errno get set here??
  */
 
-int system_hack (s)
-	const char *s;
+int system_hack (const char *s)
 {
 	Argentry *al, *cur;
 	char **argv, *p;

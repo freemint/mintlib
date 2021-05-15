@@ -18,21 +18,13 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include "lib.h"
 
 
-/* Defined in fopen.c.  */
-extern int __getmode __P ((const char *, __io_mode *));
-
-/* Defined in sysd-stdio.c.  */
-extern int __stdio_reopen __P ((const char *filename, __io_mode mode,
-				void *cookieptr, __io_close_fn closefn));
 
 /* Replace STREAM, opening it on FILENAME.  */
 FILE *
-freopen (filename, mode, stream)
-     const char *filename;
-     const char *mode;
-     register FILE *stream;
+freopen (const char *filename, const char *mode, FILE *stream)
 {
   __io_mode m;
   void *cookie;

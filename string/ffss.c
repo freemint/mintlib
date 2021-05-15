@@ -12,11 +12,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int __ffs_s (short int bits);
 
 int 
-__ffss (bits)
-	short int bits;
+__ffss (short int bits)
 {
 	unsigned short int shift;
 	unsigned short int ind = (bits & -bits);

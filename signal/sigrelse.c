@@ -23,8 +23,7 @@
 #include <signal.h>
 
 int
-sigrelse (sig)
-     int sig;
+sigrelse (int sig)
 {
   sigset_t set;
 

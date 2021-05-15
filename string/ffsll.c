@@ -8,13 +8,12 @@
     understand and accept it fully.
 */
 
-#define ffsll foobar_ffsll
 #include <string.h>
-#undef ffsll
+
+__typeof__(ffsl) __ffsl;
 
 int 
-ffsll (bits)
-	long long int bits;
+ffsll (long long int bits)
 {
 	unsigned long long int ind = (bits & -bits);
 	

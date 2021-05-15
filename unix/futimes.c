@@ -15,8 +15,10 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <mint/mintbind.h>
-
+#include <unistd.h>
 #include "lib.h"
+
+__typeof__(futimes) __futimes;
 
 /* There is no use faking odd seconds or fractional parts here.  The
  * operating system doesn't support for now.

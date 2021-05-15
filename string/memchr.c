@@ -8,10 +8,7 @@
  */
 
 void *
-memchr(s, ucharwanted, size)
-const void * s;
-int ucharwanted;
-size_t size;
+memchr(const void *s, int ucharwanted, size_t size)
 {
 	register const char *scan;
 	register size_t n;

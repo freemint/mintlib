@@ -27,8 +27,8 @@
 /* Local buffer to store the result.  */
 static struct utmp buffer;
 
-int __getutid_r (const struct utmp *__id, struct utmp *__buffer,
-                 struct utmp **__result);
+__typeof__(getutid_r) __getutid_r;
+__typeof__(getutid) __getutid;
 
 struct utmp *
 __getutid (const struct utmp *id)

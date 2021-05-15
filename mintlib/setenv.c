@@ -47,11 +47,12 @@ extern int errno;
 
 /* In the GNU C library we must keep the namespace clean.  */
 #ifdef _LIBC
+__typeof__(setenv) __setenv;
+__typeof__(unsetenv) __unsetenv;
+__typeof__(clearenv) __clearenv;
 # define setenv __setenv
 # define unsetenv __unsetenv
 # define clearenv __clearenv
-# define tfind __tfind
-# define tsearch __tsearch
 #endif
 
 #undef USE_TSEARCH
@@ -69,12 +70,8 @@ static char **last_environ;
    must be used directly.  This is all complicated by the fact that we try
    to reuse values once generated for a `setenv' call since we can never
    free the strings.  */
-int
-__add_to_environ (name, value, combined, replace)
-     const char *name;
-     const char *value;
-     const char *combined;
-     int replace;
+static int
+__add_to_environ (const char *name, const char *value, const char *combined, int replace)
 {
   register char **ep;
   register size_t size;
@@ -222,11 +219,9 @@ __add_to_environ (name, value, combined, replace)
   return 0;
 }
 
+
 int
-setenv (name, value, replace)
-     const char *name;
-     const char *value;
-     int replace;
+setenv (const char *name, const char *value, int replace)
 {
   if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
     {
@@ -237,9 +232,7 @@ setenv (name, value, replace)
   return __add_to_environ (name, value, NULL, replace);
 }
 
-int
-unsetenv (name)
-     const char *name;
+int unsetenv (const char *name)
 {
   size_t len;
   char **ep;
@@ -280,8 +273,7 @@ unsetenv (name)
 /* The `clearenv' was planned to be added to POSIX.1 but probably
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
-int
-clearenv ()
+int clearenv (void)
 {
   LOCK;
 

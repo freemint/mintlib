@@ -43,6 +43,9 @@
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
 
+enum auth_stat _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg);
+enum auth_stat _svcauth_short (struct svc_req *rqst, struct rpc_msg *msg);
+
 /*
  * Unix longhand authenticator
  */

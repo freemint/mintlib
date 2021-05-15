@@ -15,9 +15,14 @@
 
 #include <unistd.h>
 
+__typeof__(swab) __swab;
+
 void
-__swab (const char* from, char* to, ssize_t n)
+__swab (const void* _from, void* _to, ssize_t n)
 {
+	const char* from = (const char*)_from;
+	char* to = (char*)_to;
+
 	if (n & 1) {
 		*(to++) = *(from++);
 		n--;

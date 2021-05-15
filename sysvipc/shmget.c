@@ -23,14 +23,13 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(shmget) __shmget;
+
 /* Return an identifier for an shared memory segment of at least size SIZE
    which is associated with KEY.  */
 
 int
-__shmget (key, size, shmflg)
-     key_t key;
-     size_t size;
-     int shmflg;
+__shmget (key_t key, size_t size, int shmflg)
 {
 	int ret;
 	

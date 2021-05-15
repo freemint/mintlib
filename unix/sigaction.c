@@ -16,10 +16,7 @@ typedef void __CDECL (*__KerSigfunc) (int);
 #endif
 
 int
-__sigaction(sig, act, oact)
-	int sig;
-	const struct sigaction *act;
-	struct sigaction *oact;
+__sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
 	long r;
 	sighandler_t oldfunc;

@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #include <mint/sysctl.h>
 #include <sys/types.h>
+#include <unistd.h>
 
+__typeof__(sethostname) __sethostname;
 
 int
 __sethostname (const char *name, size_t namelen)

@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <mint/sysctl.h>
 
+__typeof__(gethostname) __gethostname;
 
 int
 __gethostname (char *buf, size_t len)

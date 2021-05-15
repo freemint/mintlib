@@ -37,12 +37,9 @@ static char sccsid[] = "@(#)getprotoname.c	5.7 (Berkeley) 2/24/91";
 
 #include <netdb.h>
 #include <string.h>
+#include "sockets_global.h"
 
-void __setprotoent (int f);
-void __endprotoent (void);
-struct protoent * __getprotoent (void);
-
-extern int _proto_stayopen;
+__typeof__(getprotobyname) __getprotobyname;
 
 struct protoent *
 __getprotobyname (const char *name)

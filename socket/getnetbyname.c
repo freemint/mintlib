@@ -37,12 +37,7 @@ static char sccsid[] = "@(#)getnetbyname.c	5.7 (Berkeley) 2/24/91";
 
 #include <netdb.h>
 #include <string.h>
-
-void __setnetent (int f);
-void __endnetent (void);
-struct netent * __getnetent (void);
-
-extern int _net_stayopen;
+#include "sockets_global.h"
 
 struct netent *
 __getnetbyname (const char *name)

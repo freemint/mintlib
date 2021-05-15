@@ -13,7 +13,9 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-int __utime (const char *_filename, const struct utimbuf *_tset);
+__typeof__(utimes) __utimes;
+__typeof__(utime) __utime;
+
 
 /* There is no use faking odd seconds or fractional parts here.  The
  * operating system doesn't support for now.

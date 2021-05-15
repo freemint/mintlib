@@ -11,9 +11,10 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(recv) __recv;
 
 int
-__recv (int fd, void *buf, ssize_t buflen, int flags)
+__recv (int fd, void *buf, size_t buflen, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Frecvfrom (fd, buf, buflen, flags, NULL, NULL);

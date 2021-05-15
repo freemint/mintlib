@@ -15,9 +15,10 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(connect) __connect;
 
 int
-__connect (int fd, struct sockaddr *addr, socklen_t addrlen)
+__connect (int fd, const struct sockaddr *addr, socklen_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fconnect (fd, addr, addrlen);
@@ -51,7 +52,7 @@ __connect (int fd, struct sockaddr *addr, socklen_t addrlen)
 			cmd.addr = (struct sockaddr *)&un;
 			cmd.addrlen = UN_OFFSET + strlen (un.sun_path);
 		} else {
-			cmd.addr = addr;
+			cmd.addr = (struct sockaddr *)addr;
 			cmd.addrlen = (short) addrlen;
 		}
 		cmd.cmd = CONNECT_CMD;

@@ -22,9 +22,7 @@
 
 /* Push the character C back onto the input stream of STREAM.  */
 int
-ungetc (c, stream)
-     int c;
-     FILE *stream;
+ungetc (int c, FILE *stream)
 {
   if (!__validfp (stream) || !stream->__mode.__read)
     {

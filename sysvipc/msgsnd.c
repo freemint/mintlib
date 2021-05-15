@@ -23,6 +23,8 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(msgsnd) __msgsnd;
+
 /* Send a message to the queue associated with the message queue
    descriptor MSQID.  The parameter MSGP points to a structure
    describing messages where the parameter MSGSZ gives the length
@@ -30,11 +32,7 @@
    when the limit of the message queue length is reached.  */
 
 int
-__msgsnd (msqid, msgp, msgsz, msgflg)
-     int msqid;
-     const void *msgp;
-     size_t msgsz;
-     int msgflg;
+__msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
 	int ret;
 	

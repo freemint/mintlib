@@ -23,13 +23,12 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(shmctl) __shmctl;
+
 /* Provide operations to control over shared memory segments.  */
 
 int
-__shmctl (shmid, cmd, buf)
-     int shmid;
-     int cmd;
-     struct shmid_ds *buf;
+__shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
 	int ret;
 	

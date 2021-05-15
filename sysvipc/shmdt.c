@@ -23,12 +23,13 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(shmdt) __shmdt;
+
 /* Detach shared memory segment starting at address specified by SHMADDR
    from the caller's data segment.  */
 
 int
-__shmdt (shmaddr)
-     const void *shmaddr;
+__shmdt (const void *shmaddr)
 {
 	int ret;
 	

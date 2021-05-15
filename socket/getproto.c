@@ -36,12 +36,8 @@ static char sccsid[] = "@(#)getproto.c	5.6 (Berkeley) 6/1/90";
 #endif /* LIBC_SCCS and not lint */
 
 #include <netdb.h>
+#include "sockets_global.h"
 
-void __setprotoent (int f);
-void __endprotoent (void);
-struct protoent * __getprotoent (void);
-
-extern int _proto_stayopen;
 
 struct protoent *
 __getprotobynumber (int proto)

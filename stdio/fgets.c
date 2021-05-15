@@ -31,10 +31,7 @@ extern void* __memccpy (void*, const void*, int, size_t);
    to S, the function returns NULL without appending the null character.
    If there is a file error, always return NULL.  */
 char *
-fgets (s, n, stream)
-     char *s;
-     int n;
-     FILE *stream;
+fgets (char *s, int n, FILE *stream)
 {
   register char *p = s;
 

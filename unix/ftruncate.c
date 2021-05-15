@@ -4,8 +4,11 @@
 #include <mint/mintbind.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
 #include "lib.h"
+
+__typeof__(ftruncate) __ftruncate;
 
 int
 __ftruncate (int fd, off_t length)

@@ -17,6 +17,8 @@
 
 #include "lib.h"
 
+__typeof__(ioctl) __ioctl;
+
 static int _ttydisc = NTTYDISC;
 static int _ldisc = LLITOUT;
 

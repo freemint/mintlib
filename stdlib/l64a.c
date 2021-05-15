@@ -4,8 +4,7 @@
 
 
 /* integer to base-64 char, 0x7F on error */
-static char i64a(i)
-  int i;
+static char i64a(int i)
 {
   char retval = (char)i;
   
@@ -23,8 +22,7 @@ static char i64a(i)
 } /* End of i64a() */
 
 /* long to base-64 string */
-char *l64a(l)
-  long l;
+char *l64a(long l)
 {
   static char retval[7];
   char buffer[7], *ptr1 = buffer, *ptr2 = retval;

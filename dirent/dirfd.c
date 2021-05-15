@@ -11,6 +11,8 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
+int __dirfd (DIR *dir);
+
 int
 __dirfd (DIR *dir)
 {

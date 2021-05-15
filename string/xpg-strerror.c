@@ -20,6 +20,7 @@
 #include <string.h>
 #include <sys/param.h>
 
+int __xpg_strerror_r(int errnum, char *buffer, size_t n);
 
 /* Fill buf with a string describing the errno code in ERRNUM.  */
 int __xpg_strerror_r(int errnum, char *buffer, size_t n)

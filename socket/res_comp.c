@@ -56,10 +56,7 @@ static int dn_find (u_char *exp_dn, u_char *msg,
  * Return size of compressed name or -1 if there was an error.
  */
 int
-dn_expand(msg, eomorig, comp_dn, exp_dn, length)
-	u_char *msg, *eomorig, *comp_dn;
-	u_char *exp_dn;
-	int length;
+dn_expand(u_char *msg, u_char *eomorig, u_char *comp_dn, u_char *exp_dn, int length)
 {
 	register u_char *cp, *dn;
 	register int n, c;
@@ -137,10 +134,7 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
  * is NULL, we don't update the list.
  */
 int
-dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
-	u_char *exp_dn;
-	u_char *comp_dn, **dnptrs, **lastdnptr;
-	int length;
+dn_comp(u_char *exp_dn, u_char *comp_dn, int length, u_char **dnptrs, u_char **lastdnptr)
 {
 	register u_char *cp, *dn;
 	register int c, l;
@@ -218,8 +212,7 @@ dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
  * Skip over a compressed domain name. Return the size or -1.
  */
 int
-__dn_skipname(comp_dn, eom)
-	u_char *comp_dn, *eom;
+__dn_skipname(u_char *comp_dn, u_char *eom)
 {
 	register u_char *cp;
 	register int n;
@@ -250,9 +243,7 @@ __dn_skipname(comp_dn, eom)
  * not the pointer to the start of the message.
  */
 static int
-dn_find(exp_dn, msg, dnptrs, lastdnptr)
-	u_char *exp_dn, *msg;
-	u_char **dnptrs, **lastdnptr;
+dn_find(u_char *exp_dn, u_char *msg, u_char **dnptrs, u_char **lastdnptr)
 {
 	register u_char *dn, *cp, **cpp;
 	register int n;
@@ -304,10 +295,9 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
  */
 
 u_short
-_getshort(msgp)
-	u_char *msgp;
+_getshort(u_char *msgp)
 {
-	register u_char *p = (u_char *) msgp;
+	register u_char *p = msgp;
 #ifdef vax
 	/*
 	 * vax compiler doesn't put shorts in registers
@@ -322,10 +312,9 @@ _getshort(msgp)
 }
 
 u_long
-_getlong(msgp)
-	u_char *msgp;
+_getlong(u_char *msgp)
 {
-	register u_char *p = (u_char *) msgp;
+	register u_char *p = msgp;
 	register u_long u;
 
 	u = *p++; u <<= 8;
@@ -335,22 +324,14 @@ _getlong(msgp)
 }
 
 void
-#ifdef __STDC__
 __putshort(register u_short s, register u_char *msgp)
-#else
-__putshort(s, msgp)
-	register u_short s;
-	register u_char *msgp;
-#endif
 {
 	msgp[1] = s;
 	msgp[0] = s >> 8;
 }
 
 void
-__putlong(l, msgp)
-	register u_long l;
-	register u_char *msgp;
+__putlong(u_long l, u_char *msgp)
 {
 	msgp[3] = l;
 	msgp[2] = (l >>= 8);

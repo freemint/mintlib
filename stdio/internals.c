@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
 
 
 /* Make sure that FP has its functions set.  */
@@ -35,7 +36,6 @@ __stdio_check_funcs (register FILE *fp)
 	 If no buffer is set (and the stream is not made explicitly
 	 unbuffered), we allocate a buffer below, using the bufsize
 	 set by this function.  */
-      extern void __stdio_init_stream __P ((FILE *));
       fp->__room_funcs = __default_room_functions;
       fp->__io_funcs = fp->__mode.__binary ? __default_io_functions
       			: __default_text_io_functions;
@@ -98,8 +98,7 @@ init_stream (register FILE *fp)
 
 /* Determine the current file position of STREAM if it is unknown.  */
 int
-__stdio_check_offset (stream)
-     FILE *stream;
+__stdio_check_offset (FILE *stream)
 {
   init_stream (stream);
 
@@ -517,9 +516,7 @@ const __room_functions __default_room_functions =
 /* Flush the buffer for FP and also write C if FLUSH_ONLY is nonzero.
    This is the function used by putc and fflush.  */
 int
-__flshfp (fp, c)
-     register FILE *fp;
-     int c;
+__flshfp (FILE *fp, int c)
 {
   int flush_only = c == EOF;
 
@@ -603,8 +600,7 @@ __flshfp (fp, c)
 /* Fill the buffer for FP and return the first character read.
    This is the function used by getc.  */
 int
-__fillbf (fp)
-     register FILE *fp;
+__fillbf (FILE *fp)
 {
   register int c;
   fpos_t new_target;
@@ -691,8 +687,7 @@ __fillbf (fp)
 
 /* Nuke a stream, but don't kill its link in the chain.  */
 void
-__invalidate (stream)
-     register FILE *stream;
+__invalidate (FILE *stream)
 {
   /* Save its link.  */
   register FILE *next = stream->__next;

@@ -29,10 +29,7 @@
 /* Write formatted output to S according to the format string
    FORMAT, using the argument list in ARG.  */
 int
-vsprintf (s, format, arg)
-     char *s;
-     const char *format;
-     va_list arg;
+vsprintf (char *s, const char *format, va_list arg)
 {
   int done;
   FILE f;

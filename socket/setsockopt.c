@@ -10,9 +10,10 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(setsockopt) __setsockopt;
 
 int
-__setsockopt (int fd, int level, int optname, void *optval, socklen_t optlen)
+__setsockopt (int fd, int level, int optname, const void *optval, socklen_t optlen)
 {
 	if (__libc_newsockets) {
 		long r = Fsetsockopt (fd, level, optname, optval, optlen);
@@ -33,7 +34,7 @@ __setsockopt (int fd, int level, int optname, void *optval, socklen_t optlen)
 		cmd.cmd		= SETSOCKOPT_CMD;
 		cmd.level	= level;
 		cmd.optname	= optname;
-		cmd.optval	= optval;
+		cmd.optval	= (void *)optval;
 		cmd.optlen	= optlen;
 		
 		r = Fcntl (fd, (long) &cmd, SOCKETCALL);

@@ -10,8 +10,9 @@
 
 #include "lib.h"
 
-int
-__fcntl_v (int fd, int cmd, va_list args)
+int __fcntl_v (int fd, int cmd, va_list args);
+
+int __fcntl_v (int fd, int cmd, va_list args)
 {
 	long r;
 

@@ -12,9 +12,7 @@
  */
 
 int                             /* <0 for <, 0 for ==, >0 for > */
-__strcasecmp(scan1, scan2)
-register const char *scan1;
-register const char *scan2;
+__strcasecmp(const char *scan1, const char *scan2)
 {
         register char c1, c2;
 

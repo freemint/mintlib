@@ -70,6 +70,8 @@ static char hexval (char) internal_function;
 static void hex2bin (int, char *, char *) internal_function;
 static void bin2hex (int, unsigned char *, char *) internal_function;
 void passwd2des (char *pw, char *key);
+int xencrypt (char *secret, char *passwd);
+int xdecrypt (char *secret, char *passwd);
 
 /*
  * Encrypt a secret key given passwd

@@ -15,10 +15,9 @@
 
 #define INC(x, size) x = (const void *)(((const char *)(x)) + (size))
 
-int __bcmp(src, dst, n)
-const void * src;
-const void * dst;
-register size_t n;
+__typeof__(bcmp) __bcmp;
+
+int __bcmp(const void * src, const void * dst, size_t n)
 {
 
     assert ((src != NULL) && (dst != NULL));

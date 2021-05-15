@@ -24,6 +24,7 @@
 #include <stdarg.h>
 #include <mintbind.h>
 
+__typeof__(semctl) __semctl;
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun

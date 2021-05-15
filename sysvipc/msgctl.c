@@ -23,14 +23,13 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(msgctl) __msgctl;
+
 /* Allows to control internal state and destruction of message queue
    objects.  */
 
 int
-__msgctl (msqid, cmd, buf)
-     int msqid;
-     int cmd;
-     struct msqid_ds *buf;
+__msgctl (int msqid, int cmd, struct msqid_ds *buf)
 {
 	int ret;
 	

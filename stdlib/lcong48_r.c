@@ -23,10 +23,10 @@
 #include <string.h>
 #include <limits.h>
 
+__typeof__(lcong48_r) __lcong48_r;
+
 int
-__lcong48_r (param, buffer)
-     unsigned short int param[7];
-     struct drand48_data *buffer;
+__lcong48_r (unsigned short int param[7], struct drand48_data *buffer)
 {
   /* Store the given values.  */
 #if USHRT_MAX == 0xffffU

@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #include <mint/sysctl.h>
 #include <sys/types.h>
+#include <unistd.h>
 
+__typeof__(setdomainname) __setdomainname;
 
 int
 __setdomainname (const char *name, size_t namelen)

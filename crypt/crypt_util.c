@@ -350,8 +350,7 @@ _ufc_copymem(from, to, cnt)
  */
 
 void
-__init_des_r(__data)
-     struct crypt_data * __restrict __data;
+__init_des_r(struct crypt_data * __restrict __data)
 {
   int comes_from_bit;
   int bit, sg;
@@ -549,7 +548,7 @@ small_tables_done:
 }
 
 void
-__init_des()
+__init_des(void)
 {
   __init_des_r(&_ufc_foobar);
 }
@@ -561,9 +560,7 @@ __init_des()
 
 #ifdef _UFC_32_
 STATIC void
-shuffle_sb(k, saltbits)
-     long32 *k;
-     ufc_long saltbits;
+shuffle_sb(long32 *k, ufc_long saltbits)
 {
   ufc_long j;
   long32 x;
@@ -596,9 +593,7 @@ shuffle_sb(k, saltbits)
  */
 
 void
-_ufc_setup_salt_r(s, __data)
-     __const char *s;
-     struct crypt_data * __restrict __data;
+_ufc_setup_salt_r(__const char *s, struct crypt_data * __restrict __data)
 {
   ufc_long i, j, saltbits;
 
@@ -644,9 +639,7 @@ _ufc_setup_salt_r(s, __data)
 }
 
 void
-_ufc_mk_keytab_r(key, __data)
-     const char *key;
-     struct crypt_data * __restrict __data;
+_ufc_mk_keytab_r(const char *key, struct crypt_data * __restrict __data)
 {
   ufc_long v1, v2, *k1;
   int i;
@@ -704,9 +697,7 @@ _ufc_mk_keytab_r(key, __data)
  */
 
 void
-_ufc_dofinalperm_r(res, __data)
-     ufc_long *res;
-     struct crypt_data * __restrict __data;
+_ufc_dofinalperm_r(ufc_long *res, struct crypt_data * __restrict __data)
 {
   ufc_long v1, v2, x;
   ufc_long l1,l2,r1,r2;
@@ -748,10 +739,7 @@ _ufc_dofinalperm_r(res, __data)
  */
 
 void
-_ufc_output_conversion_r(v1, v2, salt, __data)
-     ufc_long v1, v2;
-     __const char *salt;
-     struct crypt_data * __restrict __data;
+_ufc_output_conversion_r(ufc_long v1, ufc_long v2, __const char *salt, struct crypt_data * __restrict __data)
 {
   int i, s, shf;
 
@@ -783,14 +771,7 @@ _ufc_output_conversion_r(v1, v2, salt, __data)
  */
 
 void
-__encrypt_r(__block, __edflag, __data)
-     char *__block;
-#ifndef __MSHORT__
-     int __edflag;
-#else
-     int16_t __edflag;
-#endif
-     struct crypt_data * __restrict __data;
+__encrypt_r(char *__block, int __edflag, struct crypt_data * __restrict __data)
 {
   ufc_long l1, l2, r1, r2, res[4];
   int i;
@@ -883,13 +864,7 @@ __encrypt_r(__block, __edflag, __data)
 weak_alias (__encrypt_r, encrypt_r)
 
 void
-encrypt(__block, __edflag)
-     char *__block;
-#ifndef __MSHORT__
-     int __edflag;
-#else
-     int16_t __edflag;
-#endif
+encrypt(char *__block, int __edflag)
 {
   __encrypt_r(__block, __edflag, &_ufc_foobar);
 }
@@ -901,9 +876,7 @@ encrypt(__block, __edflag)
  */
 
 void
-__setkey_r(__key, __data)
-     __const char *__key;
-     struct crypt_data * __restrict __data;
+__setkey_r(__const char *__key, struct crypt_data * __restrict __data)
 {
   int i,j;
   unsigned char c;
@@ -921,8 +894,7 @@ __setkey_r(__key, __data)
 weak_alias (__setkey_r, setkey_r)
 
 void
-setkey(__key)
-     __const char *__key;
+setkey(__const char *__key)
 {
   __setkey_r(__key, &_ufc_foobar);
 }

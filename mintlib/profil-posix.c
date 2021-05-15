@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 
 static u_short *samples;
@@ -58,8 +59,9 @@ profil_count (void *pc)
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
 
-int __sigaction(int, const struct sigaction *, struct sigaction *);
-int __setitimer (enum __itimer_which, const struct itimerval *, struct itimerval *);
+__typeof__(sigaction) __sigaction;
+__typeof__(setitimer) __setitimer;
+__typeof__(profil) __profil;
 
 int
 __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)

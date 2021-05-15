@@ -22,10 +22,10 @@
 #include <stdlib.h>
 #include <limits.h>
 
+__typeof__(srand48_r) __srand48_r;
+
 int
-__srand48_r (seedval, buffer)
-     long int seedval;
-     struct drand48_data *buffer;
+__srand48_r (long int seedval, struct drand48_data *buffer)
 {
   /* The standards say we only have 32 bits.  */
   if (sizeof (long int) > 4)

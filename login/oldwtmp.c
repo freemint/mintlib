@@ -18,9 +18,7 @@
 link_warning (_write_wtmp,
 	      "using `_write_wtmp' is obsolete and dangerous")
 
-void _write_wtmp(line, name, host, time)
-const char *line, *name, *host;
-unsigned long time;
+void _write_wtmp(const char *line, const char *name, const char *host, unsigned long time)
 {
 	int fd;
 	struct utmp entry;

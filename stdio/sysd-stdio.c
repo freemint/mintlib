@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "lib.h"
 
 extern __io_read_fn __stdio_read;
 extern __io_write_fn __stdio_write;

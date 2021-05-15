@@ -27,10 +27,7 @@
 /* Read formatted input from S according to the format
    string FORMAT, using the argument list in ARG.  */
 int
-__vsscanf (s, format, arg)
-     const char *s;
-     const char *format;
-     va_list arg;
+__vsscanf (const char *s, const char *format, va_list arg)
 {
   FILE f;
 

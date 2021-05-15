@@ -61,16 +61,8 @@
 
 static char const *const extensions[] = { "ttp", "prg", "tos", NULL };
 
-static int interpret_script (int mode, const char *path, const char *,
-			     char *const *argv, char *const *envp);
-
 static int
-interpret_script(mode, path, _path, argv, envp)
-	int		mode;
-	const char *path;
-	const char *_path;
-	char	*const *argv;
-	char	*const *envp;
+interpret_script(int mode, const char *path, const char *_path, char *const *argv, char *const *envp)
 {
 	char	tmppath[PATH_MAX];
 	char	*shell;
@@ -184,11 +176,7 @@ interpret_script(mode, path, _path, argv, envp)
 #endif /* HASH_BANG */
 
 int
-_spawnve(mode, _path, argv, envp)
-int	mode;
-const char	*_path;
-char	*const *argv;
-char	*const *envp;
+_spawnve(int mode, const char *_path, char *const *argv, char *const *envp)
 {
 	char		pathbuf[PATH_MAX];
 	char*		path = (char*) _path;

@@ -24,8 +24,7 @@
 
 /* Return non-zero if STREAM has its EOF indicator set.  */
 int
-feof (stream)
-     FILE *stream;
+feof (FILE *stream)
 {
   if (!__validfp (stream))
     {

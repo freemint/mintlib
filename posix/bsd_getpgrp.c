@@ -11,6 +11,7 @@
 #include "lib.h"
 
 int __bsd_setpgrp (int, int);
+int __bsd_getpgrp(int);
 
 int
 __bsd_getpgrp (int pid)

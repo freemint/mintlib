@@ -14,8 +14,10 @@
 #include <mint/mintbind.h>
 
 #ifdef __MSHORT__
-#define int long
+#define int long /* FIXME: change data to be "long" instead" */
 #endif
+
+__typeof__(ptrace) __ptrace;
 
 int
 __ptrace (int request, pid_t pid, caddr_t addr, int data)

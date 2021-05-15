@@ -11,8 +11,11 @@
 
 #include <errno.h>
 #include <mint/mintbind.h>
+#include <unistd.h>
 
-int __sync (void);
+/* __typeof__(sync) __sync; sync() is void, but __sync() isn't */
+int __sync(void);
+__typeof__(fsync) __fsync;
 
 /*
  * FUNCTION

@@ -24,9 +24,7 @@
 
 /* Put the current position of STREAM in *POS.  */
 int
-fgetpos (stream, pos)
-     FILE *stream;
-     fpos_t *pos;
+fgetpos (FILE *stream, fpos_t *pos)
 {
   if (!__validfp (stream) || pos == NULL)
     {

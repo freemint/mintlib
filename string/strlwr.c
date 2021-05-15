@@ -1,8 +1,7 @@
 #include <ctype.h>
 #include <string.h>
 
-char *strlwr(string)
-register char *string;
+char *strlwr(char *string)
 {
     register char *p = string;
 

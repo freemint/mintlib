@@ -69,6 +69,9 @@ init_stream_mode(FILE* stream)
 		__set_binmode(stream, __default_mode__.__binary);
 }
 
+
+void __libc_main (long _argc, char **_argv, char **_envp);
+
 void
 __libc_main (long _argc, char **_argv, char **_envp)
 {

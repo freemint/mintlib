@@ -23,14 +23,13 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(semget) __semget;
+
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
 
 int
-__semget (key, nsems, semflg)
-     key_t key;
-     int nsems;
-     int semflg;
+__semget (key_t key, int nsems, int semflg)
 {
 	int ret;
 	

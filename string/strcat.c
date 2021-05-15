@@ -8,9 +8,7 @@
  * strcat - append string src to dst
  */
 char *				/* dst */
-strcat(dst, src)
-char *dst;
-const char *src;
+strcat(char *dst, const char *src)
 {
 	register char *dscan;
 	register const char *sscan;

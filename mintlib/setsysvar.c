@@ -2,6 +2,7 @@
 #include <support.h>
 #include <mint/mintbind.h>
 #include <mint/ssystem.h>
+#include <mint/sysvars.h>
 
 #include "lib.h"
 

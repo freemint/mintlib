@@ -23,8 +23,7 @@
 #include <shadow.h>
 #include <stdlib.h>
 
-extern int __fgetspent_r (FILE*, struct spwd*, char*, size_t,
-			  struct spwd**);
+__typeof__(fgetspent_r) __fgetspent_r;
 
 /* A reasonable size for a buffer to start with.  */
 #define BUFLEN_SPWD 1024

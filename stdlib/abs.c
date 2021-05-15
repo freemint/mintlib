@@ -5,8 +5,7 @@
 #undef abs
 #endif
 
-int abs(x)
-  int x;
+int abs(int x)
 {
   return x < 0 ? -x : x;
 }

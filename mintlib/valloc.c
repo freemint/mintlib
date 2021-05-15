@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <unistd.h>
 
+__typeof__(valloc) __valloc;
 
 void *__valloc(size_t size)
 {

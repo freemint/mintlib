@@ -9,9 +9,7 @@
  */
 
 size_t
-strspn(s, accept)
-const char *s;
-const char *accept;
+strspn(const char *s, const char *accept)
 {
 	register const char *sscan;
 	register const char *ascan;

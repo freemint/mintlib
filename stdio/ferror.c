@@ -25,8 +25,7 @@
 
 /* Return non-zero if STREAM has its error indicator set.  */
 int
-ferror (stream)
-     FILE *stream;
+ferror (FILE *stream)
 {
   if (!__validfp (stream))
     {

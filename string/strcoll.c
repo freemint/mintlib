@@ -4,9 +4,7 @@
 #include <string.h>
 
 int
-strcoll (scan1, scan2)
-     const char *scan1;
-     const char *scan2;
+strcoll (const char *scan1, const char *scan2)
 {
   return strcmp (scan1, scan2);
 }

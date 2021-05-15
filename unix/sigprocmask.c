@@ -14,10 +14,7 @@
 #include <stddef.h>
 
 int
-__sigprocmask (how, set, oset)
-	int how;
-  	const sigset_t* set;
-  	sigset_t* oset;
+__sigprocmask (int how, const sigset_t* set, sigset_t* oset)
 {
 	int retval = 0;
   	long oldmask = 0L;

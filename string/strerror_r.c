@@ -16,10 +16,7 @@
 
 /* The MiNTLib is actually reentrant.  The thread-safe version is
    provided here for compatibility with the GNU libc.  */
-char* __strerror_r (errnum, buf, bufsize)
-     int errnum;
-     char* buf;
-     size_t bufsize;
+char* __strerror_r (int errnum, char* buf, size_t bufsize)
 {
   char* retval = strerror (errnum);
   size_t len = strlen (retval);

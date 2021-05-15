@@ -55,6 +55,7 @@ static char sccsid[] = "@(#)res_send.c	6.27 (Berkeley) 2/24/91";
 #include <unistd.h>
 #include <string.h>
 #include <iovec.h>
+#include "sockets_global.h"
 
 static int s = -1;	/* socket used for communications */
 static struct sockaddr no_addr;
@@ -69,11 +70,7 @@ static struct sockaddr no_addr;
 #endif
 
 int
-res_send(buf, buflen, answer, anslen)
-	const char *buf;
-	int buflen;
-	char *answer;
-	int anslen;
+res_send(const char *buf, int buflen, char *answer, int anslen)
 {
 	register int n = 0;     /* Shut up compiler warning.  */
 	int try, v_circuit, resplen, ns;
@@ -441,7 +438,7 @@ wait:
  * This routine is not expected to be user visible.
  */
 void
-_res_close()
+_res_close(void)
 {
 	if (s != -1) {
 		(void) close(s);

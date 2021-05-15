@@ -49,10 +49,12 @@
 # define __fdopen(fd,m) _IO_fdopen (fd,m)
 #endif
 
-int __pipe (int *fd);
-int __fork (void);
-int __close (int fd);
-int __dup (int handle);
+__typeof__(pipe) __pipe;
+__typeof__(fork) __fork;
+__typeof__(close) __close;
+__typeof__(dup) __dup;
+
+int _openchild (const char *command, FILE **fto, FILE **ffrom);
 
 /*
  * returns pid, or -1 for failure

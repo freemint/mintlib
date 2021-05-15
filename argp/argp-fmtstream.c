@@ -33,11 +33,7 @@
 
 #include "argp-fmtstream.h"
 #include "argp-namefrob.h"
-
-#ifdef _LIBC
-extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
-#endif
+#include "lib.h"
 
 #ifndef ARGP_FMTSTREAM_USE_LINEWRAP
 

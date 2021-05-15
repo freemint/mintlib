@@ -22,8 +22,7 @@
 /* Return the offset in bytes from the beginning
    of the file of the file position of STREAM.  */
 long int
-ftell (stream)
-     FILE *stream;
+ftell (FILE *stream)
 {
   long int pos;
 
@@ -55,8 +54,7 @@ ftell (stream)
 
 /* Just use ftell for now */
 off_t
-ftello (stream)
-     FILE *stream;
+ftello (FILE *stream)
 {
-  return (off_t)ftell(stream);
+  return ftell(stream);
 }

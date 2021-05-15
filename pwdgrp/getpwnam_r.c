@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdio.h>
 
+__typeof__(getpwnam_r) __getpwnam_r;
+
 int __getpwnam_r (const char* name, struct passwd* result_buf,
                   char* buffer, size_t buflen, 
                   struct passwd** result)

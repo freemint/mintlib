@@ -79,11 +79,7 @@ typedef struct
       stack size is needed (actually O(1) in this case)!  */
 
 void
-_quicksort (pbase, total_elems, size, cmp)
-     void *const pbase;
-     size_t total_elems;
-     size_t size;
-     __compar_fn_t cmp;
+_quicksort (void *const pbase, size_t total_elems, size_t size, __compar_fn_t cmp)
 {
   register char *base_ptr = (char *) pbase;
 

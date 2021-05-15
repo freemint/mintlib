@@ -2,8 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 
-char *strupr(string)
-register char *string;
+char *strupr(char *string)
 {
     register char *p = string;
 

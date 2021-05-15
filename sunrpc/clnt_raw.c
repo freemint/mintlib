@@ -134,14 +134,7 @@ clntraw_create (u_long prog, u_long vers)
 }
 
 static enum clnt_stat
-clntraw_call (h, proc, xargs, argsp, xresults, resultsp, timeout)
-     CLIENT *h;
-     u_long proc;
-     xdrproc_t xargs;
-     caddr_t argsp;
-     xdrproc_t xresults;
-     caddr_t resultsp;
-     struct timeval timeout;
+clntraw_call (CLIENT *h, u_long proc, xdrproc_t xargs, caddr_t argsp, xdrproc_t xresults, caddr_t resultsp, struct timeval timeout)
 {
   struct clntraw_private *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;
@@ -224,10 +217,7 @@ clntraw_geterr (CLIENT *cl, struct rpc_err *err)
 
 
 static bool_t
-clntraw_freeres (cl, xdr_res, res_ptr)
-     CLIENT *cl;
-     xdrproc_t xdr_res;
-     caddr_t res_ptr;
+clntraw_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
 {
   struct clntraw_private *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;

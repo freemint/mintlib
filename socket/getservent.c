@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)getservent.c	5.9 (Berkeley) 2/24/91";
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "sockets_global.h"
 
 #define	MAXALIASES	35
 

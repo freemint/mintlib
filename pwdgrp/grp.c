@@ -23,7 +23,7 @@ static struct group curentry;   /* static data to return */
 static int nextent (FILE *fp);
 
 /* Rewind the group file to allow repeated searches */
-void setgrent()
+void setgrent(void)
 {
   if (fp != NULL)
     rewind (fp);
@@ -37,7 +37,7 @@ void setgrent()
 } /* End of setgrent() */
 
 /* Close the group file when processing is complete */
-void endgrent()
+void endgrent(void)
 {
   if (fp != NULL)
   {
@@ -47,7 +47,7 @@ void endgrent()
 } /* End of endgrent() */
 
 /* Get the next group structure in the file */
-struct group *getgrent()
+struct group *getgrent(void)
 {
   if (fp == NULL)
     setgrent();
@@ -61,8 +61,7 @@ struct group *getgrent()
 } /* End of getgrent() */
 
 /* Get first group with matching numerical group ID from file */
-struct group *getgrgid(gid)
-int gid;
+struct group *getgrgid(int gid)
 {
   setgrent();
 
@@ -74,8 +73,7 @@ int gid;
 } /* End of getgrid() */
 
 /* Get first group with matching group name from file */
-struct group *getgrnam(name)
-const char *name;
+struct group *getgrnam(const char *name)
 {
   setgrent();
 
@@ -87,8 +85,7 @@ const char *name;
 } /* End of getgrnam() */
 
 /* Read the next group structure from a given file */
-struct group *fgetgrent(f)
-FILE *f;
+struct group *fgetgrent(FILE *f)
 {
   if (f == NULL)
     return(NULL); /* Failure */
@@ -104,8 +101,7 @@ FILE *f;
 static char savbuf[512];
 static char *memb[MAX_MEMBERS];
 
-static int nextent(fp)
-FILE *fp;
+static int nextent(FILE *fp)
 {
   register char *cp;
   register int i;
@@ -155,9 +151,7 @@ FILE *fp;
 
 #ifdef TEST
 int
-main (argc, argv)
-int argc;
-char **argv;
+main (int argc, char **argv)
 {
   struct group *gr;
   char **m;

@@ -18,25 +18,23 @@ struct _dispatch
   long (*wrap) (int opcode, va_list args);
 };
 
-typedef int(*func) ();
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+
+typedef long (*func) ();
 
 /* Grab the array.  */
 #include "syscalls.h"
 
 #ifdef __MSHORT__
-long
-syscall (int opcode, ...)
+long syscall (int opcode, ...);
+long syscall (int opcode, ...)
 #else
-int
-syscall (int opcode, ...)
+int syscall (int opcode, ...);
+int syscall (int opcode, ...)
 #endif
 {
   va_list args;
-#ifdef __MSHORT__
   long retval;
-#else
-  int retval;
-#endif
   
   if (opcode < 0 || opcode > MAX_SYS_OPCODE)
     {
@@ -45,11 +43,7 @@ syscall (int opcode, ...)
     }
 
   va_start (args, opcode);
-#ifdef __MSHORT__
   retval = (long) funcs[opcode].wrap (opcode, args);
-#else
-  retval = (int) funcs[opcode].wrap (opcode, args);
-#endif
   va_end (args);
   return retval;
 }

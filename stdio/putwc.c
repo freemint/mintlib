@@ -23,6 +23,7 @@
 #include <wchar.h>
 #include <errno.h>
 
+__typeof__(putwc) __putwc;
 
 wint_t __putwc (wchar_t wc, FILE *stream)
 {

@@ -370,3 +370,9 @@ union ieee_double_extract
 };
 #endif
 #endif
+
+mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size, int *expt, int *is_neg, double value);
+mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size, int *expt, int *is_neg, long double value);
+double __mpn_construct_double (mp_srcptr frac_ptr, int expt, int negative);
+float __mpn_construct_float (mp_srcptr frac_ptr, int expt, int sign);
+long double __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign);

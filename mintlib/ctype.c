@@ -192,6 +192,7 @@ isxdigit(int c)
   return (int) (_ctype[(unsigned char) (c + 1)] & _CTx);
 }
 
+__typeof__(isblank) __isblank;
 int
 __isblank(int c)
 {

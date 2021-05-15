@@ -21,15 +21,13 @@
 
 #include <stdlib.h>
 
+__typeof__(jrand48_r) __jrand48_r;
+
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-extern long int __jrand48_r (unsigned short int __xsub[3],
-                             struct drand48_data*, long*);
-
 long int
-jrand48 (xsubi)
-     unsigned short int xsubi[3];
+jrand48 (unsigned short int xsubi[3])
 {
   long int result;
 

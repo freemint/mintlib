@@ -12,9 +12,7 @@
 #include <errno.h>
 #include <stddef.h>
 
-extern int __getpwuid_r (uid_t uid, struct passwd* result_buf,
-                         char* buffer, size_t buflen,
-                         struct passwd** result);
+__typeof__(getpwuid_r) __getpwuid_r;
 
 static struct passwd passwd;
 static char buf[1024];

@@ -6,8 +6,7 @@
 #include <signal.h>
 
 int
-raise (sig)
-     int sig;
+raise (int sig)
 {
   return __kill (__getpid (), sig);
 }

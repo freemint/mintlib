@@ -36,12 +36,10 @@ static char sccsid[] = "@(#)getnetbyaddr.c	5.7 (Berkeley) 6/1/90";
 #endif /* LIBC_SCCS and not lint */
 
 #include <netdb.h>
+#include "sockets_global.h"
 
-void __setnetent (int f);
-void __endnetent (void);
-struct netent * __getnetent (void);
-
-extern int _net_stayopen;
+__typeof__(getnetbyaddr) __getnetbyaddr;
+__typeof__(getnetent) __getnetent;
 
 struct netent *
 __getnetbyaddr (__uint32_t net, int type)

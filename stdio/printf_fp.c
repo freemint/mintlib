@@ -48,6 +48,7 @@
 #ifndef __MINT__
 # include <wchar.h>
 #endif
+#include "lib.h"
 
 #ifdef __MINT__
 # define __long_double_t long double
@@ -125,13 +126,7 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n)); /* In vfprintf.c.  */
 #define MPN_GE(u,v) \
   (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
 
-extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-				       int *expt, int *is_neg,
-				       double value);
-extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-					    int *expt, int *is_neg,
-					    long double value);
-extern unsigned int __guess_grouping (unsigned int intdig_max,
+static unsigned int __guess_grouping (unsigned int intdig_max,
 				      const char *grouping, wchar_t sepchar);
 
 
@@ -1039,7 +1034,7 @@ __printf_fp (FILE *fp,
 /* Return the number of extra grouping characters that will be inserted
    into a number with INTDIG_MAX integer digits.  */
 
-unsigned int
+static unsigned int
 __guess_grouping (unsigned int intdig_max, const char *grouping,
 		  wchar_t sepchar)
 {

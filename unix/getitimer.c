@@ -13,6 +13,8 @@
 
 #include "lib.h"
 
+__typeof__(getitimer) __getitimer;
+
 int 
 __getitimer (enum __itimer_which which, struct itimerval* old)
 {

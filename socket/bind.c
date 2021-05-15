@@ -15,9 +15,10 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(bind) __bind;
 
 int
-__bind (int fd, struct sockaddr *addr, socklen_t addrlen)
+__bind (int fd, const struct sockaddr *addr, socklen_t addrlen)
 {
 	if (__libc_newsockets) {
 		long r = Fbind (fd, addr, addrlen);
@@ -37,7 +38,7 @@ __bind (int fd, struct sockaddr *addr, socklen_t addrlen)
 		long r;
 		
 		if (!__libc_unix_names && addr && addr->sa_family == AF_UNIX) {
-			struct sockaddr_un *unp = (struct sockaddr_un *) addr;
+			const struct sockaddr_un *unp = (const struct sockaddr_un *) addr;
 			
 			if (addrlen <= UN_OFFSET || addrlen > sizeof (un)) {
 				__set_errno (EINVAL);
@@ -51,7 +52,7 @@ __bind (int fd, struct sockaddr *addr, socklen_t addrlen)
 			cmd.addr = (struct sockaddr *) &un;
 			cmd.addrlen = UN_OFFSET + strlen (un.sun_path);
 		} else {
-			cmd.addr = addr;
+			cmd.addr = (struct sockaddr *)addr;
 			cmd.addrlen = (short) addrlen;
 		}
 		cmd.cmd = BIND_CMD;

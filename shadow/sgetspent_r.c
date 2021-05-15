@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <string.h>
 
+__typeof__(sgetspent_r) __sgetspent_r;
+
 static char* space = "";
 
 int __sgetspent_r (const char* stream, struct spwd* result_buf, char* buffer, 

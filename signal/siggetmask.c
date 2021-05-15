@@ -19,6 +19,8 @@
 
 #include <signal.h>
 
+int siggetmask (void); /* obsolete; not declared in headers */
+
 int
 siggetmask (void)
 {

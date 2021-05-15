@@ -26,6 +26,9 @@
 #include <sys/param.h>
 
 #include "md5.h"
+#include "ufc-crypt.h"
+#include "crypt.h"
+#include "crypt-private.h"
 
 
 /* Define our magic string to mark salt for MD5 "encryption"
@@ -37,29 +40,12 @@ static const char md5_salt_prefix[] = "$1$";
 static const char b64t[64] =
 "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-/* Prototypes for local functions.  */
-#ifndef __MSHORT__
-extern char *__md5_crypt_r (const char *key, const char *salt,
-			    char *buffer, int buflen);
-#else
-extern char *__md5_crypt_r (const char *key, const char *salt,
-			    char *buffer, long int buflen);
-#endif
-extern char *__md5_crypt (const char *key, const char *salt);
 
 
 /* This entry point is equivalent to the `crypt' function in Unix
    libcs.  */
 char *
-__md5_crypt_r (key, salt, buffer, buflen)
-     const char *key;
-     const char *salt;
-     char *buffer;
-#ifndef __MSHORT__
-     int buflen;
-#else
-     long int buflen;
-#endif
+__md5_crypt_r (const char *key, const char *salt, char *buffer, long int buflen)
 {
   unsigned char alt_result[16];
   struct md5_ctx ctx;

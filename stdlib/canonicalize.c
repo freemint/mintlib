@@ -209,6 +209,8 @@ error:
 }
 
 
+__typeof__(realpath) __realpath;
+
 char *
 __realpath (const char *name, char *resolved)
 {
@@ -221,6 +223,8 @@ __realpath (const char *name, char *resolved)
   return canonicalize (name, resolved);
 }
 weak_alias (__realpath, realpath)
+
+__typeof__(canonicalize_file_name) __canonicalize_file_name;
 
 char *
 __canonicalize_file_name (const char *name)

@@ -7,8 +7,10 @@
 #include <fcntl.h>
 #include "lib.h"
 
+__typeof__(lockf) __lockf;
+
 int
-__lockf (int fd, int cmd, long size)
+__lockf (int fd, int cmd, __off_t size)
 {
 	return __do_lock (fd, cmd, size, 1);
 }

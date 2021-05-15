@@ -23,8 +23,7 @@
 /* Flush STREAM's buffer.
    If STREAM is NULL, flush the buffers of all streams that are writing.  */
 int
-fflush (stream)
-     register FILE *stream;
+fflush (FILE *stream)
 {
   if (stream == NULL)
     {

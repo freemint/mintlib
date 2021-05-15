@@ -5,6 +5,8 @@
 
 #include "lib.h"
 
+__typeof__(killpg) __killpg;
+
 int
 __killpg (int pgrp, int sig)
 {

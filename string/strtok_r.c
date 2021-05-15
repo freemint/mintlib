@@ -14,10 +14,7 @@
 #undef strtok_r
 
 char*       /* NULL if no token left */
-__strtok_r (s, delim, scanpoint)
-     char *s;
-     register const char *delim;
-     char** scanpoint;
+__strtok_r (char *s, const char *delim, char** scanpoint)
 {
   register char *scan;
   char *tok;

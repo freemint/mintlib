@@ -55,6 +55,8 @@ weak_alias (__libc_memalign, memalign)
 weak_alias(__libc_memalign, aligned_alloc)
 
 
+__typeof__(posix_memalign) __posix_memalign;
+
 int __posix_memalign(void **memptr, size_t alignment, size_t size)
 {
 	void *mem;

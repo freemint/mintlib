@@ -7,9 +7,7 @@
 #include <mint/mintbind.h>
 
 int
-__initgroups (user, group)
-        const char *user;
-        gid_t group;
+__initgroups (const char *user, gid_t group)
 {
   struct group *g;
   gid_t groups[NGROUPS_MAX];

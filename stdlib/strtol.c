@@ -161,7 +161,7 @@
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
 # define LOCALE_PARAM , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
+# define LOCALE_PARAM_DECL __locale_t loc
 #else
 # define LOCALE_PARAM
 # define LOCALE_PARAM_DECL
@@ -219,6 +219,7 @@
 #endif
 
 
+INT INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base, int group LOCALE_PARAM_DECL);
 
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
    If BASE is 0 the base is determined by the presence of a leading
@@ -228,12 +229,7 @@
    one converted is stored in *ENDPTR.  */
 
 INT
-INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int base;
-     int group;
-     LOCALE_PARAM_DECL
+INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base, int group LOCALE_PARAM_DECL)
 {
   int negative;
   register unsigned LONG int cutoff;
@@ -468,11 +464,7 @@ INT
 #ifdef weak_function
 weak_function
 #endif
-strtol (nptr, endptr, base LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int base;
-     LOCALE_PARAM_DECL
+strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base LOCALE_PARAM_DECL)
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0 LOCALE_PARAM);
 }

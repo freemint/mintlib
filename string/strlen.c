@@ -10,8 +10,7 @@
  * strlen - length of string (not including NUL)
  */
 size_t
-strlen(scan)
-register const char *scan;
+strlen(const char *scan)
 {
 	register const char *start = scan+1;
 

@@ -48,6 +48,7 @@ static char sccsid[] = "@(#)gethostnamadr.c	6.48 (Berkeley) 1/10/93";
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <net/if.h>             /* for struct ifconf */
 #include <sockios.h>		/* for SIOC* */
@@ -57,6 +58,7 @@ static char sccsid[] = "@(#)gethostnamadr.c	6.48 (Berkeley) 1/10/93";
 #define strcasecmp(a,b)		stricmp(a,b)
 #define strncasecmp(a,b,c)	strnicmp(a,b,c)
 #endif
+#include "sockets_global.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN	64
@@ -118,15 +120,9 @@ static int reorder = 0;
 static char *trimdomain[MAXTRIMDOMAINS];
 static char trimdomainbuf[BUFSIZ];
 static int numtrimdomains = 0;
-#ifndef __MINT__
-char *strpbrk();
-extern char *strstr(), *strtok(), *getenv();
-#else
-#include <stdlib.h>
-#endif
 
 #ifdef NIS
-static struct hostent *_getnishost();
+static struct hostent *_getnishost(char *, char *);
 #endif
 
 #if PACKETSZ > 1024
@@ -146,6 +142,8 @@ typedef union {
 } align;
 
 int h_errno;
+
+
 
 static struct hostent *_gethtbyname (const char *name);
 static struct hostent *_gethtbyaddr (const unsigned char *addr, __socklen_t len, int type);
@@ -859,7 +857,7 @@ __gethostbyaddr (const void *__addr, __socklen_t len, int type)
 }
 weak_alias (__gethostbyaddr, gethostbyaddr)
 
-void
+static void
 _sethtent (int f)
 {
 	if (hostf == NULL)
@@ -869,7 +867,7 @@ _sethtent (int f)
 	stayopen |= f;
 }
 
-void
+static void
 _endhtent (void)
 {
 	if (hostf && !stayopen) {

@@ -23,17 +23,17 @@
 #include <utmp.h>
 #include <stdlib.h>
 
+__typeof__(getutent) __getutent;
+
 /* Local buffer to store the result.  */
 static struct utmp buffer;
-
-extern int __getutent_r (struct utmp *buffer, struct utmp **result);
 
 struct utmp *
 __getutent (void)
 {
   struct utmp *result;
 
-  if (__getutent_r (&buffer, &result) < 0)
+  if (getutent_r (&buffer, &result) < 0)
     return NULL;
 
   return result;

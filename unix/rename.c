@@ -8,6 +8,8 @@
 #include <mint/mintbind.h>
 #include "lib.h"
 
+__typeof__(rename) __rename;
+
 int
 __rename(const char *_oldname, const char *_newname)
 {

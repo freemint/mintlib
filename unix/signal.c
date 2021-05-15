@@ -8,6 +8,8 @@
 
 #include "lib.h"
 
+__sighandler_t __bsd_signal(int sig, __sighandler_t func);
+
 
 #ifdef __MSHORT__
 /* trampoline code: for any caught signal, converts the 32 bit signal
@@ -18,8 +20,7 @@
 void __CDECL _trampoline (long, long);
 
 /* the argument is on the stack */
-void __CDECL _trampoline(sig, code)
-	long sig, code;
+void __CDECL _trampoline(long sig, long code)
 {
 	void (*func) (int, int);
 
@@ -33,9 +34,7 @@ void __CDECL _trampoline(sig, code)
 #endif
 
 __sighandler_t
-__bsd_signal(sig, func)
-	int sig;
-	__sighandler_t func;
+__bsd_signal(int sig, __sighandler_t func)
 {
 	long old;
 	__sighandler_t oldfunc;

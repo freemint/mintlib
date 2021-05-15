@@ -17,9 +17,9 @@
 static FILE* spfile = NULL;
 static char* spfilename = _PATH_SHADOW;
 
-extern int __fgetspent_r (FILE* stream, struct spwd* result_buf,
-                          char* buffer, size_t buflen,
-                          struct spwd** result);
+__typeof__(getspent_r) __getspent_r;
+__typeof__(fgetspent_r) __fgetspent_r;
+
 
 int __getspent_r (struct spwd* result_buf, char* buffer,
                   size_t buflen, struct spwd** result)

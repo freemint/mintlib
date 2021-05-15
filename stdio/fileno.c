@@ -18,14 +18,12 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include "lib.h"
 
 /* Return the system file descriptor associated with STREAM.  */
 int
-fileno (stream)
-     FILE *stream;
+fileno (FILE *stream)
 {
-  extern void __stdio_check_funcs __P ((FILE *));
-
   if (! __validfp (stream))
     {
       __set_errno (EINVAL);

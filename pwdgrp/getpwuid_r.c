@@ -12,6 +12,8 @@
 #include <errno.h>
 #include <stdio.h>
 
+__typeof__(getpwuid_r) __getpwuid_r;
+
 int __getpwuid_r (uid_t uid, struct passwd* result_buf,
                   char* buffer, size_t buflen, 
                   struct passwd** result)

@@ -21,8 +21,7 @@
 #include <sys/timeb.h>
 
 int
-ftime (timebuf)
-     struct timeb *timebuf;
+ftime (struct timeb *timebuf)
 {
   int save = errno;
   struct tm tp;

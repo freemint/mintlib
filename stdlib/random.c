@@ -22,12 +22,10 @@ static char sccsid[] = "@(#)random.c	5.5 (Berkeley) 7/6/88";
 #include <stdio.h>
 #include <unistd.h>
 
-#ifdef __MINT__
-extern long __random (void);
-extern char* __setstate (char* arg_state);
-extern char* __initstate (unsigned seed, char* arg_state, size_t n);
-extern void __srandom (unsigned x);
-#endif
+__typeof__(random) __random;
+__typeof__(setstate) __setstate;
+__typeof__(initstate) __initstate;
+__typeof__(srandom) __srandom;
 
 /*
  * random.c:
@@ -191,9 +189,7 @@ static  long		*end_ptr		= &randtbl[ DEG_3 + 1 ];
  */
 
 void			/* ++ERS: Berkeley didn't have this */
-__srandom( x )
-
-    unsigned		x;
+__srandom( unsigned x )
 {
     	register  int		i /* , j */ ;
 
@@ -231,11 +227,11 @@ __srandom( x )
  */
 
 char  *
-__initstate( seed, arg_state, n )
+__initstate(
 
-    unsigned		seed;			/* seed for R. N. G. */
-    char		*arg_state;		/* pointer to state array */
-    size_t			n;			/* # bytes of state info */
+    unsigned		seed,			/* seed for R. N. G. */
+    char		*arg_state,		/* pointer to state array */
+    size_t			n)			/* # bytes of state info */
 {
 	register  char		*ostate		= (char *)( &state[ -1 ] );
 
@@ -299,9 +295,7 @@ __initstate( seed, arg_state, n )
  */
 
 char  *
-__setstate( arg_state )
-
-    char		*arg_state;
+__setstate( char		*arg_state )
 {
 	register  long		*new_state	= (long *)arg_state;
 	register  int		type		= (int) (new_state[0]%MAX_TYPES);
@@ -351,7 +345,7 @@ __setstate( arg_state )
  */
 
 long
-__random()
+__random(void)
 {
 	long		i;
 

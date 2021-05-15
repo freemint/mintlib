@@ -4,6 +4,8 @@
 
 #include <sys/ioctl.h>
 
+__typeof__(gtty) __gtty;
+
 int
 __gtty (int fd, struct sgttyb *_tty)
 {

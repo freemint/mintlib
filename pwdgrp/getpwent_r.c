@@ -22,9 +22,8 @@
 static FILE* pwfile = NULL;
 static char* pwfilename = "/etc/passwd";
 
-extern int __fgetpwent_r (FILE* stream, struct passwd* result_buf,
-                          char* buffer, size_t buflen,
-                          struct passwd** result);
+typeof (fgetpwent_r) __fgetpwent_r;
+typeof (getpwent_r) __getpwent_r;
 
 int __getpwent_r (struct passwd* result_buf, char* buffer,
                   size_t buflen, struct passwd** result)

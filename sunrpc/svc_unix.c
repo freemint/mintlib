@@ -56,8 +56,8 @@
 #include <libintl.h>
 #endif
 
-int __socket (int domain, int type, int proto);
-int __close (int fd);
+__typeof__(socket) __socket;
+__typeof__(close) __close;
 
 /*
  * Ops vector for AF_UNIX based rpc service handle

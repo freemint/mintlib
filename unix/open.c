@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <stdarg.h>
-#include <device.h>
 
 #include "lib.h"
 

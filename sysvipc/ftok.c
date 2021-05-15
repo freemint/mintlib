@@ -22,12 +22,10 @@
 #include <sys/ipc.h>
 #include <sys/stat.h>
 
-extern int __stat(const char *path, struct stat *st);
+__typeof__(stat) __stat;
 
 key_t
-ftok (pathname, proj_id)
-     const char *pathname;
-     int proj_id;
+ftok (const char *pathname, int proj_id)
 {
   struct stat st;
   key_t key;

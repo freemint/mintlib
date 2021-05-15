@@ -23,13 +23,12 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(semop) __semop;
+
 /* Perform user-defined atomical operation of array of semaphores.  */
 
 int
-__semop (semid, sops, nsops)
-     int semid;
-     struct sembuf *sops;
-     size_t nsops;
+__semop (int semid, struct sembuf *sops, size_t nsops)
 {
 	int ret;
 	

@@ -11,6 +11,7 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(socket) __socket;
 
 int
 __socket (int domain, int type, int proto)

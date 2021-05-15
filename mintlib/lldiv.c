@@ -11,8 +11,7 @@
 #include <stdlib.h>
 
 lldiv_t
-lldiv (num, denom)
-	long long int num, denom;
+lldiv (long long int num, long long int denom)
 {
 	lldiv_t res;
 	

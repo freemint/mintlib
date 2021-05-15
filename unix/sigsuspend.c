@@ -13,9 +13,10 @@
 #include <signal.h>
 #include <stddef.h>
 
+__typeof__(sigsuspend) __sigsuspend;
+
 int
-__sigsuspend (signalmask)
-	const sigset_t* signalmask;
+__sigsuspend (const sigset_t* signalmask)
 {
   	Psigpause (*signalmask);
   	__set_errno (EINTR);

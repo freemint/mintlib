@@ -16,9 +16,7 @@
 static char buffer[1024];
 static struct passwd passwd;
 
-extern int __fgetpwent_r (FILE* stream, struct passwd* resultbuf,
-                          char* buffer, size_t buflen, 
-                          struct passwd** result);
+__typeof__(fgetpwent_r) __fgetpwent_r;
 
 struct passwd* fgetpwent (FILE* stream)
 {

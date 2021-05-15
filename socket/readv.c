@@ -10,6 +10,7 @@
 
 #include "sockets_global.h"
 
+__typeof__(readv) __readv;
 
 ssize_t
 __readv (int fd, struct iovec *iov, ssize_t niov)

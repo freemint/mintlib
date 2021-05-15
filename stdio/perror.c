@@ -8,8 +8,7 @@
 #include <errno.h>
 #include <string.h>
 
-void perror(msg)
-	const char *msg;
+void perror(const char *msg)
 	{
 	if(msg && *msg)
 		{

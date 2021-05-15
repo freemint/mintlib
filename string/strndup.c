@@ -15,6 +15,8 @@
 #undef strndup
 #undef __strndup
 
+__typeof__(strndup) __strndup;
+
 char*
 __strndup (const char* src, size_t n)
 {

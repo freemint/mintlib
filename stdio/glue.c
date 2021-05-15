@@ -81,6 +81,9 @@ unix_FILE _iob[] =
     { { _GLUEMAGIC, &stderr, NULL, 0x4, STDERR_FILENO } },
   };
 
+int _filbuf (unix_FILE *file);
+int _flsbuf (int c, unix_FILE *file);
+
 /* Called by the Unix stdio `getc' macro.
    The macro is assumed to look something like:
        (--file->_cnt < 0 ? _filbuf (file) ...)

@@ -12,6 +12,8 @@
 #include <time.h>
 #include <sys/time.h>
 
+__typeof__(stime) __stime;
+
 int
 __stime (const time_t *now)
 {

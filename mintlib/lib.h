@@ -151,4 +151,22 @@ int __do_lock(int fd, int cmd, long size, int whence);
 
 int __do_chown16 (const char *_name, uid_t uid, gid_t gid, int follow_links);
 
+/* fopen.c */
+int __getmode (const char *mode, __io_mode *mptr);
+/* Defined in sysd-stdio.c.  */
+int __stdio_reopen (const char *filename, __io_mode mode, void **cookieptr, __io_close_fn closefn);
+
+void __stdio_check_funcs (FILE *);
+
+/* Prototype for helper functions.  */
+int __fxprintf (FILE *__fp, const char *__fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
+void __stdio_init_stream(FILE *);
+
+#ifdef _PRINTF_H
+int __printf_fp (FILE *fp, const struct printf_info *info, const void *const *args);
+int __printf_fphex (FILE *, const struct printf_info *, const void *const*);
+#endif
+
+int __open_v (const char *_filename, int iomode, va_list argp);
+
 #endif /* _LIB_H */

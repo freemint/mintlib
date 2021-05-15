@@ -38,6 +38,7 @@
 #ifndef __MINT__
 #include <locale/localeinfo.h>
 #endif
+#include "lib.h"
 
 #ifdef __MINT__
 # define wchar_t char

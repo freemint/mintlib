@@ -12,9 +12,7 @@
 /* setlocale: set the locale.
  * FIXME: right now, only "C" is supported.
  */
-char *setlocale(category, name)
-        int category;
-        const char *name;
+char *setlocale(int category, const char *name)
 {
   (void) category;
   (void) name;

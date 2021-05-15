@@ -37,10 +37,10 @@
 #include <sys/types.h>
 #include <sys/time.h>
 
-int __setitimer (enum __itimer_which, const struct itimerval *, struct itimerval *);
+__typeof__(setitimer) __setitimer;
+int __profile_frequency (void); /* should maybe be in lib.h; used in gmon.c */
 
-int
-__profile_frequency (void)
+int __profile_frequency (void)
 {
   /*
    * Discover the tick frequency of the machine if something goes wrong,

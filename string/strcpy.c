@@ -8,9 +8,7 @@
  * strcpy - copy string src to dst
  */
 char *				/* dst */
-strcpy(dst, src)
-char *dst;
-const char *src;
+strcpy(char *dst, const char *src)
 {
 	register char *dscan = dst;
 	register const char *sscan = src;

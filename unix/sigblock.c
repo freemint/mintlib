@@ -10,8 +10,7 @@ long
 #else
 int
 #endif
-__sigblock(mask)
-	long mask;
+__sigblock(long mask)
 {
 	register long omask;
 	long r;

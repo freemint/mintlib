@@ -5,16 +5,14 @@
 
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
+__typeof__(memccpy) __memccpy;
+
 /*
  * memccpy - copy bytes up to a certain char
  */
 
 void *
-__memccpy(dst, src, ucharstop, size)
-void * dst;
-const void * src;
-int ucharstop;
-size_t size;
+__memccpy(void *dst, const void *src, int ucharstop, size_t size)
 {
 	register char *d;
 	register const char *s;

@@ -24,9 +24,7 @@
 
 /* Set the file position of STREAM to *POS.  */
 int
-fsetpos (stream, pos)
-     FILE *stream;
-     const fpos_t *pos;
+fsetpos (FILE *stream, const fpos_t *pos)
 {
   if (pos == NULL)
     {

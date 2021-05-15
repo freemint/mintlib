@@ -26,6 +26,7 @@ static char sccsid[] = "@(#)getusershell.c	5.5 (Berkeley) 7/21/88";
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define SHELLS "/etc/shells"
 

@@ -13,8 +13,7 @@
 #include <errno.h>
 
 int
-remove (filename)
-     const char* filename;
+remove (const char *filename)
 {
         int saved_errno = errno;
 

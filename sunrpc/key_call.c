@@ -55,7 +55,7 @@
 # include "door/door.h"
 #endif
 
-int __getpeername (int fd, struct sockaddr *addr, socklen_t *addrlen);
+__typeof__(getpeername) __getpeername;
 
 #define KEY_TIMEOUT	5	/* per-try timeout in seconds */
 #define KEY_NRETRY	12	/* number of retries */
@@ -228,6 +228,7 @@ key_gendes (des_block *key)
   return 0;
 }
 
+#if 0 /* unused */
 int
 key_setnet (struct key_netstarg *arg)
 {
@@ -244,6 +245,7 @@ key_setnet (struct key_netstarg *arg)
     }
   return 1;
 }
+#endif
 
 int
 key_get_conv (char *pkey, des_block *deskey)

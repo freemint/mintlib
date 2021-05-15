@@ -23,6 +23,8 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(msgrcv) __msgrcv;
+
 /* Read a message from the queue associated with the message queue
    descriptor MSQID.  At most MSGSZ bytes of the message are placed
    in the buffer specified by the MSGP parameter.  The MSGTYP parameter
@@ -30,12 +32,7 @@
    in buffer overflow or queue underflow.  */
 
 int
-__msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
-     int msqid;
-     void *msgp;
-     size_t msgsz;
-     long msgtyp;
-     int msgflg;
+__msgrcv (int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg)
 {
 	int ret;
 	

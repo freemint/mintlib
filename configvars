@@ -144,7 +144,7 @@ LDFLAGS=
 DEFS=
 
 # Define this to the warning level you want.
-WARN=-Wall -Werror
+WARN=-Wall -Werror -Wstrict-prototypes -Wmissing-prototypes -Wold-style-declaration -Wold-style-definition
 
 # If your system lacks a BSD compatible install you should set this
 # variable to "$(top_srcdir}/install-sh".

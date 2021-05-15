@@ -73,9 +73,7 @@ static uid_t uid;
 /* The user's real group id. */
 static gid_t gid;
 
-#ifdef HAVE_GETGROUPS
-int group_member ();
-#else
+#ifndef HAVE_GETGROUPS
 #define group_member(gid)	0
 #endif
 
@@ -98,9 +96,7 @@ static int have_ids;
    filesystem, text busy, etc. */
 
 int
-euidaccess (path, mode)
-     const char *path;
-     int mode;
+euidaccess (const char *path, int mode)
 {
   struct stat stats;
   int granted;
@@ -176,9 +172,7 @@ weak_alias (__euidaccess, eaccess)
 char *program_name;
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *file;
   int mode;

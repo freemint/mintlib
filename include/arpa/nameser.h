@@ -230,8 +230,8 @@ struct rrec {
 	char	*r_data;		/* pointer to data */
 };
 
-extern	unsigned short	_getshort();
-extern	unsigned long	_getlong();
+extern	unsigned short	_getshort(unsigned char *);
+extern	unsigned long	_getlong(unsigned char *);
 
 __END_DECLS
 

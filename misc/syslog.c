@@ -227,9 +227,7 @@ syslog(int pri, const char* fmt, ...)
  * OPENLOG -- open system log
  */
 
-void openlog(ident, logstat, logfac)
-	const char *ident;
-	int logstat, logfac;
+void openlog(const char *ident, int logstat, int logfac)
 {
 #ifdef SYSLOG_INET
 	struct servent *sp;
@@ -306,7 +304,7 @@ void openlog(ident, logstat, logfac)
  * CLOSELOG -- close the system log
  */
 
-void closelog()
+void closelog(void)
 {
 	(void) close(LogFile);
 	LogFile = -1;
@@ -316,8 +314,7 @@ void closelog()
 /*
  * SETLOGMASK -- set the log mask level
  */
-int setlogmask(pmask)
-	int pmask;
+int setlogmask(int pmask)
 {
 	int omask;
 

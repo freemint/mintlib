@@ -50,7 +50,7 @@ char **_LC_Day_name = C_day_name;
 
 /* localeconv: return current locale information */
 
-struct lconv *localeconv()
+struct lconv *localeconv(void)
 {
   _LC_Curlocale = C_locale;
   return &_LC_Curlocale;

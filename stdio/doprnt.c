@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include "lib.h"
 
 #define DOPRNT_BUFSIZE 1024
 

@@ -75,9 +75,7 @@ register_free_mem (void)
 }
 
 char *
-APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
-     FLOAT_TYPE value;
-     int ndigit, *decpt, *sign;
+APPEND (FUNC_PREFIX, fcvt) (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
   __libc_once_define (static, once);
   __libc_once (once, register_free_mem);
@@ -101,9 +99,7 @@ APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
 
 
 char *
-APPEND (FUNC_PREFIX, ecvt) (value, ndigit, decpt, sign)
-     FLOAT_TYPE value;
-     int ndigit, *decpt, *sign;
+APPEND (FUNC_PREFIX, ecvt) (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
   (void) APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign,
 				       ECVT_BUFFER, MAXDIG);
@@ -112,10 +108,7 @@ APPEND (FUNC_PREFIX, ecvt) (value, ndigit, decpt, sign)
 }
 
 char *
-APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
-     FLOAT_TYPE value;
-     int ndigit;
-     char *buf;
+APPEND (FUNC_PREFIX, gcvt) (FLOAT_TYPE value, int ndigit, char *buf)
 {
   sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;

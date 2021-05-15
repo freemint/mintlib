@@ -105,7 +105,7 @@ extern int h_errno;
 
 /* Private routines shared between libc/net, named, nslookup and others. */
 #define	dn_skipname	__dn_skipname
-#define	fp_query	__fp_query
+#define	fp_queryp	__fp_query
 #define	hostalias	__hostalias
 #define	putlong		__putlong
 #define	putshort	__putshort
@@ -119,6 +119,7 @@ extern char	*__hostalias	(__const char *);
 extern char	*__p_class	(int);
 extern char	*__p_time	(u_long);
 extern char	*__p_type	(int);
+void __p_query(char *msg);
 
 extern void	__putshort	(u_short, u_char *);
 extern void	__putlong	(u_long l, u_char *);

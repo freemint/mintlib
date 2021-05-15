@@ -17,17 +17,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include "lib.h"
 
-
-/* Defined in fopen.c.  */
-extern int __getmode __P ((const char *mode, __io_mode *mptr));
 
 /* Open a new stream on the given magic cookie descriptor.  */
 FILE *
-fopencookie (cookie, mode, functions)
-     void *cookie;
-     const char *mode;
-     __io_functions functions;
+fopencookie (void *cookie, const char *mode, __io_functions functions)
 {
   __io_mode m;
   FILE *f;

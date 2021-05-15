@@ -10,6 +10,8 @@
 
 #include <string.h>
 
+__typeof__(strnlen) __strnlen;
+
 size_t 
 __strnlen (const char* s, size_t max)
 {

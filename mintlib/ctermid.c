@@ -3,8 +3,7 @@
 #include <unistd.h>
 
 char *
-ctermid(s)
-  char *s;
+ctermid(char *s)
 {
   static char name[L_ctermid];
   char *t;

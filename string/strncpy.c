@@ -9,10 +9,7 @@
  * strncpy - copy at most n characters of string src to dst
  */
 char *				/* dst */
-strncpy(dst, src, n)
-char *dst;
-const char *src;
-size_t n;
+strncpy(char *dst, const char *src, size_t n)
 {
 	register char *dscan;
 	register const char *sscan;

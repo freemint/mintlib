@@ -7,13 +7,13 @@
 #undef strchr
 #undef __strchr
 
+__typeof__(strchr) __strchr;
+
 /*
  * strchr - find first occurrence of a character in a string
  */
 char *				/* found char, or NULL if none */
-__strchr(s, charwanted)
-const char *s;
-register int charwanted;
+__strchr(const char *s, int charwanted)
 {
 	register char c;
 

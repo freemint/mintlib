@@ -23,11 +23,10 @@
 #include <stdlib.h>
 #include <limits.h>
 
+__typeof__(erand48_r) __erand48_r;
+
 int
-__erand48_r (xsubi, buffer, result)
-     unsigned short int xsubi[3];
-     struct drand48_data *buffer;
-     double *result;
+__erand48_r (unsigned short int xsubi[3], struct drand48_data *buffer, double *result)
 {
   union ieee754_double temp;
 

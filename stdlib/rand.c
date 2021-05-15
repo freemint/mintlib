@@ -32,15 +32,13 @@
 static long _lseed = 1L;
 
 
-void srand( seed )
-  unsigned int seed;
-
+void srand( unsigned int seed )
   {
   _lseed = seed;
   }
 
 
-int rand()
+int rand(void)
 
   {
   _lseed = A * (_lseed % Q) - R * (_lseed / Q);

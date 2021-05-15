@@ -10,6 +10,7 @@
 
 #include "sockets_global.h"
 
+__typeof__(writev) __writev;
 
 ssize_t
 __writev (int fd, const struct iovec *iov, ssize_t niov)

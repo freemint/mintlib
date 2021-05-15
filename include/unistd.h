@@ -805,6 +805,15 @@ extern int getdomainname (char *__name, size_t __len) __THROW;
 extern int setdomainname (__const char *__name, size_t __len) __THROW;
 
 
+/* Enable statistical profiling, writing samples of the PC into at most
+   SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
+   is enabled, the system examines the user PC and increments
+   SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
+   disable profiling.  Returns zero on success, -1 on error.  */
+extern int profil (unsigned short int *__sample_buffer, size_t __size,
+		   size_t __offset, unsigned int __scale) __THROW;
+
+
 #ifndef __MINT__
 /* Revoke access permissions to all processes currently communicating
    with the control terminal, and then send a SIGHUP signal to the process
@@ -813,15 +822,6 @@ extern int vhangup (void) __THROW;
 
 /* Revoke the access of all descriptors currently open on FILE.  */
 extern int revoke (__const char *__file) __THROW;
-
-
-/* Enable statistical profiling, writing samples of the PC into at most
-   SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
-   is enabled, the system examines the user PC and increments
-   SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
-   disable profiling.  Returns zero on success, -1 on error.  */
-extern int profil (unsigned short int *__sample_buffer, size_t __size,
-		   size_t __offset, unsigned int __scale) __THROW;
 
 
 /* Turn accounting on if NAME is an existing file.  The system will then write
@@ -859,7 +859,6 @@ extern char *getpass (__const char *__prompt) __THROW;
 #if defined __USE_BSD || defined __USE_XOPEN
 /* Make all changes done to FD actually appear on disk.  */
 extern int fsync (int __fd) __THROW;
-extern int __fsync (int __fd) __THROW;
 #endif /* Use BSD || X/Open.  */
 
 
@@ -870,7 +869,6 @@ extern long int gethostid (void) __THROW;
 
 /* Make all changes done to all files actually appear on disk.  */
 extern void sync (void) __THROW;
-extern void __sync (void) __THROW;
 
 
 /* Return the number of bytes in a page.  This is the system's page size,
@@ -1017,7 +1015,7 @@ extern int __libc_enable_secure;
 #endif
 
 #ifdef __USE_BSD
-extern __mode_t getmode (const void *, __mode_t) __THROW;
+extern __mode_t getmode (const char *, __mode_t) __THROW;
 extern void *setmode (const char *) __THROW;
 #endif
 

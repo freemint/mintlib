@@ -88,6 +88,12 @@
 #include <string.h>
 #include <search.h>
 
+__typeof__(tsearch) __tsearch;
+__typeof__(tdelete) __tdelete;
+__typeof__(tfind) __tfind;
+__typeof__(twalk) __twalk;
+__typeof__(tdestroy) __tdestroy;
+
 typedef struct node_t
 {
   /* Callers expect this to be the first element in the structure - do not
@@ -299,10 +305,7 @@ weak_alias (__tsearch, tsearch)
    KEY is the key to be located, ROOTP is the address of tree root,
    COMPAR the ordering function.  */
 void *
-__tfind (key, vrootp, compar)
-     const void *key;
-     void *const *vrootp;
-     __compar_fn_t compar;
+__tfind (const void *key, void *const *vrootp, __compar_fn_t compar)
 {
   node *rootp = (node *) vrootp;
 

@@ -93,8 +93,7 @@ popen (const char *command, const char *type)
 
 /* close a pipe created by popen().
  */
-int pclose(fp)
-FILE	*fp;
+int pclose(FILE *fp)
 {
 	struct _pipe	*p,		/* the pipe's list element	*/
 			**q;		/* predecessor of p in the list	*/

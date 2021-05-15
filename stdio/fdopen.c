@@ -20,17 +20,14 @@
 #include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include "lib.h"
 
-extern int __fcntl (int f, int cmd, ...);
-
-/* Defined in fopen.c.  */
-extern int __getmode (const char *mode, __io_mode *mptr);
+__typeof__(fcntl) __fcntl;
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *
-__fdopen (fd, mode)
-     int fd;
-     const char *mode;
+__fdopen (int fd, const char *mode)
 {
   register FILE *stream;
   __io_mode m;

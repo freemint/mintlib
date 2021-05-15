@@ -17,8 +17,10 @@ Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 #include <mint/mintbind.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
-
+#include <unistd.h>
 #include "lib.h"
+
+__typeof__(truncate) __truncate;
 
 int
 __truncate (const char *_filename, off_t length)

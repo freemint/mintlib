@@ -150,10 +150,6 @@ static struct _getopt_data getopt_data;
 /* Avoid depending on library functions or files
    whose names are inconsistent.  */
 
-#ifndef getenv
-extern char *getenv ();
-#endif
-
 #endif /* not __GNU_LIBRARY__ */
 
 #ifdef _LIBC

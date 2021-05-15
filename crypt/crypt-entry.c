@@ -48,20 +48,10 @@
 #include "crypt-private.h"
 
 /* Prototypes for local functions.  */
-#if __STDC__ - 0
 #if !defined (__GNU_LIBRARY__) && !defined (__MINT__)
 void _ufc_clearmem (char *start, int cnt);
 #else
 #define _ufc_clearmem(start, cnt)   memset(start, 0, cnt)
-#endif
-#ifndef __MSHORT__
-extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
-			    int buflen);
-#else
-extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
-			    long int buflen);
-#endif
-extern char *__md5_crypt (const char *key, const char *salt);
 #endif
 
 /* Define our magic string to mark salt for MD5 encryption
@@ -77,10 +67,7 @@ extern struct crypt_data _ufc_foobar;
  */
 
 char *
-__crypt_r (key, salt, data)
-     const char *key;
-     const char *salt;
-     struct crypt_data * __restrict data;
+__crypt_r (const char *key, const char *salt, struct crypt_data * __restrict data)
 {
   ufc_long res[4];
   char ktab[9];
@@ -125,9 +112,7 @@ __crypt_r (key, salt, data)
 weak_alias (__crypt_r, crypt_r)
 
 char *
-crypt (key, salt)
-     const char *key;
-     const char *salt;
+crypt (const char *key, const char *salt)
 {
 #ifdef _LIBC
   /* Try to find out whether we have to use MD5 encryption replacement.  */

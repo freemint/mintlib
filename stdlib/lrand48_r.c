@@ -21,13 +21,10 @@
 
 #include <stdlib.h>
 
-extern int __nrand48_r (unsigned short __xsubi[3],
-                        struct drand48_data*, long int*);
+__typeof__(nrand48_r) __nrand48_r;
 
 int
-lrand48_r (buffer, result)
-     struct drand48_data *buffer;
-     long int *result;
+lrand48_r (struct drand48_data *buffer, long int *result)
 {
   /* Be generous for the arguments, detect some errors.  */
   if (buffer == NULL)

@@ -135,9 +135,7 @@ free_info (void *cookie)
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
 FILE *
-open_memstream (bufloc, sizeloc)
-     char **bufloc;
-     size_t *sizeloc;
+open_memstream (char **bufloc, size_t *sizeloc)
 {
   FILE *stream;
   struct memstream_info *info;

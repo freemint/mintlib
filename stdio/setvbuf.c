@@ -26,11 +26,7 @@
    If MODE indicates full or line buffering, use BUF,
    a buffer of SIZE bytes; if BUF is NULL, malloc a buffer.  */
 int
-setvbuf (stream, buf, mode, size)
-     FILE *stream;
-     char *buf;
-     int mode;
-     size_t size;
+setvbuf (FILE *stream, char *buf, int mode, size_t size)
 {
   if (!__validfp (stream))
     {

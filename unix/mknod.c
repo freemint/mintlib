@@ -3,7 +3,6 @@
  * using symlinks to /pipe and some kludges in open()...
  */
 
-#include <device.h>
 #include <errno.h>
 #include <limits.h>
 #include <support.h>
@@ -17,6 +16,8 @@
 #ifndef PIPE_RDEV
 #define PIPE_RDEV 0x7e00
 #endif
+
+__typeof__(mknod) __mknod;
 
 int
 __mknod (const char *path, mode_t mode, dev_t dev)

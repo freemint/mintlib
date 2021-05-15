@@ -28,6 +28,9 @@
 #include <unistd.h>
 #include <sys/file.h>
 
+__typeof__(lckpwdf) __lckpwdf;
+__typeof__(ulckpwdf) __ulckpwdf;
+
 /* Name of the lock file.  */
 #define PWD_LOCKFILE "/etc/.pwd.lock"
 
@@ -80,7 +83,7 @@ static void noop_handler __P ((int __sig));
 
 
 int
-__lckpwdf ()
+__lckpwdf (void)
 {
   int flags;
   sigset_t saved_set;			/* Saved set of caught signals.  */
@@ -151,7 +154,7 @@ __lckpwdf ()
 weak_alias (__lckpwdf, lckpwdf)
 
 int
-__ulckpwdf ()
+__ulckpwdf (void)
 {
   int result;
 
@@ -178,8 +181,7 @@ weak_alias (__ulckpwdf, ulckpwdf)
 
 
 static void
-noop_handler (sig)
-     int sig;
+noop_handler (int sig)
 {
   /* We simply return which makes the `fcntl' call return with an error.  */
 }

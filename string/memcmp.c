@@ -17,10 +17,7 @@
 #endif
 
 int				/* <0, == 0, >0 */
-memcmp(s1, s2, size)
-const void * s1;
-const void * s2;
-size_t size;
+memcmp(const void *s1, const void *s2, size_t size)
 {
 	register const char *scan1;
 	register const char *scan2;

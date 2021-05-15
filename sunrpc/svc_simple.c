@@ -58,6 +58,9 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
 
+int registerrpc (u_long prognum, u_long versnum, u_long procnum,
+	     char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc);
+
 static struct proglst
   {
     char *(*p_progname) (char *);
@@ -71,8 +74,7 @@ static struct proglst
 static void universal (struct svc_req *rqstp, SVCXPRT *transp);
 static SVCXPRT *transp;
 
-int
-registerrpc (u_long prognum, u_long versnum, u_long procnum,
+int registerrpc (u_long prognum, u_long versnum, u_long procnum,
 	     char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc)
 {
   struct proglst *pl;

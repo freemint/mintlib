@@ -4,12 +4,17 @@
  * (w) 1994, Kay Roemer.
  */
 
+#define _BSD_SOURCE
 #include <signal.h>
 #include <errno.h>
 
+/* __typeof__(sigvec) __sigvec; ifdef'd out in signal.h? */
+int __sigvec (int sig, const struct sigvec *sv, struct sigvec *osv);
+__typeof__(siginterrupt) __siginterrupt;
+
 
 int
-__sigvec (int sig, struct sigvec *sv, struct sigvec *osv)
+__sigvec (int sig, const struct sigvec *sv, struct sigvec *osv)
 {
 	struct sigaction sa, osa;
 	int i, r;

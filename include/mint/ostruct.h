@@ -611,13 +611,16 @@ typedef struct
 } _RGB;
 
 /* Structure used by Bconmap() */
+/* Note: prototypes here are only included for reference.
+   With GNU-C, you cannot call them that way,
+   unless compiling with --mshort */
 typedef struct
 {
-	short (*Bconstat)();
-	long (*Bconin)();
-	long (*Bcostat)();
-	void (*Bconout)();
-	unsigned long (*Rsconf)();
+	short (*Bconstat)(short);
+	long (*Bconin)(short);
+	long (*Bcostat)(short);
+	void (*Bconout)(short, short);
+	unsigned long (*Rsconf)(short, short, short, short, short, short);
 	_IOREC *iorec;
 } _MAPTAB;
 

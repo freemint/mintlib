@@ -41,9 +41,7 @@ xdr_utmp_array (XDR *xdrs, utmp_array *objp)
 bool_t xdr_utmp (XDR *xdrs, struct ru_utmp *objp);
 
 bool_t
-xdr_utmp(xdrs, objp)
-	XDR *xdrs;
-	struct ru_utmp *objp;
+xdr_utmp(XDR *xdrs, struct ru_utmp *objp)
 {
 	/* Since the fields are char foo [xxx], we should not free them. */
 	if (xdrs->x_op != XDR_FREE)
@@ -75,9 +73,7 @@ xdr_utmp(xdrs, objp)
 bool_t xdr_utmpptr(XDR *xdrs, struct ru_utmp **objpp);
 
 bool_t
-xdr_utmpptr(xdrs, objpp)
-	XDR *xdrs;
-	struct ru_utmp **objpp;
+xdr_utmpptr(XDR *xdrs, struct ru_utmp **objpp)
 {
 	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct ru_utmp),
 			   (xdrproc_t) xdr_utmp)) {
@@ -87,9 +83,7 @@ xdr_utmpptr(xdrs, objpp)
 }
 
 bool_t
-xdr_utmparr(xdrs, objp)
-	XDR *xdrs;
-	struct utmparr *objp;
+xdr_utmparr(XDR *xdrs, struct utmparr *objp)
 {
 	if (!xdr_array(xdrs, (char **)&objp->uta_arr, (u_int *)&objp->uta_cnt,
 		       MAXUSERS, sizeof(struct ru_utmp *),
@@ -102,9 +96,7 @@ xdr_utmparr(xdrs, objp)
 bool_t xdr_utmpidle(XDR *xdrs, struct utmpidle *objp);
 
 bool_t
-xdr_utmpidle(xdrs, objp)
-	XDR *xdrs;
-	struct utmpidle *objp;
+xdr_utmpidle(XDR *xdrs, struct utmpidle *objp)
 {
 	if (!xdr_utmp(xdrs, &objp->ui_utmp)) {
 		return (FALSE);
@@ -118,9 +110,7 @@ xdr_utmpidle(xdrs, objp)
 bool_t xdr_utmpidleptr(XDR *xdrs, struct utmpidle **objp);
 
 bool_t
-xdr_utmpidleptr(xdrs, objpp)
-	XDR *xdrs;
-	struct utmpidle **objpp;
+xdr_utmpidleptr(XDR *xdrs, struct utmpidle **objpp)
 {
 	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct utmpidle),
 			   (xdrproc_t) xdr_utmpidle)) {
@@ -130,9 +120,7 @@ xdr_utmpidleptr(xdrs, objpp)
 }
 
 bool_t
-xdr_utmpidlearr(xdrs, objp)
-	XDR *xdrs;
-	struct utmpidlearr *objp;
+xdr_utmpidlearr(XDR *xdrs, struct utmpidlearr *objp)
 {
 	if (!xdr_array(xdrs, (char **)&objp->uia_arr, (u_int *)&objp->uia_cnt,
 		       MAXUSERS, sizeof(struct utmpidle *),

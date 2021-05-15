@@ -54,9 +54,7 @@
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
-__rawmemchr (s, c)
-     const __ptr_t s;
-     int c;
+__rawmemchr (const __ptr_t s, int c)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;

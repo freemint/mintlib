@@ -37,12 +37,9 @@ static char sccsid[] = "@(#)getservbyport.c	5.7 (Berkeley) 2/24/91";
 
 #include <netdb.h>
 #include <string.h>
+#include "sockets_global.h"
 
-void __setservent (int f);
-void __endservent (void);
-struct servent * __getservent (void);
-
-extern int _serv_stayopen;
+__typeof__(getservbyport) __getservbyport;
 
 struct servent *
 __getservbyport (int port, const char *proto)

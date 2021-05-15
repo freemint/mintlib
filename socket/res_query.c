@@ -73,11 +73,11 @@ int h_errno;
  * Caller must parse answer and determine whether it answers the question.
  */
 int
-res_query(name, class, type, answer, anslen)
-	const char *name;		/* domain name */
-	int class, type;	/* class and type of query */
-	u_char *answer;		/* buffer to put answer */
-	int anslen;		/* size of answer buffer */
+res_query(
+	const char *name,		/* domain name */
+	int class, int type,	/* class and type of query */
+	u_char *answer,		/* buffer to put answer */
+	int anslen)		/* size of answer buffer */
 {
 	char buf[MAXPACKET];
 	HEADER *hp;
@@ -148,15 +148,14 @@ res_query(name, class, type, answer, anslen)
  * (not, for example, for host address-to-name lookups in domain in-addr.arpa).
  */
 int
-res_search(name, class, type, answer, anslen)
-	char *name;		/* domain name */
-	int class, type;	/* class and type of query */
-	u_char *answer;		/* buffer to put answer */
-	int anslen;		/* size of answer */
+res_search(
+	char *name,		/* domain name */
+	int class, int type,	/* class and type of query */
+	u_char *answer,		/* buffer to put answer */
+	int anslen)		/* size of answer */
 {
 	register char *cp, **domain;
  	int n, ret, got_nodata = 0;
-	char *__hostalias();
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1)
 		return (-1);
@@ -224,11 +223,12 @@ res_search(name, class, type, answer, anslen)
  * removing a trailing dot from name if domain is NULL.
  */
 int
-res_querydomain(name, domain, class, type, answer, anslen)
-	char *name, *domain;
-	int class, type;	/* class and type of query */
-	u_char *answer;		/* buffer to put answer */
-	int anslen;		/* size of answer */
+res_querydomain(
+	char *name,
+	char *domain,
+	int class, int type,	/* class and type of query */
+	u_char *answer,		/* buffer to put answer */
+	int anslen)		/* size of answer */
 {
 	char nbuf[2*MAXDNAME+2];
 	char *longname = nbuf;
@@ -258,8 +258,7 @@ res_querydomain(name, domain, class, type, answer, anslen)
 }
 
 char *
-__hostalias(name)
-	register const char *name;
+__hostalias(const char *name)
 {
 	register char *C1, *C2;
 	FILE *fp;

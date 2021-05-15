@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <wchar.h>
 #include <string.h>
+#include "lib.h"
 
 int
 __fxprintf (FILE *fp, const char *fmt, ...)

@@ -21,9 +21,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <unistd.h>
+#include "lib.h"
 
 #define	badmode()	return ((__set_errno (EINVAL)), 0)
+
+/* maybe should be renamed? this is *not* an alias for getmode() */
 
 /* Dissect the given mode string into an __io_mode.  */
 int
@@ -80,9 +83,7 @@ __getmode (const char *mode, __io_mode *mptr)
 
 /* Open a new stream on the given file.  */
 FILE *
-fopen (filename, mode)
-     const char *filename;
-     const char *mode;
+fopen (const char *filename, const char *mode)
 {
   FILE *stream;
   __io_mode m;

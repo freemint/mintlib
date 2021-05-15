@@ -11,9 +11,10 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(send) __send;
 
 int
-__send (int fd, const void *buf, ssize_t buflen, int flags)
+__send (int fd, const void *buf, size_t buflen, int flags)
 {
 	if (__libc_newsockets) {
 		long r = Fsendto (fd, buf, buflen, flags, NULL, 0);

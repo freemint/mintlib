@@ -14,8 +14,7 @@
 #include <stdlib.h>
 
 div_t
-div(num, denom)
-	int num, denom;
+div(int num, int denom)
 {
 	div_t res;
 	
@@ -28,8 +27,7 @@ div(num, denom)
 strong_alias (div, ldiv)
 #else
 ldiv_t
-ldiv(num, denom)
-	long num, denom;
+ldiv(long num, long denom)
 {
 	ldiv_t res;
 	

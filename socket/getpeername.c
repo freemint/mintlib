@@ -20,6 +20,8 @@
 #error socklen_t is unsigned int, must be wrapped for the syscall
 #endif
 
+__typeof__(getpeername) __getpeername;
+
 
 int
 __getpeername (int fd, struct sockaddr *addr, socklen_t *addrlen)

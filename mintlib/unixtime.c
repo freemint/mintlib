@@ -9,6 +9,7 @@
 */
 
 #include <time.h>
+#include <support.h>
 
 /* Convert a GEMDOS time to seconds since the epoch.
    The calculated value is always in UTC.  */

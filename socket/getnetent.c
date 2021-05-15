@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)getnetent.c	5.8 (Berkeley) 2/24/91";
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include "sockets_global.h"
 
 #define	MAXALIASES	35
 

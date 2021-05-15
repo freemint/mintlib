@@ -287,8 +287,7 @@ static
 inline
 #endif
 const char *
-next_brace_sub (begin)
-     const char *begin;
+next_brace_sub (const char *begin)
 {
   unsigned int depth = 0;
   const char *cp = begin;
@@ -334,11 +333,7 @@ next_brace_sub (begin)
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 int
-glob (pattern, flags, errfunc, pglob)
-     const char *pattern;
-     int flags;
-     int (*errfunc) __P ((const char *, int));
-     glob_t *pglob;
+glob (const char *pattern, int flags, int (*errfunc)(const char *, int), glob_t *pglob)
 {
   const char *filename;
   const char *dirname;
@@ -1035,8 +1030,7 @@ glob (pattern, flags, errfunc, pglob)
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
-globfree (pglob)
-     register glob_t *pglob;
+globfree (glob_t *pglob)
 {
   if (pglob->gl_pathv != NULL)
     {
@@ -1051,9 +1045,7 @@ globfree (pglob)
 
 /* Do a collated comparison of A and B.  */
 static int
-collated_compare (a, b)
-     const __ptr_t a;
-     const __ptr_t b;
+collated_compare (const __ptr_t a, const __ptr_t b)
 {
   const char *const s1 = *(const char *const * const) a;
   const char *const s2 = *(const char *const * const) b;
@@ -1073,10 +1065,7 @@ collated_compare (a, b)
    A slash is inserted between DIRNAME and each elt of ARRAY,
    unless DIRNAME is just "/".  Each old element of ARRAY is freed.  */
 static int
-prefix_array (dirname, array, n)
-     const char *dirname;
-     char **array;
-     size_t n;
+prefix_array (const char *dirname, char **array, size_t n)
 {
   register size_t i;
   size_t dirlen = strlen (dirname);
@@ -1141,9 +1130,7 @@ prefix_array (dirname, array, n)
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 int
-__glob_pattern_p (pattern, quote)
-     const char *pattern;
-     int quote;
+__glob_pattern_p (const char *pattern, int quote)
 {
   register const char *p;
   int open = 0;
@@ -1183,12 +1170,7 @@ weak_alias (__glob_pattern_p, glob_pattern_p)
    The GLOB_NOSORT bit in FLAGS is ignored.  No sorting is ever done.
    The GLOB_APPEND flag is assumed to be set (always appends).  */
 static int
-glob_in_dir (pattern, directory, flags, errfunc, pglob)
-     const char *pattern;
-     const char *directory;
-     int flags;
-     int (*errfunc) __P ((const char *, int));
-     glob_t *pglob;
+glob_in_dir (const char *pattern, const char *directory, int flags, int (*errfunc)(const char *, int), glob_t *pglob)
 {
   __ptr_t stream = NULL;
 

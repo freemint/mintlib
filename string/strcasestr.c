@@ -14,9 +14,7 @@
 /* Similar to `strstr' but this function ignores the case of both strings.  */
 
 char*				/* Found string, or NULL if none.  */
-__strcasestr (s, wanted)
-	const char* s;
-	const char* wanted;
+__strcasestr (const char* s, const char* wanted)
 {
 	register const char* scan;
 	register size_t len;

@@ -19,8 +19,7 @@ extern const char* __get_tmpdir (const char*, int try_tmpdir);
 
 static char tmpnam_buffer[L_tmpnam];
 
-char* tmpnam (user_buf)
-	char* user_buf;
+char* tmpnam (char *user_buf)
 {
 	const char* tmpdir = __get_tmpdir (NULL, 0);
 	char def_buf[L_tmpnam];		/* To be thread-safe when user_buf

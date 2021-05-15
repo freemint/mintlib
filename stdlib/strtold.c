@@ -34,6 +34,7 @@
 # include <stdlib.h>
 
 double __strtod_internal (const char *nptr, char **endptr, int group);
+long double __strtold_internal (const char *nptr, char **endptr, int group);
 
 /* There is no `long double' type, use the `double' implementations.  */
 long double

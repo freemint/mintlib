@@ -6,9 +6,7 @@
  */
 
 char *				/* found char, or NULL if none */
-strrchr(s, charwanted)
-const char *s;
-register int charwanted;
+strrchr(const char *s, int charwanted)
 {
 	register char c;
 	register const char *place;

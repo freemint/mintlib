@@ -8,7 +8,10 @@
     understand and accept it fully.
 */
 
+#include <time.h>
 #include <sys/time.h>
+
+__typeof__(time) __time;
 
 time_t 
 __time (time_t *buf)

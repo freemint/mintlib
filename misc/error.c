@@ -27,25 +27,11 @@
 
 #include <stdio.h>
 
-#if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC
-# if __STDC__
-#  include <stdarg.h>
-#  define VA_START(args, lastarg) va_start(args, lastarg)
-# else
-#  include <varargs.h>
-#  define VA_START(args, lastarg) va_start(args)
-# endif
-#else
-# define va_alist a1, a2, a3, a4, a5, a6, a7, a8
-# define va_dcl char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
-#endif
+#include <stdarg.h>
+#define VA_START(args, lastarg) va_start(args, lastarg)
 
-#if STDC_HEADERS || _LIBC
 # include <stdlib.h>
 # include <string.h>
-#else
-void exit ();
-#endif
 
 #include "error.h"
 
@@ -56,11 +42,7 @@ void exit ();
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
-void (*error_print_progname) (
-#if __STDC__ - 0
-			      void
-#endif
-			      );
+void (*error_print_progname) (void);
 
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;
@@ -74,6 +56,8 @@ unsigned int error_message_count;
 /* In GNU libc we want do not want to use the common name `error' directly.
    Instead make it a weak alias.  */
 #ifdef HAVE_WEAK_SYMBOLS
+__typeof__(error) __error;
+__typeof__(error_at_line) __error_at_line;
 # define error __error
 # define error_at_line __error_at_line
 #endif
@@ -92,20 +76,9 @@ extern char *program_name;
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
 
-void
-#if defined(VA_START) && __STDC__
-error (int status, int errnum, const char *message, ...)
-#else
-error (status, errnum, message, va_alist)
-     int status;
-     int errnum;
-     char *message;
-     va_dcl
-#endif
+void error (int status, int errnum, const char *message, ...)
 {
-#ifdef VA_START
   va_list args;
-#endif
 
   if (error_print_progname)
     (*error_print_progname) ();
@@ -115,17 +88,9 @@ error (status, errnum, message, va_alist)
       fprintf (stderr, "%s: ", program_name);
     }
 
-#ifdef VA_START
   VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
   vfprintf (stderr, message, args);
-# else
-  _doprnt (message, args, stderr);
-# endif
   va_end (args);
-#else
-  fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
-#endif
 
   ++error_message_count;
   if (errnum)
@@ -151,22 +116,10 @@ error (status, errnum, message, va_alist)
 int error_one_per_line;
 
 void
-#if defined(VA_START) && __STDC__
 error_at_line (int status, int errnum, const char *file_name,
 	       unsigned int line_number, const char *message, ...)
-#else
-error_at_line (status, errnum, file_name, line_number, message, va_alist)
-     int status;
-     int errnum;
-     const char *file_name;
-     unsigned int line_number;
-     char *message;
-     va_dcl
-#endif
 {
-#ifdef VA_START
   va_list args;
-#endif
 
   if (error_one_per_line)
     {
@@ -193,17 +146,9 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
   if (file_name != NULL)
     fprintf (stderr, "%s:%d: ", file_name, line_number);
 
-#ifdef VA_START
   VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
   vfprintf (stderr, message, args);
-# else
-  _doprnt (message, args, stderr);
-# endif
   va_end (args);
-#else
-  fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
-#endif
 
   ++error_message_count;
   if (errnum)

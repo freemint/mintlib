@@ -9,8 +9,7 @@
 #undef __strdup
 
 char *
-__strdup(s)
-	const char *s;
+__strdup(const char *s)
 {
 	char *dup;
 

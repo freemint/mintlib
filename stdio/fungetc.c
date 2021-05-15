@@ -11,9 +11,7 @@
 #include <stdio.h>
 
 int
-fungetc (c, stream)
-	int c;
-	FILE* stream;
+fungetc (int c, FILE *stream)
 {
 	return ungetc (c, stream);
 }

@@ -49,9 +49,9 @@ static char sccsid[] = "@(#)res_debug.c	5.36 (Berkeley) 3/6/91";
 #include <stdio.h>
 #include <string.h>
 
-void __fp_query();
-char *__p_class(), *__p_time(), *__p_type();
-static char *p_cdname(), *p_rr();
+static char *p_cdname(char *cp, char *msg, FILE *file);
+static char *p_rr(char *cp, char *msg, FILE *file);
+
 
 char *_res_opcodes[] = {
 	"QUERY",
@@ -92,8 +92,7 @@ char *_res_resultcodes[] = {
 };
 
 void
-__p_query(msg)
-	char *msg;
+__p_query(char *msg)
 {
 	__fp_query(msg,stdout);
 }
@@ -103,11 +102,9 @@ __p_query(msg)
  * This is intended to be primarily a debugging routine.
  */
 void
-__fp_query(msg,file)
-	char *msg;
-	FILE *file;
+__fp_query(char *msg, FILE *file)
 {
-	register char *cp;
+	char *cp;
 	register HEADER *hp;
 	register int n;
 
@@ -147,10 +144,10 @@ __fp_query(msg,file)
 			cp = p_cdname(cp, msg, file);
 			if (cp == NULL)
 				return;
-			fprintf(file,", type = %s", __p_type(_getshort(cp)));
+			fprintf(file,", type = %s", __p_type(_getshort((unsigned char *)cp)));
 			cp += sizeof(u_short);
 			fprintf(file,
-			    ", class = %s\n\n", __p_class(_getshort(cp)));
+			    ", class = %s\n\n", __p_class(_getshort((unsigned char *)cp)));
 			cp += sizeof(u_short);
 		}
 	}
@@ -193,9 +190,7 @@ __fp_query(msg,file)
 }
 
 static char *
-p_cdname(cp, msg, file)
-	char *cp, *msg;
-	FILE *file;
+p_cdname(char *cp, char *msg, FILE *file)
 {
 	char name[MAXDNAME];
 	int n;
@@ -215,9 +210,7 @@ p_cdname(cp, msg, file)
  * Print resource record fields in human readable form.
  */
 static char *
-p_rr(cp, msg, file)
-	char *cp, *msg;
-	FILE *file;
+p_rr(char *cp, char *msg, FILE *file)
 {
 	int type, class, dlen, n, c;
 	struct in_addr inaddr;
@@ -225,13 +218,13 @@ p_rr(cp, msg, file)
 
 	if ((cp = p_cdname(cp, msg, file)) == NULL)
 		return (NULL);			/* compression error */
-	fprintf(file,"\n\ttype = %s", __p_type(type = _getshort(cp)));
+	fprintf(file,"\n\ttype = %s", __p_type(type = _getshort((unsigned char *)cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", class = %s", __p_class(class = _getshort(cp)));
+	fprintf(file,", class = %s", __p_class(class = _getshort((unsigned char *)cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", ttl = %s", __p_time(_getlong(cp)));
+	fprintf(file,", ttl = %s", __p_time(_getlong((unsigned char *)cp)));
 	cp += sizeof(u_long);
-	fprintf(file,", dlen = %d\n", dlen = _getshort(cp));
+	fprintf(file,", dlen = %d\n", dlen = _getshort((unsigned char *)cp));
 	cp += sizeof(u_short);
 	cp1 = cp;
 	/*
@@ -287,20 +280,20 @@ p_rr(cp, msg, file)
 		cp = p_cdname(cp, msg, file);
 		fprintf(file,"\n\tmail addr = ");
 		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n\tserial = %ld", _getlong(cp));
+		fprintf(file,"\n\tserial = %ld", _getlong((unsigned char *)cp));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\trefresh = %s", __p_time(_getlong(cp)));
+		fprintf(file,"\n\trefresh = %s", __p_time(_getlong((unsigned char *)cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tretry = %s", __p_time(_getlong(cp)));
+		fprintf(file,"\n\tretry = %s", __p_time(_getlong((unsigned char *)cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\texpire = %s", __p_time(_getlong(cp)));
+		fprintf(file,"\n\texpire = %s", __p_time(_getlong((unsigned char *)cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tmin = %s\n", __p_time(_getlong(cp)));
+		fprintf(file,"\n\tmin = %s\n", __p_time(_getlong((unsigned char *)cp)));
 		cp += sizeof(u_long);
 		break;
 
 	case T_MX:
-		fprintf(file,"\tpreference = %d,",_getshort(cp));
+		fprintf(file,"\tpreference = %d,",_getshort((unsigned char *)cp));
 		cp += sizeof(u_short);
 		fprintf(file," name = ");
 		cp = p_cdname(cp, msg, file);
@@ -337,7 +330,7 @@ p_rr(cp, msg, file)
 	case T_UID:
 	case T_GID:
 		if (dlen == 4) {
-			fprintf(file,"\t%ld\n", _getlong(cp));
+			fprintf(file,"\t%ld\n", _getlong((unsigned char *)cp));
 			cp += sizeof(int);
 		}
 		break;
@@ -398,8 +391,7 @@ static	char nbuf[40];
  * Return a string for the type
  */
 char *
-__p_type(type)
-	int type;
+__p_type(int type)
 {
 	switch (type) {
 	case T_A:
@@ -458,8 +450,7 @@ __p_type(type)
  * Return a mnemonic for class
  */
 char *
-__p_class(class)
-	int class;
+__p_class(int class)
 {
 
 	switch (class) {
@@ -479,8 +470,7 @@ __p_class(class)
  * Return a mnemonic for a time to live
  */
 char *
-__p_time(value)
-	u_long value;
+__p_time(u_long value)
 {
 	int secs, mins, hours;
 	register char *p;

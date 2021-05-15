@@ -27,9 +27,7 @@
 
 /* Write the character C to STREAM.  */
 int
-fputc (c, stream)
-     int c;
-     FILE *stream;
+fputc (int c, FILE *stream)
 {
   if (!__validfp (stream) || !stream->__mode.__write)
     {

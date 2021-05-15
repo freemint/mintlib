@@ -15,10 +15,7 @@
  */
 
 int				/* <0 for <, 0 for ==, >0 for > */
-strncmp(scan1, scan2, n)
-register const char *scan1;
-register const char *scan2;
-size_t n;
+strncmp(const char *scan1, const char *scan2, size_t n)
 {
 	register unsigned char c1, c2;
 	register long count;  /* FIXME!!! Has to be size_t but that requires

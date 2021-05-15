@@ -119,24 +119,10 @@
     || STREQ (string, "cntrl") || STREQ (string, "blank"))
 # endif
 
-/* Avoid depending on library functions or files
-   whose names are inconsistent.  */
-
-# if !defined _LIBC && !defined getenv
-extern char *getenv ();
-# endif
-
-# ifndef errno
-extern int errno;
-# endif
-
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 int
-fnmatch (pattern, string, flags)
-     const char *pattern;
-     const char *string;
-     int flags;
+fnmatch (const char *pattern, const char *string, int flags)
 {
   register const char *p = pattern, *n = string;
   register unsigned char c;

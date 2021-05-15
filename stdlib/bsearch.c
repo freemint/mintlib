@@ -11,13 +11,13 @@
  *
  */
 
-void * bsearch(key, base, num, size, cmp)
-	register const void * key;		/* item to search for */
-	register const void * base;		/* base address */
-	size_t		  num;		/* number of elements */
-	register size_t   size;		/* element size in bytes */
+void * bsearch(
+	const void * key,		/* item to search for */
+	const void * base,		/* base address */
+	size_t num,		/* number of elements */
+	size_t size,		/* element size in bytes */
 	/* comparison function */
-	register int (*cmp) (const void *, const void *);
+	int (*cmp) (const void *, const void *))
 	{
 	register size_t a, b, c;
 	register int dir;

@@ -40,6 +40,9 @@
 
 #define ATTEMPT(xdr_op) if (!(xdr_op)) return (FALSE)
 
+bool_t xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred);
+bool_t xdr_authdes_verf (XDR *xdrs, struct authdes_verf *verf);
+
 bool_t
 xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred)
 {

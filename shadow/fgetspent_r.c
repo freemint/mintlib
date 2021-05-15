@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <string.h>
 
+__typeof__(fgetspent_r) __fgetspent_r;
+
 static char* space = "";
 
 /* Ignore \r before \n.  */

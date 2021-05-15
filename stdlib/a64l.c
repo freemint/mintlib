@@ -61,8 +61,7 @@ AUTHOR
 
 
 /* base-64 char to int, -1 on error */
-static int a64i(c)
-  char c;
+static int a64i(char c)
 {
   int retval = c;
 
@@ -85,8 +84,7 @@ static int a64i(c)
 } /* End of a64i() */
 
 /* base-64 string to long */
-long a64l(s)
-  const char *s;
+long a64l(const char *s)
 {
   long retval = 0;
   int counter = 0;

@@ -10,9 +10,11 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(listen) __listen;
+
 
 int
-__listen (int fd, int backlog)
+__listen (int fd, unsigned int backlog)
 {
 	if (__libc_newsockets) {
 		long r = Flisten (fd, backlog);

@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 /* Functions registered by user for calling at exit.  */
 typedef void (*ExitFn) (void);
@@ -38,6 +39,8 @@ ___fclose_all_files (void)
 }
 weak_alias (___fclose_all_files, _fclose_all_files)
 #endif
+
+__typeof__(exit) __exit;
 
 __EXITING
 __exit (int status)

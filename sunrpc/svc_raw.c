@@ -98,9 +98,7 @@ svcraw_stat (SVCXPRT *xprt)
 }
 
 static bool_t
-svcraw_recv (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svcraw_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct svcraw_private *srp = svcraw_private;
   XDR *xdrs;

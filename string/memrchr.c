@@ -6,10 +6,7 @@
  */
 
 void *
-memrchr(s, ucharwanted, size)
-const void * s;
-int ucharwanted;
-size_t size;
+memrchr(const void *s, int ucharwanted, size_t size)
 {
 	register const char *scan;
 	register size_t n;

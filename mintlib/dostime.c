@@ -11,17 +11,15 @@
  
 #include <time.h>
 #include <errno.h>
+#include <support.h>
 
 #include "lib.h"
-
-time_t __dostime (time_t t);
 
 /* convert a Unix time into a DOS time. The longword returned contains
    the time word first, then the date word */
 
 time_t
-__dostime(t)
-	time_t t;
+__dostime(time_t t)
 {
         time_t time, date;
 	struct tm ctm;

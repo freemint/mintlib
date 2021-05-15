@@ -14,8 +14,7 @@
 #define CBUFSIZ 80
 
 int
-_console_read_byte(fd)
-	int fd;
+_console_read_byte(int fd)
 {
 	short f;
 	int retvalue;
@@ -35,8 +34,7 @@ _console_read_byte(fd)
 }
 
 void
-_console_write_byte(fd, outc)
-	int fd, outc;
+_console_write_byte(int fd, int outc)
 {
 	unsigned char c;
 

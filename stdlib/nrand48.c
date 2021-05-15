@@ -24,12 +24,10 @@
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-extern int __nrand48_r (unsigned short int __xsubi[3],
-                        struct drand48_data*, long int*);
+__typeof__(nrand48_r) __nrand48_r;
 
 long int
-nrand48 (xsubi)
-     unsigned short int xsubi[3];
+nrand48 (unsigned short int xsubi[3])
 {
   long int result;
 

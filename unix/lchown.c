@@ -5,7 +5,10 @@
 #include <errno.h>
 #include <limits.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include "lib.h"
+
+__typeof__(lchown) __lchown;
 
 int
 __lchown (const char *_name, uid_t uid, gid_t gid)

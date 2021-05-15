@@ -20,6 +20,7 @@
 #error struct msghdr is not mshort clean, must be wrapped
 #endif
 
+__typeof__(recvmsg) __recvmsg;
 
 int
 __recvmsg (int fd, struct msghdr *msg, int flags)

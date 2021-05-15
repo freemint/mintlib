@@ -26,6 +26,7 @@
 
 #include "utmp-private.h"
 
+__typeof__(getutline_r) __getutline_r;
 
 /* We have to use the lock in getutent_r.c.  */
 __libc_lock_define (extern, __libc_utmp_lock)

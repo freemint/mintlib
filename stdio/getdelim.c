@@ -25,7 +25,7 @@
 #include <limits.h>
 #include <errno.h>
 
-extern void *__memccpy (void*, const void*, int, size_t);
+__typeof__(memccpy) __memccpy;
 
 /* Read up to (and including) a TERMINATOR from STREAM into *LINEPTR
    (and null-terminate it). *LINEPTR is a pointer returned from malloc (or
@@ -34,11 +34,7 @@ extern void *__memccpy (void*, const void*, int, size_t);
    null terminator), or -1 on error or EOF.  */
 
 ssize_t
-__getdelim (lineptr, n, terminator, stream)
-     char **lineptr;
-     size_t *n;
-     int terminator;
-     FILE *stream;
+__getdelim (char **lineptr, size_t *n, int terminator, FILE *stream)
 {
   char *line, *p;
   size_t size, copy;

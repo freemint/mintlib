@@ -27,11 +27,7 @@
 
 /* Write NMEMB chunks of SIZE bytes each from PTR onto STREAM.  */
 size_t
-fwrite (ptr, size, nmemb, stream)
-     const void *ptr;
-     size_t size;
-     size_t nmemb;
-     register FILE *stream;
+fwrite (const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
   register const unsigned char *p = (const unsigned char *) ptr;
   register size_t to_write = size * nmemb;

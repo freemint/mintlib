@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-char* tmpnam_r (buf)
-     char* buf;
+char* tmpnam_r (char *buf)
 {
   if (buf == NULL)
     {

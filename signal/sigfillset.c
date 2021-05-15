@@ -13,8 +13,7 @@
 #include <string.h>
 
 int
-sigfillset (set)
-  	sigset_t *set;
+sigfillset (sigset_t *set)
 {
   	if (!set) {
 		__set_errno (EINVAL);

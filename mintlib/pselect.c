@@ -22,6 +22,8 @@
 #include <sys/time.h>
 #include <sys/select.h>
 
+__typeof__(pselect) __pselect;
+
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
@@ -29,13 +31,7 @@
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
 int
-__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
-     int nfds;
-     fd_set *readfds;
-     fd_set *writefds;
-     fd_set *exceptfds;
-     const struct timespec *timeout;
-     const sigset_t *sigmask;
+__pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const struct timespec *timeout, const sigset_t *sigmask)
 {
   struct timeval tval;
   int retval;

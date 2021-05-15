@@ -25,8 +25,7 @@
 
 /* Close a stream.  */
 int
-fclose (stream)
-     FILE *stream;
+fclose (FILE *stream)
 {
   int status;
 

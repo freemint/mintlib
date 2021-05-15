@@ -11,6 +11,8 @@
 #include <signal.h>
 #include <mint/mintbind.h>
 
+__typeof__(sigreturn) __sigreturn;
+
 void
 __sigreturn (struct sigcontext* __unused)
 {

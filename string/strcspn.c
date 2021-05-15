@@ -9,9 +9,7 @@
 #undef strcspn
 
 size_t
-strcspn(s, reject)
-const char *s;
-const char *reject;
+strcspn(const char *s, const char *reject)
 {
 	register const char *scan;
 	register const char *rscan;

@@ -53,9 +53,7 @@ if_link (char *device, char *ifname)
  * Get interface link level flags
  */
 int
-if_getlnkflags (ifname, flags)
-	char *ifname;
-	short *flags;
+if_getlnkflags (char *ifname, short *flags)
 {
 	struct ifreq ifr;
 	int sock;
@@ -78,9 +76,7 @@ if_getlnkflags (ifname, flags)
  * Set interface link level flags
  */
 int
-if_setlnkflags (ifname, flags)
-	char *ifname;
-	short flags;
+if_setlnkflags (char *ifname, short flags)
 {
 	struct ifreq ifr;
 	int sock;
@@ -103,9 +99,7 @@ if_setlnkflags (ifname, flags)
  * Get interface flags
  */
 int
-if_getifflags (ifname, flags)
-	char *ifname;
-	short *flags;
+if_getifflags (char *ifname, short *flags)
 {
 	struct ifreq ifr;
 	int sock;
@@ -128,9 +122,7 @@ if_getifflags (ifname, flags)
  * Set interface link level flags
  */
 int
-if_setifflags (ifname, flags)
-	char *ifname;
-	short flags;
+if_setifflags (char *ifname, short flags)
 {
 	struct ifreq ifr;
 	int sock;

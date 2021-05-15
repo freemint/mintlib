@@ -77,11 +77,8 @@ char *strerror (int errnum);
 #include "argp.h"
 #include "argp-fmtstream.h"
 #include "argp-namefrob.h"
+#include "lib.h"
 
-#ifdef _LIBC
-extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
-#endif
 
 
 /* User-selectable (using an environment variable) formatting parameters.

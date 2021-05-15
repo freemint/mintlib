@@ -10,6 +10,7 @@
 #include "mintsock.h"
 #include "sockets_global.h"
 
+__typeof__(shutdown) __shutdown;
 
 int
 __shutdown (int fd, int how)

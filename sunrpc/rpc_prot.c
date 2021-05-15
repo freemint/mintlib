@@ -78,7 +78,7 @@ xdr_des_block (XDR *xdrs, des_block *blkp)
 /*
  * XDR the MSG_ACCEPTED part of a reply message union
  */
-bool_t
+static bool_t
 xdr_accepted_reply (XDR *xdrs, struct accepted_reply *ar)
 {
   /* personalized union, rather than calling xdr_union */
@@ -103,7 +103,7 @@ xdr_accepted_reply (XDR *xdrs, struct accepted_reply *ar)
 /*
  * XDR the MSG_DENIED part of a reply message union
  */
-bool_t
+static bool_t
 xdr_rejected_reply (XDR *xdrs, struct rejected_reply *rr)
 {
   /* personalized union, rather than calling xdr_union */
@@ -132,9 +132,7 @@ static const struct xdr_discrim reply_dscrm[3] =
  * XDR a reply message
  */
 bool_t
-xdr_replymsg (xdrs, rmsg)
-     XDR *xdrs;
-     struct rpc_msg *rmsg;
+xdr_replymsg (XDR *xdrs, struct rpc_msg *rmsg)
 {
   if (xdr_u_long (xdrs, &(rmsg->rm_xid)) &&
       xdr_enum (xdrs, (enum_t *) & (rmsg->rm_direction)) &&
@@ -152,9 +150,7 @@ xdr_replymsg (xdrs, rmsg)
  * The rm_xid is not really static, but the user can easily munge on the fly.
  */
 bool_t
-xdr_callhdr (xdrs, cmsg)
-     XDR *xdrs;
-     struct rpc_msg *cmsg;
+xdr_callhdr (XDR *xdrs, struct rpc_msg *cmsg)
 {
 
   cmsg->rm_direction = CALL;

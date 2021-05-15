@@ -23,15 +23,14 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(shmat) __shmat;
+
 /* Attach the shared memory segment associated with SHMID to the data
    segment of the calling process.  SHMADDR and SHMFLG determine how
    and where the segment is attached.  */
 
 void *
-__shmat (shmid, shmaddr, shmflg)
-     int shmid;
-     const void *shmaddr;
-     int shmflg;
+__shmat (int shmid, const void *shmaddr, int shmflg)
 {
 	int ret;
 	

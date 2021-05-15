@@ -15,9 +15,7 @@
 static char* save_ptr;
 
 char*
-strtok (s, delim)
-     char *s;
-     register const char *delim;
+strtok (char *s, const char *delim)
 {
   return __strtok_r (s, delim, &save_ptr);
 }
