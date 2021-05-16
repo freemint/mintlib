@@ -60,15 +60,6 @@ static char sccsid[] = "@(#)res_send.c	6.27 (Berkeley) 2/24/91";
 static int s = -1;	/* socket used for communications */
 static struct sockaddr no_addr;
 
-#ifndef FD_SET
-#define	NFDBITS		32
-#define	FD_SETSIZE	32
-#define	FD_SET(n, p)	((p)->fds_bits[(n)/NFDBITS] |= (1 << ((n) % NFDBITS)))
-#define	FD_CLR(n, p)	((p)->fds_bits[(n)/NFDBITS] &= ~(1 << ((n) % NFDBITS)))
-#define	FD_ISSET(n, p)	((p)->fds_bits[(n)/NFDBITS] & (1 << ((n) % NFDBITS)))
-#define FD_ZERO(p)	memset((char *)(p), 0, sizeof(*(p)))
-#endif
-
 int
 res_send(const char *buf, int buflen, char *answer, int anslen)
 {
