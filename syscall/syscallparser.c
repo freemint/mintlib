@@ -21,9 +21,8 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
+ * along with this program; if not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include <assert.h>
@@ -47,33 +46,33 @@ print_head(FILE *out, const char *myname)
 	fprintf(out, "\n");
 	
 	fprintf(out,
-		"/*                                                                      \n"
-		" * This file belongs to FreeMiNT. It's not in the original MiNT 1.12    \n"
-		" * distribution. See the file CHANGES for a detailed log of changes.    \n"
-		" *                                                                      \n"
-		" *                                                                      \n"
-		" * Copyright 2000-2005 Frank Naumann <fnaumann@freemint.de>             \n"
-		" * All rights reserved.                                                 \n"
-		" *                                                                      \n"
-		" * Please send suggestions, patches or bug reports to me or             \n"
-		" * the MiNT mailing list.                                               \n"
-		" *                                                                      \n"
-		" *                                                                      \n"
-		" * This file is free software; you can redistribute it and/or modify    \n"
-		" * it under the terms of the GNU General Public License as published by \n"
-		" * the Free Software Foundation; either version 2, or (at your option)  \n"
-		" * any later version.                                                   \n"
-		" *                                                                      \n"
-		" * This file is distributed in the hope that it will be useful,         \n"
-		" * but WITHOUT ANY WARRANTY; without even the implied warranty of       \n"
-		" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        \n"
-		" * GNU General Public License for more details.                         \n"
-		" *                                                                      \n"
-		" * You should have received a copy of the GNU General Public License    \n"
-		" * along with this program; if not, write to the Free Software          \n"
-		" * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.            \n"
-		" *                                                                      \n"
-		" */                                                                     \n"
+		"/*\n"
+		" * This file belongs to FreeMiNT. It's not in the original MiNT 1.12\n"
+		" * distribution. See the file CHANGES for a detailed log of changes.\n"
+		" *\n"
+		" *\n"
+		" * Copyright 2000-2005 Frank Naumann <fnaumann@freemint.de>\n"
+		" * All rights reserved.\n"
+		" *\n"
+		" * Please send suggestions, patches or bug reports to me or\n"
+		" * the MiNT mailing list.\n"
+		" *\n"
+		" *\n"
+		" * This file is free software; you can redistribute it and/or modify\n"
+		" * it under the terms of the GNU General Public License as published by\n"
+		" * the Free Software Foundation; either version 2, or (at your option)n"
+		" * any later version.\n"
+		" *\n"
+		" * This file is distributed in the hope that it will be useful,\n"
+		" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+		" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+		" * GNU General Public License for more details.\n"
+		" *\n"
+		" * You should have received a copy of the GNU General Public License\n"
+		" * along with this program; if not, see\n"
+		" * <http://www.gnu.org/licenses/>.\n"
+		" *\n"
+		" */\n"
 	);
 	fprintf(out, "\n");
 }
