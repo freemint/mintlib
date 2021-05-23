@@ -105,7 +105,7 @@ extern int h_errno;
 
 /* Private routines shared between libc/net, named, nslookup and others. */
 #define	dn_skipname	__dn_skipname
-#define	fp_queryp	__fp_query
+#define	fp_query	__fp_query
 #define	hostalias	__hostalias
 #define	putlong		__putlong
 #define	putshort	__putshort
