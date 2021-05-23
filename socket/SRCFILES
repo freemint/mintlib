@@ -65,4 +65,5 @@ SRCFILES = \
 	socket.c \
 	socketpair.c \
 	sockets_global.c \
-	writev.c
+	writev.c \
+	ifaddrs.c
