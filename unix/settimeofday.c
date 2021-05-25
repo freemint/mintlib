@@ -77,15 +77,15 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
     
     retval = Tsettime (tos_time);
     if (retval < 0) {
-      if (retval == -EACCES)
-        retval = -EPERM;
+      if (retval == -1)
+        retval = -EINVAL;
       __set_errno (-retval);
       return -1;
     }
     retval = Tsetdate (tos_date);
     if (retval < 0) {
-      if (retval == -EACCES)
-        retval = -EPERM;
+      if (retval == -1)
+        retval = -EINVAL;
       __set_errno (-retval);
       return -1;
     }
