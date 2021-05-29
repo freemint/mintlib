@@ -61,8 +61,6 @@ static char sccsid[] = "@(#)res_query.c	5.11 (Berkeley) 3/6/91";
 #define MAXPACKET	1024
 #endif
 
-int h_errno;
-
 /*
  * Formulate a normal query, send, and await answer.
  * Returned answer is placed in supplied buffer "answer".
