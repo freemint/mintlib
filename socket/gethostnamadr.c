@@ -930,22 +930,22 @@ again:
 /* if hosts_multiple_addrs set, then gethtbyname behaves as follows:
  *  - for hosts with multiple addresses, return all addresses, such that
  *  the first address is most likely to be one on the same net as the
- *  host we're running on, if one exists. 
+ *  host we're running on, if one exists.
  *  - like the dns version of gethostsbyname, the alias field is empty
  *  unless the name being looked up is an alias itself, at which point the
  *  alias field contains that name, and the name field contains the primary
  *  name of the host. Unlike dns, however, this behavior will still take place
- *  even if the alias applies only to one of the interfaces. 
- *  - determining a "local" address to put first is dependant on the netmask 
- *  being such that the least significant network bit is more significant 
- *  than any host bit. Only strange netmasks will violate this. 
+ *  even if the alias applies only to one of the interfaces.
+ *  - determining a "local" address to put first is dependant on the netmask
+ *  being such that the least significant network bit is more significant
+ *  than any host bit. Only strange netmasks will violate this.
  *  - we assume addresses fit into u_longs. That's quite internet specific.
- *  - if the host we're running on is not in the host file, the address 
+ *  - if the host we're running on is not in the host file, the address
  *  shuffling will not take place.
  *                     - John DiMarco <jdd@cdf.toronto.edu>
- */ 
+ */
 static struct hostent *
-_gethtbyname (const char *name)
+_gethtbyname(const char *name)
 {
 	register struct hostent *p;
 	register char **cp;
@@ -961,7 +961,7 @@ _gethtbyname (const char *name)
 	static struct hostent ht;
 	static char *aliases[MAXALIASES];
 	static char namebuf[MAXHOSTNAMELEN];
-	
+
 	hap = ht_addr_ptrs;
 	lhap = loc_addr_ptrs;
 	*hap = NULL;
@@ -979,11 +979,11 @@ _gethtbyname (const char *name)
 
 	_sethtent(0);
 	while ((p = gethostent())) {
-		if (strcasecmp(p->h_name, name) == 0) 
+		if (strcasecmp(p->h_name, name) == 0)
 			found++;
-		else 
+		else
 			for (cp = p->h_aliases; *cp != 0; cp++)
-				if (strcasecmp(*cp, name) == 0){ 
+				if (strcasecmp(*cp, name) == 0){
 					found++;
 					aliases[0]=(char *)name;
 					(void) strcpy(namebuf, p->h_name);
@@ -1037,34 +1037,33 @@ _gethtbyname (const char *name)
 		return((struct hostent *)NULL);
 	}
 
-	ht.h_aliases = aliases; 
+	ht.h_aliases = aliases;
 	ht.h_name = namebuf;
 
-	/* shuffle addresses around to ensure one on same net as local host 
+	/* shuffle addresses around to ensure one on same net as local host
 	   is first, if exists */
 	{
 		/* "best" address is assumed to be the one with the greatest
 		   number of leftmost bits matching any of the addresses of
 		   the local host. This assumes a netmask in which all net
-		   bits precede host bits. Usually but not always a fair 
+		   bits precede host bits. Usually but not always a fair
 		   assumption. */
- 
+
 		/* portability alert: assumption: iaddr fits in u_long.
 		   This is really internet specific. */
 		int i,j, best=0;
 		u_long bestval = (u_long)~0;
-		
+
 		for(i=0;loc_addr_ptrs[i];i++){
 			for(j=0;ht_addr_ptrs[j];j++){
-				/* FIXME: What is h good for?  */
-				u_long t, l, h = 0;
+				u_long t, l, h;
 				/* assert(sizeof(u_long)>=ht.h_length); */
 				memcpy((char *)&t, loc_addr_ptrs[i],
 					ht.h_length);
 				l=ntohl(t);
-				memcpy((char *)&t, ht_addr_ptrs[j],
+				memcpy((char *)&h, ht_addr_ptrs[j],
 					ht.h_length);
-				t=l^h;
+				t=l^ntohl(h);
 
 				if(t<bestval){
 					best=j;
@@ -1081,7 +1080,7 @@ _gethtbyname (const char *name)
 			ht_addr_ptrs[best]=tmp;
 		}
 	}
-	
+
 	ht.h_addr_list = ht_addr_ptrs;
 	return (&ht);
 }
