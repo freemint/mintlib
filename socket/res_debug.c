@@ -49,11 +49,11 @@ static char sccsid[] = "@(#)res_debug.c	5.36 (Berkeley) 3/6/91";
 #include <stdio.h>
 #include <string.h>
 
-static char *p_cdname(char *cp, char *msg, FILE *file);
-static char *p_rr(char *cp, char *msg, FILE *file);
+static const u_char *p_cdname(const u_char *cp, const u_char *msg, FILE *file);
+static const u_char *p_rr(const u_char *cp, const u_char *msg, FILE *file);
 
 
-char *_res_opcodes[] = {
+static const char *const _res_opcodes[] = {
 	"QUERY",
 	"IQUERY",
 	"CQUERYM",
@@ -92,7 +92,7 @@ char *_res_resultcodes[] = {
 };
 
 void
-__p_query(char *msg)
+__p_query(const u_char *msg)
 {
 	__fp_query(msg,stdout);
 }
@@ -102,16 +102,16 @@ __p_query(char *msg)
  * This is intended to be primarily a debugging routine.
  */
 void
-__fp_query(char *msg, FILE *file)
+__fp_query(const u_char *msg, FILE *file)
 {
-	char *cp;
-	register HEADER *hp;
-	register int n;
+	const u_char *cp;
+	const HEADER *hp;
+	int n;
 
 	/*
 	 * Print header fields.
 	 */
-	hp = (HEADER *)msg;
+	hp = (const HEADER *)msg;
 	cp = msg + sizeof(HEADER);
 	fprintf(file,"HEADER:\n");
 	fprintf(file,"\topcode = %s", _res_opcodes[hp->opcode]);
@@ -144,10 +144,10 @@ __fp_query(char *msg, FILE *file)
 			cp = p_cdname(cp, msg, file);
 			if (cp == NULL)
 				return;
-			fprintf(file,", type = %s", __p_type(_getshort((unsigned char *)cp)));
+			fprintf(file,", type = %s", __p_type(_getshort(cp)));
 			cp += sizeof(u_short);
 			fprintf(file,
-			    ", class = %s\n\n", __p_class(_getshort((unsigned char *)cp)));
+			    ", class = %s\n\n", __p_class(_getshort(cp)));
 			cp += sizeof(u_short);
 		}
 	}
@@ -189,14 +189,13 @@ __fp_query(char *msg, FILE *file)
 	}
 }
 
-static char *
-p_cdname(char *cp, char *msg, FILE *file)
+static const u_char *
+p_cdname(const u_char *cp, const u_char *msg, FILE *file)
 {
 	char name[MAXDNAME];
 	int n;
 
-	if ((n = dn_expand((u_char *)msg, (u_char *)msg + 512, (u_char *)cp,
-	    (u_char *)name, sizeof(name))) < 0)
+	if ((n = dn_expand(msg, msg + 512, cp, name, sizeof(name))) < 0)
 		return (NULL);
 	if (name[0] == '\0') {
 		name[0] = '.';
@@ -209,22 +208,22 @@ p_cdname(char *cp, char *msg, FILE *file)
 /*
  * Print resource record fields in human readable form.
  */
-static char *
-p_rr(char *cp, char *msg, FILE *file)
+static const u_char *
+p_rr(const u_char *cp, const u_char *msg, FILE *file)
 {
 	int type, class, dlen, n, c;
 	struct in_addr inaddr;
-	char *cp1, *cp2;
+	const u_char *cp1, *cp2;
 
 	if ((cp = p_cdname(cp, msg, file)) == NULL)
 		return (NULL);			/* compression error */
-	fprintf(file,"\n\ttype = %s", __p_type(type = _getshort((unsigned char *)cp)));
+	fprintf(file,"\n\ttype = %s", __p_type(type = _getshort(cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", class = %s", __p_class(class = _getshort((unsigned char *)cp)));
+	fprintf(file,", class = %s", __p_class(class = _getshort(cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", ttl = %s", __p_time(_getlong((unsigned char *)cp)));
+	fprintf(file,", ttl = %s", __p_time(_getlong(cp)));
 	cp += sizeof(u_long);
-	fprintf(file,", dlen = %d\n", dlen = _getshort((unsigned char *)cp));
+	fprintf(file,", dlen = %d\n", dlen = _getshort(cp));
 	cp += sizeof(u_short);
 	cp1 = cp;
 	/*
@@ -235,7 +234,7 @@ p_rr(char *cp, char *msg, FILE *file)
 		switch (class) {
 		case C_IN:
 		case C_HS:
-			memcpy((char *)&inaddr, cp, sizeof(inaddr));
+			memcpy(&inaddr, cp, sizeof(inaddr));
 			if (dlen == 4) {
 				fprintf(file,"\tinternet address = %s\n",
 					inet_ntoa(inaddr));
@@ -280,20 +279,20 @@ p_rr(char *cp, char *msg, FILE *file)
 		cp = p_cdname(cp, msg, file);
 		fprintf(file,"\n\tmail addr = ");
 		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n\tserial = %ld", _getlong((unsigned char *)cp));
+		fprintf(file,"\n\tserial = %ld", _getlong(cp));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\trefresh = %s", __p_time(_getlong((unsigned char *)cp)));
+		fprintf(file,"\n\trefresh = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tretry = %s", __p_time(_getlong((unsigned char *)cp)));
+		fprintf(file,"\n\tretry = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\texpire = %s", __p_time(_getlong((unsigned char *)cp)));
+		fprintf(file,"\n\texpire = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tmin = %s\n", __p_time(_getlong((unsigned char *)cp)));
+		fprintf(file,"\n\tmin = %s\n", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
 		break;
 
 	case T_MX:
-		fprintf(file,"\tpreference = %d,",_getshort((unsigned char *)cp));
+		fprintf(file,"\tpreference = %d,",_getshort(cp));
 		cp += sizeof(u_short);
 		fprintf(file," name = ");
 		cp = p_cdname(cp, msg, file);
@@ -303,7 +302,7 @@ p_rr(char *cp, char *msg, FILE *file)
 		(void) fputs("\t\"", file);
 		cp2 = cp1 + dlen;
 		while (cp < cp2) {
-			if ((n = (unsigned char) *cp++)) {
+			if ((n = *cp++)) {
 				for (c = n; c > 0 && cp < cp2; c--)
 					if (*cp == '\n') {
 					    (void) putc('\\', file);
@@ -330,7 +329,7 @@ p_rr(char *cp, char *msg, FILE *file)
 	case T_UID:
 	case T_GID:
 		if (dlen == 4) {
-			fprintf(file,"\t%ld\n", _getlong((unsigned char *)cp));
+			fprintf(file,"\t%ld\n", _getlong(cp));
 			cp += sizeof(int);
 		}
 		break;
@@ -338,7 +337,7 @@ p_rr(char *cp, char *msg, FILE *file)
 	case T_WKS:
 		if (dlen < sizeof(u_long) + 1)
 			break;
-		memcpy((char *)&inaddr, cp, sizeof(inaddr));
+		memcpy(&inaddr, cp, sizeof(inaddr));
 		cp += sizeof(u_long);
 		fprintf(file,"\tinternet address = %s, protocol = %d\n\t",
 			inet_ntoa(inaddr), *cp++);
@@ -390,7 +389,7 @@ static	char nbuf[40];
 /*
  * Return a string for the type
  */
-char *
+const char *
 __p_type(int type)
 {
 	switch (type) {
@@ -449,7 +448,7 @@ __p_type(int type)
 /*
  * Return a mnemonic for class
  */
-char *
+const char *
 __p_class(int class)
 {
 
@@ -469,7 +468,7 @@ __p_class(int class)
 /*
  * Return a mnemonic for a time to live
  */
-char *
+const char *
 __p_time(u_long value)
 {
 	int secs, mins, hours;

@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)res_comp.c	6.22 (Berkeley) 3/19/91";
 #include <resolv.h>
 #include <stdio.h>
 
-static int dn_find (u_char *exp_dn, u_char *msg, 
+static int dn_find (const char *exp_dn, u_char *msg, 
                     u_char **dnptrs, u_char **lastdnptr);
 
 /*
@@ -56,15 +56,16 @@ static int dn_find (u_char *exp_dn, u_char *msg,
  * Return size of compressed name or -1 if there was an error.
  */
 int
-dn_expand(u_char *msg, u_char *eomorig, u_char *comp_dn, u_char *exp_dn, int length)
+dn_expand(const u_char *msg, const u_char *eomorig, const u_char *comp_dn, char *exp_dn, int length)
 {
-	register u_char *cp, *dn;
+	const u_char *cp;
+	char *dn;
 	register int n, c;
-	u_char *eom;
+	char *eom;
 	int len = -1, checked = 0;
 
 	dn = exp_dn;
-	cp = (u_char *)comp_dn;
+	cp = comp_dn;
 	eom = exp_dn + length;
 	/*
 	 * fetch next label in domain name
@@ -98,7 +99,7 @@ dn_expand(u_char *msg, u_char *eomorig, u_char *comp_dn, u_char *exp_dn, int len
 		case INDIR_MASK:
 			if (len < 0)
 				len = cp - comp_dn + 1;
-			cp = (u_char *)msg + (((n & 0x3f) << 8) | (*cp & 0xff));
+			cp = msg + (((n & 0x3f) << 8) | (*cp & 0xff));
 			if (cp < msg || cp >= eomorig)	/* out of range */
 				return(-1);
 			checked += 2;
@@ -134,16 +135,17 @@ dn_expand(u_char *msg, u_char *eomorig, u_char *comp_dn, u_char *exp_dn, int len
  * is NULL, we don't update the list.
  */
 int
-dn_comp(u_char *exp_dn, u_char *comp_dn, int length, u_char **dnptrs, u_char **lastdnptr)
+dn_comp(const char *exp_dn, u_char *comp_dn, int length, u_char **dnptrs, u_char **lastdnptr)
 {
-	register u_char *cp, *dn;
-	register int c, l;
+	u_char *cp;
+	const char *dn;
+	int c, l;
 	u_char **cpp = NULL;
 	u_char **lpp = NULL;
 	u_char *sp, *eob;
 	u_char *msg;
 
-	dn = (u_char *)exp_dn;
+	dn = exp_dn;
 	cp = comp_dn;
 	eob = cp + length;
 	if (dnptrs != NULL) {
@@ -212,12 +214,12 @@ dn_comp(u_char *exp_dn, u_char *comp_dn, int length, u_char **dnptrs, u_char **l
  * Skip over a compressed domain name. Return the size or -1.
  */
 int
-__dn_skipname(u_char *comp_dn, u_char *eom)
+__dn_skipname(const u_char *comp_dn, const u_char *eom)
 {
-	register u_char *cp;
-	register int n;
+	const u_char *cp;
+	int n;
 
-	cp = (u_char *)comp_dn;
+	cp = comp_dn;
 	while (cp < eom && (n = *cp++)) {
 		/*
 		 * check for indirection
@@ -243,10 +245,12 @@ __dn_skipname(u_char *comp_dn, u_char *eom)
  * not the pointer to the start of the message.
  */
 static int
-dn_find(u_char *exp_dn, u_char *msg, u_char **dnptrs, u_char **lastdnptr)
+dn_find(const char *exp_dn, u_char *msg, u_char **dnptrs, u_char **lastdnptr)
 {
-	register u_char *dn, *cp, **cpp;
-	register int n;
+	const char *dn;
+	u_char *cp;
+	u_char **cpp;
+	int n;
 	u_char *sp;
 
 	for (cpp = dnptrs; cpp < lastdnptr; cpp++) {
@@ -295,9 +299,9 @@ dn_find(u_char *exp_dn, u_char *msg, u_char **dnptrs, u_char **lastdnptr)
  */
 
 u_short
-_getshort(u_char *msgp)
+_getshort(const u_char *msgp)
 {
-	register u_char *p = msgp;
+	register const u_char *p = msgp;
 #ifdef vax
 	/*
 	 * vax compiler doesn't put shorts in registers
@@ -312,9 +316,9 @@ _getshort(u_char *msgp)
 }
 
 u_long
-_getlong(u_char *msgp)
+_getlong(const u_char *msgp)
 {
-	register u_char *p = msgp;
+	register const u_char *p = msgp;
 	register u_long u;
 
 	u = *p++; u <<= 8;

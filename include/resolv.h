@@ -14,10 +14,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -33,20 +29,17 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *	@(#)resolv.h	5.15 (Berkeley) 4/3/91
  */
 
 #ifndef _RESOLV_H_
-#define	_RESOLV_H_
+#define _RESOLV_H_
 
-#ifndef	_FEATURES_H
-# include <features.h>
-#endif
-
-#ifndef _SYS_TYPES_H
-# include <sys/types.h>
-#endif
+#include <sys/cdefs.h>
+#include <sys/param.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <netinet/in.h>
+#include <arpa/nameser.h>
 
 /*
  * Resolver configuration file.
@@ -61,19 +54,26 @@
 /*
  * Global defines and variables for resolver stub.
  */
-#define	MAXNS			3	/* max # name servers we'll track */
-#define	MAXDFLSRCH		3	/* # default domain levels to try */
-#define	MAXDNSRCH		6	/* max # domains in search path */
-#define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
+#define MAXNS			3	/* max # name servers we'll track */
+#define MAXDFLSRCH		3	/* # default domain levels to try */
+#define MAXDNSRCH		6	/* max # domains in search path */
+#define LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
 
-#define	RES_TIMEOUT		5	/* min. seconds between retries */
+#define RES_TIMEOUT		5	/* min. seconds between retries */
+#define RES_MAXNDOTS		15	/* should reflect bit field size */
+#define RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
+#define RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
+#define RES_DFLRETRY		2	/* Default #/tries. */
+#define RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
 __BEGIN_DECLS
 
+#ifndef __res_state_defined
+# define __res_state_defined
 struct state {
 	int	retrans;	 	/* retransmition time interval */
 	int	retry;			/* number of times to retransmit */
-	long	options;		/* option flags - see below. */
+	unsigned long	options;		/* option flags - see below. */
 	int	nscount;		/* number of name servers */
 	struct	sockaddr_in nsaddr_list[MAXNS];	/* address of name server */
 #define	nsaddr	nsaddr_list[0]		/* for backward compatibility */
@@ -81,78 +81,117 @@ struct state {
 	char	defdname[MAXDNAME];	/* default domain */
 	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
 };
+#endif
 
 /*
- * Resolver options
+ * Revision information.  This is the release date in YYYYMMDD format.
+ * It can change every day so the right thing to do with it is use it
+ * in preprocessor commands such as "#if (__RES > 19931104)".  Do not
+ * compare for equality; rather, use it to determine whether your resolver
+ * is new enough to contain a certain feature.
  */
-#define RES_INIT	0x0001		/* address initialized */
-#define RES_DEBUG	0x0002		/* print debug messages */
-#define RES_AAONLY	0x0004		/* authoritative answers only */
-#define RES_USEVC	0x0008		/* use virtual circuit */
-#define RES_PRIMARY	0x0010		/* query primary server only */
-#define RES_IGNTC	0x0020		/* ignore trucation errors */
-#define RES_RECURSE	0x0040		/* recursion desired */
-#define RES_DEFNAMES	0x0080		/* use default domain name */
-#define RES_STAYOPEN	0x0100		/* Keep TCP socket open */
-#define RES_DNSRCH	0x0200		/* search up local domain tree */
+
+#define	__RES	19991006
+
+struct res_sym {
+	int	number;		/* Identifying number, like T_MX */
+	char *	name;		/* Its symbolic name, like "MX" */
+	char *	humanname;	/* Its fun name, like "mail exchanger" */
+};
+
+/*
+ * Resolver options (keep these in synch with res_debug.c, please)
+ */
+#define RES_INIT	0x00000001UL	/* address initialized */
+#define RES_DEBUG	0x00000002UL	/* print debug messages */
+#define RES_AAONLY	0x00000004UL	/* authoritative answers only */
+#define RES_USEVC	0x00000008UL	/* use virtual circuit */
+#define RES_PRIMARY	0x00000010UL	/* query primary server only */
+#define RES_IGNTC	0x00000020UL	/* ignore trucation errors */
+#define RES_RECURSE	0x00000040UL	/* recursion desired */
+#define RES_DEFNAMES	0x00000080UL	/* use default domain name */
+#define RES_STAYOPEN	0x00000100UL	/* Keep TCP socket open */
+#define RES_DNSRCH	0x00000200UL	/* search up local domain tree */
+#define	RES_INSECURE1	0x00000400UL	/* type 1 security disabled */
+#define	RES_INSECURE2	0x00000800UL	/* type 2 security disabled */
+#define	RES_NOALIASES	0x00001000UL	/* shuts off HOSTALIASES feature */
+#define	RES_USE_INET6	0x00002000UL	/* use/map IPv6 in gethostbyname() */
+#define RES_ROTATE		0x00004000UL	/* rotate ns list after each query */
+#define	RES_NOCHECKNAME	0x00008000UL	/* do not check names for sanity (!IMPL) */
+#define	RES_KEEPTSIG	0x00010000UL	/* do not strip TSIG records */
+#define	RES_BLAST		0x00020000UL	/* blast all recursive servers */
+#define RES_USEBSTRING	0x00040000UL	/* IPv6 reverse lookup with byte
+					   strings */
+#define RES_NOIP6DOTINT	0x00080000UL	/* Do not use .ip6.int in IPv6
+					   reverse lookup */
+#define RES_USE_EDNS0	0x00100000UL	/* Use EDNS0.  */
+#define RES_SNGLKUP	0x00200000	/* one outstanding request at a time */
+#define RES_SNGLKUPREOP	0x00400000UL	/* -"-, but open new socket for each
+					   request */
+#define RES_USE_DNSSEC	0x00800000UL	/* use DNSSEC using OK bit in OPT */
+#define RES_NOTLDQUERY	0x01000000UL	/* Do not look up unqualified name
+					   as a TLD.  */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 
 extern struct state _res;
 extern int h_errno;
 
-#include <stdio.h>
-
 /* Private routines shared between libc/net, named, nslookup and others. */
-#define	dn_skipname	__dn_skipname
-#define	fp_query	__fp_query
-#define	hostalias	__hostalias
-#define	putlong		__putlong
-#define	putshort	__putshort
+#define dn_comp		__dn_comp
+#define dn_expand	__dn_expand
+#define dn_skipname	__dn_skipname
+#define fp_nquery	__fp_nquery
+#define fp_query	__fp_query
+#define hostalias	__hostalias
+#define p_query		__p_query
+#define putlong		__putlong
+#define putshort	__putshort
 #define p_class		__p_class
 #define p_time		__p_time
 #define p_type		__p_type
 
-extern int	__dn_skipname	(u_char *__comp_dn, u_char *__eom);
-extern void	__fp_query	(char *, FILE *);
-extern char	*__hostalias	(__const char *);
-extern char	*__p_class	(int);
-extern char	*__p_time	(u_long);
-extern char	*__p_type	(int);
-void __p_query(char *msg);
+int	dn_skipname	(const u_char *__comp_dn, const u_char *__eom);
+void	fp_nquery (const u_char *, int, FILE *) __THROW;
+void	fp_query (const u_char *, FILE *);
+const char	*hostalias	(const char *);
+const char	*p_class	(int);
+const char	*p_time	(u_long);
+const char	*p_type	(int);
+void p_query(const unsigned char *msg);
 
-extern void	__putshort	(u_short, u_char *);
-extern void	__putlong	(u_long l, u_char *);
+extern void	putshort	(u_short, u_char *);
+extern void	putlong	(u_long l, u_char *);
 
-extern int	dn_comp		(u_char *__exp_dn, u_char *__comp_dn,
+extern int	dn_comp		(const char *__exp_dn, u_char *__comp_dn,
 				int __length, u_char **__dnptrs,
 				u_char **__lastdnptr);
 
-extern int	dn_expand	(u_char *__msg, u_char *__eomorig,
-				u_char *__comp_dn, u_char *__exp_dn,
+extern int	dn_expand	(const u_char *__msg, const u_char *__eomorig,
+				const u_char *__comp_dn, char *__exp_dn,
 				int __length);
 				
 extern int	res_init 	(void);
 
-extern int	res_mkquery 	(int __opval, __const char *__dname,
+extern int	res_mkquery 	(int __opval, const char *__dname,
 				int __class, int __type, char *__data,
 				int __datalen, struct rrec *__newrr,
-				char *__buf, int __buflen);
+				unsigned char *__buf, int __buflen);
 				
-extern int	res_send 	(__const char *__msg, int __msglen,
-				char *__answer, int __anslen);
+extern int	res_send 	(const unsigned char *__msg, int __msglen,
+				unsigned char *__answer, int __anslen);
 
-extern int	res_query	(__const char *__dname, int __class,
+extern int	res_query	(const char *__dname, int __class,
 				int __type, u_char *__answer, int __anslen);
 				
-extern int	res_search	(char *__dname, int __class,
+extern int	res_search	(const char *__dname, int __class,
 				int __type, u_char *__answer, int __anslen);
 
-extern int	res_querydomain	(char *__name, char *__domain,
+extern int	res_querydomain	(const char *__name, const char *__domain,
 				int __class, int __type, u_char *__answer,
 				int __anslen);
 
-extern void	herror		(__const char *__s);
+extern void	herror		(const char *__s);
 
 __END_DECLS
 

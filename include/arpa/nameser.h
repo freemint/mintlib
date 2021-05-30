@@ -10,10 +10,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -34,7 +30,7 @@
  */
 
 #ifndef _ARPA_NAMESER_H_
-#define	_ARPA_NAMESER_H_
+#define _ARPA_NAMESER_H_
 
 #ifndef	_FEATURES_H
 # include <features.h>
@@ -45,20 +41,21 @@ __BEGIN_DECLS
 /*
  * Define constants based on RFC 883, RFC 1034, RFC 1035
  */
-#define NS_PACKETSZ	512	/* maximum packet size */
-#define NS_MAXDNAME	256	/* maximum domain name */
-#define NS_MAXCDNAME	255	/* maximum compressed domain name */
-#define NS_MAXLABEL	63	/* maximum length of domain label */
-#define NS_HFIXEDSZ	12	/* #/bytes of fixed data in header */
-#define NS_QFIXEDSZ	4	/* #/bytes of fixed data in query */
-#define NS_RRFIXEDSZ	10	/* #/bytes of fixed data in r record */
-#define NS_INT32SZ	4	/* #/bytes of data in a u_int32_t */
-#define NS_INT16SZ	2	/* #/bytes of data in a u_int16_t */
-#define NS_INT8SZ	1	/* #/bytes of data in a u_int8_t */
-#define NS_INADDRSZ	4	/* IPv4 T_A */
-#define NS_IN6ADDRSZ	16	/* IPv6 T_AAAA */
-#define NS_CMPRSFLGS	0xc0	/* Flag bits indicating name compression. */
-#define NS_DEFAULTPORT	53	/* For both TCP and UDP. */
+#define NS_PACKETSZ	512	/*%< default UDP packet size */
+#define NS_MAXDNAME	256	/*%< maximum domain name */
+#define NS_MAXMSG	65535	/*%< maximum message size */
+#define NS_MAXCDNAME	255	/*%< maximum compressed domain name */
+#define NS_MAXLABEL	63	/*%< maximum length of domain label */
+#define NS_HFIXEDSZ	12	/*%< #/bytes of fixed data in header */
+#define NS_QFIXEDSZ	4	/*%< #/bytes of fixed data in query */
+#define NS_RRFIXEDSZ	10	/*%< #/bytes of fixed data in r record */
+#define NS_INT32SZ	4	/*%< #/bytes of data in a u_int32_t */
+#define NS_INT16SZ	2	/*%< #/bytes of data in a u_int16_t */
+#define NS_INT8SZ	1	/*%< #/bytes of data in a u_int8_t */
+#define NS_INADDRSZ	4	/*%< IPv4 T_A */
+#define NS_IN6ADDRSZ	16	/*%< IPv6 T_AAAA */
+#define NS_CMPRSFLGS	0xc0	/*%< Flag bits indicating name compression. */
+#define NS_DEFAULTPORT	53	/*%< For both TCP and UDP. */
 
 #define PACKETSZ	NS_PACKETSZ
 #define MAXDNAME	NS_MAXDNAME
@@ -172,7 +169,7 @@ __BEGIN_DECLS
 #endif
 /*
  * Structure for query header, the order of the fields is machine and
- * compiler dependent, in our case, the bits within a byte are assignd
+ * compiler dependent, in our case, the bits within a byte are assigned
  * least significant first, while the order of transmition is most
  * significant first.  This requires a somewhat confusing rearrangement.
  */
@@ -230,8 +227,8 @@ struct rrec {
 	char	*r_data;		/* pointer to data */
 };
 
-extern	unsigned short	_getshort(unsigned char *);
-extern	unsigned long	_getlong(unsigned char *);
+extern	unsigned short	_getshort(const unsigned char *);
+extern	unsigned long	_getlong(const unsigned char *);
 
 __END_DECLS
 

@@ -489,9 +489,9 @@ init_services (void)
 static struct hostent *
 getanswer (querybuf *answer, int anslen, int iquery)
 {
-	register HEADER *hp;
-	register u_char *cp;
-	register int n;
+	HEADER *hp;
+	u_char *cp;
+	int n;
 	u_char *eom;
 	char *bp, **ap;
 	int type, class, buflen, ancount, qdcount;
@@ -510,27 +510,25 @@ getanswer (querybuf *answer, int anslen, int iquery)
 	cp = answer->buf + sizeof(HEADER);
 	if (qdcount) {
 		if (iquery) {
-			if ((n = dn_expand((u_char *)answer->buf,
-			    (u_char *)eom, (u_char *)cp, (u_char *)bp,
-			    buflen)) < 0) {
+			if ((n = dn_expand(answer->buf, eom, cp, bp, buflen)) < 0) {
 				h_errno = NO_RECOVERY;
-				return ((struct hostent *) NULL);
+				return NULL;
 			}
-			cp += n + QFIXEDSZ;
+			cp += n + NS_QFIXEDSZ;
 			host.h_name = bp;
 			n = strlen(bp) + 1;
 			bp += n;
 			buflen -= n;
 		} else
-			cp += __dn_skipname(cp, eom) + QFIXEDSZ;
+			cp += __dn_skipname(cp, eom) + NS_QFIXEDSZ;
 		while (--qdcount > 0)
-			cp += __dn_skipname(cp, eom) + QFIXEDSZ;
+			cp += __dn_skipname(cp, eom) + NS_QFIXEDSZ;
 	} else if (iquery) {
 		if (hp->aa)
 			h_errno = HOST_NOT_FOUND;
 		else
 			h_errno = TRY_AGAIN;
-		return ((struct hostent *) NULL);
+		return NULL;
 	}
 	ap = host_aliases;
 	*ap = NULL;
@@ -542,14 +540,15 @@ getanswer (querybuf *answer, int anslen, int iquery)
 #endif
 	haveanswer = 0;
 	while (--ancount >= 0 && cp < eom) {
-		if ((n = dn_expand((u_char *)answer->buf, (u_char *)eom,
-		    (u_char *)cp, (u_char *)bp, buflen)) < 0)
+		if ((n = dn_expand(answer->buf, eom, cp, bp, buflen)) < 0)
 			break;
 		cp += n;
 		type = _getshort(cp);
  		cp += sizeof(u_short);
 		class = _getshort(cp);
+		/* skip TTL */
  		cp += sizeof(u_short) + sizeof(u_long);
+		/* get RDLENGTH */
 		n = _getshort(cp);
 		cp += sizeof(u_short);
 		if (type == T_CNAME) {
@@ -563,9 +562,7 @@ getanswer (querybuf *answer, int anslen, int iquery)
 			continue;
 		}
 		if (iquery && type == T_PTR) {
-			if ((n = dn_expand((u_char *)answer->buf,
-			    (u_char *)eom, (u_char *)cp, (u_char *)bp,
-			    buflen)) < 0)
+			if ((n = dn_expand(answer->buf, eom, cp, bp, buflen)) < 0)
 				break;
 			cp += n;
 			host.h_name = bp;
@@ -608,7 +605,8 @@ getanswer (querybuf *answer, int anslen, int iquery)
 #endif
 			break;
 		}
-		memcpy(*hap++ = bp, cp, n);
+		*hap++ = bp;
+		memcpy(bp, cp, n);
 		bp +=n;
 		cp += n;
 		haveanswer++;
@@ -631,8 +629,8 @@ struct hostent *
 __gethostbyname (const char *name)
 {
 	querybuf buf;
-	register const char *cp;
-	register int cc;
+	const char *cp;
+	int cc;
 	int n;
 	struct hostent *hp;
 
@@ -660,7 +658,7 @@ __gethostbyname (const char *name)
 				host.h_addrtype = AF_INET;
 				host.h_length = sizeof(u_long);
 				h_addr_ptrs[0] = (char *)&host_addr;
-				h_addr_ptrs[1] = (char *)0;
+				h_addr_ptrs[1] = NULL;
 #if BSD >= 43 || defined(h_addr)	/* new-style hostent structure */
 				host.h_addr_list = h_addr_ptrs;
 #else
@@ -679,7 +677,7 @@ __gethostbyname (const char *name)
 	     cc <= SERVICE_MAX; cc++) {
 		switch (service_order[cc]) {
 		case SERVICE_BIND:
-			if ((n = res_search((char*) name, C_IN, T_A,
+			if ((n = res_search(name, C_IN, T_A,
 					    buf.buf, sizeof(buf))) < 0) {
 #ifdef DEBUG
 				if (_res.options & RES_DEBUG)
@@ -728,7 +726,7 @@ __gethostbyaddr (const void *__addr, __socklen_t len, int type)
 	char qbuf[MAXDNAME];
 	
 	if (type != AF_INET)
-		return ((struct hostent *) NULL);
+		return NULL;
 	if (!service_done)
 	  init_services();
 
@@ -822,7 +820,7 @@ __gethostbyaddr (const void *__addr, __socklen_t len, int type)
 				hp->h_addrtype = type;
 				hp->h_length = len;
 				h_addr_ptrs[0] = (char *)&host_addr;
-				h_addr_ptrs[1] = (char *)0;
+				h_addr_ptrs[1] = NULL;
 				host_addr = *(struct in_addr *)addr;
 #if BSD < 43 && !defined(h_addr)	/* new-style hostent structure */
 				hp->h_addr = h_addr_ptrs[0];
@@ -853,7 +851,7 @@ __gethostbyaddr (const void *__addr, __socklen_t len, int type)
 		}
 		cc++;
 	}
-	return ((struct hostent *)NULL);
+	return NULL;
 }
 weak_alias (__gethostbyaddr, gethostbyaddr)
 
@@ -871,7 +869,7 @@ static void
 _endhtent (void)
 {
 	if (hostf && !stayopen) {
-		(void) fclose(hostf);
+		fclose(hostf);
 		hostf = NULL;
 	}
 }
@@ -947,8 +945,8 @@ again:
 static struct hostent *
 _gethtbyname(const char *name)
 {
-	register struct hostent *p;
-	register char **cp;
+	struct hostent *p;
+	char **cp;
 	char **hap, **lhap, *bp, *lbp;
 	int htbuflen, locbuflen;
 	int found=0, localfound=0;
@@ -973,9 +971,9 @@ _gethtbyname(const char *name)
 
 	aliases[0]=NULL;
 	aliases[1]=NULL;
-	(void) strcpy(namebuf, name);
+	strcpy(namebuf, name);
 
-	(void)gethostname(localname, sizeof(localname));
+	gethostname(localname, sizeof(localname));
 
 	_sethtent(0);
 	while ((p = gethostent())) {

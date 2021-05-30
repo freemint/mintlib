@@ -58,13 +58,15 @@ res_mkquery(
 	char *data,		/* resource record data */
 	int datalen,		/* length of data */
 	struct rrec *newrr,	/* new rr for modify or append */
-	char *buf,		/* buffer to put query */
+	u_char *buf,		/* buffer to put query */
 	int buflen)		/* size of buffer */
 {
-	register HEADER *hp;
-	register char *cp;
-	register int n;
-	char *dnptrs[10], **dpp, **lastdnptr;
+	HEADER *hp;
+	u_char *cp;
+	int n;
+	u_char *dnptrs[10];
+	u_char **dpp;
+	u_char **lastdnptr;
 
 #ifdef DEBUG
 	if (_res.options & RES_DEBUG)
@@ -95,14 +97,13 @@ res_mkquery(
 	case QUERY:
 		if ((buflen -= QFIXEDSZ) < 0)
 			return(-1);
-		if ((n = dn_comp((u_char *)dname, (u_char *)cp, buflen,
-		    (u_char **)dnptrs, (u_char **)lastdnptr)) < 0)
+		if ((n = dn_comp(dname, cp, buflen, dnptrs, lastdnptr)) < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(type, (u_char *)cp);
+		__putshort(type, cp);
 		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
+		__putshort(class, cp);
 		cp += sizeof(u_short);
 		hp->qdcount = htons(1);
 		if (op == QUERY || data == NULL)
@@ -111,18 +112,17 @@ res_mkquery(
 		 * Make an additional record for completion domain.
 		 */
 		buflen -= RRFIXEDSZ;
-		if ((n = dn_comp((u_char *)data, (u_char *)cp, buflen,
-		    (u_char **)dnptrs, (u_char **)lastdnptr)) < 0)
+		if ((n = dn_comp(data, cp, buflen, dnptrs, lastdnptr)) < 0)
 			return (-1);
 		cp += n;
 		buflen -= n;
-		__putshort(T_NULL, (u_char *)cp);
+		__putshort(T_NULL, cp);
 		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
+		__putshort(class, cp);
 		cp += sizeof(u_short);
-		__putlong(0, (u_char *)cp);
+		__putlong(0, cp);
 		cp += sizeof(u_long);
-		__putshort(0, (u_char *)cp);
+		__putshort(0, cp);
 		cp += sizeof(u_short);
 		hp->arcount = htons(1);
 		break;
@@ -134,13 +134,13 @@ res_mkquery(
 		if (buflen < 1 + RRFIXEDSZ + datalen)
 			return (-1);
 		*cp++ = '\0';	/* no domain name */
-		__putshort(type, (u_char *)cp);
+		__putshort(type, cp);
 		cp += sizeof(u_short);
-		__putshort(class, (u_char *)cp);
+		__putshort(class, cp);
 		cp += sizeof(u_short);
-		__putlong(0, (u_char *)cp);
+		__putlong(0, cp);
 		cp += sizeof(u_long);
-		__putshort(datalen, (u_char *)cp);
+		__putshort(datalen, cp);
 		cp += sizeof(u_short);
 		if (datalen) {
 			memcpy(cp, data, datalen);

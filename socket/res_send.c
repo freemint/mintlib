@@ -61,17 +61,17 @@ static int s = -1;	/* socket used for communications */
 static struct sockaddr no_addr;
 
 int
-res_send(const char *buf, int buflen, char *answer, int anslen)
+res_send(const u_char *buf, int buflen, u_char *answer, int anslen)
 {
 	register int n = 0;     /* Shut up compiler warning.  */
 	int try, v_circuit, resplen, ns;
 	int gotsomewhere = 0, connected = 0;
 	int connreset = 0;
 	u_short id, len;
-	char *cp;
+	u_char *cp;
 	fd_set dsmask;
 	struct timeval timeout;
-	HEADER *hp = (HEADER *) buf;
+	const HEADER *hp = (const HEADER *) buf;
 	HEADER *anhp = (HEADER *) answer;
 	struct iovec iov[2];
 	int terrno = ETIMEDOUT;
@@ -109,7 +109,7 @@ res_send(const char *buf, int buflen, char *answer, int anslen)
 			 */
 			try = _res.retry;
 			if (s < 0) {
-				s = socket(AF_INET, SOCK_STREAM, 0);
+				s = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
 				if (s < 0) {
 					terrno = errno;
 #ifdef DEBUG
@@ -135,9 +135,9 @@ res_send(const char *buf, int buflen, char *answer, int anslen)
 			 * Send length & message
 			 */
 			len = htons((u_short)buflen);
-			iov[0].iov_base = (caddr_t)&len;
+			iov[0].iov_base = &len;
 			iov[0].iov_len = sizeof(len);
-			iov[1].iov_base = (char *)buf;
+			iov[1].iov_base = (void *)buf;
 			iov[1].iov_len = buflen;
 			{
 				struct msghdr msg;
@@ -165,7 +165,7 @@ res_send(const char *buf, int buflen, char *answer, int anslen)
 			cp = answer;
 			len = sizeof(short);
 			while (len != 0 &&
-			    (n = read(s, (char *)cp, (int)len)) > 0) {
+			    (n = read(s, cp, (int)len)) > 0) {
 				cp += n;
 				len -= n;
 			}
@@ -203,7 +203,7 @@ res_send(const char *buf, int buflen, char *answer, int anslen)
 			} else
 				len = resplen;
 			while (len != 0 &&
-			   (n = read(s, (char *)cp, (int)len)) > 0) {
+			   (n = read(s, cp, (int)len)) > 0) {
 				cp += n;
 				len -= n;
 			}

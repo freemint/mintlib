@@ -77,7 +77,7 @@ res_query(
 	u_char *answer,		/* buffer to put answer */
 	int anslen)		/* size of answer buffer */
 {
-	char buf[MAXPACKET];
+	u_char buf[MAXPACKET];
 	HEADER *hp;
 	int n;
 
@@ -87,7 +87,7 @@ res_query(
 	if (_res.options & RES_DEBUG)
 		printf("res_query(%s, %d, %d)\n", name, class, type);
 #endif
-	n = res_mkquery(QUERY, name, class, type, (char *)NULL, 0, NULL,
+	n = res_mkquery(QUERY, name, class, type, NULL, 0, NULL,
 	    buf, sizeof(buf));
 
 	if (n <= 0) {
@@ -98,7 +98,7 @@ res_query(
 		h_errno = NO_RECOVERY;
 		return (n);
 	}
-	n = res_send(buf, n, (char *)answer, anslen);
+	n = res_send(buf, n, answer, anslen);
 	if (n < 0) {
 #ifdef DEBUG
 		if (_res.options & RES_DEBUG)
@@ -147,12 +147,13 @@ res_query(
  */
 int
 res_search(
-	char *name,		/* domain name */
+	const char *name,		/* domain name */
 	int class, int type,	/* class and type of query */
 	u_char *answer,		/* buffer to put answer */
 	int anslen)		/* size of answer */
 {
-	register char *cp, **domain;
+	const char *cp;
+	char **domain;
  	int n, ret, got_nodata = 0;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1)
@@ -208,7 +209,7 @@ res_search(
 	 * about a top-level domain (for servers, SOA, etc) will not use
 	 * res_search.
 	 */
-	if (n && (ret = res_querydomain(name, (char *)NULL, class, type,
+	if (n && (ret = res_querydomain(name, NULL, class, type,
 	    answer, anslen)) > 0)
 		return (ret);
 	if (got_nodata)
@@ -222,14 +223,14 @@ res_search(
  */
 int
 res_querydomain(
-	char *name,
-	char *domain,
+	const char *name,
+	const char *domain,
 	int class, int type,	/* class and type of query */
 	u_char *answer,		/* buffer to put answer */
 	int anslen)		/* size of answer */
 {
 	char nbuf[2*MAXDNAME+2];
-	char *longname = nbuf;
+	const char *longname = nbuf;
 	int n;
 
 #ifdef DEBUG
@@ -255,23 +256,17 @@ res_querydomain(
 	return (res_query(longname, class, type, answer, anslen));
 }
 
-char *
+const char *
 __hostalias(const char *name)
 {
 	register char *C1, *C2;
 	FILE *fp;
 	char *file;
-#ifndef __MINT__
-	char *getenv(), *strcpy(), *strncpy();
-#endif
 	char buf[BUFSIZ];
 	static char abuf[MAXDNAME];
-#ifndef __MINT__
-	extern int strcasecmp (const char *, const char *);
-#endif
 
 	file = getenv("HOSTALIASES");
-	if (file == NULL || (fp = fopen(file, "rt")) == NULL)
+	if (file == NULL || (fp = fopen(file, "r")) == NULL)
 		return (NULL);
 	buf[sizeof(buf) - 1] = '\0';
 	while (fgets(buf, sizeof(buf), fp)) {
