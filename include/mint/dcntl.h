@@ -232,38 +232,7 @@ struct ploadinfo
 /*
  * Socket ioctls: these require MiNT-Net 3.0 (or later)
  */
-
-# define SIOCGLOWAT	(('S' << 8) | 1)
-# define SIOCSLOWAT	(('S' << 8) | 2)
-# define SIOCGHIWAT	(('S' << 8) | 3)
-# define SIOCSHIWAT	(('S' << 8) | 4)
-# define SIOCSPGRP	(('S' << 8) | 5)
-# define SIOCGPGRP	(('S' << 8) | 6)
-# define SIOCATMARK	(('S' << 8) | 7)
-
-# define SIOCGIFCONF	(('S' << 8) | 12)	/* get iface list */
-# define SIOCGIFFLAGS	(('S' << 8) | 13)	/* get flags */
-# define SIOCSIFFLAGS	(('S' << 8) | 14)	/* set flags */
-# define SIOCGIFADDR	(('S' << 8) | 15)	/* get iface address */
-# define SIOCSIFADDR	(('S' << 8) | 16)	/* set iface address */
-# define SIOCGIFDSTADDR	(('S' << 8) | 17)	/* get iface remote address */
-# define SIOCSIFDSTADDR	(('S' << 8) | 18)	/* set iface remotw address */
-# define SIOCGIFBRDADDR	(('S' << 8) | 19)	/* get iface ibroadcast address */
-# define SIOCSIFBRDADDR	(('S' << 8) | 20)	/* set iface broadcast address */
-# define SIOCGIFNETMASK	(('S' << 8) | 21)	/* get iface network mask */
-# define SIOCSIFNETMASK	(('S' << 8) | 22)	/* set iface network mask */
-# define SIOCGIFMETRIC	(('S' << 8) | 23)	/* get metric */
-# define SIOCSIFMETRIC	(('S' << 8) | 24)	/* set metric */
-
-# define SIOCGIFMTU	(('S' << 8) | 27)	/* get MTU size */
-# define SIOCSIFMTU	(('S' << 8) | 28)	/* set MTU size */
-
-# define SIOCADDRT	(('S' << 8) | 30)	/* add routing table entry */
-# define SIOCDELRT	(('S' << 8) | 31)	/* delete routing table entry */
-
-# define SIOCDARP	(('S' << 8) | 40)	/* delete ARP table entry */
-# define SIOCGARP	(('S' << 8) | 41)	/* get ARP table entry */
-# define SIOCSARP	(('S' << 8) | 42)	/* set ARP table entry */
+#include <sockios.h>
 
 
 /*

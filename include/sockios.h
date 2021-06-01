@@ -33,7 +33,7 @@
 #define SIOCGIFMETRIC	(('S' << 8) | 23)	/* get metric */
 #define SIOCSIFMETRIC	(('S' << 8) | 24)	/* set metric */
 #define SIOCSLNKFLAGS	(('S' << 8) | 25)	/* set link level flags */
-#define SIOCGLNKFLAGS	(('S' << 8) | 26)	/* set link level flags */
+#define SIOCGLNKFLAGS	(('S' << 8) | 26)	/* get link level flags */
 #define SIOCGIFMTU	(('S' << 8) | 27)	/* get MTU size */
 #define SIOCSIFMTU	(('S' << 8) | 28)	/* set MTU size */
 #define SIOCGIFSTATS	(('S' << 8) | 29)	/* get interface statistics */

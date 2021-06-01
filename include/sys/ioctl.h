@@ -17,8 +17,6 @@ __BEGIN_DECLS
 #define TIOCGWINSZ	(('T'<< 8) | 11)
 #define TIOCSWINSZ	(('T'<< 8) | 12)
 
-#ifdef __MINT__
-
 #define FSTAT		(('F'<< 8) | 0)
 #define FIONREAD	(('F'<< 8) | 1)
 #define FIONWRITE	(('F'<< 8) | 2)
@@ -142,47 +140,13 @@ struct __ploadinfo {
 #define TCURSSTEADY	(('c'<< 8) | 3)
 #define TCURSSRATE	(('c'<< 8) | 4)
 #define TCURSGRATE	(('c'<< 8) | 5)
+#define TCURSSDELAY	(('c'<< 8) | 6)
+#define TCURSGDELAY	(('c'<< 8) | 7)
 
 /* Socket ioctls: these require MiNT-Net 3.0 (or later) */
+#include <sockios.h>
 
-/* socket-level I/O control calls */
-#define SIOCGLOWAT	(('S' << 8) | 1)
-#define SIOCSLOWAT	(('S' << 8) | 2)
-#define SIOCGHIWAT	(('S' << 8) | 3)
-#define SIOCSHIWAT	(('S' << 8) | 4)
-#define SIOCSPGRP	(('S' << 8) | 5)
-#define SIOCGPGRP	(('S' << 8) | 6)
-#define SIOCATMARK	(('S' << 8) | 7)
 
-/* socket configuration controls */
-#define SIOCGIFCONF	(('S' << 8) | 12)	/* get iface list */
-#define SIOCGIFFLAGS	(('S' << 8) | 13)	/* get flags */
-#define SIOCSIFFLAGS	(('S' << 8) | 14)	/* set flags */
-#define SIOCGIFADDR	(('S' << 8) | 15)	/* get iface address */
-#define SIOCSIFADDR	(('S' << 8) | 16)	/* set iface address */
-#define SIOCGIFDSTADDR	(('S' << 8) | 17)	/* get iface remote address */
-#define SIOCSIFDSTADDR	(('S' << 8) | 18)	/* set iface remotw address */
-#define SIOCGIFBRDADDR	(('S' << 8) | 19)	/* get iface ibroadcast address */
-#define SIOCSIFBRDADDR	(('S' << 8) | 20)	/* set iface broadcast address */
-#define SIOCGIFNETMASK	(('S' << 8) | 21)	/* get iface network mask */
-#define SIOCSIFNETMASK	(('S' << 8) | 22)	/* set iface network mask */
-#define SIOCGIFMETRIC	(('S' << 8) | 23)	/* get metric */
-#define SIOCSIFMETRIC	(('S' << 8) | 24)	/* set metric */
-#define SIOCGIFMTU	(('S' << 8) | 27)	/* get MTU size */
-#define SIOCSIFMTU	(('S' << 8) | 28)	/* set MTU size */
-
-/* routing table calls */
-#define SIOCADDRT	(('S' << 8) | 30)	/* add routing table entry */
-#define SIOCDELRT	(('S' << 8) | 31)	/* delete routing table entry */
-
-/* ARP cache control calls */
-#define SIOCDARP	(('S' << 8) | 40)	/* delete ARP table entry */
-#define SIOCGARP	(('S' << 8) | 41)	/* get ARP table entry */
-#define SIOCSARP	(('S' << 8) | 42)	/* set ARP table entry */
-
-#endif /* __MINT__ */
-
-#ifndef _filesys_h
 struct tchars {
 	char	t_intrc;
 	char	t_quitc;
@@ -203,27 +167,31 @@ struct ltchars {
 
 #define	CRMOD		0x0001
 #define	CBREAK		0x0002
-#ifndef _TERMIOS_H
+#ifndef ECHO
 #define ECHO		0x0004
-#endif /* _TERMIOS_H */
+#endif
 #define	XTABS		0x0008
 #define	RAW		0x0010
 #define LCASE		0x0020		/* does nothing */
-#ifndef _TERMIOS_H
+#ifndef NOFLSH
 #define NOFLSH		0x0040
-#ifdef __MINT__
+#endif
+#ifndef TOSTOP
 #define TOSTOP		0x0100
+#endif
+#ifndef XKEY
+#define XKEY        0x0200
+#endif
+#ifndef ECHOCTL
 #define ECHOCTL		0x0400
-#endif /* __MINT__ */
-#endif /* _TERMIOS_H */
+#endif
 #define TANDEM		0x1000
 #define RTSCTS		0x2000
 #define EVENP		0x4000
 #define ODDP		0x8000
 #define ANYP		(0)
-#endif /* _filesys_h */
 
-#ifndef _TERMIOS_H
+#ifndef B230400
 #define B0		0
 #define B50		1
 #define B75		2
@@ -244,22 +212,20 @@ struct ltchars {
 #define B57600          16
 #define B115200         17
 #define B230400         18
+#define B460800         19
+#define B921600         20
+#define EXTA            21
 #endif
 
 /* The ones below aren't supported by the kernel, at least not yet */
 #define VTDELAY		0
 #define ALLDELAY	0
 
-#ifdef __MINT__
 
-#define XKEY		0x0200
-
-#ifndef _filesys_h
 struct xkey {
 	short	xk_num;
 	char	xk_def[8];
 };
-#endif
 
 /* some fake defines for the line discipline stuff */
 
@@ -270,14 +236,6 @@ struct xkey {
 #define LFLUSHO		0x20
 #define LLITOUT		0x100
 
-#else
-
-#define META		0x0100		/* extension: Alternate as meta key */
-#define PASS8		0x0100
-
-#endif /* __MINT__ */
-
-#ifndef _filesys_h
 struct sgttyb {
 	char	sg_ispeed;
 	char	sg_ospeed;
@@ -292,7 +250,6 @@ struct winsize {
 	short	ws_xpixel;
 	short	ws_ypixel;
 };
-#endif
 
 struct _mutimbuf {
 	unsigned short actime, acdate;	/* GEMDOS format */
