@@ -707,8 +707,10 @@ extern int getaddrinfo_a (int __mode, struct gaicb *__list[__restrict_arr],
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
+#if 0
 extern int gai_suspend (const struct gaicb *const __list[], int __ent,
 			const struct timespec *__timeout);
+#endif
 
 /* Get the error status of the request REQ.  */
 extern int gai_error (struct gaicb *__req) __THROW;
