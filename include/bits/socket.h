@@ -218,12 +218,12 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    long msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Access rights information.  */
     socklen_t msg_controllen;	/* Length of access rights information.  */
 
-    int msg_flags;		/* Flags on received message.  */
+    long msg_flags;		/* Flags on received message.  */
   };
 
 /* Structure used for storage of ancillary data object information.  */
@@ -356,8 +356,8 @@ enum
 /* Structure used to manipulate the SO_LINGER option.  */
 struct linger
   {
-    int l_onoff;		/* Nonzero to linger on close.  */
-    int l_linger;		/* Time to linger.  */
+    long l_onoff;		/* Nonzero to linger on close.  */
+    long l_linger;		/* Time to linger.  */
   };
 
 #endif	/* bits/socket.h */

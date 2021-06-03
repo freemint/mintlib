@@ -135,7 +135,7 @@ typedef unsigned int __t_uscalar_t;
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
 typedef long int __intptr_t;
 
-/* Duplicate info from sys/socket.h.  */
-typedef unsigned int __socklen_t;
+/* Real type of socklen_t, used in places where unistd.h was not included.  */
+typedef unsigned long __socklen_t;
 
 #endif /* bits/types.h */
