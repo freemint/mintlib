@@ -1,5 +1,5 @@
-# include/bits/Makefile -- MiNTLib.
-# Copyright (C) 2000 Guido Flohr <guido@freemint.de>
+# include/bits/types/Makefile -- MiNTLib.
+# Copyright (C) 1999 Guido Flohr <guido@freemint.de>
 #
 # This file is part of the MiNTLib project, and may only be used
 # modified and distributed under the terms of the MiNTLib project
@@ -10,14 +10,12 @@
 SHELL = /bin/sh
 
 srcdir = .
-top_srcdir = ../..
+top_srcdir = ../../..
 csrcdir = $(top_srcdir)/src
-subdir = bits
+subdir = bits/types
 
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
-
-SUBDIRS = types
 
 # Make install-libs work.
 LIBS =

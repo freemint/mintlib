@@ -100,7 +100,7 @@ extern int h_errno;
 				   type.  */
 #define	NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
 
-#ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 /* Scope delimiter for getaddrinfo(), getnameinfo().  */
 # define SCOPE_DELIMITER	'%'
 #endif
@@ -581,7 +581,7 @@ struct addrinfo
   struct addrinfo *ai_next;	/* Pointer to next in list.  */
 };
 
-# ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 /* Structure used as control block for asynchronous lookup.  */
 struct gaicb
 {
@@ -607,7 +607,7 @@ struct gaicb
 # define AI_ALL		0x0010	/* Return IPv4 mapped and IPv6 addresses.  */
 # define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
 				   returned address type..  */
-# ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 #  define AI_IDN	0x0040	/* IDN encode input (assuming it is encoded
 				   in the current locale's character set)
 				   before looking it up. */
@@ -630,7 +630,7 @@ struct gaicb
 # define EAI_MEMORY	  -10	/* Memory allocation failure.  */
 # define EAI_SYSTEM	  -11	/* System error returned in `errno'.  */
 # define EAI_OVERFLOW	  -12	/* Argument buffer overflow.  */
-# ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 #  define EAI_NODATA	  -5	/* No address associated with NAME.  */
 #  define EAI_ADDRFAMILY  -9	/* Address family for NAME not supported.  */
 #  define EAI_INPROGRESS  -100	/* Processing request in progress.  */
@@ -651,7 +651,7 @@ struct gaicb
 # define NI_NOFQDN	4	/* Only return nodename portion.  */
 # define NI_NAMEREQD	8	/* Don't return numeric addresses.  */
 # define NI_DGRAM	16	/* Look up UDP service rather than TCP.  */
-# ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 #  define NI_IDN	32	/* Convert name from IDN format.  */
 #  define NI_IDN_ALLOW_UNASSIGNED 64 /* Don't reject unassigned Unicode
 					code points.  */
@@ -685,7 +685,7 @@ extern int getnameinfo (const struct sockaddr *__restrict __sa,
 			socklen_t __servlen, int __flags);
 #endif	/* POSIX */
 
-#ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 /* Enqueue ENT requests from the LIST.  If MODE is GAI_WAIT wait until all
    requests are handled.  If WAIT is GAI_NOWAIT return immediately after
    queueing the requests and signal completion according to SIG.

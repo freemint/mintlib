@@ -75,7 +75,7 @@ typedef __uint32_t __useconds_t;
 typedef long int __suseconds_t;
 typedef __int32_t __swblk_t;	/* Type of a swap block maybe?  */
 typedef __int32_t __key_t;	/* Type of an IPC key */
-
+
 /* Clock ID used in clock and timer functions.  */
 typedef int __clockid_t;
 
@@ -85,7 +85,12 @@ typedef int __timer_t;
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;
 
-/* Number of descriptors that can fit in an `fd_set'. */
+/* Number of descriptors that can fit in an `fd_set'.  Note that for
+   MiNT this is not equivalent to the number of file descriptors you
+   can select simultaneously.  If the kernel implements an Fpoll
+   system call this is probably correct.  If it doesn't you are
+   still stuck with 32 file descriptors.  Any attempt to exceed this
+   limit will result in the error condition EINVAL.  */
 #define __FD_SETSIZE	1024
 
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */

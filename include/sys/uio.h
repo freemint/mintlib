@@ -39,16 +39,14 @@ __BEGIN_DECLS
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
-extern ssize_t readv (int __fd, struct iovec *__vector,
-		      ssize_t __count) __THROW;
+extern ssize_t readv (int __fd, struct iovec *__vector, ssize_t __count) __THROW;
 
 /* Write data pointed by the buffers described by VECTOR, which
    is a vector of COUNT `struct iovec's, to file descriptor FD.
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
-extern ssize_t writev (int __fd, const struct iovec *__vector,
-		       ssize_t __count) __THROW;
+extern ssize_t writev (int __fd, const struct iovec *__vector, ssize_t __count) __THROW;
 
 
 __END_DECLS

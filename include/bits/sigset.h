@@ -1,5 +1,6 @@
 /* __sig_atomic_t, __sigset_t, and related definitions.  Generic/BSD version.
-   Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1994, 1996, 1997, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,29 +19,16 @@
 
 /* Modified for MiNTLib by Guido Flohr <guido@freemint.de>.  */
 
-#ifndef	_SIGSET_H_types
-#define	_SIGSET_H_types	1
-
-#ifndef __MSHORT__
-typedef int __sig_atomic_t;
-#else
-typedef long int __sig_atomic_t;
-#endif
-
-/* A `sigset_t' has a bit for each signal.  */
-typedef unsigned long int __sigset_t;
-
-#endif
-
-
 /* We only want to define these functions if <signal.h> was actually
    included; otherwise we were included just to define the types.  Since we
    are namespace-clean, it wouldn't hurt to define extra macros.  But
    trouble can be caused by functions being defined (e.g., any global
    register vars declared later will cause compilation errors).  */
 
-#if !defined _SIGSET_H_fns && defined _SIGNAL_H
+#if !defined _SIGSET_H_fns
 #define _SIGSET_H_fns 1
+
+#include <bits/types/sigset_t.h>
 
 /* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
    overflow if `sigset_t' is wider than `int'.  */

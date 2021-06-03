@@ -22,6 +22,7 @@
 
 /* We don't use `memset' because this would require a prototype and
    the array isn't too big.  */
+#ifdef __GNUC__
 #define __FD_ZERO(s) \
   do {									      \
     unsigned int __i;							      \
@@ -29,6 +30,9 @@
     for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
       __FDS_BITS (__arr)[__i] = 0;					      \
   } while (0)
+#else
+#define __FD_ZERO(s) memset((char *)(s), 0, sizeof(*(s)))
+#endif
 #define __FD_SET(d, s)     (__FDS_BITS (s)[__FDELT(d)] |= __FDMASK(d))
 #define __FD_CLR(d, s)     (__FDS_BITS (s)[__FDELT(d)] &= ~__FDMASK(d))
 #define __FD_ISSET(d, s)   ((__FDS_BITS (s)[__FDELT(d)] & __FDMASK(d)) != 0)

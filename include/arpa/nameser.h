@@ -174,33 +174,46 @@ __BEGIN_DECLS
  * significant first.  This requires a somewhat confusing rearrangement.
  */
 
+/*
+ * Pure-C does not allow to use anything else but
+ * int to be used as bitfield. But for other compilers,
+ * int might be too large for correct alignment of following members
+ */
+#ifndef __bitfield_type
+#ifdef __PUREC__
+#define __bitfield_type unsigned int
+#else
+#define __bitfield_type unsigned char
+#endif
+#endif
+
 typedef struct {
 	unsigned short	id;		/* query identification number */
 #if BYTE_ORDER == BIG_ENDIAN
 			/* fields in third byte */
-	unsigned char	qr:1;		/* response flag */
-	unsigned char	opcode:4;	/* purpose of message */
-	unsigned char	aa:1;		/* authoritive answer */
-	unsigned char	tc:1;		/* truncated message */
-	unsigned char	rd:1;		/* recursion desired */
+	__bitfield_type	qr:1;		/* response flag */
+	__bitfield_type	opcode:4;	/* purpose of message */
+	__bitfield_type	aa:1;		/* authoritive answer */
+	__bitfield_type	tc:1;		/* truncated message */
+	__bitfield_type	rd:1;		/* recursion desired */
 			/* fields in fourth byte */
-	unsigned char	ra:1;		/* recursion available */
-	unsigned char	pr:1;		/* primary server required (non standard) */
-	unsigned char	unused:2;	/* unused bits */
-	unsigned char	rcode:4;	/* response code */
+	__bitfield_type	ra:1;		/* recursion available */
+	__bitfield_type	pr:1;		/* primary server required (non standard) */
+	__bitfield_type	unused:2;	/* unused bits */
+	__bitfield_type	rcode:4;	/* response code */
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == PDP_ENDIAN
 			/* fields in third byte */
-	unsigned char	rd:1;		/* recursion desired */
-	unsigned char	tc:1;		/* truncated message */
-	unsigned char	aa:1;		/* authoritive answer */
-	unsigned char	opcode:4;	/* purpose of message */
-	unsigned char	qr:1;		/* response flag */
+	__bitfield_type	rd:1;		/* recursion desired */
+	__bitfield_type	tc:1;		/* truncated message */
+	__bitfield_type	aa:1;		/* authoritive answer */
+	__bitfield_type	opcode:4;	/* purpose of message */
+	__bitfield_type	qr:1;		/* response flag */
 			/* fields in fourth byte */
-	unsigned char	rcode:4;	/* response code */
-	unsigned char	unused:2;	/* unused bits */
-	unsigned char	pr:1;		/* primary server required (non standard) */
-	unsigned char	ra:1;		/* recursion available */
+	__bitfield_type	rcode:4;	/* response code */
+	__bitfield_type	unused:2;	/* unused bits */
+	__bitfield_type	pr:1;		/* primary server required (non standard) */
+	__bitfield_type	ra:1;		/* recursion available */
 #endif
 			/* remaining bytes */
 	unsigned short	qdcount;	/* number of question entries */

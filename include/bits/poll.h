@@ -26,7 +26,7 @@
 #define POLLPRI		0x002		/* There is urgent data to read.  */
 #define POLLOUT		0x004		/* Writing now will not block.  */
 
-#ifdef __USE_XOPEN
+#if defined(__USE_XOPEN) || defined(__PUREC__)
 /* These values are defined in XPG4.2.  */
 # define POLLRDNORM	0x040		/* Normal data may be read.  */
 # define POLLRDBAND	0x080		/* Priority data may be read.  */
@@ -34,7 +34,7 @@
 # define POLLWRBAND	0x200		/* Priority data may be written.  */
 #endif
 
-#ifdef __USE_GNU
+#if defined(__USE_GNU) || defined(__PUREC__)
 /* This is an extension for Linux.  */
 # define POLLMSG	0x400
 #endif
