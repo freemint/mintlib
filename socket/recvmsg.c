@@ -16,10 +16,6 @@
 #include "sncpy.h"
 #include "sockets_global.h"
 
-#ifdef __MSHORT__
-#error struct msghdr is not mshort clean, must be wrapped
-#endif
-
 __typeof__(recvmsg) __recvmsg;
 
 int

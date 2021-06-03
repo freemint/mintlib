@@ -18,10 +18,6 @@
 
 __typeof__(getsockname) __getsockname;
 
-#ifdef __MSHORT__
-#error socklen_t is unsigned int, must be wrapped for the syscall
-#endif
-
 
 int
 __getsockname (int fd, struct sockaddr *addr, socklen_t *addrlen)

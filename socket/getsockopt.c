@@ -12,10 +12,6 @@
 
 __typeof__(getsockopt) __getsockopt;
 
-#ifdef __MSHORT__
-#error socklen_t is unsigned int, must be wrapped for the syscall
-#endif
-
 
 int
 __getsockopt (int fd, int level, int optname, void *optval, socklen_t *optlen)

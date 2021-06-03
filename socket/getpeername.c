@@ -16,10 +16,6 @@
 #include "sncpy.h"
 #include "sockets_global.h"
 
-#ifdef __MSHORT__
-#error socklen_t is unsigned int, must be wrapped for the syscall
-#endif
-
 __typeof__(getpeername) __getpeername;
 
 

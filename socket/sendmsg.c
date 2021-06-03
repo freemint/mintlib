@@ -17,10 +17,6 @@
 
 __typeof__(sendmsg) __sendmsg;
 
-#ifdef __MSHORT__
-#error struct msghdr is not mshort clean, must be wrapped
-#endif
-
 
 int
 __sendmsg (int fd, const struct msghdr *msg, int flags)
