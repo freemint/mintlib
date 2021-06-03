@@ -162,7 +162,7 @@ int res_init(void)
 		    if ((*cp == '\0') || (*cp == '\n'))
 			    continue;
 		    if ((_res.nsaddr_list[nserv].sin_addr.s_addr =
-			inet_addr(cp)) == (unsigned)-1) {
+			inet_addr(cp)) == INADDR_NONE) {
 			    _res.nsaddr_list[nserv].sin_addr.s_addr
 				= INADDR_ANY;
 			    continue;
