@@ -165,7 +165,7 @@ res_send(const u_char *buf, int buflen, u_char *answer, int anslen)
 			cp = answer;
 			len = sizeof(short);
 			while (len != 0 &&
-			    (n = read(s, cp, (int)len)) > 0) {
+			    (n = read(s, cp, len)) > 0) {
 				cp += n;
 				len -= n;
 			}
@@ -203,7 +203,7 @@ res_send(const u_char *buf, int buflen, u_char *answer, int anslen)
 			} else
 				len = resplen;
 			while (len != 0 &&
-			   (n = read(s, cp, (int)len)) > 0) {
+			   (n = read(s, cp, len)) > 0) {
 				cp += n;
 				len -= n;
 			}

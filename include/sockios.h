@@ -37,6 +37,7 @@
 #define SIOCGIFMTU	(('S' << 8) | 27)	/* get MTU size */
 #define SIOCSIFMTU	(('S' << 8) | 28)	/* set MTU size */
 #define SIOCGIFSTATS	(('S' << 8) | 29)	/* get interface statistics */
+#define SIOCSIFHWADDR	(('S' << 8) | 49)	/* set hardware address */
 #define SIOCGIFHWADDR	(('S' << 8) | 50)	/* get hardware address */
 #define SIOCGLNKSTATS	(('S' << 8) | 51)	/* get link statistics */
 #define SIOCSIFOPT	(('S' << 8) | 52)	/* set interface option */
