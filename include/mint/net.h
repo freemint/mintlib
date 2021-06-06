@@ -37,6 +37,13 @@
 # define _mint_net_h
 
 
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
+
+
 /* possible socket states */
 enum so_state
 {
@@ -127,5 +134,7 @@ struct dom_ops
 };
 
 # endif /* __KERNEL__ */
+
+__END_DECLS
 
 # endif /* _mint_net_h */
