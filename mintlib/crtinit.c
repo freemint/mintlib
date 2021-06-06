@@ -61,9 +61,9 @@
 /* define this symbol to get ARGV argument passing that's strictly
  * compatible with the Atari standard. If it's not defined, then
  * the startup code won't validate the ARGV= variable by checking
- * the command byte for 0x127. Note that there are still some
+ * the command byte for 127. Note that there are still some
  * applications (gulam is a notable example) that implement only
- * part of the standard and don't set the command byte to 0x127.
+ * part of the standard and don't set the command byte to 127.
  */
 #if 0
 #define STRICTLY_COMPATIBLE_WITH_STANDARD
