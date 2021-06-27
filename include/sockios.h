@@ -15,6 +15,7 @@
 #define SIOCSPGRP	(('S' << 8) | 5)
 #define SIOCGPGRP	(('S' << 8) | 6)
 #define SIOCATMARK	(('S' << 8) | 7)
+/* (('S' << 8) | 101) reserved for MagiCNet */
 
 /* socket configuration controls */
 #define SIOCGIFNAME	(('S' << 8) | 10)	/* get iface name */
