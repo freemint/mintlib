@@ -46,7 +46,7 @@ gen-syscall0:
 	$(MAKE) gen-syscall CC="$(CC_FOR_BUILD)" CFLAGS="-O -Wall" COMPILE="$(CC_FOR_BUILD) -O -Wall"
 
 gen-syscall: $(gen_objs)
-	$(CC) $(gen_objs) -o $@ -lfl
+	$(CC) $(gen_objs) -o $@
 
 %.c: %.y
 	bison -d --output=$@ $<
