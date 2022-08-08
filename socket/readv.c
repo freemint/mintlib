@@ -13,7 +13,7 @@
 __typeof__(readv) __readv;
 
 ssize_t
-__readv (int fd, struct iovec *iov, ssize_t niov)
+__readv (int fd, const struct iovec *iov, ssize_t niov)
 {
 	if (__libc_newsockets) {
 		long r = Freadv (fd, iov, niov);
@@ -33,7 +33,7 @@ __readv (int fd, struct iovec *iov, ssize_t niov)
 		
 		m.msg_name = 0;
 		m.msg_namelen = 0;
-		m.msg_iov = (struct iovec*) iov;
+		m.msg_iov = (struct iovec *)iov;
 		m.msg_iovlen = niov;
 		m.msg_control = 0;
 		m.msg_controllen = 0;
