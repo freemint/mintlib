@@ -61,6 +61,8 @@
 #ifndef _CDROMIO_H
 #define _CDROMIO_H
 
+__BEGIN_DECLS
+
 typedef union
 { 
 	struct {
@@ -280,5 +282,7 @@ struct cdrom_read
 /* Read track international standard recording code. Argument points
    to cdrom_tisrc structure */
 #define CDROMGETTISRC       (('C'<<8)|0x14)
+
+__END_DECLS
 
 #endif  /* _CDROMIO_H */

@@ -12,6 +12,8 @@
 # include <linux/sunrpc/msg_prot.h>
 #endif
 
+__BEGIN_DECLS
+
 #define NFS_PORT	2049
 #define NFS_MAXDATA	8192
 #define NFS_MAXPATHLEN	1024
@@ -228,5 +230,7 @@ struct nfs_readdirres {
 
 #endif /* NFS_NEED_XDR_TYPES */
 #endif /* __KERNEL__ */
+
+__END_DECLS
 
 #endif

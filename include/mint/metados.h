@@ -23,6 +23,8 @@
 
 #include <mint/falcon.h>	/* for trap_14_xxx macros */
 
+__BEGIN_DECLS
+
 #ifndef OSBIND_CLOBBER_LIST
 #define OSBIND_CLOBBER_LIST	"d1", "d2", "a0", "a1", "a2", "cc", "memory"
 #endif
@@ -164,5 +166,7 @@ typedef struct {	/* Discinfo for MetaDiscInfo() function */
 	unsigned char index, reserved1[3];
 	unsigned long reserved2[123];
 } metadiscinfo_t __attribute__((packed));
+
+__END_DECLS
 
 #endif /* _METADOS_H */

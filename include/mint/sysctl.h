@@ -49,6 +49,7 @@
 # ifndef _MINT_SYSCTL_H
 # define _MINT_SYSCTL_H 1
 
+__BEGIN_DECLS
 
 /*
  * Definitions for sysctl call.  The sysctl call uses a hierarchical name
@@ -185,5 +186,7 @@ int sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,
 
 # endif
 
+
+__END_DECLS
 
 # endif /* _MINT_SYSCTL_H */

@@ -12,6 +12,8 @@
 #ifndef _MINT_RANDOM_H
 #define _MINT_RANDOM_H 1
 
+__BEGIN_DECLS
+
 /* ioctl()'s for the random number generator.  They will hopefully not conflict. */
 
 /* Get the entropy count. */
@@ -76,5 +78,7 @@ extern DEVDRV random_device, urandom_device;
 extern void checkrandom P_((void));
 
 #endif /* __KERNEL___ */
+
+__END_DECLS
 
 #endif /* _MINT_RANDOM_H */

@@ -10,6 +10,7 @@
 # include <mint/osbind.h>
 #endif
 
+__BEGIN_DECLS
 
 #ifndef trap_14_wwwwww
 #define trap_14_wwwwww(n,a,b,c,d,e)					\
@@ -565,5 +566,6 @@ typedef struct SndBufPtr {
 #define	Dsp_Hf3()		(short)trap_14_w((short)122)
 #define	Dsp_HStat()		(char)trap_14_w((short)125)
 
+__END_DECLS
 
 #endif /* _FALCON_H */
