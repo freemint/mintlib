@@ -57,6 +57,9 @@ __xpg_basename (char *filename)
 					while (p[1] != '\0')
 						++p;
 				}
+			} else {
+			    /* Go to the first character of the name.  */
+			    ++p;
 			}
 		}
 	}
