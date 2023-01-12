@@ -31,6 +31,14 @@
 # define _STAT_VER
 #endif
 
+#if __GNUC_PREREQ(12,0)
+/*
+ * we don't return a local addr;
+ * rpath is either == resolved, or malloced
+ */
+#pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#endif
+
 /* Return the canonical absolute name of file NAME.  A canonical name
    does not contain any `.', `..' components nor any repeated path
    separators ('/') or symlinks.  All path components must exist.  If
