@@ -17,6 +17,10 @@
 
 __typeof__(bcmp) __bcmp;
 
+#if __GNUC_PREREQ(11, 0)
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 int __bcmp(const void * src, const void * dst, size_t n)
 {
 
