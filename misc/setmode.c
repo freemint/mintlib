@@ -156,14 +156,16 @@ common:			if (set->cmd2 & CMD2_CLR) {
 
 #define	ADDCMD(a, b, c, d) do {						\
 	if (set >= endset) {						\
-		BITCMD *newset;						\
+		BITCMD *newset; \
+		long oldset;					\
 		setlen += SET_LEN_INCR;					\
+		oldset = (long)saveset; \
 		newset = realloc(saveset, sizeof(BITCMD) * setlen);	\
 		if (newset == NULL) {					\
 			free(saveset);					\
 			return (NULL);					\
 		}							\
-		set = newset + (set - saveset);				\
+		set = newset + ((long)set - oldset) / sizeof(BITCMD);				\
 		saveset = newset;					\
 		endset = newset + (setlen - 2);				\
 	}								\
