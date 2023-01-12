@@ -62,8 +62,8 @@ __utime (const char *_filename, const struct utimbuf *_tset)
 		if (retval < 0) {
 			if ((retval == -ENOTDIR) && (_enoent(filename)))
 				retval = -ENOENT;
-				__set_errno (-retval);
-				return -1;
+			__set_errno (-retval);
+			return -1;
 		}
 		return 0;
 	}
