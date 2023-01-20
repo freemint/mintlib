@@ -598,8 +598,8 @@ typedef struct
 typedef struct
 {
 	unsigned long drivemap;
-	char *version;
-	long reserved[2];
+	const char *version;
+	long reserved;
 
 	META_INFO_2 *info;	/* Available from MetaDOS version 2.30 */
 } META_INFO_1;
