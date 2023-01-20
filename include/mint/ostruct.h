@@ -492,7 +492,7 @@ typedef struct {
 #define ST_LOW			0x0000
 #define ST_MED			0x0100
 #define ST_HIGH			0x0200
-#define TT_MED			0x0300
+#define TT_MED			0x0400
 #define TT_HIGH			0x0600
 #define TT_LOW			0x0700
 
