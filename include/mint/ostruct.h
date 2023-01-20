@@ -566,16 +566,16 @@ typedef struct {
 typedef struct
 {
         void    *pb_scrptr;
-        int     pb_offset;
-        int     pb_width;
-        int     pb_height;
-        int     pb_left;
-        int     pb_right;
-        int     pb_screz;
-        int     pb_prrez;
+        short   pb_offset;
+        short   pb_width;
+        short   pb_height;
+        short   pb_left;
+        short   pb_right;
+        short   pb_screz;
+        short   pb_prrez;
         void    *pb_colptr;
-        int     pb_prtype;
-        int     pb_prport;
+        short   pb_prtype;
+        short   pb_prport;
         void    *pb_mask;
 } _PBDEF;
 
