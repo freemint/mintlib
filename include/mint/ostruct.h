@@ -100,14 +100,15 @@ typedef struct
 /* Modes for Mxalloc() */
 #define MX_STRAM		0x00
 #define MX_TTRAM		0x01
-#define MX_PREFSTRAM		0x02
-#define MX_PREFTTRAM		0x03
-#define MX_MPROT		0x08
-/* if bit #3 is set, then */
+#define MX_PREFSTRAM    0x02
+#define MX_PREFTTRAM    0x03
+/* Protection bits.  */
+#define MX_MPROT        0x08			/* change protection of already allocated block */
+
 #define MX_HEADER		0x00
 #define MX_PRIVATE		0x10
 #define MX_GLOBAL		0x20
-#define MX_SUPERVISOR		0x30
+#define MX_SUPERVISOR	0x30
 #define MX_READABLE		0x40
 
 /* Fforce() params */
@@ -134,7 +135,7 @@ typedef struct
 /* Return value for i.e. Crawcin() */
 #define MINT_EOF		0xFF1A
 
-/* Codes used with Fsfirst() */
+/* Codes used with Fcreate()/Fsfirst() */
 
 #define        FA_RDONLY           0x01
 #define        FA_HIDDEN           0x02
@@ -155,13 +156,17 @@ typedef struct
  */
 #define        PE_GO_FREE          6           /* just go, then free */
 
-#ifdef __MINT__
-/* ers: what exactly does mode 7 do ??? */
-   #define	PE_ASYNC_LOADGO	   100	       /* load and asynchronously go */
-   #define       PE_ASYNC_GO	   104	       /* asynchronously go	     */
-   #define       PE_ASYNC_GO_FREE   106	       /* asynchronously go and free */
-   #define       PE_OVERLAY	   200	       /* load and overlay	     */
-#endif
+#define        PE_CBASEPAGE_FLAGS  7           /* create basepage defining the program flags */
+#define        PE_ASYNC_LOADGO	   100	       /* load and asynchronously go */
+#define        PE_INIT             101         /* Inherits path- and file-handles (MagiC) */
+#define        PE_TERM             102         /* The process will be deleted (MagiC) */
+#define        PE_ASYNC_GO         104	       /* asynchronously go	     */
+#define        PE_ASYNC_GO_FREE    106	       /* asynchronously go and free */
+#define        PE_XBASE            107         /* As Mode 7, but in place of a command line the process name will be passed. (MagiC) */
+#define        PE_EXACC            108         /* Used internally by MagiC for starting an ACC */
+#define        PE_OVERLAY	       200	       /* load and overlay	     */
+#define        PE_OVERLAY_GO       204         /* overlay and go */
+#define        PE_OVERLAY_GO_FREE  206         /* overlay, go and free */
 
 /*
  * BIOS defines and structures
