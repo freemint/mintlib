@@ -21,10 +21,10 @@ __BEGIN_DECLS
 
 /* Structure used by Dfree() */
 typedef struct {
-    long b_free;	/* number of free clusters */
-    long b_total;	/* total number of clusters */
-    long b_secsiz;	/* number of bytes per sector */
-    long b_clsiz;	/* number of sectors per cluster */
+    unsigned long b_free;	/* number of free clusters */
+    unsigned long b_total;	/* total number of clusters */
+    unsigned long b_secsiz;	/* number of bytes per sector */
+    unsigned long b_clsiz;	/* number of sectors per cluster */
 } _DISKINFO;
 
 /* Structure returned by Fdatime() */
@@ -60,6 +60,8 @@ typedef struct
 	unsigned month  : 4;
 	unsigned day    : 5;
 } _DATETIME;
+
+/****** GEMDOS *************************************************************/
 
 /* Cconis() return values */
 #define DEV_READY		-1
