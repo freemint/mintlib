@@ -16,7 +16,7 @@
 int
 atexit(ExitFn func)
 {
-        ExitFn *new_at_exit = _at_exit;
+	ExitFn *new_at_exit = _at_exit;
     
 	if (_num_at_exit == 0)
 		new_at_exit = malloc(sizeof(ExitFn));
@@ -27,7 +27,7 @@ atexit(ExitFn func)
 		/* failure */
 		return -1;
 
-        _at_exit = new_at_exit;
+	_at_exit = new_at_exit;
 	_at_exit[_num_at_exit++] = func;
 
 	/* success */

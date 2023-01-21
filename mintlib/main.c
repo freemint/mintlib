@@ -84,7 +84,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	char *p, *tmp;
 	size_t len, cnt;
 	
-	_num_at_exit = 0;
 	__set_errno (0);
 
 	__libc_enable_secure = 1;

@@ -23,10 +23,6 @@ int __mint;		/* 0 for TOS, MiNT version number in BCD format
 			   otherwise.  */
 char _rootdir;		/* User's preferred root directory */
 
-/* Functions registered by user for calling at exit.  */
-ExitFn *_at_exit;
-int _num_at_exit;	/* Number of functions registered - 1.  */
-
 /* Set to 1 if secure mode is advised.  */
 int __libc_enable_secure = 1;
 

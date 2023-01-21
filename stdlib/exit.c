@@ -11,17 +11,17 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "lib.h"
 
 /* Functions registered by user for calling at exit.  */
-typedef void (*ExitFn) (void);
-extern ExitFn *_at_exit;
-extern int _num_at_exit;	/* Number of functions registered - 1.  */
+ExitFn *_at_exit;
+int _num_at_exit;	/* Number of functions registered - 1.  */
 
 #ifdef OLD_CLOSE
 void
 ___fclose_all_files (void)
 {
-  register FILE *stream;
+  FILE *stream;
   
   stream = __stdio_head;
   while (stream)
@@ -40,12 +40,11 @@ ___fclose_all_files (void)
 weak_alias (___fclose_all_files, _fclose_all_files)
 #endif
 
-__typeof__(exit) __exit;
-
 __EXITING
-__exit (int status)
+__NORETURN
+__exit (long status)
 {
-  register int i;
+  int i;
 
   for(i = _num_at_exit - 1; i >= 0; --i)
     (*_at_exit[i]) ();
