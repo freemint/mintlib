@@ -18,7 +18,6 @@
 #include <assert.h>
 #include "lib.h"
 
-int errno;
 int __mint;		/* 0 for TOS, MiNT version number in BCD format 
 			   otherwise.  */
 char _rootdir;		/* User's preferred root directory */

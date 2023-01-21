@@ -42,6 +42,7 @@ SRCFILES = \
 	getumask.c \
 	getwd.c \
 	globals.c \
+	errno.c \
 	gmon.c \
 	heapbase.c \
 	ident.c \
