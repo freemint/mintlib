@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
+#define NDEBUG
 #include <assert.h>
 #include <unistd.h>
 #include <osbind.h>
@@ -175,6 +176,8 @@ __free(void *param)
 	if (q && s >= q && q->valid != VAL_BORDER)
 	{
 		assert(s == q);
+		if (s != q)
+			return;
 		r->size += q->size;
 		q = q->next;
 		s->size = 0;
@@ -188,7 +191,8 @@ __free(void *param)
 	{
 		/* remember: r may be below &_mchunk_free_list in memory */
 		assert(s == r);
-
+		if (s != r)
+			return;
 		if (p->valid == VAL_BORDER)
 		{
 			if (ALLOC_SIZE(p) == r->size)
@@ -213,7 +217,8 @@ __free(void *param)
 		    s < (struct mem_chunk *) ((char *)_heapbase + _stksize))
 		{
 			assert(s == (struct mem_chunk *) _heapbase);
-
+			if (s != (struct mem_chunk *) _heapbase)
+				return;
 			_heapbase = (void *) p;
 			_stksize += p->size;
 			o->next = p->next; /* o is always != NULL here */
@@ -230,6 +235,8 @@ __free(void *param)
 			if (s)
 			{
 				assert (s == o);
+				if (s != o)
+					return;
 				q->next = p->next;
 				Mfree (o);
 			}
@@ -243,7 +250,8 @@ __free(void *param)
 		    s < (struct mem_chunk *) ((char *)_heapbase + _stksize))
 		{
 			assert(s == (struct mem_chunk *) _heapbase);
-
+			if (s != (struct mem_chunk *) _heapbase)
+				return;
 			_heapbase = (void *) r;
 			_stksize += r->size;
 
