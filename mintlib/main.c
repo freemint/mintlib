@@ -88,7 +88,6 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	__libc_enable_secure = 1;
 	__libc_unix_names = 0;
 
-	_starttime = get_sysvar (_hz_200);
 	_childtime = 0;
 
 	/*

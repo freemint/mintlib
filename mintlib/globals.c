@@ -24,7 +24,6 @@ int __mint;		/* 0 for TOS, MiNT version number in BCD format
 int _pdomain;		/* Error code of Pdomain call */
 char _rootdir;		/* User's preferred root directory */
 
-clock_t _starttime;	/* 200 HZ tick when we started the program.  */
 clock_t _childtime;	/* Time consumed so far by our children.  */
 
 /* Functions registered by user for calling at exit.  */

@@ -52,7 +52,6 @@ extern int __libc_unix_names;
 extern int _pdomain;
 extern char _rootdir;
 
-extern clock_t _starttime;
 extern clock_t _childtime;
 
 extern BASEPAGE *_base;

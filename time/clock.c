@@ -7,6 +7,13 @@
 
 #include "lib.h"
 
+static clock_t _starttime;	/* 200 HZ tick when we started the program.  */
+
+__attribute__((__constructor__))
+static void init_clock(void)
+{
+	_starttime = get_sysvar (_hz_200);
+}
 
 clock_t
 _clock(void)
