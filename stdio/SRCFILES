@@ -1,4 +1,4 @@
-# This file gets included by the Makefile in this directory to determine
+# This file gets izncluded by the Makefile in this directory to determine
 # the files that should go only into source distributions.
 # The files listed here are sorted in alphanumerical order.  This is
 # necessary but if it keeps like this the files are also compiled in
@@ -75,6 +75,7 @@ SRCFILES = \
 	sprintf.c \
 	sscanf.c \
 	stdio_init.c \
+	stdio-globals.c \
 	sysd-stdio.c \
 	tempnam.c \
 	tmpfile.c \
