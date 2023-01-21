@@ -23,6 +23,8 @@
 
 #include "lib.h"
 
+int _pdomain;		/* Error code of Pdomain call */
+
 /* NOTE: This file must not contain ANY global symbol but _main itself.
    Otherwise the user cannot provide her own version of _main if 
    weak symbols are not available.  */

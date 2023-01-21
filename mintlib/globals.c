@@ -21,7 +21,6 @@
 int errno;
 int __mint;		/* 0 for TOS, MiNT version number in BCD format 
 			   otherwise.  */
-int _pdomain;		/* Error code of Pdomain call */
 char _rootdir;		/* User's preferred root directory */
 
 /* Functions registered by user for calling at exit.  */
@@ -56,8 +55,6 @@ short _split_mem = 0;
 
 char *program_invocation_name = "unknown application";
 char *program_invocation_short_name = "unknown application";
-
-int _exit_dummy_decl;
 
 
 /* stdio things */
