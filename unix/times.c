@@ -15,20 +15,21 @@
 
 #include "lib.h"
 
+clock_t _childtime;	/* Time consumed so far by our children.  */
+
 
 clock_t 
 __times (struct tms *buf)
 {
 	clock_t retval = clock ();
+	long int r[8];
 
 	if (!buf) {
 		__set_errno (EFAULT);
 		return ((clock_t) -1);
 	}
 
-	if (__mint != 0) {
-		long int r[8];
-		(void) Prusage (r);
+	if (Prusage (r) == 0) {
 		buf->tms_utime = (r[1] * CLOCKS_PER_SEC) / 1000;
 		buf->tms_stime = (r[0] * CLOCKS_PER_SEC) / 1000;
 		buf->tms_cutime = (r[3] * CLOCKS_PER_SEC) / 1000;
