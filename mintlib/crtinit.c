@@ -77,6 +77,9 @@
 #include "lib.h"
 #include "stksiz.h"
 
+long __libc_argc = 1;
+static char *__libc_argv_default[] = { "unknown application", NULL };
+char **__libc_argv = __libc_argv_default;
 
 #define isspace(c) ((c) == ' '||(c) == '\t')
 #define isdigit(c) ((c) >= '0' && (c) <= '9')

@@ -85,7 +85,7 @@ extern char** environ;
  */
 
 /* These variables are defined and initialized in the startup code.  */
-extern int __libc_argc;
+extern long __libc_argc;
 extern char **__libc_argv;
 
 /* Some forward declarations */

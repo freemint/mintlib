@@ -33,9 +33,6 @@ int __has_no_ssystem;
 
 BASEPAGE *_base;
 char **environ;
-long __libc_argc = 1;
-static char *__libc_argv_default[] = { "unknown application", NULL };
-char **__libc_argv = __libc_argv_default;
 
 /* total size of program area */
 unsigned long _PgmSize;

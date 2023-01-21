@@ -155,7 +155,7 @@ static struct _getopt_data getopt_data;
 /* Stored original parameters.
    XXX This is no good solution.  We should rather copy the args so
    that we can compare them later.  But we must not use malloc(3).  */
-extern int __libc_argc;
+extern long __libc_argc;
 extern char **__libc_argv;
 
 /* Bash 2.0 gives us an environment variable containing flags
