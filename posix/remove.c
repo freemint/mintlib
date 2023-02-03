@@ -28,6 +28,5 @@ remove (const char *filename)
                 return __unlink (filename);
         }
         
-        __set_errno (ENOENT);
         return -1;
 }
