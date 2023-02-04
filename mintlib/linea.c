@@ -143,11 +143,13 @@ void linea7(BBPB *P)
 {
 	__asm__ volatile
 	(
+		"movl	%%a6,-(%%sp)\n\t"
  		"movl	%0,%%a6\n\t"
 		ASM_LINEA(0x7) "\n\t"
+		"movl	(%%sp)+,%%a6\n\t"
 	: 						  /* outputs */
-	: "g"(P)					  /* inputs  */
-	: "d0", "d1", "d2", "a0", "a1", "a2", "a6", "cc"		   /* clobbered regs */
+	: "r"(P)					  /* inputs  */
+	: "d0", "d1", "d2", "a0", "a1", "a2", "cc"		   /* clobbered regs */
 	  AND_MEMORY
 	);
 }
