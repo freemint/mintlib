@@ -48,11 +48,15 @@ gen-syscall0:
 gen-syscall: $(gen_objs)
 	$(CC) $(gen_objs) -o $@
 
-%.c: %.y
-	bison -d --output=$@ $<
+pars.c pars.h: pars.y
+	if bison --defines=pars.h.tmp$$$$ --output=pars.c $<; then mv pars.h.tmp$$$$ pars.h; else rm -f pars.h.tmp$$$$; exit 1; fi
 
-%.c: %.l
+pars.o: pars.c pars.h
+
+scan.c: scan.l
 	flex -o$@ $<
+
+scan.o: scan.c pars.h
 
 install: all-here
 
