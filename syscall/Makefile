@@ -49,7 +49,7 @@ gen-syscall: $(gen_objs)
 	$(CC) $(gen_objs) -o $@
 
 pars.c pars.h: pars.y
-	if bison --defines=pars.h.tmp$$$$ --output=pars.c $<; then mv pars.h.tmp$$$$ pars.h; else rm -f pars.h.tmp$$$$; exit 1; fi
+	bison --defines=pars.h --output=pars.c $< || (rm -f pars.h; exit 1)
 
 pars.o: pars.c pars.h
 
