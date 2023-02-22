@@ -45,11 +45,9 @@ __BEGIN_DECLS
 /* Get __sigset_t.  */
 #include <bits/sigset.h>
 
-/* This declaration puts `struct timeval' in global scope even if
-   <sys/time.h> has not been included to define it.  That way the
-   `select' prototype below will not conflict with a later definition
-   of `struct timeval'.  */
-struct timeval;
+/* Get definition of struct timeval.  */
+#define __need_timeval
+#include <bits/time.h>
 
 typedef __fd_mask fd_mask;
 
