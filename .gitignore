@@ -125,6 +125,9 @@ syscall/SRCFILES.traps
 syscall/gen-syscall
 syscall/pars.h
 syscall/syscalls.stmp
+syscall/pars.c
+syscall/scan.c
+syscall/.stmp.pars
 time/test-clock
 time/test-getdate
 time/test-mktime

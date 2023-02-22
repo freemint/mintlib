@@ -37,6 +37,8 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
+# FIXME: adjust rules in toplevel to cleanup .stmp.pars, syscalls.stmp and other generated files
+
 syscalls.stmp: gen-syscall0 syscalls.master
 	echo "TRAPS=" > SRCFILES.traps
 	./gen-syscall syscalls.master
@@ -48,15 +50,16 @@ gen-syscall0:
 gen-syscall: $(gen_objs)
 	$(CC) $(gen_objs) -o $@
 
-pars.c pars.h: pars.y
-	if bison --defines=pars.h.tmp$$$$ --output=pars.c $<; then mv pars.h.tmp$$$$ pars.h; else rm -f pars.h.tmp$$$$; exit 1; fi
+pars.c pars.h .stmp.pars: pars.y
+	bison --defines=pars.h --output=pars.c $<
+	touch .stmp.pars
 
-pars.o: pars.c pars.h
+pars.o: pars.c pars.h .stmp.pars
 
 scan.c: scan.l
 	flex -o$@ $<
 
-scan.o: scan.c pars.h
+scan.o: scan.c pars.h .stmp.pars
 
 install: all-here
 
