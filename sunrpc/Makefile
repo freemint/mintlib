@@ -34,6 +34,9 @@ endif
 
 dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
+include $(srcdir)/RPCSVCCFILES
+include $(srcdir)/RPCGENCFILES
+include $(srcdir)/RPCINFOCFILES
 
 # FIXME: Tests still missing.
 TESTS = dummy

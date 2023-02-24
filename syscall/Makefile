@@ -37,7 +37,11 @@ include $(top_srcdir)/checkrules
 cflags = -O -Wall
 type = 
 
-# FIXME: adjust rules in toplevel to cleanup .stmp.pars, syscalls.stmp and other generated files
+distclean::
+	$(RM) SRCFILES.traps syscalls.stmp .stmp.pars pars.c pars.h scan.c
+
+clean::
+	$(RM) gen-syscall
 
 syscalls.stmp: gen-syscall0 syscalls.master
 	echo "TRAPS=" > SRCFILES.traps

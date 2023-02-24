@@ -4,9 +4,6 @@ include $(srcdir)/BINFILES
 include $(srcdir)/SRCFILES
 include $(srcdir)/EXTRAFILES
 include $(srcdir)/MISCFILES
--include $(srcdir)/RPCSVCCFILES
--include $(srcdir)/RPCGENCFILES
--include $(srcdir)/RPCINFOCFILES
 
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 MOVEIFCHANGE = $(top_srcdir)/move-if-change
@@ -17,10 +14,12 @@ bakclean:
 	rm -f *~ *# *.BAK *.bak
 	rm -f *.orig *.rej
 
-clean:
+clean::
 	rm -f *.o lib*.a *.tmp
 	rm -f core report nohup.out errlog
 	rm -rf .deps 
+
+distclean:: clean
 
 install: all-here install-include install-lib install-man \
 install-recursive

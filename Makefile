@@ -75,8 +75,10 @@ install-headers: install-include-recursive
 
 install-man: all install-man-recursive
 
-clean: clean-recursive
+clean:: clean-recursive
 	rm -rf .deps includepath CFILES
+
+distclean:: distclean-recursive
 
 bakclean: bakclean-recursive
 
@@ -155,7 +157,7 @@ bindistdir: $(BINDISTFILES)
 	    || exit 1; \
 	done
 
-all-recursive clean-recursive bakclean-recursive \
+all-recursive clean-recursive distclean-recursive bakclean-recursive \
 install-recursive uninstall-recursive install-lib-recursive \
 install-include-recursive install-man-recursive uninstall-lib-recursive \
 uninstall-include-recursive uninstall-man-recursive:
