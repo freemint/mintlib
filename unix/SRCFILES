@@ -117,6 +117,10 @@ SRCFILES = \
 	utime.c \
 	utimes.c \
 	vfork.S \
+	getcontext.S \
+	setcontext.S \
+	makecontext.S \
+	swapcontext.S \
 	wait.c \
 	wait3.c \
 	wait4.c \

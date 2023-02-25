@@ -43,6 +43,10 @@ enum
 typedef struct sigaltstack
   {
     __ptr_t ss_sp;
+#ifdef __MSHORT__
+    long ss_flags;
+#else
     int ss_flags;
+#endif
     size_t ss_size;
   } stack_t;
