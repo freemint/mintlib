@@ -4,9 +4,6 @@
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
 #
-# The support subdirectories (crlf, lattice, purec and sozobon) are
-# handled in the Makefile.
-
 SRCFILES += BINFILES EXTRAFILES MISCFILES Makefile SRCFILES SYSCALLS \
 _itoa.h math_private.h math_ldbl.h atomicity.h atomicity-68020.h errbase.h \
 gensys stksiz.h sysdep.h lib.h libc-symbols.h \

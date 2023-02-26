@@ -21,12 +21,9 @@ C_SYMBOL_NAME(memset):
 	movb	%sp@(11),%d0	| value
 	movl	%sp@(12),%d1	| length
 	jeq	exit		| length==0? (size_t)
-#ifndef Lmemset
-	jra	do_set
-#endif
-#endif /* Lmemset */
 
-#ifndef Lmemset
+#else
+
 	.globl C_SYMBOL_NAME(bzero)
 	.globl C_SYMBOL_NAME(_bzero)
 	.globl C_SYMBOL_NAME(__bzero)
@@ -43,7 +40,7 @@ C_SYMBOL_NAME(_bzero):
 scommon:
 	jeq	exit		| length==0? (size_t)
 	clrb	%d0		| value
-#endif /* Lbzero */
+#endif /* Lmemset */
 
 do_set: 			| a0 dest, d0.b byte, d1.l length
 	movel	%d2,%sp@-
@@ -162,4 +159,3 @@ exit_d2:
 exit:
 	movl %sp@(4),%d0		| return dest (for memset only)
 	rts
-

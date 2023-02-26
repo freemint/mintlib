@@ -3,10 +3,6 @@
 
 MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	\
-	_float_h \
-	_stdarg_h \
-	_stddef_h \
-	_varargs_h \
 	alloca.h \
 	argz.h \
 	argp.h \

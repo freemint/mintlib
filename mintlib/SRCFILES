@@ -3,9 +3,6 @@
 # The files listed here are sorted in alphanumerical order.  This is
 # necessary but if it keeps like this the files are also compiled in
 # alphabetical order.
-#
-# The support subdirectories (crlf, lattice, purec and sozobon) are
-# handled in the Makefile.
 
 SRCFILES = \
 	_infinitydf.S \

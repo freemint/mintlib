@@ -76,14 +76,8 @@ to build the libray without MiNT.
 
 7. What C compilers can I use with the MiNT library?
 
-The library supports GCC.  Any distribution of the library that you get
-should compile and work with GCC.  There is also support for Pure C, Sozobon
-C (Heat 'N Serve C), and Lattice C.  But we don't have any of these except
-GCC, so a given version of the library may require some modification to
-compile correctly (yet another reason to get the source code.)
-
-As of PL48, Pure C support has been restored.  There are no current
-maintainers for other compilers.
+The library supports GCC (32-bit ABI only).  There are no current maintainers
+for other compilers.
 
 8. How do I use the MiNT library with GCC?
 

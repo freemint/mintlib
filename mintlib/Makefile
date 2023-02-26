@@ -42,24 +42,9 @@ uninstall-include:
 
 uninstall-man:
 
-distdir: distdir-local
-
-# We have to do some special things for the support subdirectories.
-support_dirs := lattice purec purec/unixname sozobon
-support_files := $(foreach dir,$(support_dirs),$(wildcard $(dir)/*))
-
-DISTFILES += $(support_files)
-
-distdir-local:
-	for subdir in $(support_dirs); do \
-	  test -d $(distdir)/$$subdir \
-	  || mkdir $(distdir)/$$subdir \
-	  || exit 1; \
-	  chmod 777 $(distdir)/$$subdir; \
-	done
+distdir:
 
 bindistdir:
 
 syscalls.h: $(srcdir)/syscalls.list $(srcdir)/gensys
 	$(GENSYS) -array $(srcdir)/syscalls.list >$@
-	
