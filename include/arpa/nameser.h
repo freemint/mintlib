@@ -180,11 +180,7 @@ __BEGIN_DECLS
  * int might be too large for correct alignment of following members
  */
 #ifndef __bitfield_type
-#ifdef __PUREC__
-#define __bitfield_type unsigned int
-#else
 #define __bitfield_type unsigned char
-#endif
 #endif
 
 typedef struct {

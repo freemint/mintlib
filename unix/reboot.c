@@ -17,11 +17,7 @@
 /* Reboot the system or change the behavior of the CTRL-ALT-DEL key
    combination.  */
 int 
-#ifndef __MSHORT__
 reboot (int howto)
-#else
-reboot (long int howto)
-#endif
 {
   int retval, arg = 0;
   

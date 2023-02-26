@@ -34,11 +34,7 @@
 void
 __stdio_init_stream (FILE *stream)
 {
-#ifdef __MSHORT__
-  const long int fd = (long int) stream->__cookie;
-#else
   const int fd = (int) stream->__cookie;
-#endif
   struct stat statb;
 
   if (stream->__buffer != NULL || stream->__userbuf)

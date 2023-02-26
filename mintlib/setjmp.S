@@ -11,19 +11,11 @@
 	.globl C_SYMBOL_NAME(sigsetjmp)
 C_SYMBOL_NAME(sigsetjmp):
 	movel	%sp@(4), %a0		| address of sigjmp_buf[]
-#ifdef __MSHORT__
-	movew	%sp@(8), %a1
-#else
 	movel	%sp@(8), %a1
-#endif
 	movel	%a1, %a0@(52)		| save sigmask for siglongjmp?
 	jeq	SETJMP			| no -- call common code
 	movel	C_SYMBOL_NAME(_sigmask), %d0		| save tos emulation signal mask
-#ifdef __MSHORT__
-	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
-#else
 	tstl	C_SYMBOL_NAME(__mint)
-#endif
 	jeq	nomint			| no -- call common code
 	
 	movel	%a0, %sp@-		| save register a0
@@ -58,11 +50,7 @@ SETJMP:
 C_SYMBOL_NAME(siglongjmp):
 	.globl C_SYMBOL_NAME(longjmp)
 C_SYMBOL_NAME(longjmp):
-#ifdef __MSHORT__
-	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
-#else
 	tstl	C_SYMBOL_NAME(__mint)
-#endif
 	jeq	NOMINT			| no -- do not call sigreturn
 	movew	#0x11a, %sp@-		| Psigreturn() system call
 	trap	#1			| (ignored if not in a sig handler)
@@ -77,11 +65,7 @@ NOMINT:
 	andw	#-2,%d0
 #endif
 	movel	%d0, C_SYMBOL_NAME(_sigmask)		| restore tos emulation signal mask
-#ifdef __MSHORT__
-	tstw	C_SYMBOL_NAME(__mint)			| see if MiNT is active
-#else
 	tstl	C_SYMBOL_NAME(__mint)
-#endif
 	jeq	NORESTORE		| no -- do not call sigsetmask
 	
 	movel	%a0, %sp@-		| save register a0
@@ -94,11 +78,7 @@ NOMINT:
 	movel	%sp@+, %a0		| restore register a0
 	
 NORESTORE:
-#ifdef __MSHORT__
-	movew	%sp@(8),%d0		| value to return
-#else
 	movel	%sp@(8),%d0		| value to return
-#endif
 	jne	L1			| may not be 0
 	movql	#1, %d0
 L1:

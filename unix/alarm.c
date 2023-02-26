@@ -16,10 +16,8 @@ __alarm (unsigned secs)
 
 	if (have_talarm) {
 		long r;
-#ifndef __MSHORT__
 		if (secs > ((unsigned int) (LONG_MAX/1000)))
 			secs = ((unsigned int) (LONG_MAX/1000));
-#endif
 		r = Talarm((long) secs);
 		if (r == -ENOSYS)
 			have_talarm = 0;

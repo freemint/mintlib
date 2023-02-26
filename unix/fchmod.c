@@ -20,13 +20,11 @@ __fchmod (int fd, mode_t mode)
 {
 	int r;
 
-#ifndef __MSHORT__
 	if (fd > SHRT_MAX)
 	{
 		__set_errno(EBADF);
 		return -1;
 	}
-#endif
 	r = Ffchmod(fd, mode);
 	if (r != 0)
 	{

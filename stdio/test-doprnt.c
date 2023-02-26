@@ -34,11 +34,7 @@ snputc (ch, fp)
 /* This is large enough to force several flushs and since it is prime 
    it should also leave some bytes unflushed at the end so that we can
    check if the buffer gets completely flushed.  */
-#ifndef __MSHORT__
 # define LARGEBUFSIZE 199999UL
-#else
-# define LARGEBUFSIZE 32719
-#endif
 char largesrc[LARGEBUFSIZE];
 char largedest[LARGEBUFSIZE];
 

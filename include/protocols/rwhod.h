@@ -55,28 +55,14 @@ struct	whod {
 	char	wd_vers;		/* protocol version # */
 	char	wd_type;		/* packet type, see below */
 	char	wd_pad[2];
-#ifdef __MSHORT__
-	long	wd_sendtime;		/* time stamp by sender */
-	long	wd_recvtime;		/* time stamp applied by receiver */
-#else
 	int	wd_sendtime;		/* time stamp by sender */
 	int	wd_recvtime;		/* time stamp applied by receiver */
-#endif
 	char	wd_hostname[32];	/* hosts's name */
-#ifdef __MSHORT__
-	long	wd_loadav[3];		/* load average as in uptime */
-	long	wd_boottime;		/* time system booted */
-#else
 	int	wd_loadav[3];		/* load average as in uptime */
 	int	wd_boottime;		/* time system booted */
-#endif
 	struct	whoent {
 		struct	outmp we_utmp;	/* active tty info */
-#ifdef __MSHORT__
-		long	we_idle;	/* tty idle time */
-#else
 		int	we_idle;	/* tty idle time */
-#endif
 	} wd_we[1024 / sizeof (struct whoent)];
 };
 

@@ -100,21 +100,12 @@
 #endif
 
 #ifndef __NULL
-#  ifdef __MSHORT__
-#    define __NULL (0L)
-#  else
      /* avoid complaints about misuse of NULL :-) */
 #    define __NULL (0)
-#  endif
 #endif
 
-#ifdef __MSHORT__
-# define __SSIZE_TYPEDEF__ long
-# define __WINT_TYPEDEF__ unsigned long
-#else
 # define __SSIZE_TYPEDEF__ int
 # define __WINT_TYPEDEF__ unsigned int
-#endif
 
 #ifndef __GNUC__
 # ifdef __OPTIMIZE__

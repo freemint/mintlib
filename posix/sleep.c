@@ -19,10 +19,8 @@ _alarm (unsigned long secs)
 {
 	unsigned long r;
 
-#ifndef __MSHORT__
 	if (secs > ((unsigned long) (LONG_MAX/1000)))
 		secs = ((unsigned long) (LONG_MAX/1000));
-#endif
 	r = Talarm((long) secs);
 
 	return (unsigned long) r;

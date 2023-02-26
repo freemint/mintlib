@@ -161,7 +161,6 @@ __md5_crypt_r (const char *key, const char *salt, char *buffer, long int buflen)
       --buflen;
     }
 
-#ifndef __MSHORT__
 #define b64_from_24bit(B2, B1, B0, N)					      \
   do {									      \
     unsigned int w = ((B2) << 16) | ((B1) << 8) | (B0);			      \
@@ -173,20 +172,6 @@ __md5_crypt_r (const char *key, const char *salt, char *buffer, long int buflen)
 	w >>= 6;							      \
       }									      \
   } while (0)
-#else
-#define b64_from_24bit(B2, B1, B0, N)					      \
-  do {									      \
-    unsigned long int w = (((unsigned long int) (B2)) << 16) |                \
-    	((unsigned long) (B1) << 8) | ((unsigned long) B0);		      \
-    long int n = (N);							      \
-    while (n-- > 0 && buflen > 0)					      \
-      {									      \
-	*cp++ = b64t[w & 0x3f];						      \
-	--buflen;							      \
-	w >>= 6;							      \
-      }									      \
-  } while (0)
-#endif
 
   b64_from_24bit (alt_result[0], alt_result[6], alt_result[12], 4);
   b64_from_24bit (alt_result[1], alt_result[7], alt_result[13], 4);

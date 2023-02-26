@@ -79,11 +79,6 @@ C_SYMBOL_NAME(__normdf):
 	moveml	%a0@+,%d4-%d5	| get mantissa
 #endif
 
-# ifdef __MSHORT__
-	movew	%a0@+,%d0		| get exponent
-	movew	%a0@+,%d2		| get sign
-	movew	%a0@+,%d1		| rounding information
-# else
 	movel	%a0@+,%d0		| get exponent
 	movel	%a0@+,%d2		| get sign
 	jpl	0f		| or bit 31 to bit 15 for later tests
@@ -96,7 +91,6 @@ C_SYMBOL_NAME(__normdf):
 	notl	%d3		| #-0x8000 -> d3
 	cmpl	%d3,%d0
 	jlt	retz
-# endif
 
 	| internal entry for floating point package, saves time
 	| d0=u.exp, d2=u.sign, d1=rounding bits, d4/d5=mantissa

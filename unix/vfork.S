@@ -17,11 +17,7 @@
 C_SYMBOL_NAME(vfork):
 C_SYMBOL_NAME(__vfork):
 	movel	%sp@+, %a1	| save return address; this is important!
-#ifdef __MSHORT__
-	tstw	C_SYMBOL_NAME(__mint)
-# else
 	tstl	C_SYMBOL_NAME(__mint)
-#endif
 	jeq	L_TOS		| go do the TOS thing
 	movew	#0x113, %sp@-	| push MiNT Pvfork() parameter
 	trap	#1		| Vfork
@@ -51,11 +47,7 @@ L_TOS:
 	jmp	%a1@		| return to caller
 L_err:
 	negl	%d0
-#ifdef __MSHORT__
-	movew	%d0, C_SYMBOL_NAME(errno)	| save error code in errno
-# else
 	movel	%d0, C_SYMBOL_NAME(errno)	| save error code in errno
-# endif
 	moveql	#-1, %d0		| return -1
 	jmp	%a1@		| return
 

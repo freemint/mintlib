@@ -33,6 +33,3 @@ __ffss (short int bits)
 	shift = (ind > 0xff) ? 8 : 0;
 	return lookup[ind >> shift] + shift;
 }
-#ifdef __MSHORT__
-weak_alias (__ffss, ffs)
-#endif

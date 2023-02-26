@@ -13,8 +13,4 @@ Erange	= ERANGE
 #define Errno	C_SYMBOL_NAME(errno)
 #define Stderr	C_SYMBOL_NAME(stderr)
 
-#ifdef __MSHORT__
-#define Emove	movew
-#else
 #define Emove	movel
-#endif

@@ -46,9 +46,5 @@ int rand(void)
   if ( _lseed < 0 )
     _lseed += M;
 
-#ifdef __MSHORT__
-  return( (int)(_lseed & 0x7fffL) );	/* how "good" is it now ? */
-#else
   return( (int) _lseed );
-#endif
   }

@@ -38,33 +38,21 @@
 /* Decimal notation.  */
 # define PRId8		"d"
 # define PRId16		"d"
-#ifdef __MSHORT__
-# define PRId32		"ld"
-#else
 # define PRId32		"d"
-#endif
 #ifndef __NO_LONGLONG
 # define PRId64		"lld"
 #endif
 
 # define PRIdLEAST8	"d"
 # define PRIdLEAST16	"d"
-#ifdef __MSHORT__
-# define PRIdLEAST32	"ld"
-#else
 # define PRIdLEAST32	"d"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIdLEAST64	"lld"
 #endif
 
 # define PRIdFAST8	"d"
 # define PRIdFAST16	"d"
-#ifdef __MSHORT__
-# define PRIdFAST32	"ld"
-#else
 # define PRIdFAST32	"d"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIdFAST64	"lld"
 #endif
@@ -72,33 +60,21 @@
 
 # define PRIi8		"i"
 # define PRIi16		"i"
-#ifdef __MSHORT__
-# define PRIi32		"li"
-#else
 # define PRIi32		"i"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIi64		"lli"
 #endif
 
 # define PRIiLEAST8	"i"
 # define PRIiLEAST16	"i"
-#ifdef __MSHORT__
-# define PRIiLEAST32	"li"
-#else
 # define PRIiLEAST32	"i"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIiLEAST64	"lli"
 #endif
 
 # define PRIiFAST8	"i"
 # define PRIiFAST16	"i"
-#ifdef __MSHORT__
-# define PRIiFAST32	"li"
-#else
 # define PRIiFAST32	"i"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIiFAST64	"lli"
 #endif
@@ -106,33 +82,21 @@
 /* Octal notation.  */
 # define PRIo8		"o"
 # define PRIo16		"o"
-#ifdef __MSHORT__
-# define PRIo32		"lo"
-#else
 # define PRIo32		"o"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIo64		"llo"
 #endif
 
 # define PRIoLEAST8	"o"
 # define PRIoLEAST16	"o"
-#ifdef __MSHORT__
-# define PRIoLEAST32	"lo"
-#else
 # define PRIoLEAST32	"o"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIoLEAST64	"llo"
 #endif
 
 # define PRIoFAST8	"o"
 # define PRIoFAST16	"o"
-#ifdef __MSHORT__
-# define PRIoFAST32	"lo"
-#else
 # define PRIoFAST32	"o"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIoFAST64	"llo"
 #endif
@@ -140,33 +104,21 @@
 /* Unsigned integers.  */
 # define PRIu8		"u"
 # define PRIu16		"u"
-#ifdef __MSHORT__
-# define PRIu32		"lu"
-#else
 # define PRIu32		"u"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIu64		"llu"
 #endif
 
 # define PRIuLEAST8	"u"
 # define PRIuLEAST16	"u"
-#ifdef __MSHORT__
-# define PRIuLEAST32	"lu"
-#else
 # define PRIuLEAST32	"u"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIuLEAST64	"llu"
 #endif
 
 # define PRIuFAST8	"u"
 # define PRIuFAST16	"u"
-#ifdef __MSHORT__
-# define PRIuFAST32	"lu"
-#else
 # define PRIuFAST32	"u"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIuFAST64	"llu"
 #endif
@@ -174,33 +126,21 @@
 /* lowercase hexadecimal notation.  */
 # define PRIx8		"x"
 # define PRIx16		"x"
-#ifdef __MSHORT__
-# define PRIx32		"lx"
-#else
 # define PRIx32		"x"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIx64		"llx"
 #endif
 
 # define PRIxLEAST8	"x"
 # define PRIxLEAST16	"x"
-#ifdef __MSHORT__
-# define PRIxLEAST32	"lx"
-#else
 # define PRIxLEAST32	"x"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIxLEAST64	"llx"
 #endif
 
 # define PRIxFAST8	"x"
 # define PRIxFAST16	"x"
-#ifdef __MSHORT__
-# define PRIxFAST32	"lx"
-#else
 # define PRIxFAST32	"x"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIxFAST64	"llx"
 #endif
@@ -208,33 +148,21 @@
 /* UPPERCASE hexadecimal notation.  */
 # define PRIX8		"X"
 # define PRIX16		"X"
-#ifdef __MSHORT__
-# define PRIX32		"lX"
-#else
 # define PRIX32		"X"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIX64		"llX"
 #endif
 
 # define PRIXLEAST8	"X"
 # define PRIXLEAST16	"X"
-#ifdef __MSHORT__
-# define PRIXLEAST32	"lX"
-#else
 # define PRIXLEAST32	"X"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIXLEAST64	"llX"
 #endif
 
 # define PRIXFAST8	"X"
 # define PRIXFAST16	"X"
-#ifdef __MSHORT__
-# define PRIXFAST32	"lX"
-#else
 # define PRIXFAST32	"X"
-#endif
 #ifndef __NO_LONGLONG
 # define PRIXFAST64	"llX"
 #endif
@@ -259,21 +187,12 @@
 
 
 /* Macros for printing `intptr_t' and `uintptr_t'.  */
-#ifdef __MSHORT__
-# define PRIdPTR	"ld"
-# define PRIiPTR	"li"
-# define PRIoPTR	"lo"
-# define PRIuPTR	"lu"
-# define PRIxPTR	"lx"
-# define PRIXPTR	"lX"
-#else
 # define PRIdPTR	"d"
 # define PRIiPTR	"i"
 # define PRIoPTR	"o"
 # define PRIuPTR	"u"
 # define PRIxPTR	"x"
 # define PRIXPTR	"X"
-#endif
 
 
 /* Macros for scanning format specifiers.  */
@@ -281,33 +200,21 @@
 /* Signed decimal notation.  */
 # define SCNd8		"hhd"
 # define SCNd16		"hd"
-#ifdef __MSHORT__
-# define SCNd32		"ld"
-#else
 # define SCNd32		"d"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNd64		"lld"
 #endif
 
 # define SCNdLEAST8	"hhd"
 # define SCNdLEAST16	"hd"
-#ifdef __MSHORT__
-# define SCNdLEAST32	"ld"
-#else
 # define SCNdLEAST32	"d"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNdLEAST64	"lld"
 #endif
 
 # define SCNdFAST8	"hhd"
 # define SCNdFAST16	"d"
-#ifdef __MSHORT__
-# define SCNdFAST32	"ld"
-#else
 # define SCNdFAST32	"d"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNdFAST64	"lld"
 #endif
@@ -315,33 +222,21 @@
 /* Signed decimal notation.  */
 # define SCNi8		"hhi"
 # define SCNi16		"hi"
-#ifdef __MSHORT__
-# define SCNi32		"li"
-#else
 # define SCNi32		"i"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNi64		"lli"
 #endif
 
 # define SCNiLEAST8	"hhi"
 # define SCNiLEAST16	"hi"
-#ifdef __MSHORT__
-# define SCNiLEAST32	"li"
-#else
 # define SCNiLEAST32	"i"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNiLEAST64	"lli"
 #endif
 
 # define SCNiFAST8	"hhi"
 # define SCNiFAST16	"i"
-#ifdef __MSHORT__
-# define SCNiFAST32	"li"
-#else
 # define SCNiFAST32	"i"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNiFAST64	"lli"
 #endif
@@ -349,33 +244,21 @@
 /* Unsigned decimal notation.  */
 # define SCNu8		"hhu"
 # define SCNu16		"hu"
-#ifdef __MSHORT__
-# define SCNu32		"lu"
-#else
 # define SCNu32		"u"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNu64		"llu"
 #endif
 
 # define SCNuLEAST8	"hhu"
 # define SCNuLEAST16	"hu"
-#ifdef __MSHORT__
-# define SCNuLEAST32	"lu"
-#else
 # define SCNuLEAST32	"u"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNuLEAST64	"llu"
 #endif
 
 # define SCNuFAST8	"hhu"
 # define SCNuFAST16	"u"
-#ifdef __MSHORT__
-# define SCNuFAST32	"lu"
-#else
 # define SCNuFAST32	"u"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNuFAST64	"llu"
 #endif
@@ -383,33 +266,21 @@
 /* Octal notation.  */
 # define SCNo8		"hho"
 # define SCNo16		"ho"
-#ifdef __MSHORT__
-# define SCNo32		"lo"
-#else
 # define SCNo32		"o"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNo64		"llo"
 #endif
 
 # define SCNoLEAST8	"hho"
 # define SCNoLEAST16	"ho"
-#ifdef __MSHORT__
-# define SCNoLEAST32	"lo"
-#else
 # define SCNoLEAST32	"o"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNoLEAST64	"llo"
 #endif
 
 # define SCNoFAST8	"hho"
 # define SCNoFAST16	"o"
-#ifdef __MSHORT__
-# define SCNoFAST32	"lo"
-#else
 # define SCNoFAST32	"o"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNoFAST64	"llo"
 #endif
@@ -417,33 +288,21 @@
 /* Hexadecimal notation.  */
 # define SCNx8		"hhx"
 # define SCNx16		"hx"
-#ifdef __MSHORT__
-# define SCNx32		"lx"
-#else
 # define SCNx32		"x"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNx64		"llx"
 #endif
 
 # define SCNxLEAST8	"hhx"
 # define SCNxLEAST16	"hx"
-#ifdef __MSHORT__
-# define SCNxLEAST32	"lx"
-#else
 # define SCNxLEAST32	"x"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNxLEAST64	"llx"
 #endif
 
 # define SCNxFAST8	"hhx"
 # define SCNxFAST16	"x"
-#ifdef __MSHORT__
-# define SCNxFAST32	"lx"
-#else
 # define SCNxFAST32	"x"
-#endif
 #ifndef __NO_LONGLONG
 # define SCNxFAST64	"llx"
 #endif
@@ -465,19 +324,11 @@
 #endif
 
 /* Macros for scaning `intptr_t' and `uintptr_t'.  */
-#ifdef __MSHORT__
-# define SCNdPTR	"ld"
-# define SCNiPTR	"li"
-# define SCNoPTR	"lo"
-# define SCNuPTR	"lu"
-# define SCNxPTR	"lx"
-#else
 # define SCNdPTR	"d"
 # define SCNiPTR	"i"
 # define SCNoPTR	"o"
 # define SCNuPTR	"u"
 # define SCNxPTR	"x"
-#endif
 
 #endif	/* C++ && format macros */
 

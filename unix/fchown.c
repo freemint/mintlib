@@ -20,12 +20,10 @@ __fchown (int fd, uid_t owner, gid_t group)
 {
 	int r;
 
-#ifndef __MSHORT__
 	if (fd > SHRT_MAX) {
 		__set_errno (EBADF);
 		return -1;
 	}
-#endif
 	r = Ffchown (fd, owner, group);
 	if (r != 0) {
 		__set_errno (-r);

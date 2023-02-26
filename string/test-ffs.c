@@ -23,9 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef __MSHORT__
-# define ffs ffsl
-#endif
 
 int
 main (void)

@@ -81,13 +81,8 @@ C_SYMBOL_NAME(ldexp):
 #endif
 	bclr	#4,%d3		| nah, we do not need stinkin leadin 1
 1:	movew	%d3,%a1@		| save results of our efforts
-#ifdef __MSHORT__
-	addw	%a1@(8),%d0	| add in exponent
-	extl	%d0
-#else
 	extl	%d0
 	addl	%a1@(8),%d0	| add in exponent
-#endif
 	cmpl	#-53,%d0		| hmm. works only if 1 in implied position...
 	jle	retz		| range error - underflow
 	cmpl	#0x7ff,%d0
@@ -155,12 +150,7 @@ L0:
 |# ported fromt sfp004 to real coprocessor, mjr, August 1991
 |##############################################################################
 
-#ifdef __MSHORT__
-	movew	%sp@(12),%d0		| get exponent
-	extl	%d0
-#else
 	movel	%sp@(12),%d0		| get exponent
-#endif
 	fgetexpd %sp@(4),%fp1		| extract exponent of 1st arg
 	fmovel	%fp1,%d1			| d1 serves as accumulator
 	addl	%d0,%d1			| sum of exp_s of both args
@@ -200,12 +190,7 @@ zahl =	  0	|	fpu data reg
 |	or
 |	.long	0x0c6889000, 0x000067f8			(a0)
 
-#ifdef __MSHORT__
-	movew	%sp@(12),%d0		| get exponent
-	extl	%d0
-#else
 	movel	%sp@(12),%d0		| get exponent
-#endif
 	lea	0xfffffa50:w,%a0		| fpu address
 	movew	#0x549e,%a0@(comm)	| fgetexpd %sp@(4),%fp1
 	cmpiw	#0x8900,%a0@(resp)

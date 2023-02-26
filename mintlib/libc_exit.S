@@ -26,11 +26,7 @@ C_SYMBOL_NAME(__libc_exit):
 #else
 	moveml	%d5/%a4/%a5,%sp@-
 #endif
-#ifndef __MSHORT__
 	movel %a6@(8),%d3
-#else
-	movew %a6@(8),%d3
-#endif
 | now on _mcleanup handled
 |	clrl %sp@-
 |	jbsr C_SYMBOL_NAME(_moncontrol)

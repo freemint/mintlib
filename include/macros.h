@@ -97,23 +97,6 @@
 
 #else
 
-#ifdef __PUREC__
-
-static __inline unsigned long  __ROLL(unsigned long x, int offset) 0xe3b8;
-static __inline unsigned short __ROLW(unsigned short x, int offset) 0xe378;
-static __inline unsigned char  __RORB(unsigned char x, int offset) 0xe338;
-static __inline unsigned long  __RORL(unsigned long x, int offset) 0xe2b8;
-static __inline unsigned short __RORW(unsigned short x, int offset) 0xe278;
-static __inline unsigned char  __RORB(unsigned char x, int offset) 0xe238;
-
-#define ROLL(offset, x)	__ROLL(x, offset)
-#define RORL(offset, x)	__RORL(x, offset)
-#define ROLW(offset, x)	__ROLW(x, offset)
-#define RORW(offset, x)	__RORW(x, offset)
-#define ROLB(offset, x)	__ROLB(x, offset)
-#define RORB(offset, x)	__RORB(x, offset)
-
-#else
 
 static __inline unsigned long ROLL(int offset, unsigned long x)
 {
@@ -145,20 +128,9 @@ static __inline unsigned char RORB(int offset, unsigned char x)
 	return (x >> offset) | (x << (8 - offset));
 }
 
-#endif
 
 #endif
 
-#ifdef __PUREC__
-
-static __inline unsigned long ROLL1(unsigned long x) 0xe398;
-static __inline unsigned short ROLW1(unsigned short x) 0xe358;
-static __inline unsigned char ROLB1(unsigned char x) 0xe318;
-static __inline unsigned long RORL1(unsigned long x) 0xe298;
-static __inline unsigned short RORW1(unsigned short x) 0xe258;
-static __inline unsigned char RORB1(unsigned char x) 0xe218;
-
-#else
 
 #define ROLL1(x)	ROLL(1, x)
 #define RORL1(x)	RORL(1, x)
@@ -167,6 +139,5 @@ static __inline unsigned char RORB1(unsigned char x) 0xe218;
 #define ROLB1(x)	ROLB(1, x)
 #define RORB1(x)	RORB(1, x)
 
-#endif
 
 #endif /* _MACROS_H */

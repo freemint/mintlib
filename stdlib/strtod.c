@@ -199,15 +199,8 @@ static const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #endif
 #define SWAP(x, y)		({ typeof(x) _tmp = x; x = y; y = _tmp; })
 
-#ifndef __MSHORT__
 #define NDIG			(MAX_10_EXP - MIN_10_EXP + 2 * MANT_DIG)
 #define HEXNDIG			((MAX_EXP - MIN_EXP + 7) / 8 + 2 * MANT_DIG)
-#else
-#define NDIG			\
-((long) ((long) MAX_10_EXP - (long) MIN_10_EXP + 2L * (long) MANT_DIG))
-#define HEXNDIG			\
-((long) (((long) MAX_EXP - (long) MIN_EXP + 7L) / 8L * 2L * (long) MANT_DIG))
-#endif
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
 #define RETURN(val,end)							      \
@@ -458,11 +451,7 @@ INTERNAL (STRTOF) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group LOCA
   int exponent;			/* Exponent of the number.  */
 
   /* Numbers starting `0X' or `0x' have to be processed with base 16.  */
-#ifndef __MSHORT__
   int base = 10;
-#else
-  long int base = 10;
-#endif
 
   /* When we have to compute fractional digits we form a fraction with a
      second multi-precision number (and we sometimes need a second for
@@ -481,11 +470,7 @@ INTERNAL (STRTOF) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group LOCA
   /* Points at the character following the integer and fractional digits.  */
   const STRING_TYPE *expp;
   /* Total number of digit and number of digits in integer part.  */
-#ifndef __MSHORT__
   int dig_no, int_no, lead_zero;
-#else
-  long int dig_no, int_no, lead_zero;
-#endif
   /* Contains the last character read.  */
   CHAR_TYPE c;
 

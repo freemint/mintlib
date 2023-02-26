@@ -16,9 +16,7 @@
 __BEGIN_DECLS
 
 struct __wait {
-#ifndef __MSHORT__
         unsigned        junk:16;        /* padding to make it 32 bits */
-#endif
         /* MiNT does actually return the exit value in the lower 8 bits, and
            coredump and termsig in the upper bits.  The value is byteswapped
            within the library to make it compliant with most other systems.  */

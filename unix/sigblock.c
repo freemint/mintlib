@@ -5,11 +5,7 @@
 #include "lib.h"
 
 
-#ifdef __MSHORT__
-long
-#else
 int
-#endif
 __sigblock(long mask)
 {
 	register long omask;

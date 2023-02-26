@@ -13,9 +13,6 @@
 #include <sys/ptrace.h>
 #include <mint/mintbind.h>
 
-#ifdef __MSHORT__
-#define int long /* FIXME: change data to be "long" instead" */
-#endif
 
 __typeof__(ptrace) __ptrace;
 

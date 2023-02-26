@@ -133,15 +133,9 @@ __EXTERN int sigpause __P ((int __mask));
 #endif
 
 #ifdef __USE_BSD
-#ifdef __MSHORT__
-__EXTERN long	sigsetmask  __P((long mask));
-__EXTERN long	sigblock    __P((long mask));
-__EXTERN long	__sigblock    __P((long mask));
-#else
 __EXTERN int	sigsetmask  __P((long mask));
 __EXTERN int	sigblock    __P((long mask));
 __EXTERN int	__sigblock    __P((long mask));
-#endif
 /* a mask for signals */
 #define sigmask(__sig) __sigmask(__sig)
 #endif /* BSD */

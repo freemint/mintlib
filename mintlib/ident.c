@@ -10,7 +10,4 @@ char __Ident_gnulib[] = "$Version: MiNTLib "
 #ifdef __M68881__
 "-m68881 "
 #endif
-#ifdef __MSHORT__
-"-mshort "
-#endif
 VERSION" $";

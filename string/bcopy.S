@@ -20,41 +20,19 @@
 |	returns dest
 |	functions are aliased
 
-#ifndef __SOZOBON__
 C_SYMBOL_NAME(memcpy):
 C_SYMBOL_NAME(memmove):
 	movl	%sp@(4),%a1	| dest
 	movl	%sp@(8),%a0	| src
 	jra	common		| the rest is samea as bcopy
-#else
-|	___bcopy() is the base function below; for memcpy(), memmove()
-|	and bcopy(), we have to sneak a size_t into an unsigned long first.
-
-C_SYMBOL_NAME(memcpy):
-C_SYMBOL_NAME(memmove):
-	movl	%sp@(4),%a1	| dest
-	movl	%sp@(8),%a0	| src
-	clrl	%d0		| here is the sneaky bit...
-	movw	%sp@(12),%d0	| length
-	jra	common2		| the rest is samea as bcopy
-
-C_SYMBOL_NAME(bcopy):
-	movl	%sp@(4),%a0	| src
-	movl	%sp@(8),%a1	| dest
-	clrl	%d0		| here is the sneaky bit...
-	movw	%sp@(12),%d0	| length
-	jra	common2		| the rest is samea as bcopy
-#endif
 
 |	void bcopy( const void *src, void *dest, size_t length );
 |	void _bcopy( const void *src, void *dest, unsigned long length );
 |	return value not used (returns src)
 |	functions are aliased (except for HSC -- sb)
 
-#ifndef __SOZOBON__
 C_SYMBOL_NAME(bcopy):
 C_SYMBOL_NAME(__bcopy):
-#endif
 C_SYMBOL_NAME(_bcopy):
 	movl	%sp@(4),%a0	| src
 	movl	%sp@(8),%a1	| dest

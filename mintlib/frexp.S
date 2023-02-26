@@ -24,11 +24,7 @@ BIAS8	=	0x3ff - 1
 	.globl C_SYMBOL_NAME(frexp)
 C_SYMBOL_NAME(frexp):
 	movel	%sp@(12),%a0	| initialize exponent for loop
-#ifdef __MSHORT__
-	clrw	%a0@
-#else
 	clrl	%a0@
-#endif
 	lea	%sp@(4),%a1	| sp@(4) -> a1 - an address of value
 |				|   and a1@(8) - an address of *eptr
 	movel	%a1@,%d0		| keep value.sign
@@ -81,12 +77,8 @@ nonzero:
 #else
 	subw	#BIAS8,%d0	| remove bias
 #endif
-#ifdef __MSHORT__
-	addw	%d0,%a0@		| add current exponent in
-#else
 	extl	%d0
 	addl	%d0,%a0@		| add current exponent in
-#endif
 
 	movew	#BIAS8,%d0	| set bias for return value
 	clrw	%d1		| rounding = 0
@@ -139,23 +131,14 @@ C_SYMBOL_NAME(frexp):
 	fgetexpx %fp0,%fp1		| get expnent
 	fgetmanx %fp0,%fp0		| get mantissa
 	fscaleb #-1,%fp0			|
-#ifdef __MSHORT__
-	fmovew	%fp1,%a1@			| fetch exp (fmovew from fp1)
-	addqw	#1,%a1@			| correct result
-#else
 	fmovel	%fp1,%a1@			| fetch exp (fmovel from fp1)
 	addql	#1,%a1@			| correct result
-#endif
 	fmoved	%fp0,%sp@-		| now fetch significand
 	moveml	%sp@+,%d0-%d1
 	rts
 null_:
 	moveml	%sp@(4),%d0-%d1
-#ifdef __MSHORT__
-	clrw	%a1@
-#else
 	clrl	%a1@
-#endif
 	rts
 
 #endif	/* __M68881__ */
@@ -204,11 +187,7 @@ C_SYMBOL_NAME(frexp):
 	tstl	%sp@(8)
 	jne	nonzero
 	movel	%sp@(12),%a0
-#ifdef __MSHORT__
-	clrw	%a0@
-#else
 	clrl	%a0@
-#endif
 	clrl	%d0
 	clrl	%d1
 	rts
@@ -230,15 +209,9 @@ nonzero:
 	.long	0x0c688900, 0xfff067f8
 	movew	#-1,%a0@
 
-#ifdef __MSHORT__
-	movew	#0x7080,%a0@(comm)	| fetch exp (fmovew from fp1)
-	.long	0x0c688900, 0xfff067f8
-	movew	%a0@,%a1@			| return exp
-#else
 	movew	#0x6080,%a0@(comm)	| fetch exp (fmovel from fp1)
 	.long	0x0c688900, 0xfff067f8
 	movel	%a0@,%a1@			| return exp
-#endif
 	movew	#0x7400,%a0@(comm)	| now fetch significand
 	.long	0x0c688900, 0xfff067f8
 	movel	%a0@,%d0

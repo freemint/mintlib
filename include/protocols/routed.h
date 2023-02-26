@@ -53,11 +53,7 @@
 
 struct netinfo {
 	struct	sockaddr rip_dst;	/* destination net/host */
-#ifdef __MSHORT__
-	long 	rip_metric;		/* cost of route */
-#else
 	int	rip_metric;		/* cost of route */
-#endif
 };
 
 struct rip {

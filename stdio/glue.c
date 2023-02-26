@@ -36,11 +36,7 @@ typedef union
   {
     struct
       {
-#ifndef __MSHORT__
 	int magic;
-#else
-	long magic;
-#endif
 	FILE **streamp;		/* Overlaps GNU stdio `bufp' member.  */
 	/* This overlaps the GNU stdio `get_limit' and `put_limit'
 	   members.  They must be <= `streamp'/`bufp' for GNU getc and putc

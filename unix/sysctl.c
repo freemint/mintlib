@@ -12,9 +12,6 @@
 #include <mint/mintbind.h>
 #include <mint/sysctl.h>
 
-#ifdef __MSHORT__
-#error sysctl not 16bit int clean
-#endif
 
 int
 __sysctl (int *name, unsigned long namelen, void *old, unsigned long *oldlenp,

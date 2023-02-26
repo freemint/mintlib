@@ -41,11 +41,7 @@ extern __io_fileno_fn __stdio_fileno;
 ssize_t
 __stdio_read (void *cookie, char *buf, size_t n)
 {
-#ifndef __MSHORT__
   const int fd = (int) cookie;
-#else
-  const long int fd = (long int) cookie;
-#endif
 #if defined EINTR && defined EINTR_REPEAT
   int save = errno;
   ssize_t nread;
@@ -71,11 +67,7 @@ __stdio_read (void *cookie, char *buf, size_t n)
 ssize_t
 __stdio_text_read (void* cookie, char* buf, size_t n)
 {
-#ifndef __MSHORT__
   const int fd = (int) cookie;
-#else
-  const long int fd = (long int) cookie;
-#endif
 
   int save = errno;
   ssize_t nread = 0;
@@ -164,11 +156,7 @@ __stdio_text_read (void* cookie, char* buf, size_t n)
 ssize_t
 __stdio_write (void *cookie, const char *buf, size_t n)
 {
-#ifndef __MSHORT__
   const int fd = (int) cookie;
-#else
-  const long int fd = (long int) cookie;
-#endif
   register size_t written = 0;
 
   while (n > 0)
@@ -196,11 +184,7 @@ __stdio_write (void *cookie, const char *buf, size_t n)
 ssize_t
 __stdio_text_write (void *cookie, const char *buf, size_t n)
 {
-#ifndef __MSHORT__
   const int fd = (int) cookie;
-#else
-  const long int fd = (long int) cookie;
-#endif
   register size_t written = 0;
   size_t blocksize = 8192;
   struct stat statbuf;
@@ -269,11 +253,7 @@ int
 __stdio_seek (void *cookie, fpos_t *pos, int whence)
 {
   off_t new;
-#ifndef __MSHORT__
   new = __lseek ((int) cookie, (off_t) *pos, whence);
-#else
-  new = __lseek ((long int) cookie, (off_t) * pos, whence);
-#endif
   if (new < 0)
     return -1;
   *pos = (fpos_t) new;

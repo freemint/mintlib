@@ -8,12 +8,7 @@
 #include "lib.h"
 
 
-#ifdef __MSHORT__
-typedef void __CDECL (*__KerSigfunc) (long, long);
-extern void __CDECL _trampoline (long sig, long code);
-#else
 typedef void __CDECL (*__KerSigfunc) (int);
-#endif
 
 int
 __sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
@@ -34,22 +29,10 @@ __sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 			return -1;
 		}
 
-#ifdef __MSHORT__
-/* NOTE: MiNT passes 32 bit numbers for signals, so we want our
- * own signal dispatcher to switch these to 16 bit ints
- */
-		oldfunc = _sig_handler[sig];
-#endif
 		if (act) {
 			kact.sa_handler = (__KerSigfunc) act->sa_handler;
 			kact.sa_mask = act->sa_mask;
 			kact.sa_flags = (short) act->sa_flags;
-#ifdef __MSHORT__
-			_sig_handler[sig] = (sighandler_t)kact.sa_handler;
-			if (_sig_handler[sig] != SIG_DFL && _sig_handler[sig] != SIG_IGN) {
-				kact.sa_handler = _trampoline;
-			}
-#endif
 		}
 		r = Psigaction(sig, (act ? &kact : 0L), (oact ? &koact : 0L));
 		if (r < 0) {
@@ -63,14 +46,7 @@ __sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 		if (oact) {
 			oact->sa_mask = koact.sa_mask;
 			oact->sa_flags = (int) koact.sa_flags;
-#ifdef __MSHORT__
-			oact->sa_handler =
-			  ((koact.sa_handler == (__KerSigfunc) _trampoline)
-			   ? oldfunc
-			   : (sighandler_t) koact.sa_handler);
-#else
 			oact->sa_handler = (sighandler_t) koact.sa_handler;
-#endif
 		}
 	}
 	else {

@@ -17,11 +17,7 @@ __BEGIN_DECLS
 #define __need_NULL
 #include <stddef.h>
 
-#ifdef __MSHORT__
-#define	RAND_MAX	(0x7FFF)	/* maximum value from rand() */
-#else
 #define	RAND_MAX	(0x7FFFFFFFL)	/* maximum value from rand() */
-#endif
 
 #define MB_CUR_MAX	1		/* max. length of multibyte character
 					   in current locale */

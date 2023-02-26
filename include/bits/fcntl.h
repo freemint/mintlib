@@ -121,8 +121,4 @@ struct flock
  * and since Fopen etc are declared as returning long in osbind.h
  * the sign-extension will not happen -- thanks ers
  */
-#ifdef __MSHORT__
-#define __SMALLEST_VALID_HANDLE (-3)
-#else
 #define __SMALLEST_VALID_HANDLE (0)
-#endif

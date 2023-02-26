@@ -25,13 +25,8 @@ typedef long (*func) ();
 /* Grab the array.  */
 #include "syscalls.h"
 
-#ifdef __MSHORT__
-long syscall (int opcode, ...);
-long syscall (int opcode, ...)
-#else
 int syscall (int opcode, ...);
 int syscall (int opcode, ...)
-#endif
 {
   va_list args;
   long retval;

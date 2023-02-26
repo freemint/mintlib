@@ -18,18 +18,8 @@
 
 C_SYMBOL_NAME(memset):
 	movl	%sp@(4),%a0	| dest
-#ifdef __MSHORT__
-	movb	%sp@(9),%d0	| value
-# ifndef __SOZOBON__
-	movl	%sp@(10),%d1	| length
-# else
-	clrl	%d1
-	movw	%sp@(10),%d1	| length
-# endif
-#else
 	movb	%sp@(11),%d0	| value
 	movl	%sp@(12),%d1	| length
-#endif
 	jeq	exit		| length==0? (size_t)
 #ifndef Lmemset
 	jra	do_set
@@ -45,17 +35,8 @@ C_SYMBOL_NAME(memset):
 |	void _bzero( void *dest, unsigned long length );
 |	return value not used (returns dest)
 
-#ifdef __SOZOBON__
 C_SYMBOL_NAME(__bzero):
 C_SYMBOL_NAME(bzero):
-	movl	%sp@(4),%a0	| dest
-	clrl	%d1
-	movw	%sp@(8),%d1	| length
-	jra	scommon
-#else
-C_SYMBOL_NAME(__bzero):
-C_SYMBOL_NAME(bzero):
-#endif
 C_SYMBOL_NAME(_bzero):
 	movl	%sp@(4),%a0	| dest
 	movl	%sp@(8),%d1	| length

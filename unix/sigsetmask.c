@@ -27,11 +27,7 @@ checksigs(void)
 	}
 }
 
-#ifdef __MSHORT__
-long
-#else
 int
-#endif
 __sigsetmask(long mask)
 {
 	register long omask;

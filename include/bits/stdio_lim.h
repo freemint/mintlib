@@ -12,15 +12,7 @@
 
 #define L_tmpnam 128
 
-#ifdef __MSHORT__
-/* Maximum number temporary file names you can create with tmpnam.  
-   Actually the values are much higher (you will run out of inodes 
-   before you reach the limit) but TMP_MAX should allow a comparison
-   against an integer.  */
-# define TMP_MAX 32767
-#else
 # define TMP_MAX 2147483647
-#endif
 
 #ifdef __USE_POSIX
 # define L_ctermid 128

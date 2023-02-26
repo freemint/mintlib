@@ -41,16 +41,9 @@ enum
 /* Structure describing a word-expansion run.  */
 typedef struct
   {
-#ifndef __MSHORT__
     int we_wordc;		/* Count of words matched.  */
     char **we_wordv;		/* List of expanded words.  */
     int we_offs;		/* Slots to reserve in `we_wordv'.  */
-#else
-    /* This is not POSIX but better than an overrun.  */
-    long int we_wordc;
-    char** we_wordv;
-    long int we_offs;
-#endif
   } wordexp_t;
 
 /* Possible nonzero return values from `wordexp'.  */

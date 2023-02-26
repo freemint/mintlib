@@ -40,11 +40,7 @@
 __BEGIN_DECLS
 
 /* Reboot the system or enable/disable CTRL-ALT-DEL keystroke.  */
-#ifndef __MSHORT__
 extern int reboot (int __howto) __THROW;
-#else
-extern int reboot (long int __howto) __THROW;
-#endif
 
 __END_DECLS
 

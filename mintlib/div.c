@@ -23,18 +23,5 @@ div(int num, int denom)
 	
 	return res;
 }
-#ifndef __MSHORT__
 strong_alias (div, ldiv)
-#else
-ldiv_t
-ldiv(long num, long denom)
-{
-	ldiv_t res;
-	
-	res.quot = num / denom;
-	res.rem = num % denom;
-	
-	return res;
-}
-#endif
 

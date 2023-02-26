@@ -45,6 +45,4 @@ __ffsl (long int bits)
 }
 
 weak_alias (__ffsl, ffsl)
-#ifndef __MSHORT__
 weak_alias (__ffsl, ffs)
-#endif
