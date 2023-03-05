@@ -57,7 +57,7 @@
 ** seven explicit spaces, two explicit colons, a newline,
 ** and a trailing NUL byte).
 ** The values above are for systems where an int is 32 bits and are provided
-** as an example; the define below calculates the maximum for the system at
+** as an example; the size expression below is a bound for the system at
 ** hand.
 */
 #define MAX_ASCTIME_BUF_SIZE	(2*3+5*INT_STRLEN_MAXIMUM(int)+7+2+1+1)
@@ -68,7 +68,7 @@ static char buf_asctime[MAX_ASCTIME_BUF_SIZE];
 ** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
 */
 
-char *asctime_r(register const struct tm *timeptr, char *buf)
+char *asctime_r(const struct tm *timeptr, char *buf)
 {
 	static const char wday_name[][4] = {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
@@ -77,8 +77,8 @@ char *asctime_r(register const struct tm *timeptr, char *buf)
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 	};
-	register const char *wn;
-	register const char *mn;
+	const char *wn;
+	const char *mn;
 	char year[INT_STRLEN_MAXIMUM(int) + 2];
 	char result[MAX_ASCTIME_BUF_SIZE];
 
@@ -125,7 +125,7 @@ char *asctime_r(register const struct tm *timeptr, char *buf)
 ** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
 */
 
-char *asctime(register const struct tm *timeptr)
+char *asctime(const struct tm *timeptr)
 {
 	return asctime_r(timeptr, buf_asctime);
 }

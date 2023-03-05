@@ -41,18 +41,15 @@ to decide which database source files should be compiled.  Usually
 you should choose all of them, currently:
 
 africa antarctica asia australasia europe northamerica southamerica
-pacificnew etcetera factory backward systemv solar87 solar88 solar89
-
-Make sure that the file "yearistype" exists, if not, copy it from
-"yearistype.sh" and make it executable with "chmod +x yearistype".
+etcetera factory backward solar87 solar88 solar89
 
 Next you have to decide where to install the database.  The library
-expects in in "/usr/share/zoneinfo" and you shouldn't change that
+expects it in "/usr/share/zoneinfo" and you shouldn't change that
 path unless you really know why.
 
 Now install the database with the command:
 
-	./zic -d /usr/share/zoneinfo -y ./yearistype -L leapseconds [SRCFILES]
+	./zic -d /usr/share/zoneinfo -L leapseconds [SRCFILES]
 
 Replacs "[SRCFILES]" with the list of source files you chose to
 install.  This will install a time zone database which will calculate

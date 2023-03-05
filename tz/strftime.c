@@ -114,7 +114,7 @@ static char *_fmt(const char *, const struct tm *, char *, const char *, enum wa
 static char *_yconv(int, int, int, int, char *, const char *);
 
 #ifndef YEAR_2000_NAME
-#define YEAR_2000_NAME	"CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
+#define YEAR_2000_NAME "CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
 #endif
 
 #if HAVE_STRFTIME_L
@@ -129,10 +129,16 @@ size_t strftime_l(char *s, size_t maxsize, const char *format, const struct tm *
 size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
 {
 	char *p;
+	int saved_errno = errno;
 	enum warn warn = IN_NONE;
 
 	tzset();
 	p = _fmt(format, t, s, s + maxsize, &warn);
+	if (p == NULL)
+	{
+		errno = EOVERFLOW;
+		return 0;
+	}
 	if (DEPRECATE_TWO_DIGIT_YEARS && warn != IN_NONE && getenv(YEAR_2000_NAME))
 	{
 		fprintf(stderr, "\n");
@@ -147,8 +153,12 @@ size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
 		fprintf(stderr, "\n");
 	}
 	if (p == s + maxsize)
+	{
+		errno = ERANGE;
 		return 0;
+	}
 	*p = '\0';
+	errno = saved_errno;
 	return p - s;
 }
 
@@ -291,12 +301,32 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 					char buf[INT_STRLEN_MAXIMUM(time_t) + 1];
 					time_t mkt;
 
-					tm = *t;
+					tm.tm_sec = t->tm_sec;
+					tm.tm_min = t->tm_min;
+					tm.tm_hour = t->tm_hour;
+					tm.tm_mday = t->tm_mday;
+					tm.tm_mon = t->tm_mon;
+					tm.tm_year = t->tm_year;
+					tm.tm_isdst = t->tm_isdst;
+#if defined TM_GMTOFF && ! UNINIT_TRAP
+					tm.TM_GMTOFF = t->TM_GMTOFF;
+#endif
 					mkt = mktime(&tm);
+					/* If mktime fails, %s expands to the
+					   value of (time_t) -1 as a failure
+					   marker; this is better in practice
+					   than strftime failing.  */
 					if (TYPE_SIGNED(time_t))
-						sprintf(buf, "%" PRIdMAX, (intmax_t) mkt);
-					else
-						sprintf(buf, "%" PRIuMAX, (uintmax_t) mkt);
+					{
+						intmax_t n = mkt;
+
+						sprintf(buf, "%" PRIdMAX, n);
+					} else
+					{
+						uintmax_t n = mkt;
+
+						sprintf(buf, "%" PRIuMAX, n);
+					}
 					pt = _add(buf, pt, ptlim);
 				}
 				continue;
@@ -455,7 +485,7 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 				 */
 				continue;
 			case 'z':
-#if defined TM_GMTOFF || USG_COMPAT || defined ALTZONE
+#if defined TM_GMTOFF || USG_COMPAT || ALTZONE
 				{
 					long diff;
 					char const *sign;
@@ -492,7 +522,7 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 						continue;
 #endif
 					else
-#ifdef ALTZONE
+#if ALTZONE
 						diff = -altzone;
 #else
 						continue;
@@ -571,8 +601,8 @@ static char *_add(const char *str, char *pt, const char *ptlim)
 
 static char *_yconv(int a, int b, int convert_top, int convert_yy, char *pt, const char *ptlim)
 {
-	register int lead;
-	register int trail;
+	int lead;
+	int trail;
 
 #define DIVISOR	100
 	trail = a % DIVISOR + b % DIVISOR;

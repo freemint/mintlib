@@ -18,11 +18,13 @@ REPORT_BUGS_TO=tz@iana.org
 #
 #	Bash <https://www.gnu.org/software/bash/>
 #	Korn Shell <http://www.kornshell.com/>
-#	MirBSD Korn Shell <https://www.mirbsd.org/mksh.htm>
+#	MirBSD Korn Shell <http://www.mirbsd.org/mksh.htm>
 #
-# For portability to Solaris 9 /bin/sh this script avoids some POSIX
-# features and common extensions, such as $(...) (which works sometimes
-# but not others), $((...)), and $10.
+# For portability to Solaris 10 /bin/sh (supported by Oracle through
+# January 2024) this script avoids some POSIX features and common
+# extensions, such as $(...) (which works sometimes but not others),
+# $((...)), ! CMD, ${#ID}, ${ID##PAT}, ${ID%%PAT}, and $10.
+
 #
 # This script also uses several features of modern awk programs.
 # If your host lacks awk, or has an old awk that does not conform to Posix,
@@ -30,6 +32,7 @@ REPORT_BUGS_TO=tz@iana.org
 #
 #	Gawk (GNU awk) <https://www.gnu.org/software/gawk/>
 #	mawk <https://invisible-island.net/mawk/>
+#	nawk <https://github.com/onetrueawk/awk>
 
 
 # Specify default values for environment variables if they are unset.
@@ -101,14 +104,6 @@ then
 	esac
       done || exit
     }
-
-    # Work around a bug in bash 1.14.7 and earlier, where $PS3 is sent to stdout.
-    case $BASH_VERSION in
-    [01].*)
-      case `echo 1 | (select x in x; do break; done) 2>/dev/null` in
-      ?*) PS3=
-      esac
-    esac
   '
 else
   doselect() {
@@ -185,7 +180,7 @@ done
 # If the current locale does not support UTF-8, convert data to current
 # locale's format if possible, as the shell aligns columns better that way.
 # Check the UTF-8 of U+12345 CUNEIFORM SIGN URU TIMES KI.
-! $AWK 'BEGIN { u12345 = "\360\222\215\205"; exit length(u12345) != 1 }' &&
+$AWK 'BEGIN { u12345 = "\360\222\215\205"; exit length(u12345) != 1 }' || {
     { tmp=`(mktemp -d) 2>/dev/null` || {
 	tmp=${TMPDIR-/tmp}/tzselect.$$ &&
 	(umask 77 && mkdir -- "$tmp")
@@ -196,6 +191,7 @@ done
     TZ_COUNTRY_TABLE=$tmp/iso3166.tab &&
     iconv -f UTF-8 -t //TRANSLIT <"$TZ_ZONE_TABLE" >$tmp/$zonetabtype.tab &&
     TZ_ZONE_TABLE=$tmp/$zonetabtype.tab
+}
 
 newline='
 '
@@ -308,15 +304,24 @@ while
 
         quoted_continents=`
 	  $AWK '
+	    function handle_entry(entry) {
+	      entry = substr(entry, 1, index(entry, "/") - 1)
+	      if (entry == "America")
+	       entry = entry "s"
+	      if (entry ~ /^(Arctic|Atlantic|Indian|Pacific)$/)
+	       entry = entry " Ocean"
+	      printf "'\''%s'\''\n", entry
+	    }
 	    BEGIN { FS = "\t" }
 	    /^[^#]/ {
-              entry = substr($3, 1, index($3, "/") - 1)
-              if (entry == "America")
-		entry = entry "s"
-              if (entry ~ /^(Arctic|Atlantic|Indian|Pacific)$/)
-		entry = entry " Ocean"
-              printf "'\''%s'\''\n", entry
+              handle_entry($3)
             }
+	    /^#@/ {
+	      ncont = split($2, cont, /,/)
+	      for (ci = 1; ci <= ncont; ci++) {
+	        handle_entry(cont[ci])
+	      }
+	    }
           ' <"$TZ_ZONE_TABLE" |
 	  sort -u |
 	  tr '\n' ' '
@@ -400,15 +405,37 @@ while
 		*)
 		# Get list of names of countries in the continent or ocean.
 		countries=`$AWK \
-			-v continent="$continent" \
+			-v continent_re="^$continent/" \
 			-v TZ_COUNTRY_TABLE="$TZ_COUNTRY_TABLE" \
 		'
 			BEGIN { FS = "\t" }
-			/^#/ { next }
-			$3 ~ ("^" continent "/") {
-			    ncc = split($1, cc, /,/)
-			    for (i = 1; i <= ncc; i++)
+			/^#$/ { next }
+			/^#[^@]/ { next }
+			{
+			  commentary = $0 ~ /^#@/
+			  if (commentary) {
+			    col1ccs = substr($1, 3)
+			    conts = $2
+			  } else {
+			    col1ccs = $1
+			    conts = $3
+			  }
+			  ncc = split(col1ccs, cc, /,/)
+			  ncont = split(conts, cont, /,/)
+			  for (i = 1; i <= ncc; i++) {
+			    elsewhere = commentary
+			    for (ci = 1; ci <= ncont; ci++) {
+			      if (cont[ci] ~ continent_re) {
 				if (!cc_seen[cc[i]]++) cc_list[++ccs] = cc[i]
+				elsewhere = 0
+			      }
+			    }
+			    if (elsewhere) {
+			      for (i = 1; i <= ncc; i++) {
+			        cc_elsewhere[cc[i]] = 1
+			      }
+			    }
+			  }
 			}
 			END {
 				while (getline <TZ_COUNTRY_TABLE) {
@@ -416,6 +443,7 @@ while
 				}
 				for (i = 1; i <= ccs; i++) {
 					country = cc_list[i]
+					if (cc_elsewhere[country]) continue
 					if (cc_name[country]) {
 					  country = cc_name[country]
 					}

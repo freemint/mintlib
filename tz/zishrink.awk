@@ -20,16 +20,18 @@ function record_hash(n, name)
 # Return a shortened rule name representing NAME,
 # and record this relationship to the hash table.
 
-function gen_rule_name(name, n)
+function gen_rule_name(name, \
+		       n)
 {
-  # Use a simple memonic: the first two letters.
+  # Use a simple mnemonic: the first two letters.
   n = substr(name, 1, 2)
   record_hash(n, name)
   # printf "# %s = %s\n", n, name
   return n
 }
 
-function prehash_rule_names(name)
+function prehash_rule_names( \
+			    name)
 {
   # Rule names are not part of the tzdb API, so substitute shorter
   # ones.  Shortening them consistently from one release to the next
@@ -148,34 +150,36 @@ function prehash_rule_names(name)
   }
 }
 
-# Process an input line and save it for later output.
+function make_line(n, field, \
+		   f, r)
+{
+  r = field[1]
+  for (f = 2; f <= n; f++)
+    r = r " " field[f]
+  return r
+}
 
-function process_input_line(line, field, end, i, n, startdef)
+# Process the input line LINE and save it for later output.
+
+function process_input_line(line, \
+			    f, field, end, i, n, r, startdef, \
+			    linkline, ruleline, zoneline)
 {
   # Remove comments, normalize spaces, and append a space to each line.
   sub(/#.*/, "", line)
   line = line " "
   gsub(/[\t ]+/, " ", line)
 
-  # Abbreviate keywords.  Do not abbreviate "Link" to just "L",
-  # as pre-2017c zic erroneously diagnoses "Li" as ambiguous.
-  sub(/^Link /, "Li ", line)
-  sub(/^Rule /, "R ", line)
-  sub(/^Zone /, "Z ", line)
-
-  # SystemV rules are not needed.
-  if (line ~ /^R SystemV /) return
+  # Abbreviate keywords and determine line type.
+  linkline = sub(/^Link /, "L ", line)
+  ruleline = sub(/^Rule /, "R ", line)
+  zoneline = sub(/^Zone /, "Z ", line)
 
   # Replace FooAsia rules with the same rules without "Asia", as they
   # are duplicates.
   if (match(line, /[^ ]Asia /)) {
-    if (line ~ /^R /) return
+    if (ruleline) return
     line = substr(line, 1, RSTART) substr(line, RSTART + 5)
-  }
-  # Replace SpainAfrica rules with Morocco, as they are duplicates.
-  if (match(line, / SpainAfrica /)) {
-    if (line ~ /^R /) return
-    line = substr(line, 1, RSTART) "Morocco" substr(line, RSTART + RLENGTH - 1)
   }
 
   # Abbreviate times.
@@ -184,21 +188,19 @@ function process_input_line(line, field, end, i, n, startdef)
   while (match(line, /:0[^:]/))
     line = substr(line, 1, RSTART - 1) substr(line, RSTART + 2)
 
-  # Abbreviate weekday names.  Do not abbreviate "Sun" and "Sat", as
-  # pre-2017c zic erroneously diagnoses "Su" and "Sa" as ambiguous.
+  # Abbreviate weekday names.
   while (match(line, / (last)?(Mon|Wed|Fri)[ <>]/)) {
     end = RSTART + RLENGTH
     line = substr(line, 1, end - 4) substr(line, end - 1)
   }
-  while (match(line, / (last)?(Tue|Thu)[ <>]/)) {
+  while (match(line, / (last)?(Sun|Tue|Thu|Sat)[ <>]/)) {
     end = RSTART + RLENGTH
     line = substr(line, 1, end - 3) substr(line, end - 1)
   }
 
-  # Abbreviate "max", "only" and month names.
-  # Do not abbreviate "min", as pre-2017c zic erroneously diagnoses "mi"
-  # as ambiguous.
+  # Abbreviate "max", "min", "only" and month names.
   gsub(/ max /, " ma ", line)
+  gsub(/ min /, " mi ", line)
   gsub(/ only /, " o ", line)
   gsub(/ Jan /, " Ja ", line)
   gsub(/ Feb /, " F ", line)
@@ -225,22 +227,21 @@ function process_input_line(line, field, end, i, n, startdef)
 
   n = split(line, field)
 
-  # Abbreviate rule names.
-  i = field[1] == "Z" ? 4 : field[1] == "Li" ? 0 : 2
-  if (i && field[i] ~ /^[^-+0-9]/) {
-    if (!rule[field[i]])
-      rule[field[i]] = gen_rule_name(field[i])
-    field[i] = rule[field[i]]
+  # Record which rule names are used, and generate their abbreviations.
+  f = zoneline ? 4 : linkline || ruleline ? 0 : 2
+  r = field[f]
+  if (r ~ /^[^-+0-9]/) {
+    rule_used[r] = 1
   }
 
   # If this zone supersedes an earlier one, delete the earlier one
   # from the saved output lines.
   startdef = ""
-  if (field[1] == "Z")
+  if (zoneline)
     zonename = startdef = field[2]
-  else if (field[1] == "Li")
+  else if (linkline)
     zonename = startdef = field[3]
-  else if (field[1] == "R")
+  else if (ruleline)
     zonename = ""
   if (startdef) {
     i = zonedef[startdef]
@@ -253,13 +254,42 @@ function process_input_line(line, field, end, i, n, startdef)
   zonedef[zonename] = nout + 1
 
   # Save the line for later output.
-  line = field[1]
-  for (i = 2; i <= n; i++)
-    line = line " " field[i]
-  output_line[nout++] = line
+  output_line[nout++] = make_line(n, field)
 }
 
-function output_saved_lines(i)
+function omit_unused_rules( \
+			   i, field)
+{
+  for (i = 0; i < nout; i++) {
+    split(output_line[i], field)
+    if (field[1] == "R" && !rule_used[field[2]]) {
+      output_line[i] = ""
+    }
+  }
+}
+
+function abbreviate_rule_names( \
+			       abbr, f, field, i, n, r)
+{
+  for (i = 0; i < nout; i++) {
+    n = split(output_line[i], field)
+    if (n) {
+      f = field[1] == "Z" ? 4 : field[1] == "L" ? 0 : 2
+      r = field[f]
+      if (r ~ /^[^-+0-9]/) {
+	abbr = rule[r]
+	if (!abbr) {
+	  rule[r] = abbr = gen_rule_name(r)
+	}
+	field[f] = abbr
+	output_line[i] = make_line(n, field)
+      }
+    }
+  }
+}
+
+function output_saved_lines( \
+			    i)
 {
   for (i = 0; i < nout; i++)
     if (output_line[i])
@@ -278,7 +308,6 @@ BEGIN {
   default_dep["factory"] = 1
   default_dep["northamerica"] = 1
   default_dep["southamerica"] = 1
-  default_dep["systemv"] = 1
   default_dep["ziguard.awk"] = 1
   default_dep["zishrink.awk"] = 1
 
@@ -321,5 +350,7 @@ BEGIN {
 }
 
 END {
+  omit_unused_rules()
+  abbreviate_rule_names()
   output_saved_lines()
 }

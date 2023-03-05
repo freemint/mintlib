@@ -10,7 +10,7 @@
 #
 # currently also duplicated at top of private.h; FIXME
 #
-TZVERSION = 2018e
+TZVERSION = 2022g
 TZ_BUGEMAIL = tz@iana.org
 PKGVERSION = mintlib
 
@@ -39,15 +39,50 @@ include $(top_srcdir)/checkrules
 cflags =
 type = 
 
+# Change the line below for your timezone (after finding the one you want in
+# one of the $(TDATA) source files, or adding it to a source file).
+# Alternatively, if you discover you've got the wrong timezone, you can just
+# 'zic -l -' to remove it, or 'zic -l rightzone' to change it.
+# Use the command
+#	make zonenames
+# to get a list of the values you can use for LOCALTIME.
+
+LOCALTIME=	Factory
+
+# The POSIXRULES macro controls interpretation of nonstandard and obsolete
+# POSIX-like TZ settings like TZ='EET-2EEST' that lack DST transition rules.
+# Such a setting uses the rules in a template file to determine
+# "spring forward" and "fall back" days and times; the environment
+# variable itself specifies UT offsets of standard and daylight saving time.
+#
+# If POSIXRULES is '-', no template is installed; this is the default.
+#
+# Any other value for POSIXRULES is obsolete and should not be relied on, as:
+# * It does not work correctly in popular implementations such as GNU/Linux.
+# * It does not work even in tzcode, except for historical timestamps
+#   that precede the last explicit transition in the POSIXRULES file.
+#   Hence it typically does not work for current and future timestamps.
+# In short, software should avoid ruleless settings like TZ='EET-2EEST'
+# and so should not depend on the value of POSIXRULES.
+#
+# If, despite the above, you want a template for handling these settings,
+# you can change the line below (after finding the timezone you want in the
+# one of the $(TDATA) source files, or adding it to a source file).
+# Alternatively, if you discover you've got the wrong timezone, you can just
+# 'zic -p -' to remove it, or 'zic -p rightzone' to change it.
+# Use the command
+#	make zonenames
+# to get a list of the values you can use for POSIXRULES.
+
+# for MiNT it is defined in configvars
+# POSIXRULES=	-
+
 -include /etc/sparemint/timezone
 ifdef TIMEZONE
   LOCALTIME = $(TIMEZONE)
   POSIXRULES = $(TIMEZONE)
 endif
 	
-# Since "." may not be in PATH...
-YEARISTYPE = ./yearistype
-
 ifeq ($(CROSS),yes)
 
 zic = ./zic_for_build$(EXEEXT_FOR_BUILD)
@@ -84,14 +119,21 @@ TZDOBJS = zdump.o
 TZIOBJS = tzinit.o
 
 MANS = tzfile.5 tzselect.8 zic.8 zdump.8 tzinit.8
-DOCS = README README.1st Theory $(MANS) Makefile
+DOCS = README SECURITY README.1st Theory $(MANS) Makefile
 
-# If you want out-of-scope and often-wrong data from the file 'backzone', use
+# If you want out-of-scope and often-wrong data from the file 'backzone',
+# but only for entries listed in the backward-compatibility file zone.tab, use
 #	PACKRATDATA=	backzone
+#	PACKRATLIST=	zone.tab
+# If you want all the 'backzone' data, use
+#	PACKRATDATA=	backzone
+#	PACKRATLIST=
 # To omit this data, use
 #	PACKRATDATA=
+#	PACKRATLIST=
 
-PACKRATDATA = 
+PACKRATDATA =
+PACKRATLIST =
 
 # For backward-compatibility links for old zone names, use
 #	BACKWARD=	backward
@@ -103,26 +145,30 @@ PACKRATDATA =
 
 BACKWARD=	backward
 
-# Choose source data features.  To get new features right away, use:
+# DATAFORM selects the data format.
+# Available formats represent essentially the same data, albeit
+# possibly with minor discrepancies that users are not likely to notice.
+# To get new features and the best data right away, use:
 #	DATAFORM=	vanguard
 # To wait a while before using new features, to give downstream users
 # time to upgrade zic (the default), use:
 #	DATAFORM=	main
 # To wait even longer for new features, use:
 #	DATAFORM=	rearguard
+# Rearguard users might also want "ZFLAGS = -b fat"; see below.
 DATAFORM=		main
 
 PRIMARY_YDATA =	africa antarctica asia australasia \
 		europe northamerica southamerica
-YDATA =	$(PRIMARY_YDATA) pacificnew etcetera factory $(BACKWARD) $(PACKRATDATA)
-NDATA =	systemv
+YDATA =	$(PRIMARY_YDATA) etcetera $(BACKWARD) $(PACKRATDATA)
+NDATA =	factory
 #SDATA =	solar87 solar88 solar89
 TDATA =	$(YDATA) $(NDATA) $(SDATA)
 ZONETABLES=	zone1970.tab zone.tab
 TABDATA = iso3166.tab $(TZDATA_TEXT) $(ZONETABLES)
 LEAP_DEPS =	$(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list
-TZDATA_ZI_DEPS=	ziguard.awk zishrink.awk $(TDATA) $(PACKRATDATA)
-DSTDATA_ZI_DEPS= ziguard.awk $(TDATA) $(PACKRATDATA)
+TZDATA_ZI_DEPS=	ziguard.awk zishrink.awk $(TDATA) $(PACKRATDATA) $(PACKRATLIST)
+DSTDATA_ZI_DEPS= ziguard.awk $(TDATA) $(PACKRATDATA) $(PACKRATLIST)
 TDATA_TO_CHECK=	$(YDATA) $(NDATA) $(srcdir)/backward $(srcdir)/pacificnew
 MISC = usno1988 usno1989 usno1989a usno1995 usno1997 \
 	Arts.htm WWW.htm gccdiffs checktab.awk
@@ -133,13 +179,17 @@ EXTRA_DIST += date.1 date.c
 
 EXTRA_DIST += newctime.3 newstrftime.3 newtzset.3 time2posix.3
 
-all-here: zic zdump tzselect yearistype tzinit zonelist
+all-here: zic zdump tzselect tzinit zonelist
 
+# "Compiled" timezone information is placed in the "TZDIR" directory
+# (and subdirectories).
 install: all-here zones
 ifneq ($(TZREDO),none)
 	@for f in $(TABDATA); do rm -f $(DESTDIR)$(TZDIR)/$$f; done
 	$(INSTALL) -m 644 $(TABDATA) $(DESTDIR)$(TZDIR)/.
 endif
+	$(INSTALL) -m 644 tzdata.zi $(DESTDIR)$(TZDIR)/.
+	$(INSTALL) -m 644 leapseconds leapseconds.awk leap-seconds.list $(DESTDIR)$(TZDIR)/.
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@for file in $(sbin_PROGRAMS); do \
 		echo "$(INSTALL) -m 755 $$file $(sbindir)"; \
@@ -155,8 +205,8 @@ zoneswarning:
 	@echo "WARNING: Compiling and installing the time zone database"
 	@echo "may take some time.  Have a cup of coffee!"
 	
-localtime-posixrules: $(zic) yearistype
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
+localtime-posixrules: $(zic)
+	$(ZIC) -d $(DESTDIR)$(TZDIR) -l $(LOCALTIME) -p $(POSIXRULES)
 	@rm -f $(DESTDIR)$(TZDIR)/localtime
 	@ln -s /etc/localtime $(DESTDIR)$(TZDIR)/localtime
 	@if test $(LOCALTIME) = Factory; then \
@@ -227,15 +277,15 @@ zic: $(TZCOBJS) $(CRT0) $(libs)
 tzinit: $(TZIOBJS) $(CRT0) $(libs)
 	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZIOBJS) -o $@ $(LIBS)
 
-tzredo-posix_only: $(zic) $(TDATA) yearistype
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L /dev/null $(TDATA)
+tzredo-posix_only: $(zic) $(TDATA)
+	$(ZIC) -d $(DESTDIR)$(TZDIR) -L /dev/null $(TDATA)
 
-tzredo-right_only: $(zic) leapseconds $(TDATA) yearistype
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR) -L leapseconds $(TDATA)
+tzredo-right_only: $(zic) leapseconds $(TDATA)
+	$(ZIC) -d $(DESTDIR)$(TZDIR) -L leapseconds $(TDATA)
 
-other_two: $(zic) leapseconds $(TDATA) yearistype
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/posix -L /dev/null $(TDATA)
-	$(ZIC) -y $(YEARISTYPE) -d $(DESTDIR)$(TZDIR)/right -L leapseconds $(TDATA)
+other_two: $(zic) leapseconds $(TDATA)
+	$(ZIC) -d $(DESTDIR)$(TZDIR)/posix -L /dev/null $(TDATA)
+	$(ZIC) -d $(DESTDIR)$(TZDIR)/right -L leapseconds $(TDATA)
 
 tzredo-posix_right: tzredo-posix_only other_two
 
@@ -251,20 +301,20 @@ tzredo-none:
 	  echo ""; \
 	  ZIC="./zic$(EXEEXT) $(ZFLAGS)"; \
 	  echo "For using right rules only, counting leap seconds:"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
 	  echo ""; \
 	  echo "For using posix rules only, not counting leap seconds:"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
 	  echo ""; \
 	  echo "For using both sets, with leap seconds counted normally:"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR) -L leapseconds $(TDATA)"; \
 	  echo "ln -s $(TZDIR_BASENAME) $(TARGET_TZDIR)-leaps"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR)-posix -L /dev/null $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR)-posix -L /dev/null $(TDATA)"; \
 	  echo ""; \
 	  echo "For using both sets, with leap seconds not counted normally:"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR) -L /dev/null $(TDATA)"; \
 	  echo "ln -s $(TZDIR_BASENAME) $(TARGET_TZDIR)-posix"; \
-	  echo "$${ZIC} -y $(YEARISTYPE) -d $(TARGET_TZDIR)-leaps -L leapseconds $(TDATA)"; \
+	  echo "$${ZIC} -d $(TARGET_TZDIR)-leaps -L leapseconds $(TDATA)"; \
 	  echo "*********************************"; \
         ) >&2
 
@@ -283,10 +333,6 @@ endif
 cleandb:
 	$(mkinstalldirs) $(DESTDIR)$(TZDIR)
 	
-yearistype: $(srcdir)/yearistype.sh
-	cp $< $@
-	chmod +x $@
-
 leapseconds:	$(LEAP_DEPS)
 		$(AWK) -f $(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list >$@.out
 		mv $@.out $@
@@ -304,8 +350,18 @@ install-include: # Do nothing here.
 check_tables: $(srcdir)/checktab.awk $(PRIMARY_YDATA)
 	$(AWK) -f $(srcdir)/checktab.awk $(PRIMARY_YDATA)
 
+# These files can be tailored by setting BACKWARD, PACKRATDATA, PACKRATLIST.
+vanguard.zi main.zi rearguard.zi: $(DSTDATA_ZI_DEPS)
+		$(AM_V_GEN)
+		$(AM_V_at)LC_ALL=C $(AWK) \
+		  -v DATAFORM=`expr $@ : '\(.*\).zi'` \
+		  -v PACKRATDATA='$(PACKRATDATA)' \
+		  -v PACKRATLIST='$(PACKRATLIST)' \
+		  -f ziguard.awk \
+		  $(TDATA) $(PACKRATDATA) >$@.out
+		mv $@.out $@
 # This file has a version comment that attempts to capture any tailoring
-# via BACKWARD, DATAFORM, PACKRATDATA, and REDO.
+# via BACKWARD, DATAFORM, PACKRATDATA, PACKRATLIST, and REDO.
 tzdata.zi:	$(DATAFORM).zi zishrink.awk
 		$(AM_V_GEN)
 		$(AM_V_at)LC_ALL=C $(AWK) \
@@ -317,7 +373,7 @@ tzdata.zi:	$(DATAFORM).zi zishrink.awk
 		    $(DATAFORM).zi >$@.out
 		$(AM_V_at)mv $@.out $@
 
-MAKE_ZONENAMES = $(AWK) '/^Z/ { print $$2 } /^L/ { print $$3 }' tzdata.zi
+MAKE_ZONENAMES = $(AWK) '/^Z/ { print $$2 } /^L/ { print $$3 }' tzdata.zi | LC_ALL=C sort
 
 zonenames: tzdata.zi
 	@$(MAKE_ZONENAMES)

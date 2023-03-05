@@ -1,9 +1,23 @@
+.\" This file is in the public domain, so clarified as of
+.\" 2009-05-17 by Arthur David Olson.
 .TH TZSELECT 8
 .SH NAME
 tzselect \- select a timezone
 .SH SYNOPSIS
-.ie \n(.g .ds - \f(CW-\fP
-.el ds - \-
+.ie \n(.g .ds - \f(CR-\fP
+.el .ds - \-
+.ds d " degrees
+.ds m " minutes
+.ds s " seconds
+.ds _ " \&
+.if t \{\
+. if \n(.g .if c \(de .if c \(fm .if c \(sd \{\
+.  ds d \(de
+.  ds m \(fm
+.  ds s \(sd
+.  ds _ \|
+. \}
+.\}
 .B tzselect
 [
 .B \*-c
@@ -57,11 +71,11 @@ seconds, with any trailing fractions represent fractional minutes or
 is present) seconds.  The decimal point is that of the current locale.
 For example, in the (default) C locale,
 .B "\*-c\ +40.689\*-074.045"
-specifies 40.689\(de\|N, 74.045\(de\|W,
+specifies 40.689\*d\*_N, 74.045\*d\*_W,
 .B "\*-c\ +4041.4\*-07402.7"
-specifies 40\(de\|41.4\(fm\|N, 74\(de\|2.7\(fm\|W, and
+specifies 40\*d\*_41.4\*m\*_N, 74\*d\*_2.7\*m\*_W, and
 .B "\*-c\ +404121\*-0740240"
-specifies 40\(de\|41\(fm\|21\(sd\|N, 74\(de\|2\(fm\|40\(sd\|W.
+specifies 40\*d\*_41\*m\*_21\*s\*_N, 74\*d\*_2\*m\*_40\*s\*_W.
 If
 .I coord
 is not one of the documented forms, the resulting behavior is unspecified.
@@ -82,7 +96,7 @@ Output version information and exit.
 .TP
 \f3AWK\fP
 Name of a Posix-compliant
-.I awk
+.B awk
 program (default:
 .BR awk ).
 .TP
@@ -109,5 +123,3 @@ newctime(3), tzfile(5), zdump(8), zic(8)
 Applications should not assume that
 .BR tzselect 's
 output matches the user's political preferences.
-.\" This file is in the public domain, so clarified as of
-.\" 2009-05-17 by Arthur David Olson.

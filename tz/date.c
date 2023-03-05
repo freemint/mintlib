@@ -65,19 +65,19 @@ int main(int, char **);
 
 int main(const int argc, char *argv[])
 {
-	register const char *format;
-	register const char *value;
-	register const char *cp;
-	register int ch;
-	register int dousg;
-	register int aflag = FALSE;
-	register int dflag = FALSE;
-	register int nflag = FALSE;
-	register int tflag = FALSE;
-	register int rflag = FALSE;
-	register int minuteswest;
-	register int dsttime;
-	register double adjust;
+	const char *format;
+	const char *value;
+	const char *cp;
+	int ch;
+	int dousg;
+	int aflag = FALSE;
+	int dflag = FALSE;
+	int nflag = FALSE;
+	int tflag = FALSE;
+	int rflag = FALSE;
+	int minuteswest;
+	int dsttime;
+	double adjust;
 	time_t now;
 	time_t t;
 	intmax_t secs;
@@ -326,7 +326,7 @@ static void dogmt(void)
 
 static void reset(const time_t newt, int nflag)
 {
-	register int fid;
+	int fid;
 	time_t oldt;
 	static struct
 	{
@@ -432,7 +432,7 @@ static int netsettime(struct timeval);
 
 static void reset(const time_t newt, int nflag)
 {
-	register const char *username;
+	const char *username;
 	static struct timeval tv;			/* static so tv_usec is 0 */
 
 	(void)nflag;
@@ -473,7 +473,7 @@ static void errensure(void)
 		retval = EXIT_FAILURE;
 }
 
-static const char *ATTRIBUTE_PURE nondigit(register const char *cp)
+static const char *ATTRIBUTE_PURE nondigit(const char *cp)
 {
 	while (is_digit(*cp))
 		++cp;
@@ -562,7 +562,7 @@ static void timeout(FILE *fp, const char *format, const struct tm *tmp)
 	free(cp);
 }
 
-static int sametm(register const struct tm *const atmp, register const struct tm *const btmp)
+static int sametm(const struct tm *const atmp, const struct tm *const btmp)
 {
 	return atmp->tm_year == btmp->tm_year &&
 		atmp->tm_mon == btmp->tm_mon &&
@@ -579,11 +579,11 @@ static int sametm(register const struct tm *const atmp, register const struct tm
 
 #define ATOI2(ar)	(ar[0] - '0') * 10 + (ar[1] - '0'); ar += 2;
 
-static time_t convert(register const char *const value, const int dousg, const time_t t)
+static time_t convert(const char *const value, const int dousg, const time_t t)
 {
-	register const char *cp;
-	register const char *dotp;
-	register int cent, year_in_cent, month, hour, day, mins, secs;
+	const char *cp;
+	const char *dotp;
+	int cent, year_in_cent, month, hour, day, mins, secs;
 	struct tm tm, outtm, *tmp;
 	time_t outt;
 
@@ -696,7 +696,7 @@ static void checkfinal(const char *const value, const int didusg, const time_t t
 	time_t othert;
 	struct tm tm, *tmp;
 	struct tm othertm;
-	register int pass, offset;
+	int pass, offset;
 
 	/*
 	 ** See if there's both a USG and a BSD interpretation.

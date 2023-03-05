@@ -9,7 +9,7 @@
 #define PRIVATE_H
 
 #define PKGVERSION "(mintlib) "
-#define TZVERSION  "2018e"
+#define TZVERSION  "2022g"
 #define REPORT_BUGS_TO "tz@iana.org"
 
 
@@ -25,6 +25,19 @@
 ** Do NOT copy it to any system include directory.
 ** Thank you!
 */
+
+#ifndef __STDC_VERSION__
+# define __STDC_VERSION__ 0
+#endif
+
+/* Define true, false and bool if they don't work out of the box.  */
+#if __STDC_VERSION__ < 199901
+# define true 1
+# define false 0
+# define bool int
+#elif __STDC_VERSION__ < 202311
+# include <stdbool.h>
+#endif
 
 /*
 ** zdump has been made independent of the rest of the time
@@ -184,19 +197,39 @@
 # endif
 #endif
 
+/*
+ * To omit or support the external variables "timezone" and "daylight", add
+ *	-DUSG_COMPAT=0 # do not support
+ *	-DUSG_COMPAT=1 # support, and variables are defined by system library
+ *	-DUSG_COMPAT=2 # support and define variables
+ */
 #ifndef USG_COMPAT
 # if !defined(_XOPEN_VERSION) && !defined(__MINT__)
 #  define USG_COMPAT 0
 # else
-#  define USG_COMPAT 1
+#  define USG_COMPAT 2
 # endif
 #endif
 
+/*
+ * To omit or support the external variable "tzname", add one of:
+ *	-DHAVE_TZNAME=0 # do not support "tzname"
+ *	-DHAVE_TZNAME=1 # support "tzname", which is defined by system library
+ *	-DHAVE_TZNAME=2 # support and define "tzname"
+ */
 #ifndef HAVE_TZNAME
 # if (!defined(_POSIX_VERSION) || _POSIX_VERSION < 198808) && !USG_COMPAT
 #  define HAVE_TZNAME 0
 # else
-#  define HAVE_TZNAME 1
+#  define HAVE_TZNAME 2
+# endif
+#endif
+
+#ifndef ALTZONE
+# if defined __sun || defined _M_XENIX
+#  define ALTZONE 1
+# else
+#  define ALTZONE 0
 # endif
 #endif
 
@@ -219,7 +252,7 @@
 #ifndef HAVE_STDINT_H
 #if ((defined(__STDC_VERSION__) && 199901 <= __STDC_VERSION__) || \
 	 (defined(__GLIBC__) && 2 < (__GLIBC__ + (0 < __GLIBC_MINOR__))) || \
-	 defined(__CYGWIN__) || defined(INTMAX_MAX))
+	 defined(__CYGWIN__) || defined(INTMAX_MAX) || defined(__MINT__))
 #define HAVE_STDINT_H 1
 #else
 #define HAVE_STDINT_H 0
@@ -280,10 +313,12 @@ typedef long		int_fast64_t;
 #ifndef INT_FAST32_MAX
 # if INT_MAX >> 31 == 0
 typedef long int_fast32_t;
+typedef unsigned long uint_fast32_t;
 #  define INT_FAST32_MAX LONG_MAX
 #  define INT_FAST32_MIN LONG_MIN
 # else
 typedef int int_fast32_t;
+typedef unsigned int uint_fast32_t;
 #  define INT_FAST32_MAX INT_MAX
 #  define INT_FAST32_MIN INT_MIN
 # endif
@@ -325,6 +360,7 @@ you may need to compile with "-DHAVE_STDINT_H".
 #  endif
 typedef unsigned long	uint_fast64_t;
 # endif
+# define UINT_FAST64_MAX ULLONG_MAX
 #endif
 
 #ifndef UINTMAX_MAX
@@ -335,6 +371,7 @@ typedef unsigned long long uintmax_t;
 typedef unsigned long uintmax_t;
 #  define PRIuMAX "lu"
 # endif
+# define UINTMAX_MAX ULLONG_MAX
 #endif
 
 #ifndef PRIuMAX
@@ -354,6 +391,35 @@ typedef unsigned long uintmax_t;
 
 #ifndef SIZE_MAX
 #define SIZE_MAX ((size_t) -1)
+#endif
+
+/* Support ckd_add, ckd_sub, ckd_mul on C23 or recent-enough GCC-like
+   hosts, unless compiled with -DHAVE_STDCKDINT_H=0 or with pre-C23 EDG.  */
+#if !defined HAVE_STDCKDINT_H && defined __has_include
+# if __has_include(<stdckdint.h>)
+#  define HAVE_STDCKDINT_H 1
+# endif
+#endif
+#ifdef HAVE_STDCKDINT_H
+# if HAVE_STDCKDINT_H
+#  include <stdckdint.h>
+# endif
+#elif defined __EDG__
+/* Do nothing, to work around EDG bug <https://bugs.gnu.org/53256>.  */
+#elif defined __has_builtin
+# if __has_builtin(__builtin_add_overflow)
+#  define ckd_add(r, a, b) __builtin_add_overflow(a, b, r)
+# endif
+# if __has_builtin(__builtin_sub_overflow)
+#  define ckd_sub(r, a, b) __builtin_sub_overflow(a, b, r)
+# endif
+# if __has_builtin(__builtin_mul_overflow)
+#  define ckd_mul(r, a, b) __builtin_mul_overflow(a, b, r)
+# endif
+#elif 7 <= __GNUC__
+# define ckd_add(r, a, b) __builtin_add_overflow(a, b, r)
+# define ckd_sub(r, a, b) __builtin_sub_overflow(a, b, r)
+# define ckd_mul(r, a, b) __builtin_mul_overflow(a, b, r)
 #endif
 
 #if __GNUC_PREREQ(2, 96)
@@ -491,7 +557,7 @@ typedef time_tz tz_time_t;
 #  undef  timezone
 #  define timezone tz_timezone
 # endif
-# ifdef ALTZONE
+# if ALTZONE
 #  undef  altzone
 #  define altzone tz_altzone
 # endif
@@ -524,7 +590,7 @@ extern int daylight;
 # endif
 #endif
 
-#ifdef ALTZONE
+#if ALTZONE
 extern long altzone;
 #endif
 
@@ -560,6 +626,7 @@ time_t posix2time(time_t);
 /* Infer TM_ZONE on systems where this information is known, but suppress
    guessing if NO_TM_ZONE is defined.  Similarly for TM_GMTOFF.  */
 #if (defined __GLIBC__ \
+     || defined __tm_zone /* musl */ \
      || defined __FreeBSD__ || defined __NetBSD__ || defined __OpenBSD__ \
      || (defined __APPLE__ && defined __MACH__) || defined(__MINT__))
 # if !defined TM_GMTOFF && !defined NO_TM_GMTOFF
@@ -611,6 +678,13 @@ time_t time2posix_z(timezone_t, time_t) ATTRIBUTE_PURE;
 #define TYPE_SIGNED(type) (((type) -1) < 0)
 #define TWOS_COMPLEMENT(t) ((t) ~ (t) 0 < 0)
 
+/* Minimum and maximum of two values.  Use lower case to avoid
+   naming clashes with standard include files.  */
+#undef max
+#undef min
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 #if __GNUC_PREREQ(4,9)
 #pragma GCC diagnostic ignored "-Wshift-negative-value"
 #endif
@@ -629,7 +703,7 @@ time_t time2posix_z(timezone_t, time_t) ATTRIBUTE_PURE;
 #define TIME_T_MAX_NO_PADDING MAXVAL(time_t, TYPE_BIT(time_t))
 
 /* The extreme time values.  These are macros, not constants, so that
-   any portability problem occur only when compiling .c files that use
+   any portability problems occur only when compiling .c files that use
    the macros, which is safer for applications that need only zdump and zic.
    This implementation assumes no padding if time_t is signed and
    either the compiler lacks support for _Generic or time_t is not one
@@ -673,6 +747,12 @@ time_t time2posix_z(timezone_t, time_t) ATTRIBUTE_PURE;
 #endif
 #endif
 
+/* Whether memory access must strictly follow the C standard.
+   If 0, it's OK to read uninitialized storage so long as the value is
+   not relied upon.  Defining it to 0 lets mktime access parts of
+   struct tm that might be uninitialized, as a heuristic when the
+   standard doesn't say what to return and when tm_gmtoff can help
+   mktime likely infer a better value.  */
 #ifndef UNINIT_TRAP
 # define UNINIT_TRAP 0
 #endif
@@ -718,28 +798,33 @@ char *ctime_r(time_t const *, char *);
 #define SECSPERDAY	((int_fast32_t) SECSPERHOUR * HOURSPERDAY)
 #define MONSPERYEAR	12
 
-#define TM_SUNDAY	0
-#define TM_MONDAY	1
-#define TM_TUESDAY	2
-#define TM_WEDNESDAY	3
-#define TM_THURSDAY	4
-#define TM_FRIDAY	5
-#define TM_SATURDAY	6
+enum {
+  TM_SUNDAY,
+  TM_MONDAY,
+  TM_TUESDAY,
+  TM_WEDNESDAY,
+  TM_THURSDAY,
+  TM_FRIDAY,
+  TM_SATURDAY
+};
 
-#define TM_JANUARY	0
-#define TM_FEBRUARY	1
-#define TM_MARCH	2
-#define TM_APRIL	3
-#define TM_MAY		4
-#define TM_JUNE		5
-#define TM_JULY		6
-#define TM_AUGUST	7
-#define TM_SEPTEMBER	8
-#define TM_OCTOBER	9
-#define TM_NOVEMBER	10
-#define TM_DECEMBER	11
+enum {
+  TM_JANUARY,
+  TM_FEBRUARY,
+  TM_MARCH,
+  TM_APRIL,
+  TM_MAY,
+  TM_JUNE,
+  TM_JULY,
+  TM_AUGUST,
+  TM_SEPTEMBER,
+  TM_OCTOBER,
+  TM_NOVEMBER,
+  TM_DECEMBER
+};
 
 #define TM_YEAR_BASE	1900
+#define TM_WDAY_BASE TM_MONDAY
 
 #define EPOCH_YEAR	1970
 #define EPOCH_WDAY	TM_THURSDAY
@@ -765,8 +850,9 @@ char *ctime_r(time_t const *, char *);
 ** The Gregorian year averages 365.2425 days, which is 31556952 seconds.
 */
 
-#define AVGSECSPERYEAR		31556952L
-#define SECSPERREPEAT		((int_fast64_t) YEARSPERREPEAT * (int_fast64_t) AVGSECSPERYEAR)
+#define DAYSPERREPEAT		((int_fast32_t) 400 * 365 + 100 - 4 + 1)
+#define SECSPERREPEAT		((int_fast64_t) DAYSPERREPEAT * SECSPERDAY)
+#define AVGSECSPERYEAR		(SECSPERREPEAT / YEARSPERREPEAT) /* 31556952L */
 #define SECSPERREPEAT_BITS	34	/* ceil(log2(SECSPERREPEAT)) */
 
 #endif /* !defined PRIVATE_H */
