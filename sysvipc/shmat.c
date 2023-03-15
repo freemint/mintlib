@@ -31,12 +31,12 @@ __typeof__(shmat) __shmat;
 void *
 __shmat (int shmid, const void *shmaddr, int shmflg)
 {
-	int ret;
+	long ret;
 	
 	ret = Pshmat (shmid, shmaddr, shmflg);
 	if (ret < 0) {
 		__set_errno (-ret);
-		return (void *) -1;
+		return (void *) -1L;
 	}
 	return (void *) ret;
 }
