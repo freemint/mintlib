@@ -29,8 +29,6 @@
 # pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif
 
-extern int gettimeofday (struct timeval*, struct timezone*);
-
 void
 logwtmp (const char *line, const char *name, const char *host)
 {

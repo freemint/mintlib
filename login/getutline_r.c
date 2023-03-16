@@ -30,9 +30,6 @@ __typeof__(getutline_r) __getutline_r;
 /* We have to use the lock in getutent_r.c.  */
 __libc_lock_define (extern, __libc_utmp_lock)
 
-/* The jump table is also in getutent_r.c.  */
-extern struct utfuncs *__libc_utmp_jump_table;
-
 int
 __getutline_r (const struct utmp *line, struct utmp *buffer,
 	       struct utmp **result)
