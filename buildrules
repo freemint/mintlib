@@ -178,10 +178,12 @@ LIBCOBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MIN
   $(STDIOOBJS) $(STDLIBOBJS) $(STRINGOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) \
   $(TERMIOSOBJS) $(TIMEOBJS) $(TZOBJS) $(UNIXOBJS) $(SUNRPCOBJS) $(SOCKETOBJS)
 
-# All modules that reference vfprintf or vfscanf should be listed here.
+# All modules that reference vfprintf or vfscanf should be listed here,
+# as well as all modules that reference modules in this list
 LIBIIO_ADDOBJS = err.o error.o doprnt.o dprintf.o fscanf.o scanf.o vscanf.o \
 vsscanf.o obstream.o printf.o vasprintf.o vdprintf.o vprintf.o vsnprintf.o \
-vsprintf.o 
+vsprintf.o sscanf.o fprintf.o fwprintf.o snprintf.o sprintf.o swprintf.o \
+vfwprintf.o vswprintf.o vwprintf.o wprintf.o
 
 DEP_FILES := $(addprefix $(top_srcdir)/.deps/,$(patsubst %.o,%.P,$(OBJS)))
 
