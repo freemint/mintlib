@@ -20,11 +20,9 @@
 
 extern long __waitval, __waittime;
 
-pid_t
-__wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
+pid_t __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
 {
-  static short have_Pwaitpid = 1;
-  long retval = 0; /* make gcc happy */
+  long retval;
   long lusage[8];  /* For current MiNT versions 2 longs should 
                     * be enough.  The MiNTLib has 8 longs.
                     * Don't know why but better leave it as
@@ -32,13 +30,9 @@ __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)
                     */
   pid_t child_pid;
   
-  if (have_Pwaitpid) {
-    retval = Pwaitpid (pid, options, lusage);
-    if (retval == -ENOSYS)
-      have_Pwaitpid = 0;
-  }
+  retval = Pwaitpid (pid, options, lusage);
   
-  if (!have_Pwaitpid) {
+  if (retval == -ENOSYS) {
     retval = __waitval;
     __waitval = -ECHILD;
     lusage[0] = __waittime;
