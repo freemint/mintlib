@@ -27,7 +27,7 @@ __typeof__(sysinfo) __sysinfo;
 
 
 /* Helper functions.  */
-static void fast_strncpy (char* to, char* from, long bytes);
+static void fast_strncpy (char* to, const char* from, long bytes);
 
 /* Prototypes for sub-functions.  */
 
@@ -48,8 +48,7 @@ static int mint_kernel_build_time (char *buf, long bufsize);
 static int mint_get_clock_mode (char *buf, long bufsize);
 static int mint_set_clock_mode (char *buf, long bufsize);
 
-int
-__sysinfo (enum __sysinfo_command command, char *buf, long bufsize)
+int __sysinfo (enum __sysinfo_command command, char *buf, long bufsize)
 {
   int retval = -1;
 
@@ -109,7 +108,7 @@ weak_alias (__sysinfo, sysinfo)
 
 /* Like strncpy but don't pad with nulls.  */
 static void
-fast_strncpy (char* to, char* from, long bytes)
+fast_strncpy (char* to, const char* from, long bytes)
 {
   long count = 0;
 
@@ -126,10 +125,10 @@ fast_strncpy (char* to, char* from, long bytes)
  * FIXME: Should we look up information about MagiC too?
  */
 
-static char* osname = NULL;  /* Cached result.  */
+static const char* osname = NULL;  /* Cached result.  */
 static int osname_len = 0;   /* Cached result.  */
 
-static char* osnames[] = {
+static const char* const osnames[] = {
 #define OS_TOS 0
   "TOS",
 #define OS_MINT 1
@@ -319,7 +318,7 @@ si_version (char* buf, long bufsize)
 
 /* Cached results.  */
 
-static char* architecture = NULL;
+static const char* architecture = NULL;
 static long architecture_len;
 #define _CPU_60 0
 #define _CPU_40 1
@@ -333,7 +332,7 @@ static long architecture_len;
 #define _MCF_V2 9
 #define _MCF_V1 10
 
-static char* architectures[] = {
+static const char* const architectures[] = {
   "mc68060",
   "mc68040",
   "mc68030",
@@ -348,14 +347,14 @@ static char* architectures[] = {
   NULL
 };
 
-static char* isalist = NULL;
-long isalist_len;
+static const char* isalist = NULL;
+static long isalist_len;
 #define _ISA_C        6
 #define _ISA_B        7
 #define _ISA_A_PLUS   8
 #define _ISA_A        9
 
-static char* isalists[] = {
+static const char* const isalists[] = {
     "mc68060", "mc68040", "mc68030", "mc68020", "mc68010", "mc68000",
      "isac", "isab", "isaaplus", "isaa"};
 
@@ -461,7 +460,7 @@ si_isalist (char* buf, long bufsize)
 #define _PLATFORM_CFEVB 8
 #define _PLATFORM_CLONE 9
 
-static char* platforms[] = {
+static const char* const platforms[] = {
   "atarist",
   "atariste",
   "ataritt",
@@ -480,7 +479,7 @@ static char* platforms[] = {
 #define _HW_PROVIDER_ARANYM 3
 #define _HW_PROVIDER_FREESCALE 4
 #define _HW_PROVIDER_UNKNOWN 5
-static char* hw_providers[] = {
+static const char* const hw_providers[] = {
   "atari",
   "milan",
   "hades",  /* This should have been "medusa" */
@@ -490,8 +489,8 @@ static char* hw_providers[] = {
 };
 
 /* Cached results.  */
-static char* platform = NULL;
-static char* hw_provider = NULL;
+static const char* platform = NULL;
+static const char* hw_provider = NULL;
 static long platform_len;
 static long hw_provider_len;
 
@@ -581,11 +580,11 @@ si_hw_provider (char* buf, long bufsize)
 
 /* Cached results.  */
 static int no_build_date = 0;
-static char* kernel_build_date = NULL;
+static const char* kernel_build_date = NULL;
 static char kernel_build_date_buf[14];
 #define kernel_build_date_len ((long) sizeof kernel_build_date_buf)
 
-static char* abbrev_month_names[] = {
+static char const abbrev_month_names[][4] = {
   "Jan",
   "Feb",
   "Mar",
@@ -635,7 +634,7 @@ mint_kernel_build_date (char* buf, long bufsize)
         mon = 1;
       else if (mon > 12)
         mon = 12;
-      sprintf (kernel_build_date, "%.02u %s %.04u",
+      sprintf (kernel_build_date_buf, "%.02u %s %.04u",
           (unsigned) day,
           abbrev_month_names[mon - 1],
           (unsigned) *year);
@@ -650,7 +649,7 @@ mint_kernel_build_date (char* buf, long bufsize)
 
 /* Cached results.  */
 static int no_build_time = 0;
-static char* kernel_build_time = NULL;
+static const char* kernel_build_time = NULL;
 static char kernel_build_time_buf[] = "HH:MM:SS";
 #define kernel_build_time_len ((long) sizeof kernel_build_time_buf)
 
@@ -674,7 +673,7 @@ mint_kernel_build_time (char* buf, long bufsize)
     } else {
       char* rbuf = (char*) &retval;
       kernel_build_time = kernel_build_time_buf;
-      sprintf (kernel_build_time, "%.02u:%.02u:%.02u",
+      sprintf (kernel_build_time_buf, "%.02u:%.02u:%.02u",
           (unsigned) rbuf[1], (unsigned) rbuf[2], (unsigned) rbuf[3]);
     }
   }
@@ -687,7 +686,7 @@ mint_kernel_build_time (char* buf, long bufsize)
 static int
 mint_get_clock_mode (char* buf, long bufsize)
 {
-  char* clock_mode = NULL;
+  const char* clock_mode;
   long int lclock_mode;
 
   lclock_mode = Ssystem (100, -1, 0);
