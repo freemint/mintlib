@@ -656,7 +656,7 @@ extern USItype __udiv_qrnnd ();
 #endif /* __m88000__ */
 
 #if defined (__mips__) && W_TYPE_SIZE == 32
-#if __GNUC__ > 2 || __GNUC_MINOR__ >= 7
+#if __GNUC_PREREQ(2,7)
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("multu %2,%3"						\
 	   : "=l" ((USItype)(w0)),					\
@@ -678,7 +678,7 @@ extern USItype __udiv_qrnnd ();
 #endif /* __mips__ */
 
 #if (defined (__mips) && __mips >= 3) && W_TYPE_SIZE == 64
-#if __GNUC__ > 2 || __GNUC_MINOR__ >= 7
+#if __GNUC_PREREQ(2,7)
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("dmultu %2,%3"						\
 	   : "=l" ((UDItype)(w0)),					\

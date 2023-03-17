@@ -130,7 +130,7 @@
 # define STRTOL_LONG_MIN LONG_LONG_MIN
 # define STRTOL_LONG_MAX LONG_LONG_MAX
 # define STRTOL_ULONG_MAX ULONG_LONG_MAX
-# if __GNUC__ == 2 && __GNUC_MINOR__ < 7
+# if defined(__GNUC__) && !__GNUC_PREREQ(2,7)
    /* Work around gcc bug with using this constant.  */
    static const unsigned long long int maxquad = ULONG_LONG_MAX;
 #  undef STRTOL_ULONG_MAX

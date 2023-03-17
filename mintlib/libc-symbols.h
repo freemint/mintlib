@@ -175,7 +175,7 @@
 
 /* Currently disabled since not supported by gcc for MiNT.  FIXME!!! */
 #if (0 && !defined __ASSEMBLER__ && \
-     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
+     (__GNUC_PREREQ(2,7)))
 /* GCC 2.7 and later has special syntax for weak symbols and aliases.
    Using that is better when possible, because the compiler and assembler
    are better clued in to what we are doing.  */

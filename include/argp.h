@@ -42,12 +42,12 @@
 
 #ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+# if !__GNUC_PREREQ(2,5) || __STRICT_ANSI__
 #  define __attribute__(Spec) /* empty */
 # endif
 /* The __-protected variants of `format' and `printf' attributes
    are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7) || __STRICT_ANSI__
+# if !__GNUC_PREREQ(2,7) || __STRICT_ANSI__
 #  define __format__ format
 #  define __printf__ printf
 # endif
@@ -56,7 +56,7 @@
 /* GCC 2.95 and later have "__restrict"; C99 compilers have
    "restrict", and "configure" may have defined "restrict".  */
 #ifndef __restrict
-# if ! (2 < __GNUC__ || (2 == __GNUC__ && 95 <= __GNUC_MINOR__))
+# if !__GNUC_PREREQ(2,95)
 #  if defined restrict || 199901L <= __STDC_VERSION__
 #   define __restrict restrict
 #  else

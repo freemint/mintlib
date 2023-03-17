@@ -96,8 +96,7 @@ __END_DECLS
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
    which contains the name of the function currently being defined.
    This is broken in G++ before version 2.6.  */
-# if (!defined __GNUC__ || __GNUC__ < 2 || \
-     (__GNUC__ == 2 && __GNUC_MINOR__ < (defined __cplusplus ? 6 : 4)))
+# if (!(defined(__cplusplus) ? __GNUC_PREREQ(2,6) : __GNUC_PREREQ(2,4)))
 #  define __ASSERT_FUNCTION	((const char *) 0)
 # else
 #  define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
