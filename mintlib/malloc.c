@@ -1,3 +1,11 @@
+#define HAVE_MMAP 0
+#define MMAP_CLEARS 0
+#define HAVE_MORECORE 1
+#define MORECORE_CONTIGUOUS 0
+#define NO_MALLOC_STATS 1
+#define malloc_getpagesize ((size_t)8192U)
+#define LACKS_TIME_H /* time(0) calls malloc... */
+
 /*
   This is a version (aka dlmalloc) of malloc/free/realloc written by
   Doug Lea and released to the public domain, as explained at
@@ -813,14 +821,14 @@ extern "C" {
 /* ------------------- Declarations of public routines ------------------- */
 
 #ifndef USE_DL_PREFIX
-#define dlcalloc               calloc
-#define dlfree                 free
-#define dlmalloc               malloc
-#define dlmemalign             memalign
-#define dlposix_memalign       posix_memalign
-#define dlrealloc              realloc
+#define dlcalloc               __calloc
+#define dlfree                 __free
+#define dlmalloc               __malloc
+#define dlmemalign             __memalign
+#define dlposix_memalign       __posix_memalign
+#define dlrealloc              __realloc
 #define dlrealloc_in_place     realloc_in_place
-#define dlvalloc               valloc
+#define dlvalloc               __valloc
 #define dlpvalloc              pvalloc
 #define dlmallinfo             mallinfo
 #define dlmallopt              mallopt
@@ -996,7 +1004,7 @@ DLMALLOC_EXPORT size_t dlmalloc_max_footprint(void);
   guarantee that this number of bytes can actually be obtained from
   the system.
 */
-DLMALLOC_EXPORT size_t dlmalloc_footprint_limit();
+DLMALLOC_EXPORT size_t dlmalloc_footprint_limit(void);
 
 /*
   malloc_set_footprint_limit();
@@ -4151,7 +4159,8 @@ static void* sys_alloc(mstate m, size_t nb) {
       char* end = CMFAIL;
       ACQUIRE_MALLOC_GLOBAL_LOCK();
       br = (char*)(CALL_MORECORE(asize));
-      end = (char*)(CALL_MORECORE(0));
+      /* end = (char*)(CALL_MORECORE(0)); */
+      end = br + asize;
       RELEASE_MALLOC_GLOBAL_LOCK();
       if (br != CMFAIL && end != CMFAIL && br < end) {
         size_t ssize = end - br;
@@ -6278,3 +6287,11 @@ History:
          structure of old version,  but most details differ.)
 
 */
+
+weak_alias (__calloc, calloc)
+weak_alias(__free, free)
+weak_alias(__malloc, malloc)
+weak_alias (__memalign, memalign)
+weak_alias(__posix_memalign, posix_memalign)
+weak_alias (__realloc, realloc)
+weak_alias (__valloc, valloc)
