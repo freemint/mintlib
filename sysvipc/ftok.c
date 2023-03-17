@@ -33,7 +33,7 @@ ftok (const char *pathname, int proj_id)
     return (key_t) -1;
 
   key = ((st.st_ino & 0xffff) | ((st.st_dev & 0xff) << 16)
-	 | ((proj_id & 0xff) << 24));
+	 | ((key_t)(proj_id & 0xff) << 24));
 
   return key;
 }
