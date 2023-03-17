@@ -218,8 +218,8 @@ __md5_crypt (const char *key, const char *salt)
      password.  We can compute the size of the result in advance and
      so we can prepare the buffer we pass to `md5_crypt_r'.  */
   static char *buffer = NULL;
-  static int buflen = 0;
-  int needed = 3 + strlen (salt) + 1 + 26 + 1;
+  static size_t buflen = 0;
+  size_t needed = 3 + strlen (salt) + 1 + 26 + 1;
 
   if (buflen < needed)
     {
