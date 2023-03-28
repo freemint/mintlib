@@ -172,7 +172,7 @@ weak_alias(__getifaddrs, getifaddrs)
 
 __typeof__(freeifaddrs) __freeifaddrs;
 
-void freeifaddrs(struct ifaddrs *ifa)
+void __freeifaddrs(struct ifaddrs *ifa)
 {
 	free(ifa);
 }
