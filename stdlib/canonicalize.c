@@ -1,11 +1,11 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,25 +18,17 @@
  
 /* Modified by Guido Flohr <guido@freemint.de> for MiNTLib.  */
 
-#include <errno.h>
-#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
 #include <sys/param.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #ifdef __MINT__
 # define __lxstat(version, file, buf) __lstat(file, buf)
 # define _STAT_VER
-#endif
-
-#if __GNUC_PREREQ(12,0)
-/*
- * we don't return a local addr;
- * rpath is either == resolved, or malloced
- */
-#pragma GCC diagnostic ignored "-Wreturn-local-addr"
 #endif
 
 /* Return the canonical absolute name of file NAME.  A canonical name
@@ -50,8 +42,10 @@
    that cannot be resolved.  If the path can be resolved, RESOLVED
    holds the same value as the value returned.  */
 
-static char *
-canonicalize (const char *name, char *resolved)
+__typeof__(realpath) __realpath;
+
+char *
+__realpath (const char *name, char *resolved)
 {
   char *rpath, *dest, *extra_buf = NULL;
   const char *start, *end, *rpath_limit;
@@ -84,13 +78,23 @@ canonicalize (const char *name, char *resolved)
     path_max = 1024;
 #endif
 
-  rpath = resolved ? alloca (path_max) : malloc (path_max);
+  if (resolved == NULL)
+  {
+      rpath = malloc (path_max);
+      if (rpath == NULL)
+          return NULL;
+  }
+  else
+      rpath = resolved;
   rpath_limit = rpath + path_max;
 
   if (name[0] != '/' || name[0] == '\\')
     {
       if (!__getcwd (rpath, path_max))
+      {
+        rpath[0] = '\0';  
 	goto error;
+      }
       dest = strchr (rpath, '\0');
     }
   else
@@ -132,10 +136,14 @@ canonicalize (const char *name, char *resolved)
 	  if (dest + (end - start) >= rpath_limit)
 	    {
 	      long dest_offset = dest - rpath;
+              char *new_rpath;
 
 	      if (resolved)
 		{
 		  __set_errno (ENAMETOOLONG);
+                  if (dest > rpath +1)
+                      dest--;
+                  *dest = '\0';
 		  goto error;
 		}
 	      new_size = rpath_limit - rpath;
@@ -143,10 +151,11 @@ canonicalize (const char *name, char *resolved)
 		new_size += end - start + 1;
 	      else
 		new_size += path_max;
-	      rpath = realloc (rpath, new_size);
+	      new_rpath = (char *)realloc (rpath, new_size);
+	      if (new_rpath == NULL)
+                  goto error;
+              rpath = new_rpath;
 	      rpath_limit = rpath + new_size;
-	      if (rpath == NULL)
-		return NULL;
 
 	      dest = rpath + dest_offset;
 	    }
@@ -173,7 +182,7 @@ canonicalize (const char *name, char *resolved)
 		  goto error;
 		}
 
-	      n = __readlink (rpath, buf, path_max);
+	      n = __readlink (rpath, buf, path_max - 1);
 	      if (n < 0)
 		goto error;
 	      buf[n] = '\0';
@@ -199,35 +208,23 @@ canonicalize (const char *name, char *resolved)
 		if (dest > rpath + 1)
 		  while ((--dest)[-1] != '/' && dest[-1] != '\\');
 	    }
+          else if (!S_ISDIR(st.st_mode) && *end != '\0')
+            {
+		  __set_errno (ENOTDIR);
+		  goto error;              
+	    }
 	}
     }
   if (dest > rpath + 1 && (dest[-1] == '/' || dest[-1] == '\\'))
     --dest;
   *dest = '\0';
 
-  return resolved ? memcpy (resolved, rpath, dest - rpath + 1) : rpath;
+  return rpath;
 
 error:
-  if (resolved)
-    strcpy (resolved, rpath);
-  else
+  if (resolved == NULL)
     free (rpath);
   return NULL;
-}
-
-
-__typeof__(realpath) __realpath;
-
-char *
-__realpath (const char *name, char *resolved)
-{
-  if (resolved == NULL)
-    {
-      __set_errno (EINVAL);
-      return NULL;
-    }
-
-  return canonicalize (name, resolved);
 }
 weak_alias (__realpath, realpath)
 
@@ -236,6 +233,6 @@ __typeof__(canonicalize_file_name) __canonicalize_file_name;
 char *
 __canonicalize_file_name (const char *name)
 {
-  return canonicalize (name, NULL);
+  return __realpath (name, NULL);
 }
 weak_alias (__canonicalize_file_name, canonicalize_file_name)
