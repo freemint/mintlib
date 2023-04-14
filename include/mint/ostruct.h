@@ -488,7 +488,10 @@ typedef struct {
 #define BLIT_SOFT		0
 #define BLIT_HARD		1
 
-/* EsetShift() modes */
+/* EgetShift() / EsetShift() modes */
+#define ES_BANK			0x003
+#define ColorBank(x) ((x) & ES_BANK)
+
 #define ST_LOW			0x0000
 #define ST_MED			0x0100
 #define ST_HIGH			0x0200
@@ -496,8 +499,14 @@ typedef struct {
 #define TT_HIGH			0x0600
 #define TT_LOW			0x0700
 
-#define ES_GRAY			12
-#define ES_SMEAR		15
+#define ES_MODE			0x0700
+#define ScreenMode(x) ((x) & ES_MODE)
+
+#define ES_GRAY			0x1000
+#define IsGrayMode(x) ((x) & ES_GRAY)
+
+#define ES_SMEAR		0x8000
+#define IsSmearMode(x) ((x) & ES_SMEAR)
 
 /* Esetbank() params */
 #define ESB_INQUIRE		-1
