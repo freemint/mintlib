@@ -20,7 +20,7 @@
 #include "libc-symbols.h"
 
 	.extern	C_SYMBOL_NAME(__has_no_ssystem)	| int __has_no_ssystem;
-	.extern	C_SYMBOL_NAME(get_sysvar)		| long get_sysvar(void *var);
+	.extern	C_SYMBOL_NAME(get_sysvar)		| long get_sysvar(const volatile void *var);
 
 	.globl	C_SYMBOL_NAME(Getcookie)
 C_SYMBOL_NAME(Getcookie):
