@@ -6,7 +6,7 @@
 | this file you indicate that you have read the license and
 | understand and accept it fully.
 
-| long get_sysvar(void *var);
+| long get_sysvar(const volatile void *var);
 |
 | Read an OS variable.
 |
