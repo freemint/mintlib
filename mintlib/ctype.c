@@ -31,7 +31,7 @@
 #define _CTg _ISgraph
 #define _CTP _ISprint
 
-static unsigned int _myctype[UCHAR_MAX + 1] =
+static unsigned int _myctype[UCHAR_MAX + 2] =
 	{
 	0,						/* EOF */
 	_CTc, _CTc, _CTc, _CTc,				/* 0x00..0x03 */
@@ -109,7 +109,7 @@ static unsigned int _myctype[UCHAR_MAX + 1] =
 	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, /* 0x80..0xE7 */
 	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, /* 0x80..0xEF */
 	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, /* 0x80..0xF7 */
-	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, /* _CTc, */ /* 0x80..0xFF */
+	_CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc, _CTc  /* 0x80..0xFF */
 	};
 
 unsigned int* _ctype = &(_myctype[0]);
