@@ -138,7 +138,7 @@ static void __sem_wait_finish(sem_t *sem)
 		v >>= SEM_VALUE_SHIFT;
 #if 0
 		if (v > 0)
-			futex_wake(&sem->value, v, sem->private);
+			futex_wake(&sem->value, v, sem->__private);
 #endif
 	}
 }
@@ -163,7 +163,7 @@ static int __attribute__((noinline)) do_futex_wait(sem_t *sem, clockid_t clockid
 	int err;
 
 #if 0
-	err = __futex_abstimed_wait_cancelable64(&sem->value, SEM_NWAITERS_MASK, clockid, abstime, sem->private);
+	err = __futex_abstimed_wait_cancelable64(&sem->value, SEM_NWAITERS_MASK, clockid, abstime, sem->__private);
 #else
 	if (abstime)
 	{

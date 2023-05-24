@@ -35,7 +35,7 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
 		return -1;
 	}
 	/* pshared is currently unused */
-	sem->private = pshared ? 1 : 0;
+	sem->__private = pshared ? 1 : 0;
 	/* Use the values the caller provided.  */
 	sem->value = value << SEM_VALUE_SHIFT;
 	sem->nwaiters = 0;

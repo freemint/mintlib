@@ -28,5 +28,5 @@ typedef struct
 	unsigned long value;
 	unsigned long nwaiters;
 	unsigned long sem_id;
-	unsigned long private;
+	unsigned long __private;
 } sem_t;

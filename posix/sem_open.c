@@ -28,5 +28,5 @@ static inline void __sem_open_init(struct new_sem *sem, unsigned value)
 	sem->nwaiters = 0;
 
 	/* This always is a shared semaphore.  */
-	sem->private = 1;
+	sem->__private = 1;
 }

@@ -28,7 +28,7 @@ int sem_post(sem_t *sem)
 	/* If there is any potentially blocked waiter, wake one of them.  */
 #if 0
 	if ((v & SEM_NWAITERS_MASK) != 0)
-		futex_wake(&sem->value, 1, sem->private);
+		futex_wake(&sem->value, 1, sem->__private);
 #endif
 	ret = Psemaphore(3, sem->sem_id, 0);
 	if (ret < 0)
