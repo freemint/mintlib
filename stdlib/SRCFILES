@@ -36,6 +36,7 @@ SRCFILES = \
 	nrand48_r.c \
 	qsort.c \
 	rand.c \
+	rand_r.c \
 	random.c \
 	secure-getenv.c \
 	seed48.c \
