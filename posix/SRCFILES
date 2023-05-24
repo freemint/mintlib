@@ -27,6 +27,15 @@ SRCFILES = \
 	regex.c \
 	remove.c \
 	sched_yield.c \
+	sem_clockwait.c \
+	sem_destroy.c \
+	sem_getvalue.c \
+	sem_init.c \
+	sem_post.c \
+	sem_timedwait.c \
+	sem_trywait.c \
+	sem_wait.c \
+	sem_waitcommon.c \
 	sleep.c \
 	sysconf.c \
 	system.c \

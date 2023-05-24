@@ -64,6 +64,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	rtent.h \
 	sched.h \
 	search.h \
+	semaphore.h \
 	setjmp.h \
 	sgtty.h \
 	shadow.h \

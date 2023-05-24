@@ -48,3 +48,7 @@
 #ifdef __MSHORT__
 #define __INT_MAX__ 32767
 #endif
+
+/* Maximum value the semaphore can have.  */
+#define SEM_VALUE_MAX   (__INT_MAX__)
+
