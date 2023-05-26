@@ -4,6 +4,8 @@
 #include <time.h>
 #include "semaphoreP.h"
 
+/* Adapted to MiNTLib by Thorsten Otto */
+
 int sem_clockwait(sem_t *sem, clockid_t clockid, const struct timespec *abstime)
 {
 	long ret;

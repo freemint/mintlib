@@ -1,13 +1,15 @@
-#include <stdlib.h>
-#include <mint/mintbind.h>
-#include <errno.h>
-#include "semaphoreP.h"
-
 /*
  *   M.Medour 2023/05/24
  *   rev.1 
  *   semaphore.h for freemint
  */
+
+/* Adapted to MiNTLib by Thorsten Otto */
+
+#include <stdlib.h>
+#include <mint/mintbind.h>
+#include <errno.h>
+#include "semaphoreP.h"
 
 /* See sem_wait for an explanation of the algorithm.  */
 int sem_post(sem_t *sem)

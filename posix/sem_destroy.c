@@ -1,13 +1,15 @@
-#include <stdlib.h>
-#include <mint/mintbind.h>
-#include <errno.h>
-#include "semaphoreP.h"
-
 /*
  *   M.Medour 2023/05/24
  *   rev.1 
  *   semaphore.h for freemint
  */
+
+/* Adapted to MiNTLib by Thorsten Otto */
+
+#include <stdlib.h>
+#include <mint/mintbind.h>
+#include <errno.h>
+#include "semaphoreP.h"
 
 /* We're done with the semaphore, destroy it. */
 int sem_destroy(sem_t *sem)

@@ -1,14 +1,16 @@
-#include <stdlib.h>
-#include <mint/mintbind.h>
-#include <errno.h>
-#include <time.h>
-#include "semaphoreP.h"
-
 /*
  *   M.Medour 2023/05/24
  *   rev.1 
  *   semaphore.h for freemint
  */
+
+/* Adapted to MiNTLib by Thorsten Otto */
+
+#include <stdlib.h>
+#include <mint/mintbind.h>
+#include <errno.h>
+#include <time.h>
+#include "semaphoreP.h"
 
 /* This is in a separate file because because sem_timedwait is only provided
    if __USE_XOPEN2K is defined.  */

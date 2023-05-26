@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Adapted to MiNTLib by Thorsten Otto */
+
 #include <stdlib.h>
 #include <mint/mintbind.h>
 #include <errno.h>

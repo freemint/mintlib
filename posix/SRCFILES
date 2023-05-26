@@ -36,6 +36,10 @@ SRCFILES = \
 	sem_trywait.c \
 	sem_wait.c \
 	sem_waitcommon.c \
+	sem_open.c \
+	sem_close.c \
+	sem_unlink.c \
+	shm-directory.c \
 	sleep.c \
 	sysconf.c \
 	system.c \

@@ -1,3 +1,5 @@
+/* Adapted to MiNTLib by Thorsten Otto */
+
 #include <semaphore.h>
 #include <limits.h>
 
@@ -9,11 +11,13 @@
 /* The directory that contains shared POSIX objects.  */
 #define SHMDIR "U:\\shm\\"
 
+#define SEM_NAME_MAX    4
+
 struct shmdir_name
 {
   /* The combined prefix/name.  The sizeof includes the terminating
      NUL byte.  4 bytes are needed for the optional "sem." prefix.  */
-  char name[sizeof (SHMDIR) + 4 + NAME_MAX];
+  char name[sizeof (SHMDIR) + 4 + SEM_NAME_MAX];
 };
 
 /* Sets RESULT->name to the constructed name and returns 0 on success,
