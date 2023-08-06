@@ -14,37 +14,68 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-1 as of August, 1988 and
-   extended by POSIX-1b (aka POSIX-4) and POSIX-1c (aka POSIX threads).  */
-#define	_POSIX_VERSION	199506L
+#ifdef __USE_XOPEN2K8
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
+# define _POSIX_VERSION	200809L
+#elif defined __USE_XOPEN2K
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
+# define _POSIX_VERSION	200112L
+#elif defined __USE_POSIX199506
+/* POSIX Standard approved as ISO/IEC 9945-1 as of June 1995.  */
+# define _POSIX_VERSION	199506L
+#elif defined __USE_POSIX199309
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 1993.  */
+# define _POSIX_VERSION	199309L
+#else
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 1990.  */
+# define _POSIX_VERSION	199009L
+#endif
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
-/* POSIX Standard approved as ISO/IEC 9945-2 as of December, 1993.  */
-#define	_POSIX2_C_VERSION	199209L
+#ifdef __USE_XOPEN2K8
+# define __POSIX2_THIS_VERSION	200809L
+/* The utilities on GNU systems also correspond to this version.  */
+#elif defined __USE_XOPEN2K
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	200112L
+#elif defined __USE_POSIX199506
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	199506L
+#else
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	199209L
+#endif
 
 /* The utilities on GNU systems also correspond to this version.  */
-#define _POSIX2_VERSION	199209L
+#define _POSIX2_VERSION	__POSIX2_THIS_VERSION
+
+/* This symbol was required until the 2001 edition of POSIX.  */
+#define	_POSIX2_C_VERSION	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
-#define	_POSIX2_C_BIND	1
+#define	_POSIX2_C_BIND	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    C Language Development Utilities Option.  */
-#define	_POSIX2_C_DEV	1
+#define	_POSIX2_C_DEV	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    Software Development Utilities Option.  */
-#define	_POSIX2_SW_DEV	1
+#define	_POSIX2_SW_DEV	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    creation of locales with the localedef utility.  */
-#define _POSIX2_LOCALEDEF       1
+#define _POSIX2_LOCALEDEF       __POSIX2_THIS_VERSION
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN2K8
+# define _XOPEN_VERSION	700
+#elif defined __USE_XOPEN2K
+# define _XOPEN_VERSION	600
+#elif defined __USE_UNIX98
 # define _XOPEN_VERSION	500
 #else
 # define _XOPEN_VERSION	4
@@ -80,7 +111,7 @@ __BEGIN_DECLS
 
    _POSIX_JOB_CONTROL		Job control is supported.
    _POSIX_SAVED_IDS		Processes have a saved set-user-ID
-   				and a saved set-group-ID.
+				and a saved set-group-ID.
    _POSIX_REALTIME_SIGNALS	Real-time, queued signals are supported.
    _POSIX_PRIORITY_SCHEDULING	Priority scheduling is supported.
    _POSIX_TIMERS		POSIX.4 clocks and timers are supported.
@@ -137,11 +168,11 @@ __BEGIN_DECLS
    for a specific file can be obtained from `pathconf' and `fpathconf'.
 
    _POSIX_CHOWN_RESTRICTED	Only the super user can use `chown' to change
-   				the owner of a file.  `chown' can only be used
+				the owner of a file.  `chown' can only be used
 				to change the group ID of a file to a group of
 				which the calling process is a member.
    _POSIX_NO_TRUNC		Pathname components longer than
-   				NAME_MAX generate an error.
+				NAME_MAX generate an error.
    _POSIX_VDISABLE		If defined, if the value of an element of the
 				`c_cc' member of `struct termios' is
 				_POSIX_VDISABLE, no character will have the
@@ -190,7 +221,7 @@ typedef __ssize_t ssize_t;
 #define __need_NULL
 #include <stddef.h>
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef __gid_t_defined
@@ -227,12 +258,12 @@ typedef __pid_t pid_t;
 # endif
 #endif	/* X/Open */
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 # ifndef intptr_t
 typedef __intptr_t intptr_t;
 #  define intptr_t intptr_t
 # endif
-#endif	/* Unix98 */
+#endif
 
 #if defined __USE_BSD || defined __USE_XOPEN
 # ifndef __socklen_t_defined
