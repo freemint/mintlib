@@ -30,6 +30,18 @@
    __STRICT_ANSI__	ISO Standard C.
    _ISOC99_SOURCE	Extensions to ISO C89 from ISO C99.
    _ISOC11_SOURCE	Extensions to ISO C99 from ISO C11.
+   _ISOC2X_SOURCE	Extensions to ISO C99 from ISO C2X.
+   __STDC_WANT_LIB_EXT2__
+			Extensions to ISO C99 from TR 27431-2:2010.
+   __STDC_WANT_IEC_60559_BFP_EXT__
+			Extensions to ISO C11 from TS 18661-1:2014.
+   __STDC_WANT_IEC_60559_FUNCS_EXT__
+			Extensions to ISO C11 from TS 18661-4:2015.
+   __STDC_WANT_IEC_60559_TYPES_EXT__
+			Extensions to ISO C11 from TS 18661-3:2015.
+   __STDC_WANT_IEC_60559_EXT__
+			ISO C2X interfaces defined only in Annex F.
+
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
@@ -46,25 +58,39 @@
    _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
    _ATFILE_SOURCE	Additional *at interfaces.
+   _DYNAMIC_STACK_SIZE_SOURCE Select correct (but non compile-time constant)
+			MINSIGSTKSZ, SIGSTKSZ and PTHREAD_STACK_MIN.
    _GNU_SOURCE		All of the above, plus GNU extensions.
+   _DEFAULT_SOURCE	The default set of features (taking precedence over
+			__STRICT_ANSI__).
+
+   _FORTIFY_SOURCE	Add security hardening to many library functions.
+			Set to 1, 2 or 3; 3 performs stricter checks than 2, which
+			performs stricter checks than 1.
+
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
-   _FORTIFY_SOURCE	If set to numeric value > 0 additional security
-			measures are defined, according to level.
 
-   The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
-   If none of these are defined, the default is to have _SVID_SOURCE,
-   _BSD_SOURCE, and _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
-   200809L.  If more than one of these are defined, they accumulate.
-   For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
-   together give you ISO C, 1003.1, and 1003.2, but nothing else.
+   The `-ansi' switch to the GNU C compiler, and standards conformance
+   options such as `-std=c99', define __STRICT_ANSI__.  If none of
+   these are defined, or if _DEFAULT_SOURCE is defined, the default is
+   to have _POSIX_SOURCE set to one and _POSIX_C_SOURCE set to
+   200809L, as well as enabling miscellaneous functions from BSD and
+   SVID.  If more than one of these are defined, they accumulate.  For
+   example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE together
+   give you ISO C, 1003.1, and 1003.2, but nothing else.
 
    These are defined by this file and are used by the
    header files to decide what to declare or define:
 
+   __GLIBC_USE (F)	Define things from feature set F.  This is defined
+			to 1 or 0; the subsequent macros are either defined
+			or undefined, and those tests should be moved to
+			__GLIBC_USE.
    __USE_ISOC11		Define ISO C11 things.
    __USE_ISOC99		Define ISO C99 things.
    __USE_ISOC95		Define ISO C90 AMD1 (C95) things.
+   __USE_ISOCXX11	Define ISO C++11 things.
    __USE_POSIX		Define IEEE Std 1003.1 things.
    __USE_POSIX2		Define IEEE Std 1003.2 things.
    __USE_POSIX199309	Define IEEE Std 1003.1, and .1b things.
@@ -81,8 +107,10 @@
    __USE_FILE_OFFSET64	Define 64bit interface as default.
    __USE_BSD		Define 4.3BSD things.
    __USE_SVID		Define SVID things.
-   __USE_MISC		Define things common to BSD and System V Unix.
+   __USE_MISC		Define things from 4.3BSD or System V Unix.
    __USE_ATFILE		Define *at interfaces and AT_* constants for them.
+   __USE_DYNAMIC_STACK_SIZE Define correct (but non compile-time constant)
+			MINSIGSTKSZ, SIGSTKSZ and PTHREAD_STACK_MIN.
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
    __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
@@ -98,7 +126,14 @@
    explicitly undefined if they are not explicitly defined.
    Feature-test macros that are not defined by the user or compiler
    but are implied by the other feature-test macros defined (or by the
-   lack of any definitions) are defined by the file.  */
+   lack of any definitions) are defined by the file.
+
+   ISO C feature test macros depend on the definition of the macro
+   when an affected header is included, not when the first system
+   header is included, and so they are handled in
+   <bits/libc-header-start.h>, which does not have a multiple include
+   guard.  Feature test macros that can be handled from the first
+   system header included are handled here.  */
 
 /* When compiling the library itself, we have to define _GNU_SOURCE and
    _MINTLIB_SOURCE because we compile these extentions.  */
@@ -130,19 +165,25 @@
 #undef	__USE_SVID
 #undef	__USE_MISC
 #undef	__USE_ATFILE
+#undef	__USE_DYNAMIC_STACK_SIZE
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
 #undef	__USE_FORTIFY_LEVEL
 #undef	__FAVOR_BSD
 #undef	__KERNEL_STRICT_NAMES
 #undef  __USE_MINTLIB
+#undef	__GLIBC_USE_ISOC2X
 #undef	__GLIBC_USE_DEPRECATED_GETS
+#undef	__GLIBC_USE_DEPRECATED_SCANF
 
 /* Suppress kernel-name space pollution unless user expressedly asks
    for it.  */
 #ifndef _LOOSE_KERNEL_NAMES
 # define __KERNEL_STRICT_NAMES
 #endif
+
+/* Whether to use feature set F.  */
+#define __GLIBC_USE(F)	__GLIBC_USE_ ## F
 
 /* Always use ISO C things.  */
 #define	__USE_ANSI	1
@@ -162,6 +203,8 @@
 # define _ISOC99_SOURCE	1
 # undef  _ISOC11_SOURCE
 # define _ISOC11_SOURCE	1
+# undef  _ISOC2X_SOURCE
+# define _ISOC2X_SOURCE	1
 # undef  _POSIX_SOURCE
 # define _POSIX_SOURCE	1
 # undef  _POSIX_C_SOURCE
@@ -183,6 +226,8 @@
 # ifndef __MINT__ /* not yet */
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1
+# undef  _DYNAMIC_STACK_SIZE_SOURCE
+# define _DYNAMIC_STACK_SIZE_SOURCE 1
 # endif /* !__MINT__ */
 #endif
 
@@ -195,20 +240,30 @@
 # define _SVID_SOURCE	1
 #endif
 
+/* This is to enable the ISO C2X extension.  */
+#if (defined _ISOC2X_SOURCE \
+     || (defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L))
+# define __GLIBC_USE_ISOC2X	1
+#else
+# define __GLIBC_USE_ISOC2X	0
+#endif
+
 /* This is to enable the ISO C11 extension.  */
-#if (defined _ISOC11_SOURCE \
+#if (defined _ISOC11_SOURCE || defined _ISOC2X_SOURCE \
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 201112L))
 # define __USE_ISOC11	1
 #endif
 
 /* This is to enable the ISO C99 extension.  */
-#if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE \
+#if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE			\
+     || defined _ISOC2X_SOURCE						\
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
 # define __USE_ISOC99	1
 #endif
 
 /* This is to enable the ISO C90 Amendment 1:1995 extension.  */
-#if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE \
+#if (defined _ISOC99_SOURCE || defined _ISOC11_SOURCE			\
+     || defined _ISOC2X_SOURCE						\
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199409L))
 # define __USE_ISOC95	1
 #endif
@@ -228,8 +283,9 @@
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2
    (and IEEE Std 1003.1b-1993 unless _XOPEN_SOURCE is defined).  */
-#if ((!defined __STRICT_ANSI__ || (_XOPEN_SOURCE - 0) >= 500) && \
-     !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
+#if ((!defined __STRICT_ANSI__					\
+      || (defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) >= 500))	\
+     && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
 # if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2
@@ -243,7 +299,22 @@
 # define __USE_POSIX_IMPLICITLY	1
 #endif
 
-#if defined _POSIX_SOURCE || _POSIX_C_SOURCE >= 1 || defined _XOPEN_SOURCE
+/* Some C libraries once required _REENTRANT and/or _THREAD_SAFE to be
+   defined in all multithreaded code.  GNU libc has not required this
+   for many years.  We now treat them as compatibility synonyms for
+   _POSIX_C_SOURCE=199506L, which is the earliest level of POSIX with
+   comprehensive support for multithreaded code.  Using them never
+   lowers the selected level of POSIX conformance, only raises it.  */
+#if ((!defined _POSIX_C_SOURCE || (_POSIX_C_SOURCE - 0) < 199506L) \
+     && (defined _REENTRANT || defined _THREAD_SAFE))
+# define _POSIX_SOURCE   1
+# undef  _POSIX_C_SOURCE
+# define _POSIX_C_SOURCE 199506L
+#endif
+
+#if (defined _POSIX_SOURCE					\
+     || (defined _POSIX_C_SOURCE && _POSIX_C_SOURCE >= 1)	\
+     || defined _XOPEN_SOURCE)
 # define __USE_POSIX	1
 #endif
 
@@ -251,15 +322,15 @@
 # define __USE_POSIX2	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 199309L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199309L
 # define __USE_POSIX199309	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 199506L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 199506L
 # define __USE_POSIX199506	1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 200112L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200112L
 # define __USE_XOPEN2K		1
 # undef __USE_ISOC95
 # define __USE_ISOC95		1
@@ -267,7 +338,7 @@
 # define __USE_ISOC99		1
 #endif
 
-#if (_POSIX_C_SOURCE - 0) >= 200809L
+#if defined _POSIX_C_SOURCE && (_POSIX_C_SOURCE - 0) >= 200809L
 # define __USE_XOPEN2K8		1
 # undef  _ATFILE_SOURCE
 # define _ATFILE_SOURCE	1
