@@ -68,6 +68,7 @@ static char sccsid[] = "@(#)syslog.c	5.16 (Berkeley) 6/27/88";
 #include <sys/wait.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <errno.h>
 
 #ifndef __MINT__
 # define	MAXLINE	1024			/* max message size */
@@ -85,7 +86,6 @@ static char sccsid[] = "@(#)syslog.c	5.16 (Berkeley) 6/27/88";
 static char	logname[] = "/dev/log";
 #else
 static char	logname[] = "/pipe/log";
-int errno;
 #endif
 static char	ctty[] = "/dev/console";
 
