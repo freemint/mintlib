@@ -133,15 +133,15 @@ rcmd(char **ahost, u_short rport, const char *locuser, const char *remuser, cons
 		write(s, "", 1);
 		lport = 0;
 	} else {
-		char num[8];
-		int s2 = rresvport(&lport), s3;
+		char num[12];
+		int s2 = rresvport(&lport), s3, n;
 		socklen_t len = sizeof (from);
 
 		if (s2 < 0)
 			goto bad;
 		listen(s2, 1);
-		(void) sprintf(num, "%d", lport);
-		if (write(s, num, strlen(num)+1) != strlen(num)+1) {
+		n = sprintf(num, "%d", lport) + 1;
+		if (write(s, num, n) != n) {
 			perror("write: setting up stderr");
 			(void) close(s2);
 			goto bad;
