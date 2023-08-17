@@ -20,8 +20,14 @@ __sigprocmask (int how, const sigset_t* set, sigset_t* oset)
   	long oldmask = 0L;
 
   	if (set == NULL) {
-    		__set_errno (EINVAL);
-    		return -1;
+        /*
+         * If set is NULL, then the signal mask is unchanged (i.e., how is ignored),
+         * but the current value of the signal mask is nevertheless returned in oldset (if
+         * it is not NULL).
+         */
+        if (oset != NULL)
+            *oset = Psigblock(0);
+        return retval;
   	}
   	
   	switch (how) {
