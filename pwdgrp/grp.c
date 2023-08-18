@@ -16,7 +16,7 @@
 #include <grp.h>
 
 static char const *grpfile = "/etc/group";  /* default group file */
-static FILE *fp = NULL;
+static FILE *filep = NULL;
 
 static struct group curentry;   /* static data to return */
 
@@ -25,9 +25,9 @@ static int nextent (FILE *fp);
 /* Rewind the group file to allow repeated searches */
 void setgrent(void)
 {
-  if (fp != NULL)
-    rewind (fp);
-  else if ((fp = fopen (grpfile, "rt")) == NULL)
+  if (filep != NULL)
+    rewind (filep);
+  else if ((filep = fopen (grpfile, "rt")) == NULL)
   {
 #ifdef VERBOSE
     fprintf (stderr,
@@ -39,22 +39,22 @@ void setgrent(void)
 /* Close the group file when processing is complete */
 void endgrent(void)
 {
-  if (fp != NULL)
+  if (filep != NULL)
   {
-    fclose (fp);
-    fp = NULL;
+    fclose (filep);
+    filep = NULL;
   }
 } /* End of endgrent() */
 
 /* Get the next group structure in the file */
 struct group *getgrent(void)
 {
-  if (fp == NULL)
+  if (filep == NULL)
     setgrent();
-  if (fp == NULL)
+  if (filep == NULL)
     return NULL;
 
-  if (nextent(fp) == 0)
+  if (nextent(filep) == 0)
     return(NULL);
   else
     return(&curentry);
@@ -65,7 +65,7 @@ struct group *getgrgid(int gid)
 {
   setgrent();
 
-  while (nextent(fp) != 0)
+  while (nextent(filep) != 0)
     if (curentry.gr_gid == gid)
       return(&curentry);
 
@@ -77,7 +77,7 @@ struct group *getgrnam(const char *name)
 {
   setgrent();
 
-  while (nextent(fp) != 0)
+  while (nextent(filep) != 0)
     if (strcmp (curentry.gr_name, name) == 0)
       return (&curentry);
 
@@ -103,8 +103,8 @@ static char *memb[MAX_MEMBERS];
 
 static int nextent(FILE *fp)
 {
-  register char *cp;
-  register int i;
+  char *cp;
+  int i;
 
   if (fp == NULL)
     setgrent();

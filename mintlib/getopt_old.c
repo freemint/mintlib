@@ -27,11 +27,11 @@ char *optarg;                   /* Option argument      */
 
 int getopt(int argc, char * const *argv, const char* opts)
 {
-  static int sp = 1;
-  register char *cp;
-  register int c;
+  static int stringptr = 1;
+  char *cp;
+  int c;
 
-  if(sp == 1) {
+  if(stringptr == 1) {
     if(optind >= argc || argv[optind][0] != '-' || argv[optind][1] == '\0') {
       return(EOF);
     } else if( !strcmp(argv[optind], "--")) {
@@ -39,33 +39,33 @@ int getopt(int argc, char * const *argv, const char* opts)
       return(EOF);
     }
   }
-  optopt = c = argv[optind][sp];
+  optopt = c = argv[optind][stringptr];
   if(c == ':' || (cp = strchr(opts, c)) == NULL) {
     if(opterr)
       (void) fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
-    else if(argv[optind][++sp] == '\0') {
+    else if(argv[optind][++stringptr] == '\0') {
       optind++;
-      sp = 1;
+      stringptr = 1;
     }
     return('?');
   }
   if(*++cp == ':') {
-    if(argv[optind][sp+1] != '\0')
-      optarg = &argv[optind++][sp+1];
+    if(argv[optind][stringptr+1] != '\0')
+      optarg = &argv[optind++][stringptr+1];
     else if(++optind >= argc) {
       if(opterr)
        (void) fprintf(stderr, "%s: option requires an argument -- %c\n",
                       argv[0], c);
-      sp = 1;
+      stringptr = 1;
       return('?');
     }
     else
       optarg = argv[optind++];
-    sp = 1;
+    stringptr = 1;
   }
   else {
-    if(argv[optind][++sp] == '\0') {
-      sp = 1;
+    if(argv[optind][++stringptr] == '\0') {
+      stringptr = 1;
       optind++;
     }
     optarg = NULL;

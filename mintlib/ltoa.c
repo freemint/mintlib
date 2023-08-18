@@ -2,7 +2,7 @@
 #include <string.h>
 #include "lib.h"
 
-char _numstr[] = "0123456789ABCDEF";
+static char const _numstr[] = "0123456789ABCDEF";
 
 char *
 _ultoa(unsigned long n, char *buffer, int radix)
