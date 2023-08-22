@@ -93,8 +93,6 @@ extern size_t line_wrap_set_wmargin (FILE *stream, size_t wmargin);
    the current output point.  */
 extern size_t line_wrap_point (FILE *stream);
 
-#ifdef	__OPTIMIZE__
-
 extern void __line_wrap_output (FILE *, int); /* private */
 
 /* If STREAM is not line-wrapped, return 0.  Otherwise all pending text
@@ -104,6 +102,8 @@ extern void __line_wrap_output (FILE *, int); /* private */
    POINT_COL field refers to the column at which any new text would be added,
    and (2) any changes to the margin parameters will only affect new text.  */
 extern struct line_wrap_data *__line_wrap_update (FILE *stream); /* private */
+
+#ifdef	__OPTIMIZE__
 
 /* Returns true if STREAM is line wrapped.  */
 _EXTERN_INLINE int

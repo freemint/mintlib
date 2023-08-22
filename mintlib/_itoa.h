@@ -28,11 +28,7 @@ CHAR_T * _witoa (unsigned long long int, CHAR_T *, unsigned int, int);
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
-_itoa_word (unsigned long value, CHAR_T *buflim,
-	    unsigned int base, int upper_case);
-
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+static __inline__ CHAR_T * __attribute__ ((unused))
 _itoa_word (unsigned long value, CHAR_T *buflim,
 	    unsigned int base, int upper_case)
 {
@@ -61,10 +57,7 @@ _itoa_word (unsigned long value, CHAR_T *buflim,
   return bp;
 }
 
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
-_fitoa_word (unsigned long value, CHAR_T *buf, unsigned int base, int upper_case);
-
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+static __inline__ CHAR_T * __attribute__ ((unused))
 _fitoa_word (unsigned long value, CHAR_T *buf, unsigned int base, int upper_case)
 {
   CHAR_T tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */
@@ -74,10 +67,7 @@ _fitoa_word (unsigned long value, CHAR_T *buf, unsigned int base, int upper_case
   return buf;
 }
 
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
-_fitoa (unsigned long long value, CHAR_T *buf, unsigned int base, int upper_case);
-
-_EXTERN_INLINE CHAR_T * __attribute__ ((unused))
+static __inline__ CHAR_T * __attribute__ ((unused))
 _fitoa (unsigned long long value, CHAR_T *buf, unsigned int base, int upper_case)
 {
   CHAR_T tmpbuf[sizeof value * 4];	/* Worst case length: base 2.  */

@@ -517,7 +517,7 @@
 #   define _EXTERN_INLINE extern __inline
 # endif
 #else
-# define _EXTERN_INLINE extern
+# define _EXTERN_INLINE extern __inline __attribute__((__gnu_inline__))
 #endif
 
 #endif	/* features.h  */

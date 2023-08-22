@@ -20,6 +20,14 @@
 #include <inttypes.h>
 #include <stdlib.h>
 
+# ifndef __strtoll_internal_defined
+__extension__
+extern long long int __strtoll_internal __P ((__const char *__restrict __nptr,
+					      char **__restrict __endptr,
+					      int __base, int __group));
+#  define __strtoll_internal_defined	1
+# endif
+
 intmax_t
 strtoimax (const char *__restrict nptr, char **__restrict endptr, int base)
 {

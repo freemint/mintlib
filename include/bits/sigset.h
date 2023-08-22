@@ -48,13 +48,8 @@
 /* These functions needn't check for a bogus signal number -- error
    checking is done in the non __ versions.  */
 
-__EXTERN int __sigismember __P ((__const __sigset_t *, int));
-__EXTERN int __sigaddset __P ((__sigset_t *, int));
-__EXTERN int __sigdelset __P ((__sigset_t *, int));
-
-#ifdef __USE_EXTERN_INLINES
 # define __SIGSETFN(NAME, BODY, CONST)					      \
-  _EXTERN_INLINE int							      \
+  static __inline__ int							      \
   NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
     __sigset_t __mask = __sigmask (__sig);				      \
@@ -66,7 +61,6 @@ __SIGSETFN (__sigaddset, ((*__set |= __mask), 0), )
 __SIGSETFN (__sigdelset, ((*__set &= ~__mask), 0), )
 
 # undef __SIGSETFN
-#endif
 
 
 #endif /* ! _SIGSET_H_fns.  */

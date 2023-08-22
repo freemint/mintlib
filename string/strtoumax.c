@@ -20,6 +20,17 @@
 #include <inttypes.h>
 #include <stdlib.h>
 
+# ifndef __strtoull_internal_defined
+__extension__
+extern unsigned long long int __strtoull_internal __P ((__const char *
+							__restrict __nptr,
+							char **
+							__restrict __endptr,
+							int __base,
+							int __group));
+#  define __strtoull_internal_defined	1
+# endif
+
 uintmax_t
 strtoumax (const char *__restrict nptr, char **__restrict endptr, int base)
 {
