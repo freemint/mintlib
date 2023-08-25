@@ -15,7 +15,7 @@ type=
 # If you change this you must run "make checkclean".
 cflags=
 
-CRT0 = $(top_srcdir)/startup/crt0.o
+CRT0 = $(top_srcdir)/lib$(type)/crt0.o
 libs = $(libs-$(@F)) $(top_srcdir)/lib$(type)/libc.a
 LIBS = -lgcc $(LIBS-$(@F)) $(libs) -lgcc
 

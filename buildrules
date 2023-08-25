@@ -60,6 +60,7 @@ pwdgrpdir  := $(top_srcdir)/pwdgrp
 shadowdir  := $(top_srcdir)/shadow
 signaldir  := $(top_srcdir)/signal
 socketdir  := $(top_srcdir)/socket
+startupdir := $(top_srcdir)/startup
 stdiiodir  := $(top_srcdir)/stdiio
 stdiodir   := $(top_srcdir)/stdio
 stdlibdir  := $(top_srcdir)/stdlib
@@ -143,6 +144,7 @@ DEFS-xnlm_prot.c= -Wno-unused
 DEFS-xrstat.c = -Wno-unused
 DEFS-xspray.c= -Wno-unused
 
+CRT0OBJS    := crt0.o gcrt0.o
 ARGPOBJS    := $(addsuffix .o, $(basename $(notdir $(ARGPSRCS))))
 CRYPTOBJS   := $(addsuffix .o, $(basename $(notdir $(CRYPTSRCS))))
 DIRENTOBJS  := $(addsuffix .o, $(basename $(notdir $(DIRENTSRCS))))
@@ -168,7 +170,7 @@ TERMIOSOBJS := $(addsuffix .o, $(basename $(notdir $(TERMIOSSRCS))))
 TIMEOBJS    := $(addsuffix .o, $(basename $(notdir $(TIMESRCS))))
 TZOBJS      := $(addsuffix .o, $(basename $(notdir $(TZSRCS))))
 UNIXOBJS    := $(addsuffix .o, $(basename $(notdir $(UNIXSRCS))))
-OBJS := $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
+OBJS := $(CRT0OBJS) $(ARGPOBJS) $(CRYPTOBJS) $(DIRENTOBJS) $(GMPOBJS) $(LOGINOBJS) $(MINTLIBOBJS) \
   $(MISCOBJS) $(MBYTEOBJS) $(POSIXOBJS) $(PWDGRPOBJS) $(RPCSVCOBJS) $(SHADOWOBJS) \
   $(SIGNALOBJS) $(SOCKETOBJS) $(STDIIOOBJS) $(STDIOOBJS) $(STDLIBOBJS) \
   $(STRINGOBJS) $(SUNRPCOBJS) $(SYSCALLOBJS) $(SYSVIPCOBJS) $(TERMIOSOBJS) \
@@ -193,7 +195,7 @@ DEP_FILES := $(addprefix $(top_srcdir)/.deps/,$(patsubst %.o,%.P,$(OBJS)))
 
 endif  # not top_distdir.
 
-all-here: $(top_srcdir)/CFILES $(top_srcdir)/includepath $(LIBS)
+all-here: $(top_srcdir)/CFILES $(top_srcdir)/includepath $(CRT0OBJS) $(LIBS)
 
 $(top_srcdir)/includepath: $(top_srcdir)/configvars
 	@echo "Generating $@"; \
@@ -275,6 +277,12 @@ vpath %.S $(srcdirs)
 .s.o:
 	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
 				
+crt0.o: $(startupdir)/crt0.S
+	$(AM_V_CC)$(CC) $(WARN) $(cflags) $(CFLAGS) -nostdinc -I$(top_srcdir)/include -I$(top_srcdir)/mintlib -c $< -o $@
+
+gcrt0.o: $(startupdir)/crt0.S
+	$(AM_V_CC)$(CC) $(WARN) $(cflags) $(CFLAGS) -nostdinc -I$(top_srcdir)/include -I$(top_srcdir)/mintlib -DGCRT0 -c $< -o $@
+
 # Finally, build the libs.
 $(libc): $(LIBCOBJS)
 	@rm -f $@

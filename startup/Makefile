@@ -20,42 +20,21 @@ dont_install_libs = yes
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
 
-OBJS = crt0.o gcrt0.o
-
 libdir = $(prefix)/lib
 
 INCLUDES = -nostdinc -I$(top_srcdir)/include -I$(top_srcdir)/mintlib
 
 COMPILE = $(CC) $(WARN) $(CFLAGS) $(INCLUDES) $(DEFS)
 
-all-here: $(OBJS)
+all-here:
 
 include $(top_srcdir)/phony
-
-crt0.o: $(srcdir)/crt0.S
-	$(COMPILE) $(INCLUDES) -c $< -o $@
-
-gcrt0.o: $(srcdir)/crt0.S
-	$(COMPILE) $(INCLUDES) -DGCRT0 -c $< -o $@
 
 include $(top_srcdir)/rules
 
 install: all-here
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	@list='$(OBJS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo " $(INSTALL) -m 644 $$p $(libdir)"; \
-	    $(INSTALL) -m 644 $$p $(DESTDIR)$(libdir); \
-	  else :; fi; \
-	done
 
 uninstall:
-	@list='$(OBJS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo " rm -f $(libdir)/$$p"; \
-	    rm -f $(DESTDIR)$(libdir)/$$p; \
-	  else :; fi; \
-	done
 	
 install-include:
 

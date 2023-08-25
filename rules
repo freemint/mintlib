@@ -35,7 +35,7 @@ baselibs = $(basename $(LIBS))
 
 install-lib:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(instdir)
-	@list='$(LIBS)'; for p in $$list; do \
+	@list='$(LIBS) $(CRT0OBJS)'; for p in $$list; do \
 	  if test -f $$p; then \
 	    echo " $(INSTALL) -m 644 $$p $(libdir)/$(instdir)"; \
 	    $(INSTALL) -m 644 $$p $(DESTDIR)$(libdir)/$(instdir); \
@@ -43,11 +43,15 @@ install-lib:
 	done
 
 uninstall-lib:
-	list='$(baselibs)'; for p in $$list; do \
+	@list='$(baselibs)'; for p in $$list; do \
 	  r=$$p.a; \
 	  s="$$p"$(libsize).a; \
 	  echo " rm -f $(libdir)/$(instdir)/$$r $(libdir)/$(instdir)/$$s"; \
 	  rm -f $(DESTDIR)$(libdir)/$(instdir)/$$r $(DESTDIR)$(libdir)/$(instdir)/$$s; \
+	done
+	@list='$(CRT0OBJS)'; for p in $$list; do \
+	  echo " rm -f $(DESTDIR)$(libdir)/$(instdir)/$$p"; \
+	  rm -f $(DESTDIR)$(libdir)/$(instdir)/$$p; \
 	done
 endif
 
