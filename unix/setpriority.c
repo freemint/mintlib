@@ -19,7 +19,7 @@ static int have_Prenice = 1;
 static int have_Pnice = 1;
 
 int
-__setpriority (enum __priority_which class, int id, int priority)
+__setpriority (__priority_which_t class, int id, int priority)
 {
   int saved_priority;
   int increment;

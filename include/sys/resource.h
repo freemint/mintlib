@@ -99,19 +99,33 @@ struct rlimit
                          */
 };
 
+/* The X/Open standard defines that all the functions below must use
+   `int' as the type for the first argument.  When we are compiling with
+   GNU extensions we change this slightly to provide better error
+   checking.  */
+#if defined __USE_GNU && !defined __cplusplus
+typedef enum __rlimit_resource __rlimit_resource_t;
+typedef enum __rusage_who __rusage_who_t;
+typedef enum __priority_which __priority_which_t;
+#else
+typedef int __rlimit_resource_t;
+typedef int __rusage_who_t;
+typedef int __priority_which_t;
+#endif
+
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-extern int getrlimit (enum __rlimit_resource __resource,
+extern int getrlimit (__rlimit_resource_t __resource,
 		      struct rlimit *__rlimits) __THROW;
-extern int __getrlimit (enum __rlimit_resource __resource,
+extern int __getrlimit (__rlimit_resource_t __resource,
 		        struct rlimit *__rlimits) __THROW;
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-extern int setrlimit (enum __rlimit_resource __resource,
+extern int setrlimit (__rlimit_resource_t __resource,
 		      struct rlimit *__rlimits) __THROW;
-extern int __setrlimit (enum __rlimit_resource __resource,
+extern int __setrlimit (__rlimit_resource_t __resource,
 		        struct rlimit *__rlimits) __THROW;
 
 /* Possible values for first argument to `getrusage'.  */
@@ -127,9 +141,9 @@ enum __rusage_who
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int getrusage (enum __rusage_who __who, 
+extern int getrusage (__rusage_who_t __who,
                       struct rusage *__usage) __THROW;
-extern int __getrusage (enum __rusage_who __who, 
+extern int __getrusage (__rusage_who_t __who,
                         struct rusage *__usage) __THROW;
 
 #if 0
@@ -172,14 +186,14 @@ enum __priority_which
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
-extern int getpriority (enum __priority_which __which, int __who) __THROW;
-extern int __getpriority (enum __priority_which __which, int __who) __THROW;
+extern int getpriority (__priority_which_t __which, int __who) __THROW;
+extern int __getpriority (__priority_which_t __which, int __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
-extern int setpriority (enum __priority_which __which, int __who,
+extern int setpriority (__priority_which_t __which, int __who,
 			int __prio) __THROW;
-extern int __setpriority (enum __priority_which __which, int __who,
+extern int __setpriority (__priority_which_t __which, int __who,
 			  int __prio) __THROW;
 
 /* Increment the priority of the current process by INCREMENT.  Return

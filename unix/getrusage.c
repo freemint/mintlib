@@ -35,7 +35,7 @@ _add_tval(struct timeval *orig, struct timeval *new)
 #endif
 
 int 
-__getrusage(enum __rusage_who which, struct rusage *data)
+__getrusage(__rusage_who_t which, struct rusage *data)
 {
 	long r;
 	long usage[8];

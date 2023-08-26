@@ -19,7 +19,7 @@ static int have_Prenice = 1;
 static int have_Pnice = 1;
 
 int
-__getpriority (enum __priority_which class, int id)
+__getpriority (__priority_which_t class, int id)
 {
   if (class != PRIO_PROCESS && class != PRIO_PGRP && class != PRIO_USER)
     {

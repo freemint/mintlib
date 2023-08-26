@@ -8,7 +8,7 @@
 #include <mint/mintbind.h>
 
 int
-__setrlimit (enum __rlimit_resource kind, struct rlimit *rl)
+__setrlimit (__rlimit_resource_t kind, struct rlimit *rl)
 {
 	unsigned long limit;
 	int mode;

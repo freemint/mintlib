@@ -11,7 +11,7 @@
 long __sysconf (int var);
 
 int
-__getrlimit (enum __rlimit_resource kind, struct rlimit *rl)
+__getrlimit (__rlimit_resource_t kind, struct rlimit *rl)
 {
 	long limit;
 	int mode;
