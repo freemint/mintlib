@@ -70,7 +70,7 @@ endif
 # This variable is used for various others.  Change its value if 
 # need be.  When cross-compiling you will usually want to set this
 # to "/usr/m68k-atari-mint".
-prefix=/usr
+prefix:="$(shell $(toolprefix)gcc -print-sysroot)/opt/mintlib-dlmalloc"
 
 # This is where include files get installed.
 includedir=${prefix}/include
