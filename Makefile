@@ -43,11 +43,19 @@ endif
 ifeq ($(WITH_020_LIB), yes)
   SUBDIRS += lib020
   DIST_SUBDIRS += lib020
+  ifeq ($(WITH_DEBUG_LIB), yes)
+    SUBDIRS += lib020_g
+    DIST_SUBDIRS += lib020_g
+  endif
 endif
 
 ifeq ($(WITH_V4E_LIB), yes)
   SUBDIRS += libv4e
   DIST_SUBDIRS += libv4e
+  ifeq ($(WITH_DEBUG_LIB), yes)
+    SUBDIRS += libv4e_g
+    DIST_SUBDIRS += libv4e_g
+  endif
 endif
 
 include $(srcdir)/BINFILES

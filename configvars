@@ -42,6 +42,9 @@ else
 endif
 endif
 
+EVAL_ELF := (echo '\#ifdef __ELF__'; echo yes; echo '\#endif' ) | $(toolprefix)gcc  -E - 2>/dev/null | grep yes
+ELF := $(shell $(EVAL_ELF))
+
 # Uncomment this out if you want extra libraries that are optimized
 # for m68020 processors.
 WITH_020_LIB=yes
@@ -52,6 +55,9 @@ WITH_V4E_LIB=yes
 
 # Uncomment this out if you want a debuggable lib lib_g.a.
 #WITH_DEBUG_LIB=yes
+ifeq ($(ELF),yes)
+WITH_DEBUG_LIB=yes
+endif
 
 # Uncomment this out if you want a debugable lib lib_p.a.  
 # This is currently not recommended.  At least on my machine
