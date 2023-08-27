@@ -52,13 +52,13 @@ int __getnameinfo(
 		return EAI_FAMILY;
 	}
 
-	ok = 0;
 	if (host != NULL && hostlen > 0)
 	{
 		switch (sa->sa_family)
 		{
 		case AF_INET:
 		case AF_INET6:
+			ok = 0;
 			if (!(flags & NI_NUMERICHOST))
 			{
 				if (sa->sa_family == AF_INET6)
@@ -151,6 +151,7 @@ int __getnameinfo(
 			strncpy(serv, ((const struct sockaddr_un *) sa)->sun_path, servlen);
 		} else
 		{								/* AF_INET || AF_INET6 */
+			ok = 0;
 			if (!(flags & NI_NUMERICSERV))
 			{
 				struct servent *s;
