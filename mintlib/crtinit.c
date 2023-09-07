@@ -86,6 +86,58 @@ char **__libc_argv = __libc_argv_default;
 
 static long parseargs(BASEPAGE *);
 
+#ifdef __ELF__
+
+/*
+ * Support for the init/fini initialization mechanism.
+ * Inspired from glibc's csu/libc-start.c.
+ * https://sourceware.org/git/?p=glibc.git;f=csu/libc-start.c;hb=refs/heads/master
+ */
+
+/* These magic symbols are provided by the linker.  */
+extern void (*__preinit_array_start [])(int, char **, char **);
+extern void (*__preinit_array_end [])(int, char **, char **);
+extern void (*__init_array_start [])(int, char **, char **);
+extern void (*__init_array_end [])(int, char **, char **);
+extern void (*__fini_array_start [])(void);
+extern void (*__fini_array_end [])(void);
+
+/* Call global initializers/constructors.  */
+static void
+call_init(int argc, char **argv, char **envp)
+{
+	/* Preinitializers come from the .preinit_array sections.  */
+	{
+		const size_t size = __preinit_array_end - __preinit_array_start;
+		size_t i;
+		for (i = 0; i < size; i++)
+			(*__preinit_array_start [i])(argc, argv, envp);
+	}
+
+	/* Modern systems don't require the .init section.  */
+	/*_init();*/
+
+	/* Initializers come from the .init_array sections.  */
+	const size_t size = __init_array_end - __init_array_start;
+	for (size_t i = 0; i < size; i++)
+		(*__init_array_start [i])(argc, argv, envp);
+}
+
+/* Call global finalizers/destructors.  */
+static void
+call_fini(void)
+{
+	/* Finalizers come from the .fini_array sections.  */
+	size_t i = __fini_array_end - __fini_array_start;
+	while (i-- > 0)
+		(*__fini_array_start [i])();
+
+	/* Modern systems don't require the .fini section.  */
+	/*_fini();*/
+}
+
+#endif /* __ELF__ */
+
 /*
  * accessories start here:
  */
@@ -113,6 +165,12 @@ _acc_main(void)
 
 	/* this is an accessory */
 	_app = 0;
+
+#ifdef __ELF__
+	/* main() won't call __main() for global constructors, so do it here. */
+	atexit(call_fini);
+	call_init(1L, acc_argv, acc_argv);
+#endif
 
 	_main(1L, acc_argv, acc_argv);
 	/*NOTREACHED*/
@@ -195,6 +253,12 @@ _crtinit(void)
 
 	/* start profiling, if we were linked with gcrt0.o */
 	_monstartup((void *)bp->p_tbase, (void *)((long)etext - 1));
+
+#ifdef __ELF__
+	/* main() won't call __main() for global constructors, so do it here. */
+	atexit(call_fini);
+	call_init(__libc_argc, __libc_argv, environ);
+#endif
 
 	_main(__libc_argc, __libc_argv, environ);
 	/* not reached normally */
