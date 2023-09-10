@@ -177,8 +177,8 @@ __extension__								\
  * 0: 640x480; 1280x720 (with OVERSCAN set)
  * 1: 800x600; 1680x1050 (with OVERSCAN set)
  * 2: 1024x768; 1920x1080 (with OVERSCAN set)
- * 3: 1280x1024
- * 4: 1600x1200
+ * 3: 1280x1024; 1920x1200 (with OVERSCAN set)
+ * 4: 1600x1200; 2560x1440 (with OVERSCAN set)
  */
 #define SVEXT_BASERES(res) ((res & 0xf) << 9)	/* specify base resolution */
 #define	SVEXT			0x4000	/* enable SuperVidel's extensions */
