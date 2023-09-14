@@ -39,6 +39,9 @@ void	_main		(long, char **, char **);
 void	_acc_main	(void);
 void	_setstack	(char *);
 
+/* automagically called, either on entry to main(), or by use of .init_array */
+void __main (void);
+
 void	_monstartup	(void *lowpc, void *highpc);
 
 
