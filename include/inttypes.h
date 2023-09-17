@@ -29,10 +29,6 @@
 #include <stdint.h>
 
 
-/* The ISO C 9X standard specifies that these macros must only be
-   defined if explicitly requested.  */
-#if !defined __cplusplus || defined __STDC_FORMAT_MACROS
-
 /* Macros for printing format specifiers.  */
 
 /* Decimal notation.  */
@@ -478,8 +474,6 @@
 # define SCNuPTR	"u"
 # define SCNxPTR	"x"
 #endif
-
-#endif	/* C++ && format macros */
 
 
 __BEGIN_DECLS
