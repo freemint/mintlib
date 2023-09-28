@@ -23,6 +23,8 @@
 # include <features.h>
 #endif
 
+__BEGIN_DECLS
+
 /* Structure returned by the `ftime' function.  */
 
 struct timeb {
@@ -34,5 +36,7 @@ struct timeb {
 
 /* For compatibility reasons.  Actually obsoleted by gettimeofday().  */
 extern int ftime (struct timeb *__timebuf) __THROW;
+
+__END_DECLS
 
 #endif	/* _SYS_TIMEB_h */
