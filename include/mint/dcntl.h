@@ -20,6 +20,11 @@
 # ifndef _DCNTL_H
 # define _DCNTL_H
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
+__BEGIN_DECLS
 
 #ifndef LLONG
 # define LLONG
@@ -477,5 +482,7 @@ struct fs_usage
 	llong	free_inodes;	/* 64bit: number of free inodes or FS_UNLIMITED */
 # define FS_UNLIMITED	-1
 };
+
+__END_DECLS
 
 # endif /* _DCNTL_H */

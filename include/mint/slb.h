@@ -18,6 +18,10 @@
 # ifndef _MINT_SLB_H
 # define _MINT_SLB_H 1
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 __BEGIN_DECLS
 
 typedef void *SLB_HANDLE;

@@ -8,6 +8,10 @@
 #ifndef _MINT_NFS_H
 #define _MINT_NFS_H 1
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 #ifndef __MINT__
 # include <linux/sunrpc/msg_prot.h>
 #endif

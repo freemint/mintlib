@@ -49,6 +49,10 @@
 # ifndef _MINT_SYSCTL_H
 # define _MINT_SYSCTL_H 1
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 __BEGIN_DECLS
 
 /*

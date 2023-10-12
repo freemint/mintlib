@@ -43,6 +43,8 @@
 # include <features.h>
 #endif
 
+__BEGIN_DECLS
+
 #define	_PATH_LOG	"/dev/log"
 
 /*
@@ -171,6 +173,8 @@ CODE facilitynames[] =
 #define	LOG_NDELAY	0x08	/* don't delay open */
 #define	LOG_NOWAIT	0x10	/* don't wait for console forks: DEPRECATED */
 #define	LOG_PERROR	0x20	/* log to stderr as well */
+
+__END_DECLS
 
 #ifndef KERNEL
 

@@ -28,6 +28,8 @@
 /* get definitions of sigset_t and stack_t */
 #include <signal.h>
 
+__BEGIN_DECLS
+
 /* Type for general register.  */
 #ifdef __MSHORT__
 typedef long greg_t;
@@ -132,5 +134,7 @@ typedef struct ucontext_t
 } ucontext_t;
 
 #undef __ctx
+
+__END_DECLS
 
 #endif /* sys/ucontext.h */

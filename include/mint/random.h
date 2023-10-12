@@ -12,6 +12,10 @@
 #ifndef _MINT_RANDOM_H
 #define _MINT_RANDOM_H 1
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 __BEGIN_DECLS
 
 /* ioctl()'s for the random number generator.  They will hopefully not conflict. */

@@ -10,6 +10,10 @@
 # include "include/mint.h"
 #endif
 
+#ifndef _FEATURES_H
+# include <features.h>
+#endif
+
 __BEGIN_DECLS
 
 # define HAS_SSYSTEM

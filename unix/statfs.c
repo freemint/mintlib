@@ -23,6 +23,10 @@
 
 __typeof__(statfs) __statfs;
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 int
 __statfs (const char *path, struct statfs *buf)
 {
