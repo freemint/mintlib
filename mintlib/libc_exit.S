@@ -22,9 +22,9 @@ C_SYMBOL_NAME(__libc_exit):
 	link %a6,#0
 #ifdef __mcoldfire__
 	lea	%sp@(-12),%sp
-	moveml	%d5/%a4/%a5,%sp@
+	moveml	%d2-%d3/%a2,%sp@
 #else
-	moveml	%d5/%a4/%a5,%sp@-
+	moveml	%d2-%d3/%a2,%sp@-
 #endif
 #ifndef __MSHORT__
 	movel %a6@(8),%d3
