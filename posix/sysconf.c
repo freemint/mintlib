@@ -11,6 +11,7 @@
 #include <mintbind.h>
 #include <errno.h>
 #include <limits.h>
+#include <time.h>
 #include "lib.h"
 
 #define UNLIMITED	(0x7fffffffL)
@@ -42,6 +43,10 @@ __sysconf (int var)
 		return NGROUPS_MAX;
 	case _SC_CHILD_MAX:
 		return UNLIMITED; /* good 'ol TOS :-) */
+	case _SC_CLK_TCK:
+		return CLOCKS_PER_SEC;
+	case _SC_PAGE_SIZE:
+		return getpagesize();
 	default:
 		return -1;
 	}
