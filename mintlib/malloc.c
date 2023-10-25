@@ -1,6 +1,7 @@
 #define HAVE_MMAP 0
 #define HAVE_MORECORE 1
 #define MORECORE_CONTIGUOUS 0
+#define MORECORE_CANNOT_TRIM 1
 #define NO_MALLOC_STATS 1
 #define LACKS_TIME_H /* time(0) calls malloc... */
 
