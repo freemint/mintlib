@@ -1,9 +1,7 @@
 #define HAVE_MMAP 0
-#define MMAP_CLEARS 0
 #define HAVE_MORECORE 1
 #define MORECORE_CONTIGUOUS 0
 #define NO_MALLOC_STATS 1
-#define malloc_getpagesize ((size_t)8192U)
 #define LACKS_TIME_H /* time(0) calls malloc... */
 
 /*
