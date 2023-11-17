@@ -7,4 +7,4 @@
 SRCFILES += EXTRAFILES Makefile SRCFILES MISCFILES BINFILES dtest.c ftest.c \
 fpioconst.h gmp-impl.h gmp-mparam.h gmp.h longlong.h test-canon.c \
 test-canon2.c test-cc.c test-div.c test-div.input test-mb.c test-rand.c \
-test-sort.c test-strtod.c test-strtol.c
+test-sort.c test-strtod.c test-strtol.c strfrom-skeleton.c

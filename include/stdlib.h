@@ -117,6 +117,21 @@ extern unsigned long long int strtoull (__const char* __nptr, char** _endptr,
                                                    int __base) __THROW;
 #endif
 
+/* Convert a floating-point number to a string.  */
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
+extern int strfromd (char *__dest, size_t __size, const char *__format,
+		     double __f)
+     __THROW __nonnull ((3));
+
+extern int strfromf (char *__dest, size_t __size, const char *__format,
+		     float __f)
+     __THROW __nonnull ((3));
+
+extern int strfroml (char *__dest, size_t __size, const char *__format,
+		     long double __f)
+     __THROW __nonnull ((3));
+#endif
+
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 # include <sys/types.h>	/* we need int32_t... */
 

@@ -43,6 +43,9 @@ SRCFILES = \
 	seed48_r.c \
 	srand48.c \
 	srand48_r.c \
+	strfromd.c \
+	strfromf.c \
+	strfroml.c \
 	strtod.c \
 	strtof.c \
 	strtol.c \
