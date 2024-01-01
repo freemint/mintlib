@@ -360,7 +360,6 @@
 #define C_PAMN 0x50414D4EL     /* PAM Network Driver */
 #define C_PAUL 0x5041554CL     /* Paula 2, Amiga MODfile player */
 #define C_PBUG 0x50425547L     /* PeaceBug */
-#define C_PCI_ 0x5043495FL     /* PCI-BIOS */
 #define C_PDeb 0x50446562L     /* PureDebugger */
 #define C_PDEB 0x50444542L     /* PureDebugger */
 #define C_PDOS 0x50444F53L     /* PowerDOS */
@@ -609,7 +608,7 @@
 #define C__MIL 0x5F4D494CL     /* Milan computer */
 #define C__NET 0x5F4E4554L     /* GEMDOS Network Support */
 #define C__OOL 0x5F4F4F4CL     /* Pool Fix */
-#define C__PCI 0x5F504349L     /* PCIbios */
+#define C__PCI 0x5F504349L     /* PCI-BIOS */
 #define C__PKT 0x5F504B54L     /* Paket Driver Cookie */
 #define C__PWR 0x5F505752L     /* Power Management unit */
 #define C__SLM 0x5F534C4DL     /* SLM Driver */
