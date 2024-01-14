@@ -32,9 +32,9 @@ int __futimes (int fd, const struct timeval tvp[2])
 	if (tvp)
 	{
 		unsigned long *tp = (unsigned long*) &(settime.modtime);
-		*tp =  __dostime (tvp[0].tv_sec);
+		*tp =  __dostime (tvp[1].tv_sec);
 		tp = (unsigned long*) &(settime.actime);
-		*tp = __dostime (tvp[1].tv_sec);
+		*tp = __dostime (tvp[0].tv_sec);
 		
 		tset = &settime;
 	}
