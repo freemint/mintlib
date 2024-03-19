@@ -15,27 +15,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <time.h>
 #include <sys/timeb.h>
+#include <sys/time.h>
 
 int
 ftime (struct timeb *timebuf)
 {
-  int save = errno;
-  struct tm tp;
+	struct timeval now;
 
-  __set_errno (0);
-  if (time (&timebuf->time) == (time_t) -1 && errno != 0)
-    return -1;
-  timebuf->millitm = 0;
+	if (__gettimeofday (&now, NULL) != 0)
+		return -1;
+	timebuf->time = now.tv_sec;
+	timebuf->millitm = now.tv_usec / 1000;
 
-  if (localtime_r (&timebuf->time, &tp) == NULL)
-    return -1;
+	timebuf->timezone = 0;
+	timebuf->dstflag = 0;
 
-  timebuf->timezone = tp.tm_gmtoff / 60;
-  timebuf->dstflag = tp.tm_isdst;
-
-  __set_errno (save);
-  return 0;
+	return 0;
 }
