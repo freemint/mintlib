@@ -257,7 +257,7 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define Validmode(mode)							\
 	(short)trap_14_ww((short)95,(short)(mode))
 #define VsetMask(ormask,andmask,overlay)					\
-	(short)trap_14_www((short)150,(long)(ormask),(long)(andmask),(short)(overlay))
+	(void)trap_14_wllw((short)150,(long)(ormask),(long)(andmask),(short)(overlay))
 
 
 /*
