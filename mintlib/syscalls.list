@@ -83,7 +83,7 @@ getgroups		int	int ptr
 chown			int	ptr int int
 select			int	int ptr ptr ptr
 getrusage		int	int ptr
-initgroups		int	ptr int
+initgroups		int	ptr long
 setgroups		int	long ptr
 getrlimit		int	int ptr
 setrlimit		int	int ptr

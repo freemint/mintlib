@@ -47,11 +47,9 @@ __EXTERN struct group * getgrgid __P ((int gid));
 __EXTERN struct group * getgrnam __P ((const char *name));
 
 #ifdef __USE_BSD
-__EXTERN int initgroups __P ((const char* __user, __gid_t __groups));
-__EXTERN int setgroups __P ((size_t __count, __gid_t* __groups));
+__EXTERN int initgroups __P ((const char* __user, __gid_t __group));
+__EXTERN int setgroups __P ((size_t __count, const __gid_t* __groups));
 #endif
-__EXTERN int __initgroups __P ((const char* __user, __gid_t __groups));
-__EXTERN int __setgroups __P ((size_t __count, __gid_t* __groups));
 
 __END_DECLS
 

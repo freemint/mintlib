@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <mint/mintbind.h>
 
+__typeof__(initgroups) __initgroups;
+
 int
 __initgroups (const char *user, gid_t group)
 {

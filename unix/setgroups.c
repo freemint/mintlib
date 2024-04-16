@@ -13,8 +13,10 @@
 #include <sys/types.h>
 #include <mint/mintbind.h>
 
+__typeof__(setgroups) __setgroups;
+
 int
-__setgroups (size_t count, gid_t *groups)
+__setgroups (size_t count, const gid_t *groups)
 {
 	int r;
 
