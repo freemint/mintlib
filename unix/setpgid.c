@@ -15,7 +15,7 @@
 
 #include "lib.h"
 
-int __bsd_setpgrp (int, int);
+__typeof__(setpgid) __setpgid;
 
 int
 __setpgid (pid_t pid, pid_t pgid)

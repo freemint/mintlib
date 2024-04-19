@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int __bsd_getpgrp (int pid);
+__typeof__(getpgid) __getpgid;
 
 pid_t
 __getpgid (pid_t pid)

@@ -11,31 +11,11 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <mint/mintbind.h>
 #include "lib.h"
 
 int
 __setpgrp (void)
 {
-	static short have_pgrp = 1;
-
-	if (have_pgrp) {
-		int r = 0;
-
-		r = Psetpgrp (0, 0);
-		if (r == -ENOSYS) {
-			have_pgrp = 0;
-		}
-		else if (r < 0) {
-			if (r == -ENOENT)
-				r = -ESRCH;
-			else if (r == -EACCES)
-				r = -EPERM;
-			__set_errno (-r);
-			return -1;
-		}
-	}
-
-	return 0;
+	return __bsd_setpgrp (0, 0);
 }
 weak_alias (__setpgrp, setpgrp)

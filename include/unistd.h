@@ -566,7 +566,6 @@ extern __pid_t __getpgrp (void) __THROW;
 #endif
 
 /* Get the process group ID of process PID.  */
-extern __pid_t __getpgid (__pid_t __pid) __THROW;
 #ifdef __USE_XOPEN_EXTENDED
 extern __pid_t getpgid (__pid_t __pid) __THROW;
 #endif
@@ -576,7 +575,6 @@ extern __pid_t getpgid (__pid_t __pid) __THROW;
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
 extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
-extern int __setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Both System V and BSD have `setpgrp' functions, but with different
