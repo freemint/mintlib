@@ -272,6 +272,7 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define	SND_DSP		0x08	/* DSP */
 #define	SND_MATRIX	0x10	/* Connection matrix */
 #define SND_EXT		0x20	/* Extended XBIOS routines (Milan, GSXB) */
+#define SND_GSXB    SND_EXT
 
 /*
  * Sound data memory layout - samples are all signed values
@@ -296,23 +297,39 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define	RTGAIN		3	/* Right channel gain */
 	/* gain and attenuation in 1.5 dB units, 0x00V0, V:0-15 */
 #define	ADDERIN		4	/* Select inputs to adder 0=off, 1=on */
-#define	ADCIN		1	/* Input from ADC */
-#define	MATIN		2	/* Input from connection matrix */
+#define	  ADCIN		1	/* Input from ADC */
+#define	  MATIN		2	/* Input from connection matrix */
 #define	ADCINPUT	5	/* Select input to ADC, 0=mic, 1=PSG */
-#define	ADCRT		1	/* Right channel input */
-#define	ADCLT		2	/* Left input */
+#define	  ADCRT		1	/* Right channel input */
+#define	  ADCLT		2	/* Left input */
 #define	SETPRESCALE	6	/* Set TT compatibility prescaler */
-#define	PREMUTE		0	/* was /1280, now is invalid, mutes */
-#define	PRE1280		PREMUTE
-#define	PRE640		1	/* divide by 640 */
-#define	PRE320		2	/* / 320 */
-#define	PRE160		3	/* / 160 */
+#define	  PREMUTE	0	/* was /1280, now is invalid, mutes */
+#define	  PRE1280	PREMUTE
+#define	  PRE640	1	/* divide by 640 */
+#define	  PRE320	2	/* / 320 */
+#define	  PRE160	3	/* / 160 */
 
-/* Record/Playback modes */
+/* NSoundcmd modes. Only available with SND_EXT */
 
-#define	STEREO8		0	/* 8 bit stereo */
-#define	STEREO16	1	/* 16 bit stereo */
-#define	MONO8		2	/* 8 bit mono */
+#define SETRATE			7	/* Set sample rate */
+#define SET8BITFORMAT	8	/* 8 bits format */
+#define SET16BITFORMAT	9	/* 16 bits format */
+#define SET24BITFORMAT	10	/* 24 bits format */
+#define SET32BITFORMAT	11	/* 32 bits format */
+#define LTATTEN_MASTER	12	/* Attenuation */
+#define RTATTEN_MASTER	13
+#define LTATTEN_MICIN	14
+#define RTATTEN_MICIN	15
+#define LTATTEN_FMGEN	16
+#define RTATTEN_FMGEN	17
+#define LTATTEN_LINEIN	18
+#define RTATTEN_LINEIN	19
+#define LTATTEN_CDIN	20
+#define RTATTEN_CDIN	21
+#define LTATTEN_VIDIN	22
+#define RTATTEN_VIDIN	23
+#define LTATTEN_AUXIN	24
+#define RTATTEN_AUXIN	25
 
 /* Record/Playback tracks range from 0 to 3 */
 
@@ -395,6 +412,17 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 	 * interrupts disabled, buffer operation disabled.
 	 */
 
+/* Extended Sndstatus commands. Only available with SND_EXT */
+
+#define SND_QUERYFORMATS	2
+#define SND_QUERYMIXERS		3
+#define SND_QUERYSOURCES	4
+#define SND_QUERYDUPLEX		5
+#define SND_QUERY8BIT		8
+#define SND_QUERY16BIT		9
+#define SND_QUERY24BIT		10
+#define SND_QUERY32BIT		11
+
 /* Sndstatus status return */
 
 #define	SS_OK		0	/* No errors */
@@ -407,6 +435,19 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 
 #define SS_ERROR	0xf
 
+/* Return values for SND_QUERYFORMATS */
+
+#define SND_FORMAT8		(1<<0)
+#define SND_FORMAT16	(1<<1)
+#define SND_FORMAT24	(1<<2)
+#define SND_FORMAT32	(1<<3)
+
+/* Return values for SND_QUERY{8,16,24,32}BIT */
+
+#define SND_FORMATSIGNED		(1<<0)
+#define SND_FORMATUNSIGNED		(1<<1)
+#define SND_FORMATBIGENDIAN		(1<<2)
+#define SND_FORMATLITTLEENDIAN	(1<<3)
 
 /* Soundcmd() params */
 
@@ -424,9 +465,24 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define SNDNOTLOCK		-128
 
 /* Setmode() modes */
-#define MODE_STEREO8	0
-#define MODE_STEREO16	1
-#define MODE_MONO		2
+#define MODE_STEREO8	0	/* 8 bit stereo */
+#define MODE_STEREO16	1	/* 16 bit stereo */
+#define MODE_MONO		2	/* 8 bit mono */
+#define MODE_MONO8		MODE_MONO
+
+/* Extended modes. Only available with SND_EXT */
+
+#define MODE_MONO16		3	/* 16 bit mono, big-endian */
+#define MODE_STEREO24	4	/* 24 bit stereo, big-endian */
+#define MODE_STEREO32	5	/* 32 bit stereo, big-endian */
+#define MODE_MONO24		6	/* 24 bit mono, big-endian */
+#define MODE_MONO32		7	/* 32 bit mono, big-endian */
+
+/* aliases */
+
+#define	STEREO8		MODE_STEREO8
+#define	STEREO16	MODE_STEREO16
+#define	MONO8		MODE_MONO
 
 /* Dsptristate() params */
 #define DSP_TRISTATE	0
@@ -456,12 +512,12 @@ typedef struct SndBufPtr {
 	(long)trap_14_w((short)128)
 #define Unlocksnd()							\
 	(long)trap_14_w((short)129)
-#define Setbuffer(region,beg,end)					\
-	(long)trap_14_wwll((short)131,(short)(region),(long)(beg),(long)(end))
 #define Soundcmd(mode,data)						\
 	(long)trap_14_www((short)130,(short)(mode),(short)(data))
 #define NSoundcmd(mode,data,data2)						\
 	(long)trap_14_wwwl((short)130,(short)(mode),(short)(data),(long)(data2))
+#define Setbuffer(region,beg,end)					\
+	(long)trap_14_wwll((short)131,(short)(region),(long)(beg),(long)(end))
 #define Setmode(stereo_mode)						\
 	(long)trap_14_ww((short)132,(short)(stereo_mode))
 #define Settracks(play,rec)						\
@@ -505,15 +561,6 @@ typedef struct SndBufPtr {
 #define	Dsp_BlkUnpacked(data_in,size_in,data_out,size_out)		\
 	(void)trap_14_wllll((short)98,(long)(data_in),(long)(size_in),	\
 		(long)(data_out),(long)(size_out))
-#define	Dsp_BlkWords(data_in,size_in,data_out,size_out)			\
-	(void)trap_14_wllll((short)123,(long)(data_in),(long)(size_in),	\
-		(long)(data_out),(long)(size_out))
-#define	Dsp_BlkBytes(data_in,size_in,data_out,size_out)			\
-	(void)trap_14_wllll((short)124,(long)(data_in),(long)(size_in),	\
-		(long)(data_out),(long)(size_out))
-#define	Dsp_MultBlocks(numsend,numrecv,sendblks,recvblks)		\
-	(void)trap_14_wllll((short)127,(long)(numsend),(long)(numrecv),	\
-		(long)(sendblks),(long)(recvblks))
 #define	Dsp_InStream(data_in,blksiz,numblks,blksdone)			\
 	(void)trap_14_wllll((short)99,(long)(data_in),(long)(blksiz),	\
 		(long)(numblks),(long)(blksdone))
@@ -524,8 +571,6 @@ typedef struct SndBufPtr {
 	(void)trap_14_wllllll((short)101,(long)(data_in),(long)(data_out),\
 		(long)(blkisiz),(long)(blkosiz),(long)(numblks),	\
 		(long)(blksdone))
-#define	Dsp_SetVectors(rcvr,xmtr)					\
-	(void)trap_14_wll((short)126,(long)(rcvr),(long)(xmtr))
 #define	Dsp_RemoveInterrupts(mask)					\
 	(void)trap_14_ww((short)102,(short)(mask))
 #define	Dsp_GetWordSize()	(short)trap_14_w((short)103)
@@ -564,7 +609,18 @@ typedef struct SndBufPtr {
 	(short)trap_14_ww((short)120,(short)(flag))
 #define	Dsp_Hf2()		(short)trap_14_w((short)121)
 #define	Dsp_Hf3()		(short)trap_14_w((short)122)
+#define	Dsp_BlkWords(data_in,size_in,data_out,size_out)			\
+	(void)trap_14_wllll((short)123,(long)(data_in),(long)(size_in),	\
+		(long)(data_out),(long)(size_out))
+#define	Dsp_BlkBytes(data_in,size_in,data_out,size_out)			\
+	(void)trap_14_wllll((short)124,(long)(data_in),(long)(size_in),	\
+		(long)(data_out),(long)(size_out))
 #define	Dsp_HStat()		(char)trap_14_w((short)125)
+#define	Dsp_SetVectors(rcvr,xmtr)					\
+	(void)trap_14_wll((short)126,(long)(rcvr),(long)(xmtr))
+#define	Dsp_MultBlocks(numsend,numrecv,sendblks,recvblks)		\
+	(void)trap_14_wllll((short)127,(long)(numsend),(long)(numrecv),	\
+		(long)(sendblks),(long)(recvblks))
 
 __END_DECLS
 
