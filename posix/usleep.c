@@ -13,7 +13,7 @@
 clock_t _clock (void);
 
 /*
- * Sleep for usec microSeconds 
+ * Sleep for usec microSeconds
  * the actual suspension time can be arbitrarily longer
  *
  */
@@ -29,7 +29,7 @@ usleep (__useconds_t __useconds)
 	if (r == -ENOSYS) {
 		stop = _clock() + USEC_TO_CLOCK_TICKS(__useconds);
 		while (_clock() < stop)
-			;
+			Syield();
 		r = 0;
 	}
 
