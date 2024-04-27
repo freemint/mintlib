@@ -150,6 +150,10 @@ __typeof__(regexec) __regexec;
 __typeof__(regerror) __regerror;
 __typeof__(regfree) __regfree;
 
+#if defined(__OPTIMIZE__) && __OPTIMIZE__ == 1 && __GNUC__ <= 4
+/* gcc 4.x gets ICE when compiling this with -O1 */
+#pragma GCC optimize "-O2"
+#endif
 
 #ifdef __MINT__
 extern int __re_search_2
