@@ -1,6 +1,6 @@
 #include "libc-symbols.h"
 
-#if !defined (__M68881__) && !defined (sfp004)
+#if !defined (__HAVE_68881__) && !defined (sfp004)
 #
  |-----------------------------------------------------------------------------
  | remove exponent from floating point number
@@ -23,7 +23,9 @@ BIAS8	=	0x3ff - 1
 	.text; .even
 	.globl C_SYMBOL_NAME(frexp)
 C_SYMBOL_NAME(frexp):
+#ifndef __FASTCALL__
 	movel	%sp@(12),%a0	| initialize exponent for loop
+#endif
 #ifdef __MSHORT__
 	clrw	%a0@
 #else
@@ -57,9 +59,9 @@ nonzero:
 
 	moveq	#0x0f,%d1	| remove exponent from value.mantissa
 #ifdef __mcoldfire__
-	andl	%d2,%d1		| four upper bits of value in %d1
+	andl	%d2,%d1		| four upper bits of value in d1
 #else
-	andb	%d2,%d1		| four upper bits of value in %d1
+	andb	%d2,%d1		| four upper bits of value in d1
 #endif
 	bset	#4,%d1		| implied leading 1
 	tstw	%d0		| check for zero exponent
@@ -82,7 +84,13 @@ nonzero:
 	subw	#BIAS8,%d0	| remove bias
 #endif
 #ifdef __MSHORT__
+#ifdef __mcoldfire__
+	move	%a0@,%d1
+	addl	%d0,%d1		| add current exponent in
+	move	%d1,%a0@
+#else
 	addw	%d0,%a0@		| add current exponent in
+#endif
 #else
 	extl	%d0
 	addl	%d0,%a0@		| add current exponent in
@@ -100,7 +108,7 @@ nonzero:
 	moveml	%a1@,%d4-%d5
 	jmp	C_SYMBOL_NAME(__norm_df)	| normalize result
 L0:				| norm_df does not affect a0 or a1
-|				| but it pops %d2-%d7
+|				| but it pops d2-d7
 	moveml	%d0-%d1,%a1@
 	jra	2b		| loop around to catch denormalized numbers
 3:
@@ -109,8 +117,8 @@ L0:				| norm_df does not affect a0 or a1
 				| d0-d1 has normalized mantissa
 	rts
 
-#endif	/* !__M68881__ && !sfp004 */
-#ifdef	__M68881__
+#endif	/* !__HAVE_68881__ && !sfp004 */
+#ifdef	__HAVE_68881__
 
 |
 | remove exponent from floating point number
@@ -127,12 +135,15 @@ L0:				| norm_df does not affect a0 or a1
 | a0:	pointer to n
 | 	sp@(12) address of resulting exponent (n)
 
-	.text; .even
+	.text
+	.even
 
 .globl C_SYMBOL_NAME(frexp)
 
 C_SYMBOL_NAME(frexp):
-	moveal	%sp@(12),%a1		| address of n
+#ifndef __FASTCALL__
+	moveal	%sp@(12),%a0		| address of n
+#endif
 	fmoved	%sp@(4),%fp0		| load first_argument to fp0
 	fcmpd	#0r0.0,%fp0		| 1st arg == 0 ?
 	fjeq	null_			| both parts of result are 0
@@ -140,11 +151,11 @@ C_SYMBOL_NAME(frexp):
 	fgetmanx %fp0,%fp0		| get mantissa
 	fscaleb #-1,%fp0			|
 #ifdef __MSHORT__
-	fmovew	%fp1,%a1@			| fetch exp (fmovew from fp1)
-	addqw	#1,%a1@			| correct result
+	fmovew	%fp1,%a0@			| fetch exp (fmovew from fp1)
+	addqw	#1,%a0@			| correct result
 #else
-	fmovel	%fp1,%a1@			| fetch exp (fmovel from fp1)
-	addql	#1,%a1@			| correct result
+	fmovel	%fp1,%a0@			| fetch exp (fmovel from fp1)
+	addql	#1,%a0@			| correct result
 #endif
 	fmoved	%fp0,%sp@-		| now fetch significand
 	moveml	%sp@+,%d0-%d1
@@ -152,13 +163,13 @@ C_SYMBOL_NAME(frexp):
 null_:
 	moveml	%sp@(4),%d0-%d1
 #ifdef __MSHORT__
-	clrw	%a1@
+	clrw	%a0@
 #else
-	clrl	%a1@
+	clrl	%a0@
 #endif
 	rts
 
-#endif	/* __M68881__ */
+#endif	/* __HAVE_68881__ */
 #ifdef	sfp004
 
 | remove exponent from floating point number
@@ -184,12 +195,12 @@ zahl =	  0	|	fpu data reg
 | waiting loop ...
 |
 | wait:
-| ww:	cmpiw	#0x8900,%a0@(resp)
+| ww:	cmpiw	#0x8900,a0@(resp)
 | 	beq	ww
 | is coded directly by
 |	.long	0x0c688900, 0xfff067f8                 (fpu base a1)
 | and
-| www:	tst.w	%a0@(resp)
+| www:	tst.w	a0@(resp)
 |	bmi.b	www
 | is coded by
 |	.word	0x4a68,0xfff0,0x6bfa		| test
@@ -203,7 +214,9 @@ C_SYMBOL_NAME(frexp):
 	jne	nonzero
 	tstl	%sp@(8)
 	jne	nonzero
+#ifndef __FASTCALL__
 	movel	%sp@(12),%a0
+#endif
 #ifdef __MSHORT__
 	clrw	%a0@
 #else
@@ -213,36 +226,35 @@ C_SYMBOL_NAME(frexp):
 	clrl	%d1
 	rts
 nonzero:
-	lea	0xfffffa50:w,%a0
-	movew	#0x5418,%a0@(comm)	| load first argument to fp0
-	cmpiw	#0x8900,%a0@(resp)	| check
-	movel	%sp@(4),%a0@
-	movel	%sp@(8),%a0@
+	lea	0xfffffa50:w,%a1
+	movew	#0x5418,%a1@(comm)	| load first argument to fp0
+	cmpiw	#0x8900,%a1@(resp)	| check
+	movel	%sp@(4),%a1@
+	movel	%sp@(8),%a1@
 
-	movew	#0x009f,%a0@(comm)	| fgetman %fp0,%fp1
+	movew	#0x009f,%a1@(comm)	| fgetman fp0,fp1
 	.word	0x4a68,0xfff0,0x6bfa	| test
 
-	movew	#0x001e,%a0@(comm)	| fgetexp %fp0,%fp0
-	moveal	%sp@(12),%a1		| address of n while the fpu is active
+	movew	#0x001e,%a1@(comm)	| fgetexp fp0,fp0
 	.word	0x4a68,0xfff0,0x6bfa	| test
 
-	movew	#5026,%a0@(comm)		| fscalew #-1,%fp0
+	movew	#5026,%a1@(comm)		| fscalew #-1,fp0
 	.long	0x0c688900, 0xfff067f8
-	movew	#-1,%a0@
+	movew	#-1,%a1@
 
 #ifdef __MSHORT__
-	movew	#0x7080,%a0@(comm)	| fetch exp (fmovew from fp1)
+	movew	#0x7080,%a1@(comm)	| fetch exp (fmovew from fp1)
 	.long	0x0c688900, 0xfff067f8
-	movew	%a0@,%a1@			| return exp
+	movew	%a1@,%a0@			| return exp
 #else
-	movew	#0x6080,%a0@(comm)	| fetch exp (fmovel from fp1)
+	movew	#0x6080,%a1@(comm)	| fetch exp (fmovel from fp1)
 	.long	0x0c688900, 0xfff067f8
-	movel	%a0@,%a1@			| return exp
+	movel	%a1@,%a0@			| return exp
 #endif
-	movew	#0x7400,%a0@(comm)	| now fetch significand
+	movew	#0x7400,%a1@(comm)	| now fetch significand
 	.long	0x0c688900, 0xfff067f8
-	movel	%a0@,%d0
-	movel	%a0@,%d1
+	movel	%a1@,%d0
+	movel	%a1@,%d1
 	btst	#31,%sp@(4)		| test sign of 1st arg
 	jge	fini			| arg neg ?
 	bset	#31,%d0			| =>  negate result

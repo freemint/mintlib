@@ -26,7 +26,11 @@ C_SYMBOL_NAME(get_sysvar):
 	lea	%sp@(-16),%sp
 	movml	%d2/%d3/%a2/%a3,%sp@		| ColdFire compatibility
 
+#ifdef __FASTCALL__
+	movel	%a0,%a3		| var
+#else
 	movel	%sp@(16+4),%a3		| var
+#endif
 
 	tstl	C_SYMBOL_NAME(__has_no_ssystem)
 	beqs	.get_with_ssystem

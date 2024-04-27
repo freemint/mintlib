@@ -26,10 +26,14 @@ C_SYMBOL_NAME(__libc_exit):
 #else
 	moveml	%d2-%d3/%a2,%sp@-
 #endif
+#ifdef __FASTCALL__
+	movw %d0,%d3
+#else
 #ifndef __MSHORT__
 	movel %a6@(8),%d3
 #else
 	movew %a6@(8),%d3
+#endif
 #endif
 | now on _mcleanup handled
 |	clrl %sp@-

@@ -25,8 +25,10 @@
 
 ENTRY(__getcontext)
 	cfi_startproc
+#ifndef __FASTCALL__
 	/* Load address of the context data structure.  */
 	move.l	4(%sp), %a0
+#endif
 
 	/* Save the preserved registers and the return address.  */
 	movem.l	%d2-%d7, oGREGS+2*4(%a0)
@@ -64,11 +66,7 @@ ENTRY(__getcontext)
 	movel	C_SYMBOL_NAME(_sigmask), %d0		/* save tos emulation signal mask */
 	
 nomint:
-#ifdef __mcoldfire__
-	orl	#1,%d0			/* make it != 0 (SIGNULL is unmaskable) */
-#else
-	orw	#1,%d0			/* make it != 0 (SIGNULL is unmaskable) */
-#endif
+	bset	#0,%d0			/* make it != 0 (SIGNULL is unmaskable) */
 	move.l	%d0, oSIGMASK(%a0)
 
 	/* Restore registers.  */

@@ -48,7 +48,7 @@ void	_monstartup	(void *lowpc, void *highpc);
 /* mintlib/globals.c */
 
 extern int __mint;
-extern int __has_no_ssystem;
+extern long __has_no_ssystem;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
 

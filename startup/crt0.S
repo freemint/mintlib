@@ -14,6 +14,8 @@
 | .extern in order to ensure they will be linked into the executable
 | even if they are not used in this file.
 
+| No __FASTCALL__ modifications required.
+
 #include "libc-symbols.h"
 
 	.globl	C_SYMBOL_NAME(_app)		| short, defined in crtinit.c
@@ -21,7 +23,7 @@
 	.globl	C_SYMBOL_NAME(_heapbase)	| void *
 	.globl	C_SYMBOL_NAME(_stksize)	| long, defined by user or in stksiz.c
 	.globl	C_SYMBOL_NAME(main)		| for references
-	.globl	C_SYMBOL_NAME(__has_no_ssystem)	| int, defined in globals.c
+	.globl	C_SYMBOL_NAME(__has_no_ssystem)	| long, defined in globals.c
 
 |
 | externs to pull ident strings of all used libraries into the

@@ -8,7 +8,7 @@
 #include "errbase.h"
 _Overflow:
 	.ascii "ldexp: OVERFLOW\12\15\0"
-# if defined(__M68881__) || defined(sfp004)
+# if defined(__HAVE_68881__) || defined(sfp004)
 _Domain:
 	.ascii "ldexp: NAN\12\15\0"
 	.even
@@ -31,7 +31,7 @@ m_Inf:
 	.even
 #endif	/* ERROR_CHECK */
 C_SYMBOL_NAME(ldexp):
-#if !defined (__M68881__) && !defined (sfp004)
+#if !defined (__HAVE_68881__) && !defined (sfp004)
 
  | add exponent to floating point number
  | C Interface
@@ -53,6 +53,15 @@ C_SYMBOL_NAME(ldexp):
 	moveml	%d2-%d7,%sp@	| save d2-d7
 #else
 	moveml	%d2-%d7,%sp@-	| save d2-d7
+#endif
+#ifdef __FASTCALL__
+	movel	%d0,%d4
+#else
+#ifdef __MSHORT__
+	movew	%a1@(8),%d4
+#else
+	movew	%a1@(10),%d4
+#endif
 #endif
 
 	movew	%a1@,%d0		| extract value.exp
@@ -81,13 +90,12 @@ C_SYMBOL_NAME(ldexp):
 #endif
 	bclr	#4,%d3		| nah, we do not need stinkin leadin 1
 1:	movew	%d3,%a1@		| save results of our efforts
-#ifdef __MSHORT__
-	addw	%a1@(8),%d0	| add in exponent
-	extl	%d0
+#ifdef __mcoldfire__
+	addl	%d4,%d0	| add in exponent
 #else
-	extl	%d0
-	addl	%a1@(8),%d0	| add in exponent
+	addw	%d4,%d0	| add in exponent
 #endif
+	extl	%d0
 	cmpl	#-53,%d0		| hmm. works only if 1 in implied position...
 	jle	retz		| range error - underflow
 	cmpl	#0x7ff,%d0
@@ -115,10 +123,16 @@ rangerr:
 #ifdef ERROR_CHECK
 	moveq	#Erange,%d0
 	Emove	%d0,Errno
+#ifdef __FASTCALL__
+	lea	%pc@(_Overflow),%a1	| for printf
+	movel	Stderr,%a0		|
+	jbsr	C_SYMBOL_NAME(fprintf)	|
+#else
 	pea	%pc@(_Overflow)	| for printf
 	movel Stderr,%sp@-		|
 	jbsr	C_SYMBOL_NAME(fprintf)	|
 	addql	#8,%sp		|
+#endif
 #endif /* ERROR_CHECK */
 
 #ifdef __mcoldfire__
@@ -139,8 +153,8 @@ L0:
 #endif
 	rts
 
-#else	/* __M68881__ || sfp004 */
-#ifdef	__M68881__
+#else	/* __HAVE_68881__ || sfp004 */
+#ifdef	__HAVE_68881__
 |#######################################################################
 |
 |# add exponent to floating point number
@@ -155,6 +169,12 @@ L0:
 |# ported fromt sfp004 to real coprocessor, mjr, August 1991
 |##############################################################################
 
+#ifdef __FASTCALL__
+#ifdef __MSHORT__
+	extl	%d0
+#endif
+	fgetexp.x %fp0,%fp1		| extract exponent of 1st arg
+#else
 #ifdef __MSHORT__
 	movew	%sp@(12),%d0		| get exponent
 	extl	%d0
@@ -162,15 +182,20 @@ L0:
 	movel	%sp@(12),%d0		| get exponent
 #endif
 	fgetexpd %sp@(4),%fp1		| extract exponent of 1st arg
+#endif
 	fmovel	%fp1,%d1			| d1 serves as accumulator
 	addl	%d0,%d1			| sum of exp_s of both args
 
-	ftwotoxl %d0,%fp0			| ftwotox to fp0 (as long int!)
-	fmuld	%sp@(4),%fp0		| fmul value,fp0
-	fmoved	%fp0,%sp@-		| get double from fp0
+	ftwotoxl %d0,%fp1			| ftwotox to fp1 (as long int!)
+#ifdef __FASTCALL__
+	fmul.x	%fp1,%fp0		| fmul value,fp0
+#else
+	fmuld	%sp@(4),%fp1		| fmul value,fp1
+	fmoved	%fp1,%sp@-		| get double from fp1
 	moveml	%sp@+,%d0-%d1
+#endif
 
-#endif  /* __M68881__ */
+#endif  /* __HAVE_68881__ */
 #ifdef	sfp004
 
 | add exponent to floating point number
@@ -193,36 +218,42 @@ zahl =	  0	|	fpu data reg
 | waiting loop ...
 |
 | wait:
-| ww:	cmpiw	#0x8900,%a1@(resp)
+| ww:	cmpiw	#0x8900,a1@(resp)
 | 	beq	ww
 | is coded directly by
 |	.byte	0x0c,0x69,0x89,0x00,0xff,0xf0,0x67,0xf8 (a1)
 |	or
 |	.long	0x0c6889000, 0x000067f8			(a0)
 
+#ifdef __FASTCALL__
+#ifdef __MSHORT__
+	extl	%d0
+#endif
+#else
 #ifdef __MSHORT__
 	movew	%sp@(12),%d0		| get exponent
 	extl	%d0
 #else
 	movel	%sp@(12),%d0		| get exponent
 #endif
+#endif
 	lea	0xfffffa50:w,%a0		| fpu address
-	movew	#0x549e,%a0@(comm)	| fgetexpd %sp@(4),%fp1
+	movew	#0x549e,%a0@(comm)	| fgetexpd sp@(4),fp1
 	cmpiw	#0x8900,%a0@(resp)
 	movel	%sp@(4),%a0@
 	movel	%sp@(8),%a0@
-	movew	#0x6080,%a0@(comm)	| fmovel %fp1,%d1
+	movew	#0x6080,%a0@(comm)	| fmovel fp1,d1
 	.long	0x0c688900, 0xfff067f8
 	movel	%a0@,%d1
 	addl	%d0,%d1
-	movew	#0x4011,%a0@(comm)	| ftwotoxl %d0,%fp0
+	movew	#0x4011,%a0@(comm)	| ftwotoxl d0,fp0
 	.long	0x0c688900, 0xfff067f8
 	movel	%d0,%a0@
-	movew	#0x5423,%a0@(comm)	| fmuld %sp@(4),%fp0
+	movew	#0x5423,%a0@(comm)	| fmuld sp@(4),fp0
 	.long	0x0c688900, 0xfff067f8
 	movel	%sp@(4),%a0@
 	movel	%sp@(8),%a0@
-	movew	#0x7400,%a0@(comm)	| fmoved %fp0,%d0/%d1
+	movew	#0x7400,%a0@(comm)	| fmoved fp0,d0/d1
 	.long	0x0c688900, 0xfff067f8
 	movel	%a0@,%d0
 	movel	%a0@,%d1
@@ -242,20 +273,26 @@ error_plus:
 	moveml	%d0-%d1,%sp@-	| print error message
 	moveq	#Erange,%d0	| Overflow: errno = ERANGE
 	Emove	%d0,Errno
-	pea	%pc@(_Domain)	| for printf
+	lea	%pc@(_Domain),%a1	| for printf
 	jra	error_exit	|
 error_nan:
 	moveq	#Edom,%d0	| NAN => errno = EDOM
 	Emove	%d0,Errno
 	moveml	%a0@(24),%d0-%d1	| result = +inf
 	moveml	%d0-%d1,%sp@-	| print error message
-	pea	%pc@(_Overflow)	| for printf
+	lea	%pc@(_Overflow),%a1	| for printf
 error_exit:
+#ifdef __FASTCALL__
+	movel	Stderr,%a0		|
+	jbsr	C_SYMBOL_NAME(fprintf)	|
+#else
+	movel   %a1,-(%sp)
 	movel	Stderr,%sp@-		|
 	jbsr	C_SYMBOL_NAME(fprintf)	|
 	addql	#8,%sp		|
+#endif
 	moveml	%sp@+,%d0-%d1
 #endif	/* ERROR_CHECK */
 	rts
 
-#endif	/* !__M68881__ && !sfp004	*/
+#endif	/* !__HAVE_68881__ && !sfp004	*/

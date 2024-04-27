@@ -28,7 +28,7 @@ int __libc_enable_secure = 1;
 /* Set to 1 if we don't have to convert filenames to Redmond style.  */
 int __libc_unix_names = 0;
 
-int __has_no_ssystem;
+long __has_no_ssystem;
 
 BASEPAGE *_base;
 char **environ;

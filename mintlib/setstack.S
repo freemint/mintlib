@@ -31,9 +31,13 @@
 
 	.globl	C_SYMBOL_NAME(_setstack)
 C_SYMBOL_NAME(_setstack):
-	movel	%sp@+, %a0	| save return address
-	movel	%sp@, %sp		| new stack pointer
+	movel	(%sp)+, %a1	| save return address
+#ifdef __FASTCALL__
+	movel	%a0, %sp		| new stack pointer
+#else
+	movel	(%sp), %sp		| new stack pointer
+#endif
 	subl	#64+4, %sp	| push some unused space for buggy OS and a
 				| fake parameter to be popped by the caller
-	jmp	%a0@		| back to caller
+	jmp	(%a1)		| back to caller
 

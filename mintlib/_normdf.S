@@ -1,4 +1,4 @@
-| mjr: not needed _normdf for -__M68881__ or the sfp004
+| mjr: not needed _normdf for -__HAVE_68881__ or the sfp004
 
 |#######################################################################
 
@@ -55,7 +55,7 @@
 	.even
 	.globl	C_SYMBOL_NAME(_infinitydf)
 
-#if !defined (__M68881__) && !defined (sfp004)
+#if !defined (__HAVE_68881__) && !defined (sfp004)
 	.globl	C_SYMBOL_NAME(__normdf)
 	.globl	C_SYMBOL_NAME(__norm_df)
 #include "errbase.h"
@@ -68,6 +68,7 @@ LC0:
 	| C entry, for procs dealing with the internal representation :
 	| double __normdf(long long mant, int exp, int sign, int rbits);
 C_SYMBOL_NAME(__normdf):
+/* note: long long value is passed on stack, even for -mfastcall */
 	lea	%sp@(4),%a0	| parameter pointer
 #ifdef __mcoldfire__
 	lea	%sp@(-24),%sp
@@ -80,17 +81,37 @@ C_SYMBOL_NAME(__normdf):
 #endif
 
 # ifdef __MSHORT__
+#ifdef __FASTCALL__
+#ifdef __mcoldfire__
+	movel   %d2,%d3
+	movel   %d1,%d2
+	movel   %d3,%d1
+#else
+	exg		%d1,%d2
+#endif
+#else
 	movew	%a0@+,%d0		| get exponent
 	movew	%a0@+,%d2		| get sign
 	movew	%a0@+,%d1		| rounding information
+#endif
 # else
+#ifdef __FASTCALL__
+#ifdef __mcoldfire__
+	movel   %d2,%d3
+	movel   %d1,%d2
+	movel   %d3,%d1
+#else
+	exg		%d1,%d2
+#endif
+#else
 	movel	%a0@+,%d0		| get exponent
 	movel	%a0@+,%d2		| get sign
+	movel	%a0@+,%d1		| rounding information
+#endif
+	tstl	%d2
 	jpl	0f		| or bit 31 to bit 15 for later tests
 	bset	#15,%d2
-0:	movel	%a0@+,%d1		| rounding information
-
-	movel	#0x7fff,%d3
+0:	movel	#0x7fff,%d3
 	cmpl	%d3,%d0		| test exponent
 	jgt	oflow
 	notl	%d3		| #-0x8000 -> d3
@@ -202,18 +223,18 @@ C_SYMBOL_NAME(__norm_df):
 #ifdef __mcoldfire__
 	cmpb	#0x80,%d1
 	jne	7f		| round up
-        movew   %d5,%d1           | tie case - round to even
-                                | dont need rounding bits any more
-        andl    #1,%d1           | check if even
+	movew   %d5,%d1           | tie case - round to even
+				| dont need rounding bits any more
+	andl    #1,%d1           | check if even
 #else
 	negb	%d1
 	jvc	7f		| round up
-        movew   %d5,%d1           | tie case - round to even
-                                | dont need rounding bits any more
-        andw    #1,%d1           | check if even
+	movew   %d5,%d1           | tie case - round to even
+				| dont need rounding bits any more
+	andw    #1,%d1           | check if even
 #endif
-        jeq     8f              | mantissa is even - no action necessary
-                                | fall through
+	jeq     8f              | mantissa is even - no action necessary
+				| fall through
 7:
 	clrl	%d1		| zero rounding bits
 	addl	#1,%d5
@@ -276,21 +297,27 @@ retzok:
 	movw	%d2,%d0
 	swap	%d0
 	andil	#0x80000000,%d0
-0:	moveml	%sp@,%d2-%d7
+	moveml	%sp@,%d2-%d7
 	lea	%sp@(24),%sp
 #else
 	lslw	#1,%d2		| set value of extension
 	roxrl	#1,%d0		| and move it to hight bit of d0
-0:	moveml	%sp@+,%d2-%d7
+	moveml	%sp@+,%d2-%d7
 #endif
 	rts
 
 oflow:
 #ifdef	ERROR_CHECK
+#ifdef __FASTCALL__
+	lea	%pc@(LC0),%a1
+	movel	Stderr,%a0
+	jbsr	C_SYMBOL_NAME(fprintf)	|
+#else
 	pea	%pc@(LC0)
 	movel	Stderr,%sp@-
 	jbsr	C_SYMBOL_NAME(fprintf)	|
-	addql	#8,%%sp		|
+	addql	#8,%sp		|
+#endif
 	moveq	#Erange,%d0
 	Emove	%d0,Errno
 #endif	/* ERROR_CHECK */
@@ -314,4 +341,4 @@ oflow:
 #endif
 	rts
 
-#endif /* __M68881__ */
+#endif /* __HAVE_68881__ */

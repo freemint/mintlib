@@ -25,10 +25,14 @@
 
 ENTRY(__makecontext)
 	cfi_startproc
+#ifdef __FASTCALL__
+	move.l	%a1, oPC(%a0)
+#else
 	move.l	4(%sp), %a0
 
 	/* Get the address of the function we are supposed to run.  */
 	move.l	8(%sp), oPC(%a0)
+#endif
 
 	/* Compute the address of the stack.  The information comes from
 	   to us_stack element.  */
@@ -38,17 +42,19 @@ ENTRY(__makecontext)
 	/* Remember the number of parameters for the exit handler since
 	   it has to remove them.  We store the number in the D7 register
 	   which the function we will call must preserve.  */
-	move.l	12(%sp), %d1
-	add.l   %d1,%d1
-	add.l   %d1,%d1
-	move.l	%d1, oGREGS+7*4(%a0)
+#ifndef __FASTCALL__
+	move.l	12(%sp), %d0
+#endif
+	add.l   %d0,%d0
+	add.l   %d0,%d0
+	move.l	%d0, oGREGS+7*4(%a0)
 
 	/* Make room on the new stack for the parameters.
 	   Room for the arguments, return address (== 1f) and
 	   oLINK pointer is needed.  */
-	neg.l	%d1
-	lea	-8(%a1,%d1.l), %a1
-	neg.l	%d1
+	neg.l	%d0
+	lea	-8(%a1,%d0.l), %a1
+	neg.l	%d0
 
 	/* Store the future stack pointer.  */
 	move.l	%a1, oSP(%a0)
@@ -56,17 +62,21 @@ ENTRY(__makecontext)
 	/* Put the next context on the new stack (from the uc_link
 	   element).  */
 #ifdef __mcoldfire__
-	move.l	oLINK(%a0), %d0
-	move.l	%d0, 4(%a1,%d1.l)
+	move.l	oLINK(%a0), %d1
+	move.l	%d1, 4(%a1,%d0.l)
 #else
-	move.l	oLINK(%a0), 4(%a1,%d1.l)
+	move.l	oLINK(%a0), 4(%a1,%d0.l)
 #endif
 
 	/* Copy all the parameters.  */
-	lea	    16(%sp,%d1.l),%a0
-1:	subq.l	#4,%d1
+#ifdef __FASTCALL__
+	lea	    4(%sp,%d0.l),%a0
+#else
+	lea	    16(%sp,%d0.l),%a0
+#endif
+1:	subq.l	#4,%d0
 	jmi	2f
-	move.l	-(%a0), 4(%a1,%d1.l)
+	move.l	-(%a0), 4(%a1,%d0.l)
 	jra	1b
 2:
 
@@ -97,9 +107,12 @@ ENTRY(__makecontext)
 	   parameters (see above).  */
 	lea	(%sp,%d7.l), %sp
 
-	tst.l	(%sp)			/* Check the next context.  */
+	move.l	(%sp),%d0			/* Check the next context.  */
 	jeq	2f			/* If it is zero exit.  */
 
+#ifdef __FASTCALL__
+	move.l  %d0,%a0
+#endif
 	jbsr	C_SYMBOL_NAME(setcontext)
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */

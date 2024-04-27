@@ -27,15 +27,25 @@ C_SYMBOL_NAME(Getcookie):
 	lea	%sp@(-16),%sp
 	movml	%d2/%d3/%a2/%a3,%sp@		| ColdFire compatibility
 
+#ifdef __FASTCALL__
+	movel	%d0,%d3		| cookie
+	movel	%a0,%a3		| p_value
+#else
 	movel	%sp@(16+4),%d3		| cookie
 	movel	%sp@(16+8),%a3		| p_value
+#endif
 
 	tstl	C_SYMBOL_NAME(__has_no_ssystem)
 	beqs	.get_with_ssystem
 
+#ifdef __FASTCALL__
+	movew	#0x5a0,%a0			| _p_cookies
+	jsr	C_SYMBOL_NAME(get_sysvar)
+#else
 	pea	0x5a0			| _p_cookies
 	jsr	C_SYMBOL_NAME(get_sysvar)
 	addql	#4,%sp
+#endif
 
 	tstl	%d0
 	beqs	.error			| No cookie jar

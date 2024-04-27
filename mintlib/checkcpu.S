@@ -26,13 +26,19 @@
 
 	.globl	C_SYMBOL_NAME(_checkcpu)
 C_SYMBOL_NAME(_checkcpu):
-#ifdef __M68020__
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
 	subql	#4,%sp			| Local variable for cookie value
 
+#ifdef __FASTCALL__
+	movl	%sp,%a0
+	movl	#0x5f435055,%d0	| "_CPU"
+	jsr	C_SYMBOL_NAME(Getcookie)
+#else
 	pea	%sp@
 	movl	#0x5f435055,%sp@-	| "_CPU"
 	jsr	C_SYMBOL_NAME(Getcookie)
 	addql	#8,%sp
+#endif
 
 	movel	%sp@+,%d1			| Cookie value
 
@@ -43,7 +49,7 @@ C_SYMBOL_NAME(_checkcpu):
 	bhss	.ok020			| CPU >= 68020
 
 .bad020:
-	pea	.err020			| Error message
+	pea	.err020(%pc)			| Error message
 	bra	.printexit
 
 .err020:
@@ -57,17 +63,23 @@ C_SYMBOL_NAME(_checkcpu):
 #ifdef __mcoldfire__
 	subql	#4,%sp			| Local variable for cookie value
 
+#ifdef __FASTCALL__
+	movl	%sp,%a0
+	movl	#0x5f43465f,%d0	| "_CF_"
+	jsr	C_SYMBOL_NAME(Getcookie)
+#else
 	pea	%sp@
 	movl	#0x5f43465f,%sp@-	| "_CF_"
 	jsr	C_SYMBOL_NAME(Getcookie)
 	addql	#8,%sp
+#endif
 
 	movel	%sp@+,%d1			| Cookie value
 
 	tstl	%d0
 	beqs	.okv4e			| _CF_ cookie found
 
-	pea	.errv4e			| Error message
+	pea	.errv4e(%pc)			| Error message
 	bra	.printexit
 
 .errv4e:
@@ -78,13 +90,19 @@ C_SYMBOL_NAME(_checkcpu):
 .okv4e:
 #endif
 
-#ifdef __M68881__
+#ifdef __HAVE_68881__
 	subql	#4,%sp			| Local variable for cookie value
 
+#ifdef __FASTCALL__
+	movl	%sp,%a0
+	movl	#0x5f465055,%d0	| "_FPU"
+	jsr	C_SYMBOL_NAME(Getcookie)
+#else
 	pea	%sp@
 	movl	#0x5f465055,%sp@-	| "_FPU"
 	jsr	C_SYMBOL_NAME(Getcookie)
 	addql	#8,%sp
+#endif
 
 	movel	%sp@+,%d1			| Cookie value
 
@@ -95,7 +113,7 @@ C_SYMBOL_NAME(_checkcpu):
 	bnes	.ok881			| FPU present
 
 .bad881:
-	pea	.err881			| Error message
+	pea	.err881(%pc)			| Error message
 	bra	.printexit
 
 .err881:
@@ -107,6 +125,7 @@ C_SYMBOL_NAME(_checkcpu):
 #endif
 	rts				| All requirements passed
 
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__) || defined(__mcoldfire__) || defined(__HAVE_68881__)
 | Print a message then exit.
 | The message must have been pushed on the stack.
 .printexit:
@@ -117,3 +136,4 @@ C_SYMBOL_NAME(_checkcpu):
 	movew	#-1,%sp@-		| Failure
 	movew	#0x4c,%sp@-		| Pterm()
 	trap	#1
+#endif

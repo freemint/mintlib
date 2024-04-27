@@ -116,9 +116,9 @@ void moncontrol (int mode)
 
 
 void
-monstartup (u_long lowpc, u_long highpc)
+monstartup (void *lowpc, void *highpc)
 {
-  register int o;
+  int o;
   char *cp;
   struct gmonparam *p = &_gmonparam;
 
@@ -126,8 +126,8 @@ monstartup (u_long lowpc, u_long highpc)
    * round lowpc and highpc to multiples of the density we're using
    * so the rest of the scaling (here and in gprof) stays in ints.
    */
-  p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
-  p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->lowpc = ROUNDDOWN((unsigned long)lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->highpc = ROUNDUP((unsigned long)highpc, HISTFRACTION * sizeof(HISTCOUNTER));
   p->textsize = p->highpc - p->lowpc;
   p->kcountsize = p->textsize / HISTFRACTION;
   p->hashfraction = HASHFRACTION;

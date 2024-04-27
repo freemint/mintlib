@@ -24,14 +24,19 @@
 
 ENTRY(__swapcontext)
 	cfi_startproc
+#ifndef __FASTCALL__
 	/* Load address of the context data structure we save in.  */
 	move.l	4(%sp), %a0
+	/* Load address of the context data structure we have to load.  */
+	move.l	8(%sp), %a1
+#endif
 
 	/* Save the preserved registers and the return address.  */
 	movem.l	%d2-%d7, oGREGS+2*4(%a0)
 	movem.l	%a2-%a6, oGREGS+10*4(%a0)
-	lea	4(%sp), %a1
-	move.l	%a1, oSP(%a0)
+	move.l	%sp, %d0
+	addq.l	#4,%d0
+	move.l	%d0, oSP(%a0)
 	move.l	(%sp), oPC(%a0)
 #ifdef __mcoldfire__
 	fmove.l %fpcr, oFPREGS(%a0)
@@ -49,9 +54,6 @@ ENTRY(__swapcontext)
 	cfi_offset (%d3, oGREGS+3*4)
 	cfi_offset (%a2, oGREGS+10*4)
 	cfi_offset (%pc, oPC)
-
-	/* Load address of the context data structure we have to load.  */
-	move.l	8(%sp), %a1
 
 	/* Save the current signal mask and install the new one.  */
 	move.l	oSIGMASK(%a1), %d0

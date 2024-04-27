@@ -24,17 +24,19 @@
 
 ENTRY(__setcontext)
 	cfi_startproc
+#ifndef __FASTCALL__
 	/* Load address of the context data structure.  */
 	move.l	4(%sp), %a0
+#endif
 
 	move.l	oSIGMASK(%a0), %d0
 	movel	%d0, C_SYMBOL_NAME(_sigmask)		/* restore tos emulation signal mask */
-	movel	%a0, %sp@-		/* save register a0 */
-	movel	%d0, %sp@-		/* restore signal mask */
-	movew	#0x117, %sp@-		/* Psigsetmask() system call */
+	movel	%a0, -(%sp)		/* save register a0 */
+	movel	%d0, -(%sp)		/* restore signal mask */
+	movew	#0x117, -(%sp)		/* Psigsetmask() system call */
 	trap	#1
 	addql	#6, %sp
-	movel	%sp@+, %a0		/* restore register a0 */
+	movel	(%sp)+, %a0		/* restore register a0 */
 	
 	/* Load the new stack pointer.  */
 	move.l	oSP(%a0), %sp
