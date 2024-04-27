@@ -91,10 +91,16 @@ static long parseargs(BASEPAGE *);
  */
 static char *acc_argv[] = { "", NULL }; /* no name and no arguments */
 
+/*
+ * A frame-pointer is useless here,
+ * because we change the stack inside those functions.
+ */
+#pragma GCC optimize "-fomit-frame-pointer"
+
 void
 _acc_main(void)
 {
-        char *s;
+	char *s;
 
 	if (_stksize == 0 || _stksize == -1L)
 		_stksize = MINKEEP;
@@ -111,6 +117,9 @@ _acc_main(void)
 	s = (char *)Malloc(_stksize);
 	_setstack(s + _stksize);
 
+	/* local variables must not be accessed after this point,
+	   because we just changed the stack */
+
 	/* this is an accessory */
 	_app = 0;
 
@@ -123,17 +132,20 @@ _acc_main(void)
 #endif
 
 	_main(__libc_argc, __libc_argv, environ);
-	/*NOTREACHED*/
+	__builtin_unreachable();
 }
+
+/* because we change the stack in this function */
+#pragma GCC optimize "-fno-defer-pop"
 
 void
 _crtinit(void)
 {
 	extern void etext(void);	/* a "function" to fake out pc-rel addressing */
 
-	register BASEPAGE *bp;
-	register long m;
-	register long freemem;
+	BASEPAGE *bp;
+	long m;
+	long freemem;
 	char *s;
 
 	/* its an application */
@@ -192,17 +204,36 @@ _crtinit(void)
 	if (((long)bp + m) > ((long)bp->p_hitpa - MINFREE))
 	    goto notenough;
 
-	/* set up the new stack to bp + m  */
-	_setstack((char *)bp + m);
-
-	/* shrink the TPA */
-	(void)Mshrink(bp, m);
-
 	/* keep length of program area */
 	_PgmSize = m;
 
 	/* start profiling, if we were linked with gcrt0.o */
 	_monstartup((void *)bp->p_tbase, (void *)((long)etext - 1));
+
+	/*
+	 * shrink the TPA,
+	 * and set up the new stack to bp + m.
+	 * Instead of calling Mshrink() and _setstack, this is done inline here,
+	 * because we cannot access the bp parameter after changing the stack anymore.
+	 */
+	__asm__ __volatile__(
+		"\tmovel    %0,%%d0\n"
+		"\taddl     %1,%%d0\n"
+		"\tsubl     #64,%%d0\n" /* push some unused space for buggy OS */
+		"\tmovel    %%d0,%%sp\n"/* set up the new stack to bp + m */
+		"\tmove.l   %1,-(%%sp)\n"
+		"\tmove.l   %0,-(%%sp)\n"
+		"\tclr.w    -(%%sp)\n"
+		"\tmove.w   #0x4a,-(%%sp)\n" /* Mshrink */
+		"\ttrap     #1\n"
+		"\tlea      12(%%sp),%%sp\n"
+		: /* no outputs */
+		: "r"(bp), "r"(m)
+		: "d0", "d1", "d2", "a0", "a1", "a2", "cc" AND_MEMORY
+	);
+
+	/* local variables must not be accessed after this point,
+	   because we just changed the stack */
 
 #ifdef __GCC_HAVE_INITFINI_ARRAY_SUPPORT
 	/* main() won't call __main() for global constructors, so do it here. */
@@ -211,12 +242,14 @@ _crtinit(void)
 
 	_main(__libc_argc, __libc_argv, environ);
 	/* not reached normally */
+	__builtin_unreachable();
 
 notenough:
 	(void) Cconws("Fatal error: insufficient memory\r\n");
 	(void) Cconws("Hint: either decrease stack size using 'stack' command (not recomended)\r\n" \
 		   "      or increase TPA_INITIALMEM value in mint.cnf.\r\n");
 	Pterm(-1);
+	__builtin_unreachable();
 }
 
 /*
