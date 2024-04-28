@@ -11,7 +11,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-subdir = argp 
+subdir = argp
 
 SUBDIRS =
 

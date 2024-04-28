@@ -158,3 +158,4 @@ unix/test-vfork
 *.a
 *~
 *.exe
+build

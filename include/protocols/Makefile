@@ -11,7 +11,6 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-csrcdir = $(top_srcdir)/src
 subdir = protocols
 
 include $(top_srcdir)/configvars

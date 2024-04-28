@@ -34,8 +34,7 @@ TESTS = dummy
 include $(top_srcdir)/checkrules
 
 # Override test flags.
-cflags = -O -Wall
-type = 
+#type = m68000
 
 distclean::
 	$(RM) SRCFILES.traps syscalls.stmp .stmp.pars pars.c pars.h scan.c

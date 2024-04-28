@@ -45,9 +45,10 @@ install-lib:
 uninstall-lib:
 	@list='$(baselibs)'; for p in $$list; do \
 	  r=$$p.a; \
-	  s="$$p"$(libsize).a; \
-	  echo " rm -f $(libdir)/$(instdir)/$$r $(libdir)/$(instdir)/$$s"; \
-	  rm -f $(DESTDIR)$(libdir)/$(instdir)/$$r $(DESTDIR)$(libdir)/$(instdir)/$$s; \
+	  s="$$p"_g.a; \
+	  s2="$$p"_p.a; \
+	  echo " rm -f $(libdir)/$(instdir)/$$r $(libdir)/$(instdir)/$$s" $(libdir)/$(instdir)/$$s2"; \
+	  rm -f $(DESTDIR)$(libdir)/$(instdir)/$$r $(DESTDIR)$(libdir)/$(instdir)/$$s $(DESTDIR)$(libdir)/$(instdir)/$$s2; \
 	done
 	@list='$(CRT0OBJS)'; for p in $$list; do \
 	  echo " rm -f $(DESTDIR)$(libdir)/$(instdir)/$$p"; \

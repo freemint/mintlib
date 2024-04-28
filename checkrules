@@ -6,25 +6,25 @@ include $(top_srcdir)/configvars
 
 # The variable "type" will be appended to "lib" when searching for
 # libraries.  Thus, to test the library with fpu code and >=m68020, 
-# set type to 16020.  If you change this you must run "make checkclean".
-type=
+# set type to m68020.  If you change this you must run "make checkclean".
+type=m68000
 
 # These are additional CFLAGS passed to the compiler and the linker.
 # For fpu/m68020 libs:
 #	cflags=-m68020-60
 # If you change this you must run "make checkclean".
-cflags=
+cflags=$(CFLAGS_$(type))
 
-CRT0 = $(top_srcdir)/lib$(type)/crt0.o
-libs = $(libs-$(@F)) $(top_srcdir)/lib$(type)/libc.a
+CRT0 = $(top_srcdir)/build/$(type)/crt0.o
+libs = $(libs-$(@F)) $(top_srcdir)/build/$(type)/libc.a
 LIBS = -lgcc $(LIBS-$(@F)) $(libs) -lgcc
 
 TESTPRGS = $(addprefix test-, $(TESTS))
-TESTCFILES = $(addsuffix .c, $(TESTPRGS) $(EXTRAPRGS))
+TESTCFILES = $(addsuffix .c,$(TESTPRGS) $(EXTRAPRGS))
 TESTOBJS = $(TESTCFILES:.c=.o)
-DEP_FILES = $(addprefix $(srcdir)/.deps/, $(patsubst %.c,%.P,$(TESTCFILES)))
+DEP_FILES = $(addprefix $(top_srcdir)/build/$(type)/$(subdir)/.deps/,$(patsubst %.c,%.P,$(TESTCFILES)))
 
-TESTCFLAGS = $(cflags) $(EXTRACFLAGS)
+TESTCFLAGS = $(cflags) $(CFLAGS) $(EXTRACFLAGS)
 TESTLDFLAGS = $(cflags) -s -nostartfiles -nostdlib
 TESTDEFS = -D_GNU_SOURCE -D_REENTRANT
 
@@ -37,8 +37,8 @@ check: check-local $(libs) $(TESTPRGS)
 	$(top_srcdir)/do_test $(TESTS)
 
 checkclean:
-	rm -f $(srcdir)/*.o $(TESTPRGS) 
-	rm -rf $(srcdir)/.deps
+	rm -f $(top_srcdir)/build/$(type)/$(subdir)/*.o $(TESTPRGS) 
+	rm -rf $(top_srcdir)/build/$(type)/$(subdir)/.deps
 
 $(TESTPRGS) $(EXTRAPRGS): %: %.o $(libs) $(CRT0)
 	$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $< -o $@ $(LIBS)
@@ -48,9 +48,8 @@ $(TESTPRGS) $(EXTRAPRGS): %: %.o $(libs) $(CRT0)
 
 .c.o:
 	@echo '$(COMPILE) -c $< -o $@'; \
-	$(COMPILE) -Wp,-MD,.deps/$(@:.o=.P) -c $< -o $@
+	$(COMPILE) -Wp,-MD,$(top_srcdir)/build/$(type)/$(subdir)/.deps/$(@:.o=.P) -c $< -o $@
 
-DEPS_MAGIC := $(shell mkdir $(srcdir)/.deps > /dev/null 2>&1 || :)
+DEPS_MAGIC := $(shell mkdir -p $(top_srcdir)/build/$(type)/$(subdir)/.deps > /dev/null 2>&1 || :)
 
 -include $(DEP_FILES) /dev/null
-

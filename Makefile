@@ -23,40 +23,37 @@ endif
 
 SUBDIRS = include syscall startup argp conf crypt dirent gmp login mintlib \
   misc multibyte posix pwdgrp shadow signal socket stdiio stdio stdlib \
-  string sysvipc termios time unix lib tz sunrpc
-DIST_SUBDIRS = argp conf crypt dirent gmp include lib \
+  string sysvipc termios time unix
+DIST_SUBDIRS = argp conf crypt dirent gmp include \
   login mintlib misc multibyte posix pwdgrp shadow signal socket startup \
   stdiio stdio stdlib string sunrpc syscall sysvipc termios time tz unix
 TEST_SUBDIRS = argp crypt dirent login mintlib misc posix pwdgrp shadow signal \
   socket startup stdiio stdio stdlib string time tz unix
 
-ifeq ($(WITH_PROFILE_LIB), yes)
-  SUBDIRS += lib_p
-  DIST_SUBDIRS += lib_p
-endif
-
-ifeq ($(WITH_DEBUG_LIB), yes)
-  SUBDIRS += lib_g
-  DIST_SUBDIRS += lib_g
-endif
-
+BASE_FLAVOURS = m68000
 ifeq ($(WITH_020_LIB), yes)
-  SUBDIRS += lib020
-  DIST_SUBDIRS += lib020
-  ifeq ($(WITH_DEBUG_LIB), yes)
-    SUBDIRS += lib020_g
-    DIST_SUBDIRS += lib020_g
-  endif
+  BASE_FLAVOURS += m68020
+endif
+ifeq ($(WITH_V4E_LIB), yes)
+  BASE_FLAVOURS += coldfire
+endif
+FLAVOURS = $(BASE_FLAVOURS)
+
+ifeq ($(WITH_PROFILE_LIB), yes)
+  FLAVOURS += $(addsuffix -profile,$(BASE_FLAVOURS))
+endif
+ifeq ($(WITH_DEBUG_LIB), yes)
+  FLAVOURS += $(addsuffix -debug,$(BASE_FLAVOURS))
+endif
+ifeq ($(WITH_FASTCALL), yes)
+  FLAVOURS += $(addsuffix -fastcall,$(BASE_FLAVOURS))
 endif
 
-ifeq ($(WITH_V4E_LIB), yes)
-  SUBDIRS += libv4e
-  DIST_SUBDIRS += libv4e
-  ifeq ($(WITH_DEBUG_LIB), yes)
-    SUBDIRS += libv4e_g
-    DIST_SUBDIRS += libv4e_g
-  endif
-endif
+LIBDIRS += $(addprefix build/,$(FLAVOURS))
+
+SUBDIRS += $(LIBDIRS)
+# must come after lib dirs, since it needs the just-built library
+SUBDIRS += tz sunrpc
 
 include $(srcdir)/BINFILES
 include $(srcdir)/SRCFILES
@@ -69,7 +66,64 @@ include phony
 
 all: all-here all-recursive
 
-all-here:
+# the SRCFILES, EXTRAFILES, and MISCFILES are still required by
+# the rules; FIXME
+all-here: $(top_srcdir)/includepath
+	@for flavour in $(FLAVOURS); do \
+	   dir=build/$$flavour; \
+	   mkdir -p $$dir/.deps; \
+	   test -f $$dir/SRCFILES || touch $$dir/SRCFILES; \
+	   test -f $$dir/EXTRAFILES || touch $$dir/EXTRAFILES; \
+	   test -f $$dir/MISCFILES || touch $$dir/MISCFILES; \
+	   cflags=""; \
+	   nocflags=""; \
+	   qualifier=""; \
+	   cflags=""; \
+	   for f in `echo $$flavour | sed -e 's/-/ /g'`; do \
+	     case $$f in \
+	     profile) \
+	     	qualifier=_p; \
+	     	nocflags="-fomit-frame-pointer"; \
+	        cflags="$$cflags $(CFLAGS_profile)"; \
+	     	;; \
+	     debug) \
+	        qualifier=_g; \
+	        nocflags="-O2 -O3 -fomit-frame-pointer -fexpensive-optimizations"; \
+	        cflags="$$cflags $(CFLAGS_debug)"; \
+	        ;; \
+	     m68000) \
+	        cflags="$$cflags $(CFLAGS_m68000)"; \
+	        ;; \
+	     m68020) \
+	        cflags="$$cflags $(CFLAGS_m68020)"; \
+	        ;; \
+	     coldfire) \
+	        cflags="$$cflags $(CFLAGS_coldfire)"; \
+	        ;; \
+	     short) \
+	        cflags="$$cflags $(CFLAGS_short)"; \
+	        ;; \
+	     fastcall) \
+	        cflags="$$cflags $(CFLAGS_fastcall)"; \
+	        ;; \
+	     esac; \
+	   done; \
+	   instdir=`$(CC) $$cflags -print-multi-directory`; \
+	   test -f $$dir/BINFILES || echo "BINFILES = libc$${qualifier}.a libiio$${qualifier}.a" > $$dir/BINFILES; \
+	   ( echo "SHELL = /bin/sh"; \
+	     echo "srcdir = ."; \
+	     echo "top_srcdir = ../.."; \
+	     echo "subdir = $$dir"; \
+	     echo "qualifier = $$qualifier"; \
+	     echo "cflags = $$cflags"; \
+	     echo "nocflags = $$nocflags"; \
+	     echo "instdir = $$instdir"; \
+	     echo ""; \
+	     echo "default: all"; \
+	     echo ""; \
+	     echo 'include $$(top_srcdir)/buildrules'; \
+	   ) > $$dir/Makefile; \
+	done
 
 install: all-here install-recursive zoneswarning
 
@@ -84,7 +138,7 @@ install-headers: install-include-recursive
 install-man: all install-man-recursive
 
 clean:: clean-recursive
-	rm -rf .deps includepath CFILES
+	rm -rf .deps includepath CFILES build
 
 distclean:: distclean-recursive
 
@@ -100,6 +154,17 @@ bindistdir = $(distdir)-bin
 topdistdir = $(distdir)
 topbindistdir = $(topdistdir)-bin
 
+$(top_srcdir)/includepath: $(top_srcdir)/configvars
+	@echo "Generating $@"; \
+	installdir=`$(CC) --print-search-dirs | awk '{ print $$2; exit; }'`; \
+	echo "$${installdir}include -I$${installdir}include-fixed" >$@
+	@if [ -z "$$(<$@)" ]; then \
+	  rm $@; \
+	  echo "error: The syntax \$$(<file) is unsupported by $(SHELL)." >&2; \
+	  echo "       Please use \"$(MAKE) SHELL=/bin/bash\" instead." >&2; \
+	  exit 1; \
+	fi
+	
 dist-check:
 	@echo "WARNING: This will take VERY long and will consume"
 	@echo "VERY much diskspace!!!"
@@ -175,7 +240,9 @@ uninstall-include-recursive uninstall-man-recursive:
 	   echo "attempting to install on host; aborting" >&2; \
            exit 1; \
 	fi; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
+	list='$(SUBDIRS)'; \
+	if test "$@" = clean-recursive; then list='$(filter-out $(LIBDIRS),$(SUBDIRS))'; fi; \
+	for subdir in $$list; do \
 	  target=`echo $@ | sed s/-recursive//`; \
 	  echo "Making $$target in $$subdir"; \
 	  (cd $$subdir && $(MAKE) $$target) \

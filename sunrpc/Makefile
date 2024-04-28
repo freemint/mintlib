@@ -43,8 +43,7 @@ TESTS = dummy
 include $(top_srcdir)/checkrules
 
 # Override test flags.
-cflags = -O -Wall
-type = 
+#type = m68000
 
 RPCGENOBJS = $(RPCGENSRCFILES:.c=.o)
 RPCINFOOBJS = $(RPCINFOSRCFILES:.c=.o)

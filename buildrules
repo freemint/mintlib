@@ -16,11 +16,15 @@ am__v_AR_0 = @echo "  AR    " $@;
 AM_V_RANLIB = $(am__v_RANLIB_$(V))
 am__v_RANLIB_ = $(am__v_RANLIB_$(AM_DEFAULT_VERBOSITY))
 am__v_RANLIB_0 = @echo "  RANLIB" $@;
+AM_V_STRIP = $(am__v_STRIP_$(V))
+am__v_STRIP_ = $(am__v_STRIP_$(AM_DEFAULT_VERBOSITY))
+am__v_STRIP_0 = @echo "  STRIP " $@;
 
 # This is the slow part of the Makefiles.  Exclude it if we build
 # binary distributions.
 ifndef top_distdir
 
+# qualifier is _p, _g, or empty
 libc := libc$(qualifier).a
 libiio := libiio$(qualifier).a
 librpcsvc := librpcsvc$(qualifier).a
@@ -108,9 +112,6 @@ SRCS := $(ARGPSRCS) $(CRYPTSRCS) $(DIRENTSRCS) $(GMPSRCS) $(LOGINSRCS) $(MINTLIB
   $(STRINGSRCS) $(SUNRPCSRCS) $(SYSCALLSRCS) $(SYSVIPCSRCS) $(TERMIOSSRCS) \
   $(TIMESRCS) $(TZSRCS) $(UNIXSRCS)
 
-ifeq ($(libsize), _p)
-CFLAGS-_mon.S = -DPROFILING
-endif
 CFLAGS-crtinit.c = -fno-omit-frame-pointer --no-profile
 CFLAGS-gmon.c = -fno-omit-frame-pointer --no-profile
 CFLAGS-mcount.c = -fno-omit-frame-pointer --no-profile
@@ -187,7 +188,7 @@ vsscanf.o obstream.o printf.o vasprintf.o vdprintf.o vprintf.o vsnprintf.o \
 vsprintf.o sscanf.o fprintf.o fwprintf.o snprintf.o sprintf.o swprintf.o \
 vfwprintf.o vswprintf.o vwprintf.o wprintf.o
 
-DEP_FILES := $(addprefix $(top_srcdir)/.deps/,$(patsubst %.o,%.P,$(OBJS)))
+DEP_FILES := $(addprefix .deps/,$(patsubst %.o,%.P,$(OBJS)))
 
 # These are automatically remade, no need for make to worry about
 # them.
@@ -195,21 +196,8 @@ DEP_FILES := $(addprefix $(top_srcdir)/.deps/,$(patsubst %.o,%.P,$(OBJS)))
 
 endif  # not top_distdir.
 
-all-here: $(top_srcdir)/CFILES $(top_srcdir)/includepath $(CRT0OBJS) $(LIBS)
+all-here: $(top_srcdir)/CFILES $(CRT0OBJS) $(LIBS)
 
-$(top_srcdir)/includepath: $(top_srcdir)/configvars
-	@echo "Generating $@"; \
-	local= ; \
-	installdir=`$(CC) --print-search-dirs | awk '{ print $$2; exit; }'`; \
-	case $$installdir in /usr/local*) local=/local;; esac; \
-	echo "$${installdir}include -I$${installdir}include-fixed" >$@
-	@if [ -z "$$(<$@)" ]; then \
-	  rm $@; \
-	  echo "error: The syntax \$$(<file) is unsupported by $(SHELL)." >&2; \
-	  echo "       Please use \"$(MAKE) SHELL=/bin/bash\" instead." >&2; \
-	  exit 1; \
-	fi
-	
 include $(top_srcdir)/bindist
 
 install-include:
@@ -232,6 +220,7 @@ $(top_srcdir)/CFILES: $(argpdir)/SRCFILES $(cryptdir)/SRCFILES $(direntdir)/SRCF
   $(syscalldir)/SRCFILES $(sysvipcdir)/SRCFILES $(termiosdir)/SRCFILES \
   $(timedir)/SRCFILES $(tzdir)/SRCFILES $(unixdir)/SRCFILES
 	rm -f $@
+ifneq (clean,$(MAKECMDGOALS))
 	echo "# This file is a generated secondary file. Do not edit." >$@
 	sed -e 's,^SRCFILES *=,ARGPCFILES =,g' $(argpdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,CRYPTCFILES =,g' $(cryptdir)/SRCFILES >>$@
@@ -260,6 +249,7 @@ $(top_srcdir)/CFILES: $(argpdir)/SRCFILES $(cryptdir)/SRCFILES $(direntdir)/SRCF
 	sed -e 's,^SRCFILES *=,TIMECFILES =,g' $(timedir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,TZCFILES =,g' $(tzdir)/SRCFILES >>$@
 	sed -e 's,^SRCFILES *=,UNIXCFILES =,g' $(unixdir)/SRCFILES >>$@
+endif
 
 vpath %.c $(srcdirs)
 vpath %.s $(srcdirs)
@@ -269,13 +259,13 @@ vpath %.S $(srcdirs)
 .SUFFIXES: .c .o .S .s
 
 .c.o:
-	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,.deps/$(@:.o=.P) -c $< -o $@
 			
 .S.o:
-	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,.deps/$(@:.o=.P) -c $< -o $@
 			
 .s.o:
-	$(AM_V_CC)$(COMPILE) -Wp,-MD,$(top_srcdir)/.deps/$(@:.o=.P) -c $< -o $@
+	$(AM_V_CC)$(COMPILE) -Wp,-MD,.deps/$(@:.o=.P) -c $< -o $@
 				
 crt0.o: $(startupdir)/crt0.S
 	$(AM_V_CC)$(CC) $(WARN) $(cflags) $(CFLAGS) -nostdinc -I$(top_srcdir)/include -I$(top_srcdir)/mintlib -c $< -o $@
@@ -287,16 +277,19 @@ gcrt0.o: $(startupdir)/crt0.S
 $(libc): $(LIBCOBJS)
 	@rm -f $@
 	$(AM_V_AR)$(AR) cru $@ $(LIBCOBJS)
+	if test "$(qualifier)" = ""; then $(AM_V_STRIP)$(STRIP) -S -X -w -N '.L[0-9]*' $@; fi
 	$(AM_V_RANLIB)$(RANLIB) $@
 
 $(libiio): $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
 	@rm -f $@
 	$(AM_V_AR)$(AR) cru $@ $(STDIIOOBJS) $(LIBIIO_ADDOBJS)
+	if test "$(qualifier)" = ""; then $(AM_V_STRIP)$(STRIP) -S -X -w -N '.L[0-9]*' $@; fi
 	$(AM_V_RANLIB)$(RANLIB) $@
 
 $(librpcsvc): $(RPCSVCOBJS)
 	@rm -f $@
 	$(AM_V_AR)$(AR) cru $@ $(RPCSVCOBJS)
+	if test "$(qualifier)" = ""; then $(AM_V_STRIP)$(STRIP) -S -X -w -N '.L[0-9]*' $@; fi
 	$(AM_V_RANLIB)$(RANLIB) $@
 
 $(LIBCOBJS) $(LIBIIO_ADDOBJS) $(RPCSVCOBJS): $(top_srcdir)/includepath
@@ -304,8 +297,6 @@ $(LIBCOBJS) $(LIBIIO_ADDOBJS) $(RPCSVCOBJS): $(top_srcdir)/includepath
 $(top_srcdir)/include/linker.h: $(top_srcdir)/include/linker.h.in \
   $(top_srcdir)/configvars
 	(cd $(top_srcdir)/include && $(MAKE) linker.h)
-
-DEPS_MAGIC := $(shell mkdir $(top_srcdir)/.deps > /dev/null 2>&1 || :)
 
 .SECONDARY : $(DEP_FILES) $(SRCFILES)
 

@@ -36,8 +36,7 @@ TESTS = dummy
 include $(top_srcdir)/checkrules
 
 # Override test flags.
-cflags =
-type = 
+#type = m68000
 
 # Change the line below for your timezone (after finding the one you want in
 # one of the $(TDATA) source files, or adding it to a source file).
@@ -269,6 +268,8 @@ uninstall-man:
 	done
 	
 zdump: $(TZDOBJS) $(CRT0) $(libs)
+	@echo CFLAGS=$(CFLAGS)
+	@echo LDFLAGS=$(LDFLAGS)
 	$(AM_V_LD)$(CC) $(LDFLAGS) $(TESTLDFLAGS) $(CRT0) $(TZDOBJS) -o $@ $(LIBS)
 
 zic: $(TZCOBJS) $(CRT0) $(libs)

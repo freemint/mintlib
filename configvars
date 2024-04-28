@@ -59,6 +59,9 @@ ifeq ($(ELF),yes)
 WITH_DEBUG_LIB=yes
 endif
 
+# Uncomment this out if you want -mfastcall libraries
+WITH_FASTCALL=$(shell if $(toolprefix)gcc -mfastcall -E - < /dev/null >/dev/null 2>&1; then echo yes; else echo no; fi)
+
 # Uncomment this out if you want a debugable lib lib_p.a.  
 # This is currently not recommended.  At least on my machine
 # all executables linked against a profiled lib crash and I
@@ -121,6 +124,9 @@ AR=$(toolprefix)ar
 # Define this to "${AR} s" if your system lacks the ranlib program.
 RANLIB=$(toolprefix)ranlib
 
+# Define this to the name of your strip program.
+STRIP=$(toolprefix)strip
+
 # Minimal set of CFLAGS to use.  Additional flags for other processors
 # will be added by the individual Makefiles.  If you want a debuggable
 # library you will have to add "-g" here.  If you want more or less
@@ -141,6 +147,14 @@ LDFLAGS=
 
 # Additional defines.
 DEFS=
+
+CFLAGS_m68000   = -m68000
+CFLAGS_m68020   = -m68020-60
+CFLAGS_coldfire = -mcpu=5475
+CFLAGS_debug    = -O -g
+CFLAGS_profile  = -g -pg -DPROFILING
+CFLAGS_short    = -mshort
+CFLAGS_fastcall = -mfastcall
 
 # Define this to the warning level you want.
 WARN=-Wall -Werror -Wstrict-prototypes -Wmissing-prototypes -Wold-style-declaration -Wold-style-definition -Wdeclaration-after-statement
