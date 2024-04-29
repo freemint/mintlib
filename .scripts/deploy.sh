@@ -1,6 +1,7 @@
 #!/bin/sh -x
 
-UPLOAD_DIR=web196@server43.webgo24.de:/home/www/snapshots
+SERVER=web196@server43.webgo24.de
+UPLOAD_DIR=$SERVER:/home/www/snapshots
 
 if [ -z "${DEPLOY_ARCHIVE+x}" ]
 then
@@ -49,12 +50,24 @@ upload_file() {
 	exit 1
 }
 
+link_file() {
+	local from="$1"
+	local to="$2"
+	for i in 1 2 3
+	do
+		ssh -o "StrictHostKeyChecking no" $SERVER -- "cd www/snapshots/${PROJECT_DIR}; ln -sf $from $to"
+		[ $? = 0 ] && return 0
+		sleep 1
+	done
+	exit 1
+}
+
 for f in "" -000 -020 -v4e; do
 	upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}"
 done
 if test -z "${CPU_TARGET}"
 then
-	upload_file "$ARCHIVE_PATH" "${UPLOAD_DIR}/${PROJECT_DIR}/${PROJECT_DIR}-latest.${DEPLOY_ARCHIVE}"
+	link_file "${ARCHIVE_NAME}.${DEPLOY_ARCHIVE}" "${PROJECT_DIR}-latest.${DEPLOY_ARCHIVE}"
 fi
 
 echo ${PROJECT_NAME}-${PROJECT_VERSION}-${SHORT_ID} > .latest_version
