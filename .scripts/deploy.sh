@@ -50,7 +50,7 @@ upload_file() {
 }
 
 for f in "" -000 -020 -v4e; do
-	upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}"
+	upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}"
 done
 if test -z "${CPU_TARGET}"
 then
