@@ -3,11 +3,6 @@
 # -u: Treat unset variables as an error when substituting.
 # -x: Display expanded script commands
 
-if test "$CROSS_TOOL" = ""; then
-  CROSS_TOOL=m68k-atari-mint
-  export CROSS_TOOL
-fi
-
 make SHELL=/bin/bash
 make SHELL=/bin/bash DESTDIR="${INSTALL_DIR}" install
 

@@ -9,8 +9,10 @@ then
 	DEPLOY_ARCHIVE="zip"
 fi
 
+toolsuffix=${CROSS_TOOL##*-}
+
 ARCHIVE_NAME="${PROJECT_NAME}-${PROJECT_VERSION}-${SHORT_ID}"
-ARCHIVE_PATH="${DEPLOY_DIR}/${ARCHIVE_NAME}.${DEPLOY_ARCHIVE}"
+ARCHIVE_PATH="${DEPLOY_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}"
 
 mkdir -p "${DEPLOY_DIR}"
 
@@ -62,12 +64,13 @@ link_file() {
 	exit 1
 }
 
-for f in "" -000 -020 -v4e; do
+upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}"
+for f in -000 -020 -v4e; do
 	upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}"
 done
 if test -z "${CPU_TARGET}"
 then
-	link_file "${ARCHIVE_NAME}.${DEPLOY_ARCHIVE}" "${PROJECT_DIR}-latest.${DEPLOY_ARCHIVE}"
+	link_file "${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}" "${PROJECT_DIR}-${toolsuffix}-latest.${DEPLOY_ARCHIVE}"
 fi
 
 echo ${PROJECT_NAME}-${PROJECT_VERSION}-${SHORT_ID} > .latest_version
