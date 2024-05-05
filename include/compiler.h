@@ -99,7 +99,11 @@
  * different, define it above
  */
 #ifndef __CDECL
+#ifdef __FASTCALL__
+#define __CDECL __attribute__((__cdecl__))
+#else
 #define __CDECL
+#endif
 #endif
 
 #ifndef __NORETURN
