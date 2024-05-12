@@ -104,3 +104,5 @@ C_SYMBOL_NAME(Getcookie):
 	movl	%d0,%d1			| Get value from return value
 
 	bras	.return
+
+#include "elfattr.S"

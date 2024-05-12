@@ -197,3 +197,5 @@ C_SYMBOL_NAME(modf):
  	rts
 
 #endif	/* sfp004 */
+
+#include "elfattr.S"

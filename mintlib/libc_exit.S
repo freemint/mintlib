@@ -43,3 +43,5 @@ C_SYMBOL_NAME(__libc_exit):
 	movw	%d3,%sp@-
 	movw    #76,%sp@-
 	trap    #1
+
+#include "elfattr.S"

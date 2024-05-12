@@ -296,3 +296,5 @@ error_exit:
 	rts
 
 #endif	/* !__HAVE_68881__ && !sfp004	*/
+
+#include "elfattr.S"

@@ -20,3 +20,5 @@ C_SYMBOL_NAME(_StkOver):
 	move.w     #0x7FFF,(%a7)
 	move.w     #76,-(%a7) /* Pterm */
 	trap       #1
+
+#include "elfattr.S"

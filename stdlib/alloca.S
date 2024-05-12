@@ -39,3 +39,5 @@ C_SYMBOL_NAME(__alloca):
 #endif
 
 	jmp	%a1@		| return by jmping via saved addr
+
+#include "elfattr.S"

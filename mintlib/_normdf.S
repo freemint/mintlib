@@ -342,3 +342,5 @@ oflow:
 	rts
 
 #endif /* __HAVE_68881__ */
+
+#include "elfattr.S"

@@ -41,3 +41,4 @@ C_SYMBOL_NAME(_setstack):
 				| fake parameter to be popped by the caller
 	jmp	(%a1)		| back to caller
 
+#include "elfattr.S"

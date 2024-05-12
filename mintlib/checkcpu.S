@@ -137,3 +137,5 @@ C_SYMBOL_NAME(_checkcpu):
 	movew	#0x4c,%sp@-		| Pterm()
 	trap	#1
 #endif
+
+#include "elfattr.S"

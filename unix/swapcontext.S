@@ -130,3 +130,5 @@ PSEUDO_END(__swapcontext)
 	cfi_endproc
 
 weak_alias (__swapcontext, swapcontext)
+
+#include "elfattr.S"

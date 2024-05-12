@@ -117,3 +117,5 @@ L1:
 	moveml	4(%a0),%d2-%d7/%a2-%a7	| restore saved reggies
 	movl	(%a0),(%sp)			| and the saved return address
 	rts
+
+#include "elfattr.S"

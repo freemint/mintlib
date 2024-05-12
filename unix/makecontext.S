@@ -126,3 +126,5 @@ END(__makecontext)
 	cfi_endproc
 
 weak_alias (__makecontext, makecontext)
+
+#include "elfattr.S"

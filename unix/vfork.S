@@ -72,3 +72,5 @@ L_newprog:
 	moveml	%a0@, %d2-%d7/%a1-%a6	| restore reggies
 	clrl	%d0		| child always returns 0 from vfork
 	jmp	%a1@		| back to caller, as child process
+
+#include "elfattr.S"

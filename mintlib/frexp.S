@@ -261,3 +261,5 @@ nonzero:
 fini:	rts
 
 #endif	/* sfp004 */
+
+#include "elfattr.S"

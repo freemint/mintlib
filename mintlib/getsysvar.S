@@ -76,3 +76,5 @@ C_SYMBOL_NAME(get_sysvar):
 	movel	%d3,%d0
 
 	bras	.return
+
+#include "elfattr.S"

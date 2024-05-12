@@ -376,3 +376,5 @@ scopy_d:
 	subq.l	#1,%d0
 	jne	scopy_d
 	jra	exit_d2
+
+#include "elfattr.S"

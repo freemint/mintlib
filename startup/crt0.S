@@ -116,3 +116,5 @@ C_SYMBOL_NAME(_moncontrol):
 C_SYMBOL_NAME(__mcleanup):
 	rts
 #endif /* GCRT0 */
+
+#include "elfattr.S"

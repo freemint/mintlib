@@ -189,3 +189,5 @@ exit_d2:
 exit:
 	movl %a0,%d0		| return dest (for memset only), in a0 by predec now
 	rts
+
+#include "elfattr.S"

@@ -82,3 +82,5 @@ PSEUDO_END(__getcontext)
 	cfi_endproc
 
 weak_alias (__getcontext, getcontext)
+
+#include "elfattr.S"
