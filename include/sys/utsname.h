@@ -37,6 +37,7 @@ struct utsname {
      idea.  */
   char architecture[8];               /* sysinfo (SI_ARCHITECTURE, ...).  */
 #endif
+  char __pad; /* make it even */
 };
 
 /* Fill INFO with the system information obtained via sysinfo.  */
