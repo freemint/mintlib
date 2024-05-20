@@ -16,49 +16,27 @@
 
 #ifndef __FASTCALL__
 
-|	void *memcpy( void *dest, const void *src, size_t len );
-|	void *memmove( void *dest, const void *src, size_t len );
-|	returns dest
-|	functions are aliased
-
-#ifndef __SOZOBON__
-C_SYMBOL_NAME(memcpy):
-C_SYMBOL_NAME(memmove):
-	move.l	4(%sp),%a0	| dest
-	move.l	8(%sp),%a1	| src
-	jra	common		| the rest is samea as bcopy
-#else
-|	___bcopy() is the base function below; for memcpy(), memmove()
-|	and bcopy(), we have to sneak a size_t into an unsigned long first.
-
-C_SYMBOL_NAME(memcpy):
-C_SYMBOL_NAME(memmove):
-	move.l	4(%sp),%a0	| dest
-	move.l	8(%sp),%a1	| src
-	clr.l	%d0		| here is the sneaky bit...
-	move.w	12(%sp),%d0	| length
-	jra	common2		| the rest is samea as bcopy
-
-C_SYMBOL_NAME(bcopy):
-	move.l	4(%sp),%a1	| src
-	move.l	8(%sp),%a0	| dest
-	clr.l	%d0		| here is the sneaky bit...
-	move.w	12(%sp),%d0	| length
-	jra	common2		| the rest is samea as bcopy
-#endif
-
 |	void bcopy( const void *src, void *dest, size_t length );
 |	void _bcopy( const void *src, void *dest, unsigned long length );
 |	return value not used (returns src)
 |	functions are aliased (except for HSC -- sb)
 
-#ifndef __SOZOBON__
 C_SYMBOL_NAME(bcopy):
 C_SYMBOL_NAME(__bcopy):
-#endif
 C_SYMBOL_NAME(_bcopy):
 	move.l	4(%sp),%a1	| src
 	move.l	8(%sp),%a0	| dest
+	jra	common		| the rest is same as bcopy
+
+|	void *memcpy( void *dest, const void *src, size_t len );
+|	void *memmove( void *dest, const void *src, size_t len );
+|	returns dest
+|	functions are aliased
+
+C_SYMBOL_NAME(memcpy):
+C_SYMBOL_NAME(memmove):
+	move.l	4(%sp),%a0	| dest
+	move.l	8(%sp),%a1	| src
 common:
 	move.l	12(%sp),%d0	| length
 
