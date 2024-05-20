@@ -28,12 +28,12 @@ C_SYMBOL_NAME(__vfork):
 	addql	#2, %sp
 	tstl	%d0		| error??
 	jmi	L_err
-	jmp	(%a1)		| return
+	jmp	(%a1)		| return; note: assumes that a1 was not clobbered by vfork call
 L_TOS:
 	lea	L_vfsav, %a0
 	moveml	%d2-%d7/%a1-%a6, (%a0)	| save registers
 #ifdef __FASTCALL__
-	movel	%a0,%a1
+	movel	%a0,%d0
 	lea	L_newprog(%pc),%a0
 	jbsr	C_SYMBOL_NAME(tfork)		| tfork(L_newprog, L_vfsav)
 #else
