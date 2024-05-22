@@ -81,10 +81,22 @@ long __libc_argc = 1;
 static char *__libc_argv_default[] = { "unknown application", NULL };
 char **__libc_argv = __libc_argv_default;
 
+/*
+ * This variable is checked by compiled code when using -fstack-check.
+ */
+char *_StkLim;
+
 #define isspace(c) ((c) == ' '||(c) == '\t')
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
 static long parseargs(BASEPAGE *);
+
+static void __libc_set_stacklim(char *stack, long size)
+{
+	/* leave some room for saved registers */
+	(void)size;
+	_StkLim = stack + 80;
+}
 
 /*
  * accessories start here:
@@ -116,6 +128,7 @@ _acc_main(void)
 
 	s = (char *)Malloc(_stksize);
 	_setstack(s + _stksize);
+	__libc_set_stacklim(s, _stksize);
 
 	/* local variables must not be accessed after this point,
 	   because we just changed the stack */
@@ -198,6 +211,7 @@ _crtinit(void)
 
 	/* make m the total number of bytes including stack */
 	_stksize = _stksize & (~3L);
+	__libc_set_stacklim((char *)bp + m, _stksize);
 	m += _stksize;
 
 	/* make sure there's enough room for the stack */

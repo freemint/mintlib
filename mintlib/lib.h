@@ -65,7 +65,9 @@ extern void *_heapbase;
 extern short _split_mem;
 
 extern long _stksize;
+extern char *_StkLim;
 extern long _initial_stack;
+
 
 extern short _app;
 extern unsigned long _PgmSize;

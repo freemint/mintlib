@@ -97,6 +97,7 @@ SRCFILES = \
 	spawn.c \
 	spawnve.c \
 	spawnvp.c \
+	stkover.S \
 	stksiz.c \
 	syscall.c \
 	tell.c \
