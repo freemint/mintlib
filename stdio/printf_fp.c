@@ -134,6 +134,63 @@ static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
      internal_function;
 
 
+struct hack_digit_args {
+	/* The type of output format that will be used: 'e'/'E' or 'f'.  */
+	int type;
+	/* and the exponent.	*/
+	int exponent;
+	/* Sign of the exponent.  */
+	int expsign;
+	/* The fraction of the floting-point value in question  */
+	MPN_VAR(frac);
+	/* Scaling factor.  */
+	MPN_VAR(scale);
+	/* Temporary bignum value.  */
+	MPN_VAR(tmp);
+};
+
+static char hack_digit (struct hack_digit_args *args)
+    {
+      mp_limb_t hi;
+      mp_limb_t cy;
+
+      if (args->expsign != 0 && args->type == 'f' && args->exponent-- > 0)
+	hi = 0;
+      else if (args->scalesize == 0)
+	{
+	  hi = args->frac[args->fracsize - 1];
+	  args->frac[args->fracsize - 1] = __mpn_mul_1 (args->frac, args->frac, args->fracsize - 1, 10);
+	}
+      else
+	{
+	  if (args->fracsize < args->scalesize)
+	    hi = 0;
+	  else
+	    {
+	      hi = mpn_divmod (args->tmp, args->frac, args->fracsize, args->scale, args->scalesize);
+	      args->tmp[args->fracsize - args->scalesize] = hi;
+	      hi = args->tmp[0];
+
+	      args->fracsize = args->scalesize;
+	      while (args->fracsize != 0 && args->frac[args->fracsize - 1] == 0)
+		--args->fracsize;
+	      if (args->fracsize == 0)
+		{
+		  /* We're not prepared for an mpn variable with zero
+		     limbs.  */
+		  args->fracsize = 1;
+		  return '0' + hi;
+		}
+	    }
+
+	  cy = __mpn_mul_1 (args->frac, args->frac, args->fracsize, 10);
+	  if (cy != 0)
+	    args->frac[args->fracsize++] = cy;
+	}
+
+      return '0' + hi;
+    }
+
 int
 __printf_fp (FILE *fp,
 	     const struct printf_info *info,
@@ -170,74 +227,22 @@ __printf_fp (FILE *fp,
   /* We need to shift the contents of fp_input by this amount of bits.	*/
   int to_shift = 0;
 
-  /* The fraction of the floting-point value in question  */
-  MPN_VAR(frac);
-  /* and the exponent.	*/
-  int exponent;
-  /* Sign of the exponent.  */
-  int expsign = 0;
   /* Sign of float number.  */
   int is_neg = 0;
-
-  /* Scaling factor.  */
-  MPN_VAR(scale);
-
-  /* Temporary bignum value.  */
-  MPN_VAR(tmp);
-
-  /* Digit which is result of last hack_digit() call.  */
-  int digit;
-
-  /* The type of output format that will be used: 'e'/'E' or 'f'.  */
-  int type;
-
-  /* Counter for number of written characters.	*/
-  int done = 0;
 
   /* General helper (carry limb).  */
   mp_limb_t cy;
 
-  char hack_digit (void)
-    {
-      mp_limb_t hi;
+  /* Digit which is result of last hack_digit() call.  */
+  int digit;
 
-      if (expsign != 0 && type == 'f' && exponent-- > 0)
-	hi = 0;
-      else if (scalesize == 0)
-	{
-	  hi = frac[fracsize - 1];
-	  cy = __mpn_mul_1 (frac, frac, fracsize - 1, 10);
-	  frac[fracsize - 1] = cy;
-	}
-      else
-	{
-	  if (fracsize < scalesize)
-	    hi = 0;
-	  else
-	    {
-	      hi = mpn_divmod (tmp, frac, fracsize, scale, scalesize);
-	      tmp[fracsize - scalesize] = hi;
-	      hi = tmp[0];
+  /* Counter for number of written characters.	*/
+  int done = 0;
 
-	      fracsize = scalesize;
-	      while (fracsize != 0 && frac[fracsize - 1] == 0)
-		--fracsize;
-	      if (fracsize == 0)
-		{
-		  /* We're not prepared for an mpn variable with zero
-		     limbs.  */
-		  fracsize = 1;
-		  return '0' + hi;
-		}
-	    }
+  struct hack_digit_args hack_info;
 
-	  cy = __mpn_mul_1 (frac, frac, fracsize, 10);
-	  if (cy != 0)
-	    frac[fracsize++] = cy;
-	}
-
-      return '0' + hi;
-    }
+  hack_info.expsign = 0;
+  hack_info.exponent = 0;
 
 #ifndef __MINT__
   /* Figure out the decimal point character.  */
@@ -332,12 +337,12 @@ __printf_fp (FILE *fp,
 	}
       else
 	{
-	  fracsize = __mpn_extract_long_double (fp_input,
+	  hack_info.fracsize = __mpn_extract_long_double (fp_input,
 						(sizeof (fp_input) /
 						 sizeof (fp_input[0])),
-						&exponent, &is_neg,
+						&hack_info.exponent, &is_neg,
 						fpnum.ldbl);
-	  to_shift = 1 + fracsize * BITS_PER_MP_LIMB - LDBL_MANT_DIG;
+	  to_shift = 1 + hack_info.fracsize * BITS_PER_MP_LIMB - LDBL_MANT_DIG;
 	}
     }
   else
@@ -358,11 +363,11 @@ __printf_fp (FILE *fp,
 	}
       else
 	{
-	  fracsize = __mpn_extract_double (fp_input,
+	  hack_info.fracsize = __mpn_extract_double (fp_input,
 					   (sizeof (fp_input)
 					    / sizeof (fp_input[0])),
-					   &exponent, &is_neg, fpnum.dbl);
-	  to_shift = 1 + fracsize * BITS_PER_MP_LIMB - DBL_MANT_DIG;
+					   &hack_info.exponent, &is_neg, fpnum.dbl);
+	  to_shift = 1 + hack_info.fracsize * BITS_PER_MP_LIMB - DBL_MANT_DIG;
 	}
     }
 
@@ -398,18 +403,18 @@ __printf_fp (FILE *fp,
      efficient to use variables of the fixed maximum size but because this
      would be really big it could lead to memory problems.  */
   {
-    mp_size_t bignum_size = ((ABS (exponent) + BITS_PER_MP_LIMB - 1)
+    mp_size_t bignum_size = ((ABS (hack_info.exponent) + BITS_PER_MP_LIMB - 1)
 			     / BITS_PER_MP_LIMB + 4) * sizeof (mp_limb_t);
-    frac = (mp_limb_t *) alloca (bignum_size);
-    tmp = (mp_limb_t *) alloca (bignum_size);
-    scale = (mp_limb_t *) alloca (bignum_size);
+    hack_info.frac = (mp_limb_t *) alloca (bignum_size);
+    hack_info.tmp = (mp_limb_t *) alloca (bignum_size);
+    hack_info.scale = (mp_limb_t *) alloca (bignum_size);
   }
 
   /* We now have to distinguish between numbers with positive and negative
      exponents because the method used for the one is not applicable/efficient
      for the other.  */
-  scalesize = 0;
-  if (exponent > 2)
+  hack_info.scalesize = 0;
+  if (hack_info.exponent > 2)
     {
       /* |FP| >= 8.0.  */
       int scaleexpo = 0;
@@ -418,22 +423,22 @@ __printf_fp (FILE *fp,
       const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
       int cnt_h, cnt_l, i;
 
-      if ((exponent + to_shift) % BITS_PER_MP_LIMB == 0)
+      if ((hack_info.exponent + to_shift) % BITS_PER_MP_LIMB == 0)
 	{
-	  MPN_COPY_DECR (frac + (exponent + to_shift) / BITS_PER_MP_LIMB,
-			 fp_input, fracsize);
-	  fracsize += (exponent + to_shift) / BITS_PER_MP_LIMB;
+	  MPN_COPY_DECR (hack_info.frac + (hack_info.exponent + to_shift) / BITS_PER_MP_LIMB,
+			 fp_input, hack_info.fracsize);
+	  hack_info.fracsize += (hack_info.exponent + to_shift) / BITS_PER_MP_LIMB;
 	}
       else
 	{
-	  cy = __mpn_lshift (frac + (exponent + to_shift) / BITS_PER_MP_LIMB,
-			     fp_input, fracsize,
-			     (exponent + to_shift) % BITS_PER_MP_LIMB);
-	  fracsize += (exponent + to_shift) / BITS_PER_MP_LIMB;
+	  cy = __mpn_lshift (hack_info.frac + (hack_info.exponent + to_shift) / BITS_PER_MP_LIMB,
+			     fp_input, hack_info.fracsize,
+			     (hack_info.exponent + to_shift) % BITS_PER_MP_LIMB);
+	  hack_info.fracsize += (hack_info.exponent + to_shift) / BITS_PER_MP_LIMB;
 	  if (cy)
-	    frac[fracsize++] = cy;
+	    hack_info.frac[hack_info.fracsize++] = cy;
 	}
-      MPN_ZERO (frac, (exponent + to_shift) / BITS_PER_MP_LIMB);
+      MPN_ZERO (hack_info.frac, (hack_info.exponent + to_shift) / BITS_PER_MP_LIMB);
 
       assert (powers > &_fpioconst_pow10[0]);
       do
@@ -442,52 +447,52 @@ __printf_fp (FILE *fp,
 
 	  /* The number of the product of two binary numbers with n and m
 	     bits respectively has m+n or m+n-1 bits.	*/
-	  if (exponent >= scaleexpo + powers->p_expo - 1)
+	  if (hack_info.exponent >= scaleexpo + powers->p_expo - 1)
 	    {
-	      if (scalesize == 0)
+	      if (hack_info.scalesize == 0)
 		{
-		  tmpsize = powers->arraysize;
-		  memcpy (tmp, &__tens[powers->arrayoff],
-			  tmpsize * sizeof (mp_limb_t));
+		  hack_info.tmpsize = powers->arraysize;
+		  memcpy (hack_info.tmp, &__tens[powers->arrayoff],
+			  hack_info.tmpsize * sizeof (mp_limb_t));
 		}
 	      else
 		{
-		  cy = __mpn_mul (tmp, scale, scalesize,
+		  cy = __mpn_mul (hack_info.tmp, hack_info.scale, hack_info.scalesize,
 				  &__tens[powers->arrayoff
 					 + _FPIO_CONST_OFFSET],
 				  powers->arraysize - _FPIO_CONST_OFFSET);
-		  tmpsize = scalesize + powers->arraysize - _FPIO_CONST_OFFSET;
+		  hack_info.tmpsize = hack_info.scalesize + powers->arraysize - _FPIO_CONST_OFFSET;
 		  if (cy == 0)
-		    --tmpsize;
+		    --hack_info.tmpsize;
 		}
 
-	      if (MPN_GE (frac, tmp))
+	      if (MPN_GE (hack_info.frac, hack_info.tmp))
 		{
 		  int cnt;
-		  MPN_ASSIGN (scale, tmp);
-		  count_leading_zeros (cnt, scale[scalesize - 1]);
-		  scaleexpo = (scalesize - 2) * BITS_PER_MP_LIMB - cnt - 1;
+		  MPN_ASSIGN (hack_info.scale, hack_info.tmp);
+		  count_leading_zeros (cnt, hack_info.scale[hack_info.scalesize - 1]);
+		  scaleexpo = (hack_info.scalesize - 2) * BITS_PER_MP_LIMB - cnt - 1;
 		  exp10 |= 1 << explog;
 		}
 	    }
 	  --explog;
 	}
       while (powers > &_fpioconst_pow10[0]);
-      exponent = exp10;
+      hack_info.exponent = exp10;
 
       /* Optimize number representations.  We want to represent the numbers
 	 with the lowest number of bytes possible without losing any
 	 bytes. Also the highest bit in the scaling factor has to be set
 	 (this is a requirement of the MPN division routines).  */
-      if (scalesize > 0)
+      if (hack_info.scalesize > 0)
 	{
 	  /* Determine minimum number of zero bits at the end of
 	     both numbers.  */
-	  for (i = 0; scale[i] == 0 && frac[i] == 0; i++)
+	  for (i = 0; hack_info.scale[i] == 0 && hack_info.frac[i] == 0; i++)
 	    ;
 
 	  /* Determine number of bits the scaling factor is misplaced.	*/
-	  count_leading_zeros (cnt_h, scale[scalesize - 1]);
+	  count_leading_zeros (cnt_h, hack_info.scale[hack_info.scalesize - 1]);
 
 	  if (cnt_h == 0)
 	    {
@@ -495,27 +500,27 @@ __printf_fp (FILE *fp,
 		 we only have to remove the trailing empty limbs.  */
 	      if (i > 0)
 		{
-		  MPN_COPY_INCR (scale, scale + i, scalesize - i);
-		  scalesize -= i;
-		  MPN_COPY_INCR (frac, frac + i, fracsize - i);
-		  fracsize -= i;
+		  MPN_COPY_INCR (hack_info.scale, hack_info.scale + i, hack_info.scalesize - i);
+		  hack_info.scalesize -= i;
+		  MPN_COPY_INCR (hack_info.frac, hack_info.frac + i, hack_info.fracsize - i);
+		  hack_info.fracsize -= i;
 		}
 	    }
 	  else
 	    {
-	      if (scale[i] != 0)
+	      if (hack_info.scale[i] != 0)
 		{
-		  count_trailing_zeros (cnt_l, scale[i]);
-		  if (frac[i] != 0)
+		  count_trailing_zeros (cnt_l, hack_info.scale[i]);
+		  if (hack_info.frac[i] != 0)
 		    {
 		      int cnt_l2;
-		      count_trailing_zeros (cnt_l2, frac[i]);
+		      count_trailing_zeros (cnt_l2, hack_info.frac[i]);
 		      if (cnt_l2 < cnt_l)
 			cnt_l = cnt_l2;
 		    }
 		}
 	      else
-		count_trailing_zeros (cnt_l, frac[i]);
+		count_trailing_zeros (cnt_l, hack_info.frac[i]);
 
 	      /* Now shift the numbers to their optimal position.  */
 	      if (i == 0 && BITS_PER_MP_LIMB - cnt_h > cnt_l)
@@ -523,10 +528,10 @@ __printf_fp (FILE *fp,
 		  /* We cannot save any memory.	 So just roll both numbers
 		     so that the scaling factor has its highest bit set.  */
 
-		  (void) __mpn_lshift (scale, scale, scalesize, cnt_h);
-		  cy = __mpn_lshift (frac, frac, fracsize, cnt_h);
+		  (void) __mpn_lshift (hack_info.scale, hack_info.scale, hack_info.scalesize, cnt_h);
+		  cy = __mpn_lshift (hack_info.frac, hack_info.frac, hack_info.fracsize, cnt_h);
 		  if (cy != 0)
-		    frac[fracsize++] = cy;
+		    hack_info.frac[hack_info.fracsize++] = cy;
 		}
 	      else if (BITS_PER_MP_LIMB - cnt_h <= cnt_l)
 		{
@@ -534,73 +539,73 @@ __printf_fp (FILE *fp,
 		     and by packing the non-zero limbs which gain another
 		     free one. */
 
-		  (void) __mpn_rshift (scale, scale + i, scalesize - i,
+		  (void) __mpn_rshift (hack_info.scale, hack_info.scale + i, hack_info.scalesize - i,
 				       BITS_PER_MP_LIMB - cnt_h);
-		  scalesize -= i + 1;
-		  (void) __mpn_rshift (frac, frac + i, fracsize - i,
+		  hack_info.scalesize -= i + 1;
+		  (void) __mpn_rshift (hack_info.frac, hack_info.frac + i, hack_info.fracsize - i,
 				       BITS_PER_MP_LIMB - cnt_h);
-		  fracsize -= frac[fracsize - i - 1] == 0 ? i + 1 : i;
+		  hack_info.fracsize -= hack_info.frac[hack_info.fracsize - i - 1] == 0 ? i + 1 : i;
 		}
 	      else
 		{
 		  /* We can only save the memory of the limbs which are zero.
 		     The non-zero parts occupy the same number of limbs.  */
 
-		  (void) __mpn_rshift (scale, scale + (i - 1),
-				       scalesize - (i - 1),
+		  (void) __mpn_rshift (hack_info.scale, hack_info.scale + (i - 1),
+				       hack_info.scalesize - (i - 1),
 				       BITS_PER_MP_LIMB - cnt_h);
-		  scalesize -= i;
-		  (void) __mpn_rshift (frac, frac + (i - 1),
-				       fracsize - (i - 1),
+		  hack_info.scalesize -= i;
+		  (void) __mpn_rshift (hack_info.frac, hack_info.frac + (i - 1),
+				       hack_info.fracsize - (i - 1),
 				       BITS_PER_MP_LIMB - cnt_h);
-		  fracsize -= frac[fracsize - (i - 1) - 1] == 0 ? i : i - 1;
+		  hack_info.fracsize -= hack_info.frac[hack_info.fracsize - (i - 1) - 1] == 0 ? i : i - 1;
 		}
 	    }
 	}
     }
-  else if (exponent < 0)
+  else if (hack_info.exponent < 0)
     {
       /* |FP| < 1.0.  */
       int exp10 = 0;
       int explog = LDBL_MAX_10_EXP_LOG;
       const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
-      mp_size_t used_limbs = fracsize - 1;
+      mp_size_t used_limbs = hack_info.fracsize - 1;
 
       /* Now shift the input value to its right place.	*/
-      cy = __mpn_lshift (frac, fp_input, fracsize, to_shift);
-      frac[fracsize++] = cy;
-      assert (cy == 1 || (frac[fracsize - 2] == 0 && frac[0] == 0));
+      cy = __mpn_lshift (hack_info.frac, fp_input, hack_info.fracsize, to_shift);
+      hack_info.frac[hack_info.fracsize++] = cy;
+      assert (cy == 1 || (hack_info.frac[hack_info.fracsize - 2] == 0 && hack_info.frac[0] == 0));
 
-      expsign = 1;
-      exponent = -exponent;
+      hack_info.expsign = 1;
+      hack_info.exponent = -hack_info.exponent;
 
       assert (powers != &_fpioconst_pow10[0]);
       do
 	{
 	  --powers;
 
-	  if (exponent >= powers->m_expo)
+	  if (hack_info.exponent >= powers->m_expo)
 	    {
 	      int i, incr, cnt_h, cnt_l;
 	      mp_limb_t topval[2];
 
 	      /* The __mpn_mul function expects the first argument to be
 		 bigger than the second.  */
-	      if (fracsize < powers->arraysize - _FPIO_CONST_OFFSET)
-		cy = __mpn_mul (tmp, &__tens[powers->arrayoff
+	      if (hack_info.fracsize < powers->arraysize - _FPIO_CONST_OFFSET)
+		cy = __mpn_mul (hack_info.tmp, &__tens[powers->arrayoff
 					    + _FPIO_CONST_OFFSET],
 				powers->arraysize - _FPIO_CONST_OFFSET,
-				frac, fracsize);
+				hack_info.frac, hack_info.fracsize);
 	      else
-		cy = __mpn_mul (tmp, frac, fracsize,
+		cy = __mpn_mul (hack_info.tmp, hack_info.frac, hack_info.fracsize,
 				&__tens[powers->arrayoff + _FPIO_CONST_OFFSET],
 				powers->arraysize - _FPIO_CONST_OFFSET);
-	      tmpsize = fracsize + powers->arraysize - _FPIO_CONST_OFFSET;
+	      hack_info.tmpsize = hack_info.fracsize + powers->arraysize - _FPIO_CONST_OFFSET;
 	      if (cy == 0)
-		--tmpsize;
+		--hack_info.tmpsize;
 
-	      count_leading_zeros (cnt_h, tmp[tmpsize - 1]);
-	      incr = (tmpsize - fracsize) * BITS_PER_MP_LIMB
+	      count_leading_zeros (cnt_h, hack_info.tmp[hack_info.tmpsize - 1]);
+	      incr = (hack_info.tmpsize - hack_info.fracsize) * BITS_PER_MP_LIMB
 		     + BITS_PER_MP_LIMB - 1 - cnt_h;
 
 	      assert (incr <= powers->p_expo);
@@ -608,7 +613,7 @@ __printf_fp (FILE *fp,
 	      /* If we increased the exponent by exactly 3 we have to test
 		 for overflow.	This is done by comparing with 10 shifted
 		 to the right position.	 */
-	      if (incr == exponent + 3)
+	      if (incr == hack_info.exponent + 3)
 		{
 		  if (cnt_h <= BITS_PER_MP_LIMB - 4)
 		    {
@@ -630,32 +635,32 @@ __printf_fp (FILE *fp,
 		 against 10.0.  If it is greater or equal to 10.0 the
 		 multiplication was not valid.  This is because we cannot
 		 determine the number of bits in the result in advance.  */
-	      if (incr < exponent + 3
-		  || (incr == exponent + 3 &&
-		      (tmp[tmpsize - 1] < topval[1]
-		       || (tmp[tmpsize - 1] == topval[1]
-			   && tmp[tmpsize - 2] < topval[0]))))
+	      if (incr < hack_info.exponent + 3
+		  || (incr == hack_info.exponent + 3 &&
+		      (hack_info.tmp[hack_info.tmpsize - 1] < topval[1]
+		       || (hack_info.tmp[hack_info.tmpsize - 1] == topval[1]
+			   && hack_info.tmp[hack_info.tmpsize - 2] < topval[0]))))
 		{
 		  /* The factor is right.  Adapt binary and decimal
 		     exponents.	 */
-		  exponent -= incr;
+		  hack_info.exponent -= incr;
 		  exp10 |= 1 << explog;
 
 		  /* If this factor yields a number greater or equal to
 		     1.0, we must not shift the non-fractional digits down. */
-		  if (exponent < 0)
-		    cnt_h += -exponent;
+		  if (hack_info.exponent < 0)
+		    cnt_h += -hack_info.exponent;
 
 		  /* Now we optimize the number representation.	 */
-		  for (i = 0; tmp[i] == 0; ++i);
+		  for (i = 0; hack_info.tmp[i] == 0; ++i);
 		  if (cnt_h == BITS_PER_MP_LIMB - 1)
 		    {
-		      MPN_COPY (frac, tmp + i, tmpsize - i);
-		      fracsize = tmpsize - i;
+		      MPN_COPY (hack_info.frac, hack_info.tmp + i, hack_info.tmpsize - i);
+		      hack_info.fracsize = hack_info.tmpsize - i;
 		    }
 		  else
 		    {
-		      count_trailing_zeros (cnt_l, tmp[i]);
+		      count_trailing_zeros (cnt_l, hack_info.tmp[i]);
 
 		      /* Now shift the numbers to their optimal position.  */
 		      if (i == 0 && BITS_PER_MP_LIMB - 1 - cnt_h > cnt_l)
@@ -664,15 +669,15 @@ __printf_fp (FILE *fp,
 			     number so that the leading digit is in a
 			     separate limb.  */
 
-			  cy = __mpn_lshift (frac, tmp, tmpsize, cnt_h + 1);
-			  fracsize = tmpsize + 1;
-			  frac[fracsize - 1] = cy;
+			  cy = __mpn_lshift (hack_info.frac, hack_info.tmp, hack_info.tmpsize, cnt_h + 1);
+			  hack_info.fracsize = hack_info.tmpsize + 1;
+			  hack_info.frac[hack_info.fracsize - 1] = cy;
 			}
 		      else if (BITS_PER_MP_LIMB - 1 - cnt_h <= cnt_l)
 			{
-			  (void) __mpn_rshift (frac, tmp + i, tmpsize - i,
+			  (void) __mpn_rshift (hack_info.frac, hack_info.tmp + i, hack_info.tmpsize - i,
 					       BITS_PER_MP_LIMB - 1 - cnt_h);
-			  fracsize = tmpsize - i;
+			  hack_info.fracsize = hack_info.tmpsize - i;
 			}
 		      else
 			{
@@ -680,43 +685,43 @@ __printf_fp (FILE *fp,
 			     are zero.	The non-zero parts occupy the same
 			     number of limbs.  */
 
-			  (void) __mpn_rshift (frac, tmp + (i - 1),
-					       tmpsize - (i - 1),
+			  (void) __mpn_rshift (hack_info.frac, hack_info.tmp + (i - 1),
+					       hack_info.tmpsize - (i - 1),
 					       BITS_PER_MP_LIMB - 1 - cnt_h);
-			  fracsize = tmpsize - (i - 1);
+			  hack_info.fracsize = hack_info.tmpsize - (i - 1);
 			}
 		    }
-		  used_limbs = fracsize - 1;
+		  used_limbs = hack_info.fracsize - 1;
 		  (void) used_limbs;
 		}
 	    }
 	  --explog;
 	}
-      while (powers != &_fpioconst_pow10[1] && exponent > 0);
+      while (powers != &_fpioconst_pow10[1] && hack_info.exponent > 0);
       /* All factors but 10^-1 are tested now.	*/
-      if (exponent > 0)
+      if (hack_info.exponent > 0)
 	{
 	  int cnt_l;
 
-	  cy = __mpn_mul_1 (tmp, frac, fracsize, 10);
-	  tmpsize = fracsize;
-	  assert (cy == 0 || tmp[tmpsize - 1] < 20);
+	  cy = __mpn_mul_1 (hack_info.tmp, hack_info.frac, hack_info.fracsize, 10);
+	  hack_info.tmpsize = hack_info.fracsize;
+	  assert (cy == 0 || hack_info.tmp[hack_info.tmpsize - 1] < 20);
 
-	  count_trailing_zeros (cnt_l, tmp[0]);
-	  if (cnt_l < MIN (4, exponent))
+	  count_trailing_zeros (cnt_l, hack_info.tmp[0]);
+	  if (cnt_l < MIN (4, hack_info.exponent))
 	    {
-	      cy = __mpn_lshift (frac, tmp, tmpsize,
-				 BITS_PER_MP_LIMB - MIN (4, exponent));
+	      cy = __mpn_lshift (hack_info.frac, hack_info.tmp, hack_info.tmpsize,
+				 BITS_PER_MP_LIMB - MIN (4, hack_info.exponent));
 	      if (cy != 0)
-		frac[tmpsize++] = cy;
+		hack_info.frac[hack_info.tmpsize++] = cy;
 	    }
 	  else
-	    (void) __mpn_rshift (frac, tmp, tmpsize, MIN (4, exponent));
-	  fracsize = tmpsize;
+	    (void) __mpn_rshift (hack_info.frac, hack_info.tmp, hack_info.tmpsize, MIN (4, hack_info.exponent));
+	  hack_info.fracsize = hack_info.tmpsize;
 	  exp10 |= 1;
-	  assert (frac[fracsize - 1] < 10);
+	  assert (hack_info.frac[hack_info.fracsize - 1] < 10);
 	}
-      exponent = exp10;
+      hack_info.exponent = exp10;
     }
   else
     {
@@ -724,13 +729,13 @@ __printf_fp (FILE *fp,
 	 numbers are in the range of 0.0 <= fp < 8.0.  We simply
 	 shift it to the right place and divide it by 1.0 to get the
 	 leading digit.	 (Of course this division is not really made.)	*/
-      assert (0 <= exponent && exponent < 3 &&
-	      exponent + to_shift < BITS_PER_MP_LIMB);
+      assert (0 <= hack_info.exponent && hack_info.exponent < 3 &&
+	      hack_info.exponent + to_shift < BITS_PER_MP_LIMB);
 
       /* Now shift the input value to its right place.	*/
-      cy = __mpn_lshift (frac, fp_input, fracsize, (exponent + to_shift));
-      frac[fracsize++] = cy;
-      exponent = 0;
+      cy = __mpn_lshift (hack_info.frac, fp_input, hack_info.fracsize, (hack_info.exponent + to_shift));
+      hack_info.frac[hack_info.fracsize++] = cy;
+      hack_info.exponent = 0;
     }
 
   {
@@ -746,7 +751,7 @@ __printf_fp (FILE *fp,
 
     if (_tolower (info->spec) == 'e')
       {
-	type = info->spec;
+	hack_info.type = info->spec;
 	intdig_max = 1;
 	fracdig_min = fracdig_max = info->prec < 0 ? 6 : info->prec;
 	chars_needed = 1 + 1 + fracdig_max + 1 + 1 + 4;
@@ -756,13 +761,13 @@ __printf_fp (FILE *fp,
       }
     else if (info->spec == 'f')
       {
-	type = 'f';
+	hack_info.type = 'f';
 	fracdig_min = fracdig_max = info->prec < 0 ? 6 : info->prec;
-	if (expsign == 0)
+	if (hack_info.expsign == 0)
 	  {
-	    intdig_max = exponent + 1;
+	    intdig_max = hack_info.exponent + 1;
 	    /* This can be really big!	*/  /* XXX Maybe malloc if too big? */
-	    chars_needed = exponent + 1 + 1 + fracdig_max;
+	    chars_needed = hack_info.exponent + 1 + 1 + fracdig_max;
 	  }
 	else
 	  {
@@ -775,18 +780,18 @@ __printf_fp (FILE *fp,
     else
       {
 	dig_max = info->prec < 0 ? 6 : (info->prec == 0 ? 1 : info->prec);
-	if ((expsign == 0 && exponent >= dig_max)
-	    || (expsign != 0 && exponent > 4))
+	if ((hack_info.expsign == 0 && hack_info.exponent >= dig_max)
+	    || (hack_info.expsign != 0 && hack_info.exponent > 4))
 	  {
-	    type = isupper (info->spec) ? 'E' : 'e';
+	    hack_info.type = isupper (info->spec) ? 'E' : 'e';
 	    fracdig_max = dig_max - 1;
 	    intdig_max = 1;
 	    chars_needed = 1 + 1 + fracdig_max + 1 + 1 + 4;
 	  }
 	else
 	  {
-	    type = 'f';
-	    intdig_max = expsign == 0 ? exponent + 1 : 0;
+	    hack_info.type = 'f';
+	    intdig_max = hack_info.expsign == 0 ? hack_info.exponent + 1 : 0;
 	    fracdig_max = dig_max - intdig_max;
 	    /* We need space for the significant digits and perhaps for
 	       leading zeros when < 1.0.  Pessimistic guess: dig_max.  */
@@ -818,18 +823,18 @@ __printf_fp (FILE *fp,
     cp = startp = buffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */
-    if (expsign == 0 || type != 'f')
+    if (hack_info.expsign == 0 || hack_info.type != 'f')
       {
-	assert (expsign == 0 || intdig_max == 1);
+	assert (hack_info.expsign == 0 || intdig_max == 1);
 	while (intdig_no < intdig_max)
 	  {
 	    ++intdig_no;
-	    *cp++ = hack_digit ();
+	    *cp++ = hack_digit (&hack_info);
 	  }
 	significant = 1;
 	if (info->alt
 	    || fracdig_min > 0
-	    || (fracdig_max > 0 && (fracsize > 1 || frac[0] != 0)))
+	    || (fracdig_max > 0 && (hack_info.fracsize > 1 || hack_info.frac[0] != 0)))
 	  *cp++ = decimal;
       }
     else
@@ -837,16 +842,16 @@ __printf_fp (FILE *fp,
 	/* |fp| < 1.0 and the selected type is 'f', so put "0."
 	   in the buffer.  */
 	*cp++ = '0';
-	--exponent;
+	--hack_info.exponent;
 	*cp++ = decimal;
       }
 
     /* Generate the needed number of fractional digits.	 */
     while (fracdig_no < fracdig_min
-	   || (fracdig_no < fracdig_max && (fracsize > 1 || frac[0] != 0)))
+	   || (fracdig_no < fracdig_max && (hack_info.fracsize > 1 || hack_info.frac[0] != 0)))
       {
 	++fracdig_no;
-	*cp = hack_digit ();
+	*cp = hack_digit (&hack_info);
 	if (*cp != '0')
 	  significant = 1;
 	else if (significant == 0)
@@ -859,7 +864,7 @@ __printf_fp (FILE *fp,
       }
 
     /* Do rounding.  */
-    digit = hack_digit ();
+    digit = hack_digit (&hack_info);
     if (digit > '4')
       {
 	char *tp = cp;
@@ -867,16 +872,16 @@ __printf_fp (FILE *fp,
 	if (digit == '5' && (*(cp - 1) & 1) == 0)
 	  {
 	    /* This is the critical case.	 */
-	    if (fracsize == 1 && frac[0] == 0)
+	    if (hack_info.fracsize == 1 && hack_info.frac[0] == 0)
 	      /* Rest of the number is zero -> round to even.
 		 (IEEE 754-1985 4.1 says this is the default rounding.)  */
 	      goto do_expo;
-	    else if (scalesize == 0)
+	    else if (hack_info.scalesize == 0)
 	      {
 		/* Here we have to see whether all limbs are zero since no
 		   normalization happened.  */
-		size_t lcnt = fracsize;
-		while (lcnt >= 1 && frac[lcnt - 1] == 0)
+		size_t lcnt = hack_info.fracsize;
+		while (lcnt >= 1 && hack_info.frac[lcnt - 1] == 0)
 		  --lcnt;
 		if (lcnt == 0)
 		  /* Rest of the number is zero -> round to even.
@@ -911,10 +916,10 @@ __printf_fp (FILE *fp,
 	    else
 	      /* It is more critical.  All digits were 9's.  */
 	      {
-		if (type != 'f')
+		if (hack_info.type != 'f')
 		  {
 		    *startp = '1';
-		    exponent += expsign == 0 ? 1 : -1;
+		    hack_info.exponent += hack_info.expsign == 0 ? 1 : -1;
 		  }
 		else if (intdig_no == dig_max)
 		  {
@@ -934,9 +939,9 @@ __printf_fp (FILE *fp,
 		    fracdig_no += intdig_no;
 		    intdig_no = 1;
 		    fracdig_max = intdig_max - intdig_no;
-		    ++exponent;
+		    ++hack_info.exponent;
 		    /* Now we must print the exponent.	*/
-		    type = isupper (info->spec) ? 'E' : 'e';
+		    hack_info.type = isupper (info->spec) ? 'E' : 'e';
 		  }
 		else
 		  {
@@ -975,28 +980,28 @@ __printf_fp (FILE *fp,
       cp = group_number (startp, cp, intdig_no, grouping, thousands_sep);
 
     /* Write the exponent if it is needed.  */
-    if (type != 'f')
+    if (hack_info.type != 'f')
       {
-	*cp++ = type;
-	*cp++ = expsign ? '-' : '+';
+	*cp++ = hack_info.type;
+	*cp++ = hack_info.expsign ? '-' : '+';
 
 	/* Find the magnitude of the exponent.	*/
 	expscale = 10;
-	while (expscale <= exponent)
+	while (expscale <= hack_info.exponent)
 	  expscale *= 10;
 
-	if (exponent < 10)
+	if (hack_info.exponent < 10)
 	  /* Exponent always has at least two digits.  */
 	  *cp++ = '0';
 	else
 	  do
 	    {
 	      expscale /= 10;
-	      *cp++ = '0' + (exponent / expscale);
-	      exponent %= expscale;
+	      *cp++ = '0' + (hack_info.exponent / expscale);
+	      hack_info.exponent %= expscale;
 	    }
 	  while (expscale > 10);
-	*cp++ = '0' + exponent;
+	*cp++ = '0' + hack_info.exponent;
       }
 
     /* Compute number of characters which must be filled with the padding
