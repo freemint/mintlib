@@ -86,6 +86,10 @@ install-include: remove-stale
 	    $(INSTALL) -m 644 $$p $(DESTDIR)$(includedir); \
 	  else :; fi; \
 	done
+	@for subdir in $(SUBDIRS); do \
+	  echo "Making $@ in $$subdir"; \
+	  $(MAKE) -C $$subdir $@ || exit 1; \
+	done
 
 ifeq (${HEADER_CLEANUP}, no)
 remove-stale:
@@ -102,6 +106,10 @@ uninstall-include:
 	    echo " rm -f $(includedir)/$$p"; \
 	    rm -f $(DESTDIR)$(includedir)/$$p; \
 	  else :; fi; \
+	done
+	@for subdir in $(SUBDIRS); do \
+	  echo "Making $@ in $$subdir"; \
+	  $(MAKE) -C $$subdir $@; \
 	done
 
 install-lib:

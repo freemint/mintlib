@@ -40,6 +40,10 @@ install-include:
 	    $(INSTALL) -m 644 $$p $(DESTDIR)$(includedir)/$(subdir); \
 	  else :; fi; \
 	done
+	@for subdir in $(SUBDIRS); do \
+	  echo "Making $@ in $$subdir"; \
+	  $(MAKE) -C $$subdir $@ || exit 1; \
+	done
 	
 uninstall-include:
 	@list='$(includefiles)'; \
@@ -48,6 +52,10 @@ uninstall-include:
 	    echo " rm -f $(includedir)/$(subdir)/$$p"; \
 	    rm -f $(DESTDIR)$(includedir)/$(subdir)/$$p; \
 	  else :; fi; \
+	done
+	@for subdir in $(SUBDIRS); do \
+	  echo "Making $@ in $$subdir"; \
+	  $(MAKE) -C $$subdir $@; \
 	done
 
 install-lib:
