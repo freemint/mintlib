@@ -45,9 +45,10 @@ static int lock_fd = -1;
 __libc_lock_define_initialized (static, lock)
 
 
-/* Prototypes for local functions.  */
-static void noop_handler __P ((int __sig));
-
+static void noop_handler (int sig)
+{
+  /* We simply return which makes the `fcntl' call return with an error.  */
+}
 
 /* We cannot simply return in error cases.  We have to close the file
    and perhaps restore the signal handler.  */
@@ -125,7 +126,7 @@ __lckpwdf (void)
   memset (&new_act, '\0', sizeof (struct sigaction));
   new_act.sa_handler = noop_handler;
   sigfillset (&new_act.sa_mask);
-  new_act.sa_flags = 0ul;
+  new_act.sa_flags = 0;
 
   /* Install new action handler for alarm and save old.  */
   if (sigaction (SIGALRM, &new_act, &saved_act) < 0)
@@ -177,10 +178,3 @@ __ulckpwdf (void)
   return result;
 }
 weak_alias (__ulckpwdf, ulckpwdf)
-
-
-static void
-noop_handler (int sig)
-{
-  /* We simply return which makes the `fcntl' call return with an error.  */
-}

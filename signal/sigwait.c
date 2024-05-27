@@ -23,13 +23,18 @@
 
 __typeof__(sigwait) __sigwait;
 
-/* This is our dummy signal handler we use here.  */
-static void ignore_signal (int sig);
-
 /* Place where to remember which signal we got.  Please note that this
    implementation cannot be used for the threaded libc.  The
    libpthread must provide an own version.  */
 static int was_sig;
+
+
+/* This is our dummy signal handler we use here.  */
+static void ignore_signal (int sig)
+{
+  /* Remember the signal.  */
+  was_sig = sig;
+}
 
 
 int
@@ -82,11 +87,3 @@ __sigwait (const sigset_t *set, int *sig)
   return was_sig == -1 ? -1 : 0;
 }
 weak_alias (__sigwait, sigwait)
-
-
-static void
-ignore_signal (int sig)
-{
-  /* Remember the signal.  */
-  was_sig = sig;
-}

@@ -97,6 +97,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   pc_offset = offset;
   pc_scale = scale;
 
+  /* FIXME: should use SA_SIGINFO & sa_sigaction */
   act.sa_handler = (sighandler_t) &profil_counter;
   act.sa_flags = 0; //SA_RESTART;
   sigfillset (&act.sa_mask);

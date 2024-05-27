@@ -11,17 +11,15 @@
 __sighandler_t __bsd_signal(int sig, __sighandler_t func);
 
 
-#ifdef __MSHORT__
+#if NEED_SIGNAL_TRAMPOLINE
 /* trampoline code: for any caught signal, converts the 32 bit signal
  * number MiNT passed us into a 16 bit one, and jumps to the handler
  * we previously established
  */
-
-void __CDECL _trampoline (long, long);
-
 /* the argument is on the stack */
-void __CDECL _trampoline(long sig, long code)
+void __CDECL __signal_trampoline(long sig, long code)
 {
+	/* FIXME: should be typeof(sa_sigaction) */
 	void (*func) (int, int);
 
 	func = (void (*) (int, int)) _sig_handler[sig];
@@ -40,7 +38,7 @@ __bsd_signal(int sig, __sighandler_t func)
 	__sighandler_t oldfunc;
 	static short have_psignal = 1;
 	
-#ifdef __MSHORT__
+#if NEED_SIGNAL_TRAMPOLINE
 /* NOTE: MiNT passes 32 bit numbers for signals, so we want our
  * own signal dispatcher to switch these to 16 bit ints
  */
@@ -51,7 +49,7 @@ __bsd_signal(int sig, __sighandler_t func)
 	oldfunc = _sig_handler[sig];
 	_sig_handler[sig] = func;
 	if (func != SIG_DFL && func != SIG_IGN)
-		func = (__sighandler_t) _trampoline;
+		func = (__sighandler_t) __signal_trampoline;
 #endif
 	if (have_psignal) {
 		old = Psignal((short)sig, (long)func);
@@ -63,14 +61,15 @@ __bsd_signal(int sig, __sighandler_t func)
 		}
 		else {
 			func = (__sighandler_t) old;
-#ifdef __MSHORT__
-			if (func == (__sighandler_t) _trampoline) func = oldfunc;
+#if NEED_SIGNAL_TRAMPOLINE
+			if (func == (__sighandler_t) __signal_trampoline) func = oldfunc;
 #endif
 			return func;
 		}
 	}
-	
-#ifndef __MSHORT__ 
+
+	/* plain TOS emulation */
+#if !NEED_SIGNAL_TRAMPOLINE
 	if (sig < 0 || sig >= NSIG) {
 		__set_errno (ERANGE);
 		return SIG_ERR;

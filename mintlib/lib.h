@@ -24,6 +24,13 @@
 #  endif
 #endif
 
+#if defined(__MSHORT__) || defined(__FASTCALL__)
+#define NEED_SIGNAL_TRAMPOLINE 1
+void __CDECL __signal_trampoline (long, long);
+#else
+#define NEED_SIGNAL_TRAMPOLINE 0
+#endif
+
 /* Write formatted output to STREAM from argument list ARG using
    fputc like function PUTFUNCTION.  This is provided for binary
    compatibility with older versions.  */
