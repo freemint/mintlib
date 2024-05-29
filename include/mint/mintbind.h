@@ -361,6 +361,24 @@ __extension__								\
 	__retvalue;							\
 })
 
+#define trap_1_w_noclobber(n)							\
+__extension__								\
+({									\
+	register long __retvalue __asm__("d0");				\
+	    								\
+	__asm__ volatile						\
+	(								\
+		"movw	%1,%%sp@-\n\t"					\
+		"trap	#1\n\t"						\
+		"addql	#2,%%sp\n\t"					\
+	: "=r"(__retvalue)			/* outputs */		\
+	: "g"(n)				/* inputs  */		\
+	: __CLOBBER_RETURN("d0") "cc"    /* clobbered regs */	\
+	  AND_MEMORY							\
+	);								\
+	__retvalue;							\
+})
+
 
 #define Srealloc(newsize)					\
 		trap_1_wl(0x15, (long)(newsize))
@@ -410,7 +428,7 @@ __extension__								\
 #define Psignal(sig, handler)					\
 		trap_1_wwl(0x112, (short)(sig), (long)(handler))
 #define Pvfork()						\
-		trap_1_w(0x113)
+		trap_1_w_noclobber(0x113)
 #define Pgetgid()						\
 		(int)trap_1_w(0x114)
 #define Psetgid(id)						\
