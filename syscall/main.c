@@ -143,7 +143,6 @@ main(int argc, char **argv)
 
 		generate_sysbind_h(path);
 		generate_traps_h(path);
-	/*	generate_traps_as_files("."); */
 	}
 
 	return error;

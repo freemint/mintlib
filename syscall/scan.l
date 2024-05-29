@@ -190,6 +190,12 @@ space		[ \t\n]
 	return _IDENT_PASSTHROUGH;
 }
 
+"noclobber"	{
+	strncpy(yylval.ident, yytext, STRMAX);
+	yylval.ident[STRMAX] = '\0';
+	return _IDENT_NOCLOBBER;
+}
+
 {nonzerodigit}{digit}*	{
 	yylval.value = strtol(yytext, NULL, 0);
 	return Integer;

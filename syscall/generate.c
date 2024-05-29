@@ -33,8 +33,9 @@
 #include <string.h>
 
 
-static void generate_trap(struct syscall *call, char *buf, int trapnr)
+static struct call *generate_trap(struct syscall *call, int trapnr)
 {
+	char buf[20];
 	char *s = buf;
 	struct arg *l;
 
@@ -44,9 +45,10 @@ static void generate_trap(struct syscall *call, char *buf, int trapnr)
 		if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 		{
 			*s++ = 'l';
-		}
-		else switch (l->type)
+		} else
 		{
+			switch (l->type)
+			{
 			case TYPE_INT:
 			case TYPE_CHAR:
 			case TYPE_SHORT:
@@ -60,17 +62,20 @@ static void generate_trap(struct syscall *call, char *buf, int trapnr)
 			case TYPE_OFF_T:
 				*s++ = 'l';
 				break;
+			case TYPE_IDENT: /* pass by value not supported */
 			default:
 				printf("invalid type specification for %s (%s)\n",
 					call->name, l->name);
 				exit(1);
+			}
 		}
 
 		l = l->next;
 	}
 
 	*s = '\0';
-	add_trap(trapnr, buf);
+	strcpy(call->callname, buf);
+	return add_trap(trapnr, buf, call->status == SYSCALL_NOCLOBBER);
 }
 
 
@@ -81,14 +86,18 @@ static void print_casted_args(FILE *out, struct syscall *call)
 	l = call->args;
 	while (l)
 	{
+		int skip = strcmp(l->name, "DUMMY") == 0;
+		
 		fprintf(out, ", ");
 
+#if 0
 		if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 		{
 			fprintf(out, "(long)");
-		}
-		else switch (l->type)
+		} else
 		{
+			switch (l->type)
+			{
 			case TYPE_INT:
 			case TYPE_CHAR:
 			case TYPE_SHORT:
@@ -108,10 +117,96 @@ static void print_casted_args(FILE *out, struct syscall *call)
 				printf("invalid type specification for %s (%s)\n",
 					call->name, l->name);
 				exit(1);
+			}
 		}
 		fprintf(out, "(%s)", l->name);
+		if (skip)
+			fprintf(out, "(0)");
+		else
+			fprintf(out, "(%s)", l->name);
+#else
+		/* no need to cast here; that is already done in the trap_xxx macros */
+		if (skip)
+			fprintf(out, "0");
+		else
+			fprintf(out, "%s", l->name);
+#endif
 
 		l = l->next;
+	}
+}
+
+
+static void generate_ret_type(FILE *out, struct syscall *call)
+{
+	if (call->ret && (call->ret->type != TYPE_VOID || (call->ret->flags & (FLAG_POINTER | FLAG_ARRAY))))
+	{
+		switch (call->ret->type)
+		{
+		case TYPE_VOID:
+			fprintf(out, "void");
+			break;
+		case TYPE_INT:
+		case TYPE_CHAR:
+		case TYPE_SHORT:
+			fprintf(out, "short");
+			break;
+		case TYPE_UNSIGNED:
+		case TYPE_UCHAR:
+		case TYPE_USHORT:
+			fprintf(out, "unsigned short");
+			break;
+		case TYPE_LONG:
+		case TYPE_OFF_T:
+			fprintf(out, "long");
+			break;
+		case TYPE_ULONG:
+			fprintf(out, "unsigned long");
+			break;
+		case TYPE_IDENT:
+			fprintf(out, "%s", call->ret->types);
+			break;
+		}
+		if (call->ret->flags & FLAG_POINTER)
+			fprintf(out, " *");
+	} else
+	{
+		fprintf(out, "void");
+	}
+}
+
+static void generate_args(FILE *out, struct syscall *call)
+{
+	struct arg *l;
+	
+	l = call->args;
+	while (l)
+	{
+		int skip = strcmp(l->name, "DUMMY") == 0;
+		
+		if (!skip)
+		{
+			if (l->flags & FLAG_CONST)
+				fprintf(out, "const %s ", l->types);
+			else
+				fprintf(out, "%s ", l->types);
+			
+			if (l->flags & FLAG_POINTER)
+				fprintf(out, "*");
+			
+			if (l->flags & FLAG_POINTER2)
+				fprintf(out, "*");
+			
+			fprintf(out, "%s", l->name);
+			
+			if (l->flags & FLAG_ARRAY)
+				fprintf(out, " [%i]", l->ar_size);
+		}
+					
+		l = l->next;
+			
+		if (l && !skip)
+			fprintf(out, ", ");
 	}
 }
 
@@ -127,12 +222,11 @@ void generate_bindings_proto(FILE *out, struct systab *tab, int trapnr)
 
 		if (call && is_syscall(call))
 		{
-			fprintf(out, "long __%s", call->name);
-
-			fprintf(out, "(");
+			generate_ret_type(out, call);
+			fprintf(out, " %s(", call->name);
 
 			if (call->args)
-				generate_args(out, call->args, "", 1, ", ");
+				generate_args(out, call);
 			else
 				fprintf(out, "void");
 
@@ -160,8 +254,8 @@ void generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 			l = call->args;
 			while (l)
 			{
-				if (l->flags & FLAG_STRUCT
-				    || l->flags & FLAG_UNION)
+				/* FIXME: filter out duplicates already used in previous calls */
+				if ((l->flags & FLAG_STRUCT) || (l->flags & FLAG_UNION))
 				{
 					fprintf(out, "%s;\n", l->types);
 				}
@@ -178,27 +272,30 @@ void generate_bindings_impl(FILE *out, struct systab *tab, int trapnr)
 
 		if (call && is_syscall(call))
 		{
-			char trap[128];
+			struct call *trap;
 
-			fprintf(out, "static inline long __%s", call->name);
-			fprintf(out, "(");
+			fprintf(out, "static inline ");
+			generate_ret_type(out, call);
+			fprintf(out, " %s(", call->name);
 
 			if (call->args)
-				generate_args(out, call->args, "", 1, ", ");
+				generate_args(out, call);
 			else
 				fprintf(out, "void");
 
 			fprintf(out, ")\n");
-			fprintf(out, "{ ");
+			fprintf(out, "{\n");
 
-			generate_trap(call, trap, trapnr);
+			trap = generate_trap(call, trapnr);
 
-			fprintf(out, "return __trap_%i_w%s", trapnr, trap);
-			fprintf(out, "(0x%x", i);
+			fprintf(out, "\t");
+			if (call->ret && (call->ret->type != TYPE_VOID || (call->ret->flags & (FLAG_POINTER | FLAG_ARRAY))))
+				fprintf(out, "return ");
+			fprintf(out, "__trap_%i_w%s%s(0x%x", trapnr, trap->call, trap->noclobber ? "_noclobber" : "", i);
 
 			print_casted_args(out, call);
 
-			fprintf(out, "); }\n\n");
+			fprintf(out, ");\n}\n\n");
 		}
 	}
 }
@@ -214,7 +311,7 @@ void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 
 		if (call && is_syscall(call))
 		{
-			char trap[128];
+			struct call *trap;
 			struct arg *l;
 			char arg;
 
@@ -223,7 +320,7 @@ void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 			l = call->args;
 			while (l)
 			{
-				int skip = (strcmp(l->name, "DUMMY") == 0);
+				int skip = strcmp(l->name, "DUMMY") == 0;
 
 				if (!skip)
 					fprintf(out, "%c", arg);
@@ -235,50 +332,49 @@ void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 			}
 			fprintf(out, ") ");
 
-			generate_trap(call, trap, trapnr);
+			trap = generate_trap(call, trapnr);
 
 			if (call->ret)
 			{
 				fprintf(out, "(");
 				switch (call->ret->type)
 				{
-					case TYPE_VOID:
-						fprintf(out, "void");
-						break;
-					case TYPE_INT:
-					case TYPE_CHAR:
-					case TYPE_SHORT:
-						fprintf(out, "short");
-						break;
-					case TYPE_UNSIGNED:
-					case TYPE_UCHAR:
-					case TYPE_USHORT:
-						fprintf(out, "unsigned short");
-						break;
-					case TYPE_LONG:
-						fprintf(out, "long");
-						break;
-					case TYPE_ULONG:
-						fprintf(out, "unsigned long");
-						break;
-					case TYPE_OFF_T:
-						fprintf(out, "off_t");
-						break;
-					case TYPE_IDENT:
-						fprintf(out, "%s", call->ret->types);
-						break;
-					default:
-						printf("invalid type specification for %s (%s)\n",
-							call->name, call->ret->name);
-						exit (1);
+				case TYPE_VOID:
+					fprintf(out, "void");
+					break;
+				case TYPE_INT:
+				case TYPE_CHAR:
+				case TYPE_SHORT:
+					fprintf(out, "short");
+					break;
+				case TYPE_UNSIGNED:
+				case TYPE_UCHAR:
+				case TYPE_USHORT:
+					fprintf(out, "unsigned short");
+					break;
+				case TYPE_LONG:
+					fprintf(out, "long");
+					break;
+				case TYPE_ULONG:
+					fprintf(out, "unsigned long");
+					break;
+				case TYPE_OFF_T:
+					fprintf(out, "off_t");
+					break;
+				case TYPE_IDENT:
+					fprintf(out, "%s", call->ret->types);
+					break;
+				default:
+					printf("invalid type specification for %s (%s)\n",
+						call->name, call->ret->name);
+					exit (1);
 				}
 				if (call->ret->flags & FLAG_POINTER)
 					fprintf(out, " *");
 				fprintf(out, ")");
 			}
 
-			fprintf(out, "trap_%i_w%s", trapnr, trap);
-			fprintf(out, "(0x%x", i);
+			fprintf(out, "trap_%i_w%s%s(0x%x", trapnr, trap->call, trap->noclobber ? "_noclobber" : "", i);
 
 			arg = 'a';
 			l = call->args;
@@ -291,9 +387,10 @@ void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 				if ((l->flags & FLAG_POINTER) || (l->flags & FLAG_ARRAY))
 				{
 					fprintf(out, "(long)");
-				}
-				else switch (l->type)
+				} else
 				{
+					switch (l->type)
+					{
 					case TYPE_INT:
 					case TYPE_CHAR:
 					case TYPE_SHORT:
@@ -311,6 +408,7 @@ void generate_bindings_old(FILE *out, struct systab *tab, int trapnr)
 						printf("invalid type specification for %s (%s)\n",
 							call->name, l->name);
 						exit (1);
+					}
 				}
 
 				if (skip)

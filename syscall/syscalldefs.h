@@ -48,7 +48,9 @@ struct syscall
 #define SYSCALL_UNIMPLEMENTED	1
 #define SYSCALL_UNSUPPORTED	2
 #define SYSCALL_PASSTHROUGH	3
-#define SYSCALL_UNDEFINED	4
+#define SYSCALL_NOCLOBBER	4
+#define SYSCALL_UNDEFINED	5
+	char callname[20];
 };
 
 struct arg

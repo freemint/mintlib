@@ -114,6 +114,7 @@ static struct arg *make_arg(int type, const char *s);
 %token	<ident>	_IDENT_UNSUPPORTED
 %token	<ident>	_IDENT_UNIMPLEMENTED
 %token	<ident>	_IDENT_PASSTHROUGH
+%token	<ident>	_IDENT_NOCLOBBER
 
 %token	<ident>	Identifier
 %token	<value>	Integer
@@ -509,6 +510,10 @@ status
 |	_IDENT_PASSTHROUGH
 	{
 		$$ = SYSCALL_PASSTHROUGH;
+	}
+|	_IDENT_NOCLOBBER
+	{
+		$$ = SYSCALL_NOCLOBBER;
 	}
 ;
 

@@ -77,116 +77,26 @@ print_head(FILE *out, const char *myname)
 	fprintf(out, "\n");
 }
 
-void
-generate_args(FILE *out, struct arg *l, const char *pre, int flag, const char *post)
-{
-	while (l)
-	{
-		if (l->flags & FLAG_CONST)
-			fprintf(out, "%sconst %s ", pre, l->types);
-		else
-			fprintf(out, "%s%s ", pre, l->types);
-		
-		if (l->flags & FLAG_POINTER)
-			fprintf(out, "*");
-		
-		if (l->flags & FLAG_POINTER2)
-			fprintf(out, "*");
-		
-		fprintf(out, "%s", l->name);
-		
-		if (l->flags & FLAG_ARRAY)
-			fprintf(out, " [%i]", l->ar_size);
-		
-		if (l->next || flag)
-			fprintf(out, "%s", post);
-		
-		l = l->next;
-	}
-}
-
-int
-arg_length(struct arg *l)
-{
-	int length = 0;
-	
-	while (l)
-	{
-		length++;
-		l = l->next;
-	}
-	
-	return length;
-}
-
-int
-arg_size_bytes(struct arg *l)
-{
-	int size = 0;
-	
-	while (l)
-	{
-		if (l->flags & (FLAG_POINTER|FLAG_ARRAY))
-		{
-			size += 4;
-		}
-		else switch (l->type)
-		{
-			default:
-				assert(0); break;
-			case TYPE_IDENT:
-			case TYPE_VOID:
-				assert(0); break;
-			case TYPE_INT:
-			case TYPE_CHAR: 
-			case TYPE_SHORT:
-			case TYPE_UNSIGNED:
-			case TYPE_UCHAR:
-			case TYPE_USHORT:
-				size += 2; break;
-			case TYPE_LONG:
-			case TYPE_ULONG:
-				size += 4; break;
-		}
-		
-		l = l->next;
-	}
-	
-	return size;
-}
-
-int
-is_regular_syscall(struct syscall *call)
-{
-	return (call->status == SYSCALL_REGULAR);
-}
-
-int
-is_passthrough_syscall(struct syscall *call)
-{
-	return (call->status == SYSCALL_PASSTHROUGH);
-}
-
-int
-is_syscall(struct syscall *call)
+int is_syscall(struct syscall *call)
 {
 	int ret = 0;
 
 	switch (call->status)
 	{
-		case SYSCALL_REGULAR:
-		case SYSCALL_UNIMPLEMENTED:
-		case SYSCALL_UNSUPPORTED:
-			ret = 1;
-			break;
-		case SYSCALL_PASSTHROUGH:
-			ret = (strcmp(call->name, "passthrough") != 0);
-			break;
-		case SYSCALL_UNDEFINED:
-			break;
-		default:
-			assert(0);
-			break;
+	case SYSCALL_REGULAR:
+	case SYSCALL_UNIMPLEMENTED:
+	case SYSCALL_UNSUPPORTED:
+	case SYSCALL_NOCLOBBER:
+		ret = 1;
+		break;
+	case SYSCALL_PASSTHROUGH:
+		ret = strcmp(call->name, "passthrough") != 0;
+		break;
+	case SYSCALL_UNDEFINED:
+		break;
+	default:
+		assert(0);
+		break;
 	}
 
 	return ret;

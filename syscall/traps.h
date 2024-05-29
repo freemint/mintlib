@@ -28,10 +28,17 @@
 #ifndef _traps_h
 #define _traps_h
 
+struct call
+{
+	struct call *next;
+	int nr;
+	int noclobber;
+	char call[20];
+};
 
-void add_trap(int nr, const char *call);
 
-void generate_traps_as_files(const char *path);
+struct call *add_trap(int nr, const char *call, int noclobber);
+
 void generate_traps_h(const char *path);
 
 

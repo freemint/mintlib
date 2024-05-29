@@ -34,25 +34,19 @@
 #include "syscallparser.h"
 
 
-struct call
-{
-	struct call *next;
-	int nr;
-	char *call;
-};
-
 static struct call *root = NULL;
 
-void
-add_trap(int nr, const char *call)
+struct call *add_trap(int nr, const char *call, int noclobber)
 {
 	struct call *l;
 
 	l = root;
 	while (l)
 	{
-		if ((l->nr == nr) && !strcmp(l->call, call))
-			return;
+		if (l->nr == nr && l->noclobber == noclobber && strcmp(l->call, call) == 0)
+		{
+			return l;
+		}
 
 		l = l->next;
 	}
@@ -65,23 +59,20 @@ add_trap(int nr, const char *call)
 	}
 
 	l->nr = nr;
-	l->call = strdup(call);
-
-	if (!l->call)
-	{
-		perror("malloc");
-		exit(1);
-	}
+	l->noclobber = noclobber;
+	strcpy(l->call, call);
 
 	l->next = root;
 	root = l;
+	return l;
 }
 
 static void
-generate_trap_impl(FILE *out, int nr, const char *call, int macro)
+generate_trap_impl(FILE *out, const struct call *l, int macro)
 {
 	const char *macro0 = macro ? " \\" : "";
 	int size = 2;
+	const char *call = l->call;
 	int len = strlen(call), split_flag = 0;
 	int i;
 
@@ -92,12 +83,12 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 
 	if (macro)
 	{
-		fprintf(out, "#define trap_%i_w%s(n", nr, call);
+		fprintf(out, "#define trap_%i_w%s%s(n", l->nr, call, l->noclobber ? "_noclobber" : "");
 	}
 	else
 	{
 		fprintf(out, "long\n");
-		fprintf(out, "__trap_%i_w%s(short n", nr, call);
+		fprintf(out, "__trap_%i_w%s%s(short n", l->nr, call, l->noclobber ? "_noclobber" : "");
 	}
 
 	i = 0;
@@ -189,7 +180,7 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 
 	if (!split_flag)
 	{
-		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
+		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", l->nr, macro0);
 		if (size <= 8)
 			fprintf(out, "\t\t\"addql\t#%i,%%%%sp\"%s\n", size, macro0);
 		else
@@ -211,7 +202,10 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 
 	if (!split_flag)
 	{
-		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\", \"cc\" /* clobbered regs */%s\n", macro0);
+		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\")");
+		if (!l->noclobber)
+			fprintf(out, " \"d1\", \"d2\", \"a0\", \"a1\", \"a2\",");
+		fprintf(out, " \"cc\" /* clobbered regs */%s\n", macro0);
 		fprintf(out, "\t  AND_MEMORY%s\n", macro0);
 	}
 
@@ -222,11 +216,14 @@ generate_trap_impl(FILE *out, int nr, const char *call, int macro)
 		fprintf(out, "\t%s\n", macro0);
 		fprintf(out, "\t__asm__ volatile%s\n", macro0);
 		fprintf(out, "\t(%s\n", macro0);
-		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", nr, macro0);
+		fprintf(out, "\t\t\"trap\t#%i\\n\\t\"%s\n", l->nr, macro0);
 		fprintf(out, "\t\t\"lea\t%%%%sp@(%i),%%%%sp\"%s\n", size, macro0);
 		fprintf(out, "\t: \"=r\"(__retvalue) /* outputs */%s\n", macro0);
 		fprintf(out, "\t: /* inputs */%s\n", macro0);
-		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\") \"d1\", \"d2\", \"a0\", \"a1\", \"a2\", \"cc\" /* clobbered regs */%s\n", macro0);
+		fprintf(out, "\t: __CLOBBER_RETURN(\"d0\")");
+		if (!l->noclobber)
+			fprintf(out, " \"d1\", \"d2\", \"a0\", \"a1\", \"a2\",");
+		fprintf(out, " \"cc\" /* clobbered regs */%s\n", macro0);
 		fprintf(out, "\t  AND_MEMORY%s\n", macro0);
 		fprintf(out, "\t);%s\n", macro0);
 	}
@@ -256,7 +253,7 @@ generate_traps_as_macros(FILE *out, int nr)
 	{
 		if (l->nr == nr)
 		{
-			generate_trap_impl(out, l->nr, l->call, 1);
+			generate_trap_impl(out, l, 1);
 			fprintf(out, "\n");
 		}
 
@@ -264,64 +261,13 @@ generate_traps_as_macros(FILE *out, int nr)
 	}
 }
 
-void
-generate_traps_as_files(const char *path)
+static void generate_trap_proto(FILE *out, const struct call *l)
 {
-	char srcbuf[1024];
-	FILE *src;
-	struct call *l;
-
-	snprintf(srcbuf, sizeof(srcbuf), "%s/SRCFILES.traps", path);
-
-	src = fopen(srcbuf, "w+");
-	if (!src)
-	{
-		perror("fopen");
-		exit(1);
-	}
-
-	fprintf(src, "TRAPS = \\\n");
-
-	l = root;
-	while (l)
-	{
-		char buf[1024];
-		FILE *f;
-
-		fprintf(src, "\ttrap_%i_w%s.c", l->nr, l->call);
-		snprintf(buf, sizeof(buf), "%s/trap_%i_w%s.c", path, l->nr, l->call);
-
-		f = fopen(buf, "w+");
-		if (!f)
-		{
-			perror("fopen");
-			exit(1);
-		}
-
-		print_head(f, "gen-syscall");
-		fprintf(f, "#include <compiler.h>\n");
-		fprintf(f, "\n");
-
-		generate_trap_impl(f, l->nr, l->call, 0);
-		generate_trap_impl(f, l->nr, l->call, 1);
-
-		fclose(f);
-		l = l->next;
-
-		if (l) fprintf(src, " \\\n");
-	}
-
-	fprintf(src, "\n");
-	fclose(src);
-}
-
-static void
-generate_trap_proto(FILE *out, int nr, const char *call)
-{
+	const char *call = l->call;
 	int len = strlen(call);
 	int i;
 
-	fprintf(out, "long __trap_%i_w%s(short", nr, call);
+	fprintf(out, "long __trap_%i_w%s%s(short", l->nr, call, l->noclobber ? "_noclobber" : "");
 
 	i = 0;
 	while (i < len)
@@ -351,7 +297,7 @@ generate_trap_protos(FILE *out, int nr)
 	while (l)
 	{
 		if (l->nr == nr)
-			generate_trap_proto(out, l->nr, l->call);
+			generate_trap_proto(out, l);
 
 		l = l->next;
 	}

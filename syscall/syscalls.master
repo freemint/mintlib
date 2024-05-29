@@ -36,7 +36,7 @@
  * Syntax:
  * 
  * opcode class name args
- * opcode class name args (unimplemented|unsupported|passthrough)
+ * opcode class name args (unimplemented|unsupported|passthrough|noclobber)
  * opcode (undefined|passthrough)
  * 
  * 
@@ -58,6 +58,9 @@
  * 
  * - passthrough
  *   no entry in table, e.g. pass through to TOS
+ * 
+ * - noclobber
+ *   use _noclobber varient of trap_* macro
  * 
  * MAX - size of table
  *
@@ -100,7 +103,7 @@ opcode	ret	class name	args */
 0x017	long	Slbclose	(SLB_HANDLE sl)		/* since 1.15.3, MagiC 5 */
 0x018		undefined
 0x019	short	Dgetdrv		(void)
-0x01a	void	Fsetdta		(struct dtabuf *dta)
+0x01a	void	Fsetdta		(_DTA *dta)
 0x01b		undefined
 0x01c		undefined
 0x01d		undefined
@@ -388,7 +391,7 @@ opcode	ret	class name	args */
 0x110	short	Psetuid		(ushort id)
 0x111	short	Pkill		(short pid, short sig)
 0x112	long	Psignal		(short sig, void *handler)
-0x113	long	Pvfork		(void)
+0x113	long	Pvfork		(void) noclobber
 0x114	short	Pgetgid		(void)
 0x115	short	Psetgid		(ushort id)
 0x116	long	Psigblock	(ulong mask)
