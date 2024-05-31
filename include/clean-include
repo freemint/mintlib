@@ -15,7 +15,7 @@
 
 stale_hdrs="cookie.h dcntl.h dir.h file.h ioctl.h \
 ssystem.h param.h stat.h statfs.h sys/restoresys timeb.h times.h \
-utsname.h sigvec.h"
+utsname.h sigvec.h bits/string2.h"
 
 stale_system_hdrs="float.h stdarg.h stddef.h varargs.h"
 

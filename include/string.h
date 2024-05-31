@@ -317,47 +317,6 @@ __EXTERN char* basename __P ((const char* __filename));
 # endif
 #endif
 
-/* All inline stuff is currently disabled.  There is no measurable
-   performance goal and we run into a lot of problems.  */
-#if 0
-#if defined __GNUC__ && __GNUC__ >= 2
-# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ && !defined __cplusplus
-/* When using GNU CC we provide some optimized versions of selected
-   functions from this header.  There are two kinds of optimizations:
-
-   - machine-dependent optimizations, most probably using inline
-     assembler code; these might be quite expensive since the code
-     size can increase significantly.
-     These optimizations are not used unless the symbol
-	__USE_STRING_INLINES
-     is defined before including this header.
-
-   - machine-independent optimizations which do not increase the
-     code size significantly and which optimize mainly situations
-     where one or more arguments are compile-time constants.
-     These optimizations are used always when the compiler is
-     taught to optimize.
-
-   One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
-
-/* Get the machine-dependent optimizations (if any).  */
-#  include <bits/string.h>
-
-/* The test string/test-common fails if the optimization macro for stpcpy
-   is turned on.  Trying to track down the bug will cause it to disappear,
-   i. e. it only shows up in the mammut source file.  Until we find a 
-   reason (and remembering that stpcpy is often used in the libc) we turn
-   it off here.  */
-#ifndef _HAVE_STRING_ARCH_stpcpy
-# define _HAVE_STRING_ARCH_stpcpy
-#endif
-
-/* These are generic optimizations which do not add too much inline code.  */
-#  include <bits/string2.h>
-# endif
-#endif
-#endif /* not 0 */
-
 #ifdef __USE_MISC
 __EXTERN char* strlwr __P ((char* string));
 __EXTERN char* strupr __P ((char* string));
