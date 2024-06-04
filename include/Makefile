@@ -78,7 +78,7 @@ syscall-list.h: $(csrcdir)/syscalls.list $(csrcdir)/gensys
 
 includefiles = $(filter %.h, $(MISCFILES)) stab.def syscall-list.h
 
-install-include: remove-stale
+install-include install-headers: remove-stale
 	$(mkinstalldirs) $(DESTDIR)$(includedir)
 	@list='$(includefiles)'; for p in $$list; do \
   	  if test -f $$p; then \

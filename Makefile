@@ -133,7 +133,7 @@ install-lib: all install-lib-recursive
 
 install-include: all install-include-recursive
 
-install-headers: install-include-recursive
+install-headers: install-headers-recursive
 
 install-man: all install-man-recursive
 
@@ -248,6 +248,18 @@ uninstall-include-recursive uninstall-man-recursive:
 	  (cd $$subdir && $(MAKE) $$target) \
 	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
+
+install-headers-recursive:
+	if test "${CROSS}" = yes -a "$(DESTDIR)${prefix}" = "/usr"; then \
+	   echo "attempting to install on host; aborting" >&2; \
+           exit 1; \
+	fi; \
+	list='include'; \
+	for subdir in $$list; do \
+	  target=`echo $@ | sed s/-recursive//`; \
+	  echo "Making $$target in $$subdir"; \
+	  $(MAKE) -C $$subdir $$target || exit 1; \
+	done
 
 dist-recursive bindist-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \

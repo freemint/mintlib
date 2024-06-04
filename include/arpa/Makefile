@@ -30,7 +30,7 @@ include $(top_srcdir)/rules
 
 includefiles = $(filter %.h, $(MISCFILES))
 
-install-include: 
+install-include install-headers:
 	$(mkinstalldirs) $(DESTDIR)$(includedir)/$(subdir)
 	@list='$(includefiles)'; for p in $$list; do \
   	  if test -f $$p; then \
