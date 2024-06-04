@@ -26,7 +26,6 @@ default: all
 
 all-here:
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 # FIXME: stratcliff still missing because of missing mman.h.

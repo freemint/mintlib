@@ -22,7 +22,6 @@ default: all
 
 all-here:
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 install-include:

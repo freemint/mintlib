@@ -32,7 +32,6 @@ else
 all-here: rpcgen rpcinfo
 endif
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 include $(srcdir)/RPCSVCCFILES
 include $(srcdir)/RPCGENCFILES

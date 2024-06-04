@@ -28,7 +28,6 @@ all-here: features.h linker.h syscall-list.h
 
 include $(top_srcdir)/phony
 
-dont_install_libs = yes
 include $(top_srcdir)/rules
 
 GENSYS = AWK=$(AWK) $(csrcdir)/gensys 

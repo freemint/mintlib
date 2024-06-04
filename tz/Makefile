@@ -22,8 +22,6 @@ srcdir = .
 top_srcdir = ..
 subdir = tz
 
-dont_install_libs = yes
-
 include $(top_srcdir)/configvars
 
 default: all

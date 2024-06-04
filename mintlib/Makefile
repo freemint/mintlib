@@ -24,7 +24,6 @@ default: all
 
 all-here: syscalls.h
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 TESTS = assert assert-perr atexit ctype ctype1 dirent mallocbug seekdir \

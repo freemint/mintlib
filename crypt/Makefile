@@ -28,7 +28,6 @@ default: all
 
 all-here:
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 TESTS = cert md5_1 md5_2 ufc

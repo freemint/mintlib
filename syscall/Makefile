@@ -26,7 +26,6 @@ gen_objs += syscallparser.c
 
 all-here: syscalls.stmp
 
-dont_install_libs = yes
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 # FIXME: Tests still missing.

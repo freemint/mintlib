@@ -15,8 +15,6 @@ subdir = startup
 
 default: all
 
-dont_install_libs = yes
-
 include $(top_srcdir)/configvars
 include $(top_srcdir)/bindist
 

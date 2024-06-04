@@ -26,11 +26,6 @@ install-recursive
 
 uninstall: uninstall-recursive uninstall-include uninstall-lib uninstall-man
 
-ifdef dont_install_libs
-install-lib:
-
-else
-
 baselibs = $(basename $(LIBS))
 
 install-lib:
@@ -54,7 +49,6 @@ uninstall-lib:
 	  echo " rm -f $(DESTDIR)$(libdir)/$(instdir)/$$p"; \
 	  rm -f $(DESTDIR)$(libdir)/$(instdir)/$$p; \
 	done
-endif
 
 check: check-recursive
 
@@ -83,8 +77,8 @@ distdir: $(DISTFILES) distdir-local
 distdir-local:
 
 all-recursive clean-recursive bakclean-recursive check-recursive \
-install-recursive uninstall-recursive install-lib-recursive \
-install-include-recursive install-man-recursive uninstall-lib-recursive \
+install-recursive uninstall-recursive \
+install-include-recursive install-man-recursive \
 uninstall-include-recursive uninstall-man-recursive dist-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
@@ -93,4 +87,3 @@ uninstall-include-recursive uninstall-man-recursive dist-recursive:
 	  (cd $$subdir && $(MAKE) -r $$target) \
 	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
-

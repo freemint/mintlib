@@ -27,7 +27,6 @@ all-here:
 
 include $(top_srcdir)/phony
 
-dont_install_libs = yes
 include $(top_srcdir)/rules
 
 includefiles = $(filter %.h, $(MISCFILES))

@@ -231,8 +231,8 @@ bindistdir: $(BINDISTFILES)
 	done
 
 all-recursive clean-recursive distclean-recursive bakclean-recursive \
-install-recursive uninstall-recursive install-lib-recursive \
-install-include-recursive install-man-recursive uninstall-lib-recursive \
+install-recursive uninstall-recursive \
+install-include-recursive install-man-recursive \
 uninstall-include-recursive uninstall-man-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
 	echo $@ | grep -q install; \
@@ -248,6 +248,19 @@ uninstall-include-recursive uninstall-man-recursive:
 	  (cd $$subdir && $(MAKE) $$target) \
 	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
+
+install-lib-recursive uninstall-lib-recursive:
+	echo $@ | grep -q install; \
+	if test $$? = 0 -a "${CROSS}" = yes -a "$(DESTDIR)${prefix}" = "/usr"; then \
+	   echo "attempting to install on host; aborting" >&2; \
+           exit 1; \
+	fi; \
+	list='$(LIBDIRS)'; \
+	for subdir in $$list; do \
+	  target=`echo $@ | sed s/-recursive//`; \
+	  echo "Making $$target in $$subdir"; \
+	  $(MAKE) -C $$target $$subdir || exit 1; \
+	done
 
 install-headers-recursive:
 	if test "${CROSS}" = yes -a "$(DESTDIR)${prefix}" = "/usr"; then \
