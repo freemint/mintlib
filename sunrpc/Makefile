@@ -60,6 +60,8 @@ install: all-here install-rpcsvc-programs install-rpcsvc-headers
 
 uninstall: uninstall-rpcsvc-programs uninstall-rpcsvc-headers
 
+install-include install-headers: install-rpcsvc-headers
+
 # Not suitable for cross-compiling.
 ifndef CROSS
 
