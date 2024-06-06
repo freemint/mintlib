@@ -37,6 +37,7 @@ include $(top_srcdir)/checkrules
 
 distclean::
 	$(RM) SRCFILES.traps syscalls.stmp .stmp.pars pars.c pars.h scan.c
+	$(RM) $(top_srcdir)/include/mint/sysbind.h $(top_srcdir)/include/mint/trap{1,13,14}.h
 
 clean::
 	$(RM) gen-syscall

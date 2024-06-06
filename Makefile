@@ -242,6 +242,7 @@ uninstall-include-recursive uninstall-man-recursive:
 	fi; \
 	list='$(SUBDIRS)'; \
 	if test "$@" = clean-recursive; then list='$(filter-out $(LIBDIRS),$(SUBDIRS))'; fi; \
+	if test "$@" = distclean-recursive; then list='$(filter-out $(LIBDIRS),$(SUBDIRS))'; fi; \
 	for subdir in $$list; do \
 	  target=`echo $@ | sed s/-recursive//`; \
 	  echo "Making $$target in $$subdir"; \
@@ -267,6 +268,7 @@ install-headers-recursive:
 	   echo "attempting to install on host; aborting" >&2; \
            exit 1; \
 	fi; \
+	$(MAKE) -C syscall all || exit 1; \
 	list='include sunrpc'; \
 	for subdir in $$list; do \
 	  target=`echo $@ | sed s/-recursive//`; \
