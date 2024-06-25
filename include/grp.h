@@ -43,8 +43,11 @@ __EXTERN struct group * getgrent __P ((void));
 __EXTERN struct group * fgetgrent __P ((FILE *f));
 #endif /* __USE_SVID */
 
-__EXTERN struct group * getgrgid __P ((int gid));
+__EXTERN struct group * getgrgid __P ((__gid_t gid));
 __EXTERN struct group * getgrnam __P ((const char *name));
+
+int getgrgid_r(__gid_t gid, struct group *grp, char *buf, size_t buflen, struct group **result);
+int getgrnam_r(const char *name, struct group *grp, char *buf, size_t buflen, struct group **result);
 
 #ifdef __USE_BSD
 __EXTERN int initgroups __P ((const char* __user, __gid_t __group));

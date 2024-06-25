@@ -15,5 +15,7 @@ SRCFILES = \
 	getpwuid.c \
 	getpwuid_r.c \
 	grp.c \
+	getgrgid_r.c \
+	getgrnam_r.c \
 	initgroups.c \
 	putpwent.c

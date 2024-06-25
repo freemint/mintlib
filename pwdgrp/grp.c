@@ -61,7 +61,7 @@ struct group *getgrent(void)
 } /* End of getgrent() */
 
 /* Get first group with matching numerical group ID from file */
-struct group *getgrgid(int gid)
+struct group *getgrgid(gid_t gid)
 {
   setgrent();
 
