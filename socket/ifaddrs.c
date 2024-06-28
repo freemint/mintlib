@@ -112,7 +112,7 @@ int __getifaddrs(struct ifaddrs **ifap)
 		/* Now copy the information we already have from SIOCGIFCONF.  */
 		storage->ia.ifa_name = names;
 		strcpy(names, ifr->ifr_name);
-		names += strlen(names);
+		names += strlen(names) + 1;
 		storage->addr = ifr->ifr_addr;
 		storage->ia.ifa_addr = &storage->addr;
 
