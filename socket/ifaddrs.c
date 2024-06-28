@@ -152,7 +152,7 @@ int __getifaddrs(struct ifaddrs **ifap)
 				storage->broadaddr = ifr->ifr_dstaddr;
 			}
 		}
-		storage[i].ia.ifa_data = NULL;	/* Nothing here for now.  */
+		storage->ia.ifa_data = NULL;	/* Nothing here for now.  */
 	}
 	free(ibuf);
 	close(fd);
