@@ -13,10 +13,13 @@
 #include <sys/types.h>
 #include <mint/mintbind.h>
 
+#ifdef HAVE_WEAK_SYMBOLS
 __typeof__(setgroups) __setgroups;
+# define setgroups __setgroups
+#endif
 
-int
-__setgroups (size_t count, const gid_t *groups)
+
+int setgroups (size_t count, const gid_t *groups)
 {
 	int r;
 
@@ -38,4 +41,6 @@ __setgroups (size_t count, const gid_t *groups)
 
 	return 0;
 }
+
+#undef setgroups
 weak_alias (__setgroups, setgroups)

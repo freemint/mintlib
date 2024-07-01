@@ -6,10 +6,13 @@
 #include <sys/types.h>
 #include <mint/mintbind.h>
 
+#ifdef HAVE_WEAK_SYMBOLS
 __typeof__(initgroups) __initgroups;
+# define initgroups __initgroups
+#endif
 
 int
-__initgroups (const char *user, gid_t group)
+initgroups (const char *user, gid_t group)
 {
   struct group *g;
   gid_t groups[NGROUPS_MAX];
@@ -37,4 +40,6 @@ __initgroups (const char *user, gid_t group)
     }
   return 0;
 }
+
+#undef initgroups
 weak_alias (__initgroups, initgroups)

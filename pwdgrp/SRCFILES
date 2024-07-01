@@ -17,5 +17,6 @@ SRCFILES = \
 	grp.c \
 	getgrgid_r.c \
 	getgrnam_r.c \
+	getgrouplist.c \
 	initgroups.c \
 	putpwent.c
