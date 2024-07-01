@@ -1,5 +1,9 @@
+/*
+ *	POSIX Standard: 9.2.1 Group Database Access	<grp.h>
+ */
+
 #ifndef _GRP_H
-#define _GRP_H
+#define _GRP_H 1
 
 #ifndef _FEATURES_H
 #include <features.h>
@@ -20,20 +24,21 @@
 __BEGIN_DECLS
 
 /* For the Single Unix specification we must define this type here.  */
-#if defined __USE_XOPEN && !defined __gid_t_defined
+#if (defined __USE_XOPEN || defined __USE_XOPEN2K) && !defined __gid_t_defined
 typedef __gid_t gid_t;
 # define __gid_t_defined 1
 #endif
 
+/* The group structure.	 */
 struct group
 {
   char *gr_name;    /* The name of the group        */
-  __gid_t gr_gid;    /* The numerical group ID       */
+  __gid_t gr_gid;   /* The numerical group ID       */
   char **gr_mem;    /* array of member names        */
-  char *gr_passwd;/* The encrypted group password */
+  char *gr_passwd;  /* The encrypted group password */
 };
 
-#if defined (__USE_SVID) || defined (__USE_MISC) || defined (__USE_BSD)
+#if defined (__USE_SVID) || defined (__USE_MISC) || defined (__USE_BSD) || defined (__USE_XOPEN_EXTENDED)
 /* Rewind the group-file stream.
 
    This function is a possible cancellation point and therefore not
@@ -60,7 +65,7 @@ struct group * getgrent(void);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-struct group *fgetgrent(FILE *f);
+struct group *fgetgrent(FILE *__stream);
 #endif /* __USE_SVID */
 
 #ifdef __USE_GNU
@@ -70,23 +75,22 @@ struct group *fgetgrent(FILE *f);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-int putgrent (const struct group *__restrict __p,
-		     FILE *__restrict __f);
+int putgrent (const struct group *__restrict __p, FILE *__restrict __f);
 #endif
 
 /* Search for an entry with a matching group ID.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-struct group * getgrgid(__gid_t gid);
+struct group * getgrgid(__gid_t __gid);
 
 /* Search for an entry with a matching group name.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-struct group * getgrnam(const char *name);
+struct group * getgrnam(const char *__name);
 
-#ifdef __USE_POSIX
+#if defined __USE_POSIX || defined __USE_MISC
 
 # ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
@@ -169,8 +173,8 @@ int getgrouplist(const char *__user, __gid_t __group, __gid_t *__groups, int *__
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-int initgroups(const char* __user, __gid_t __groups);
-#endif
+int initgroups(const char* __user, __gid_t __group);
+#endif /* Use BSD.  */
 
 __END_DECLS
 
