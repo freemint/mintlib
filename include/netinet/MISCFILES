@@ -3,6 +3,7 @@
 
 MISCFILES = MISCFILES \
 	\
+	ether.h \
 	if_ether.h \
 	in.h \
 	in_systm.h \

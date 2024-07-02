@@ -8,6 +8,13 @@ SRCFILES = \
 	accept.c \
 	bind.c \
 	connect.c \
+	ether_aton.c \
+	ether_aton_r.c \
+	ether_line.c \
+	ether_ntoa.c \
+	ether_ntoa_r.c \
+	ether_hostton.c \
+	ether_ntohost.c \
 	freeaddrinfo.c \
 	gai_strerror.c \
 	getaddrinfo.c \

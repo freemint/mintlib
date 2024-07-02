@@ -52,6 +52,7 @@
 #define	_PATH_PROTOCOLS	"/etc/protocols"
 #define	_PATH_SERVICES	"/etc/services"
 #define _PATH_HOSTCONF	"/etc/host.conf"
+#define _PATH_ETHERS	"/etc/ethers"
 
 __BEGIN_DECLS
 
