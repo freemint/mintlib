@@ -47,7 +47,7 @@ struct rpcent
 {
   char *r_name;		/* Name of server for this rpc program.  */
   char **r_aliases;	/* Alias list.  */
-  int r_number;		/* RPC program number.  */
+  long r_number;		/* RPC program number.  */
 };
 
 extern void setrpcent (int __stayopen) __THROW;

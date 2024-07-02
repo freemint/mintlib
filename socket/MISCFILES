@@ -7,6 +7,7 @@ MISCFILES = \
 	bind.3 \
 	connect.3 \
 	getpeername.3 \
+	getrpcent.3 \
 	getsockname.3 \
 	getsockopt.3 \
 	listen.3 \

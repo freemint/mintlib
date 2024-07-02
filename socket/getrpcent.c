@@ -1,6 +1,6 @@
 /* @(#)getrpcent.c	2.2 88/07/29 4.0 RPCSRC */
 #if !defined(lint) && defined(SCCSIDS)
-static  char sccsid[] = "@(#)getrpcent.c 1.9 87/08/11  Copyr 1984 Sun Micro";
+static char sccsid[] = "@(#)getrpcent.c 1.9 87/08/11  Copyr 1984 Sun Micro";
 #endif
 
 /*
@@ -42,192 +42,195 @@ static  char sccsid[] = "@(#)getrpcent.c 1.9 87/08/11  Copyr 1984 Sun Micro";
 #include <netdb.h>
 #include <sys/socket.h>
 
-extern void __setrpcent (int __stayopen) __THROW;
-extern void __endrpcent (void) __THROW;
-extern struct rpcent *__getrpcbyname (__const char *__name) __THROW;
-extern struct rpcent *__getrpcbynumber (int __number) __THROW;
-extern struct rpcent *__getrpcent (void) __THROW;
-
-#if __GNUC_PREREQ(8, 0)
-# pragma GCC diagnostic ignored "-Wstringop-truncation"
+#if defined(__PUREC__) && !defined(_SYS_POLL_H)
+struct pollfd { int dummy; };
 #endif
 
 
 /*
  * Internet version.
  */
-struct rpcdata {
-	FILE	*rpcf;
-	char	*current;
-	int	currentlen;
-	int	stayopen;
+static struct rpcdata
+{
+	FILE *rpcf;
+	int stayopen;
 #define	MAXALIASES	35
-	char	*rpc_aliases[MAXALIASES];
-	struct	rpcent rpc;
-	char	line[BUFSIZ+1];
-	char	*domain;
+	char *rpc_aliases[MAXALIASES];
+	struct rpcent rpc;
+	char line[BUFSIZ + 1];
+	char *domain;
 } *rpcdata;
 
-static char RPCDB[] = "/etc/rpc";
+static char const RPCDB[] = "U:\\etc\\rpc";
+static char const RPCDB2[] = "C:\\etc\\rpc";
 
 static struct rpcdata *_rpcdata(void)
 {
-	register struct rpcdata *d = rpcdata;
-
-	if (d == 0) {
-		d = (struct rpcdata *)calloc(1, sizeof (struct rpcdata));
-		rpcdata = d;
-	}
-	return (d);
-}
-
-struct rpcent *__getrpcbynumber (int number)
-{
-	register struct rpcdata *d = _rpcdata();
-	register struct rpcent *p;
+	struct rpcdata *d = rpcdata;
 
 	if (d == 0)
-		return (0);
-	__setrpcent(0);
-	while ((p = __getrpcent())) {
-		if (p->r_number == number)
-			break;
+	{
+		d = (struct rpcdata *) calloc(1, sizeof(struct rpcdata));
+		rpcdata = d;
 	}
-	__endrpcent();
-	return (p);
+	return d;
 }
-weak_alias (__getrpcbynumber, getrpcbynumber)
 
-struct rpcent *__getrpcbyname (const char *name)
+
+void setrpcent(int f)
 {
-	struct rpcent *rpc;
-	char **rp;
-
-	__setrpcent(0);
-	while((rpc = __getrpcent())) {
-		if (strcmp(rpc->r_name, name) == 0)
-			return (rpc);
-		for (rp = rpc->r_aliases; *rp != NULL; rp++) {
-			if (strcmp(*rp, name) == 0)
-				return (rpc);
-		}
-	}
-	__endrpcent();
-	return (NULL);
-}
-weak_alias (__getrpcbyname, getrpcbyname)
-
-void __setrpcent (int f)
-{
-	register struct rpcdata *d = _rpcdata();
+	struct rpcdata *d = _rpcdata();
 
 	if (d == 0)
 		return;
 	if (d->rpcf == NULL)
+	{
 		d->rpcf = fopen(RPCDB, "r");
-	else
+		if (d->rpcf == NULL)
+			d->rpcf = fopen(RPCDB2, "r");
+	} else
+	{
 		rewind(d->rpcf);
-	if (d->current)
-		free(d->current);
-	d->current = NULL;
+	}
 	d->stayopen |= f;
 }
-weak_alias (__setrpcent, setrpcent)
 
-void __endrpcent (void)
+
+void endrpcent(void)
 {
-	register struct rpcdata *d = _rpcdata();
+	struct rpcdata *d = _rpcdata();
 
 	if (d == 0)
 		return;
-	if (d->current && !d->stayopen) {
-		free(d->current);
-		d->current = NULL;
-	}
-	if (d->rpcf && !d->stayopen) {
+	if (d->rpcf && !d->stayopen)
+	{
 		fclose(d->rpcf);
 		d->rpcf = NULL;
 	}
 }
-weak_alias (__endrpcent, endrpcent)
 
-static struct rpcent *interpret (char *val, int len);
 
-struct rpcent *__getrpcent (void)
+static int interpret(struct rpcdata *d)
 {
-	register struct rpcdata *d = _rpcdata();
-
-	if (d == 0)
-		return(NULL);
-	if (d->rpcf == NULL && (d->rpcf = fopen(RPCDB, "r")) == NULL)
-		return (NULL);
-	if (fgets(d->line, BUFSIZ, d->rpcf) == NULL)
-		return (NULL);
-	return interpret(d->line, strlen(d->line));
-}
-weak_alias (__getrpcent, getrpcent)
-
-static struct rpcent *interpret (char *val, int len)
-{
-	register struct rpcdata *d = _rpcdata();
 	char *p;
-	register char *cp, **q;
+	char *cp;
+	char **q;
 
-	if (d == 0)
-		return NULL;
-	strncpy(d->line, val, len);
 	p = d->line;
-	d->line[len] = '\n';
 	if (*p == '#')
-		return (__getrpcent());
-	cp = index(p, '#');
+		return 0;
+	cp = strchr(p, '#');
+	if (cp == NULL)
+		cp = strchr(p, '\n');
+	if (cp != NULL)
+		*cp = '\0';
+	if (*p == '\0')
+		return 0;
+	cp = strchr(p, ' ');
 	if (cp == NULL)
 	{
-		cp = index(p, '\n');
+		cp = strchr(p, '\t');
 		if (cp == NULL)
-			return (__getrpcent());
-	}
-	*cp = '\0';
-	cp = index(p, ' ');
-	if (cp == NULL)
-	{
-		cp = index(p, '\t');
-		if (cp == NULL)
-			return (__getrpcent());
+			return 0;
 	}
 	*cp++ = '\0';
 	/* THIS STUFF IS INTERNET SPECIFIC */
 	d->rpc.r_name = d->line;
 	while (*cp == ' ' || *cp == '\t')
 		cp++;
-	d->rpc.r_number = atoi(cp);
+	d->rpc.r_number = strtol(cp, NULL, 10);
 	q = d->rpc.r_aliases = d->rpc_aliases;
-	cp = index(p, ' ');
+	cp = strchr(p, ' ');
 	if (cp != NULL)
-		*cp++ = '\0';
-	else
 	{
-		cp = index(p, '\t');
+		*cp++ = '\0';
+	} else
+	{
+		cp = strchr(p, '\t');
 		if (cp != NULL)
 			*cp++ = '\0';
 	}
-	while (cp && *cp) {
-		if (*cp == ' ' || *cp == '\t') {
+	while (cp && *cp)
+	{
+		if (*cp == ' ' || *cp == '\t')
+		{
 			cp++;
 			continue;
 		}
 		if (q < &(d->rpc_aliases[MAXALIASES - 1]))
 			*q++ = cp;
-		cp = index(p, ' ');
+		cp = strchr(p, ' ');
 		if (cp != NULL)
+		{
 			*cp++ = '\0';
-		else
-	    {
-			cp = index(p, '\t');
+		} else
+		{
+			cp = strchr(p, '\t');
 			if (cp != NULL)
 				*cp++ = '\0';
 		}
 	}
 	*q = NULL;
-	return (&d->rpc);
+	return 1;
+}
+
+
+struct rpcent *getrpcent(void)
+{
+	struct rpcdata *d = _rpcdata();
+
+	if (d == 0)
+		return NULL;
+	if (d->rpcf == NULL)
+		setrpcent(0);
+	if (d->rpcf == NULL)
+		return NULL;
+	for (;;)
+	{
+		if (fgets(d->line, BUFSIZ, d->rpcf) == NULL)
+			break;
+		if (interpret(d))
+			return &d->rpc;
+	}
+	return NULL;
+}
+
+
+struct rpcent *getrpcbynumber(int number)
+{
+	struct rpcdata *d = _rpcdata();
+	struct rpcent *p;
+
+	if (d == 0)
+		return 0;
+	setrpcent(0);
+	while ((p = getrpcent()) != NULL)
+	{
+		if (p->r_number == number)
+			break;
+	}
+	endrpcent();
+	/* FIXME there is no way for the application to free the rpcdata buffer */
+	return p;
+}
+
+
+struct rpcent *getrpcbyname(const char *name)
+{
+	struct rpcent *rpc;
+	char **rp;
+
+	setrpcent(0);
+	while ((rpc = getrpcent()) != NULL)
+	{
+		if (strcmp(rpc->r_name, name) == 0)
+			return rpc;
+		for (rp = rpc->r_aliases; *rp != NULL; rp++)
+		{
+			if (strcmp(*rp, name) == 0)
+				return rpc;
+		}
+	}
+	endrpcent();
+	return NULL;
 }
