@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "sockets_global.h"
 #include <arpa/inet.h>
+#include <net/if.h>
+#include <ifaddrs.h>
 
 /*
  * Converts the current herrno error value into an EAI_* error code.
@@ -91,6 +93,31 @@ static struct addrinfo *makeipv4info(int type, int proto, uint32_t ip, uint16_t 
 
 
 /*
+ * AI_ADDRCONFIG check: Build a mask containing a bit set for each address
+ * family configured in the system.
+ *
+ */
+static int addrconfig(uint32_t *mask)
+{
+	struct ifaddrs *ifaddrs, *ifa;
+
+	if (getifaddrs(&ifaddrs) < 0)
+		return -1;
+
+	*mask = 0;
+	for (ifa = ifaddrs; ifa != NULL; ifa = ifa->ifa_next)
+		if (ifa->ifa_addr && (ifa->ifa_flags & IFF_UP))
+		{
+			if (ifa->ifa_addr->sa_family < ((unsigned short)(sizeof(*mask) * 8)))
+				*mask |= (uint32_t)1 << ifa->ifa_addr->sa_family;
+		}
+
+	freeifaddrs(ifaddrs);
+	return 0;
+}
+
+
+/*
  * getaddrinfo() non-thread-safe IPv4-only implementation
  * Address-family-independent hostname to address resolution.
  *
@@ -107,6 +134,7 @@ int __getaddrinfo(const char *node, const char *service, const struct addrinfo *
 	int protocol = 0;
 	int flags = 0;
 	const char *name = NULL;
+	uint32_t mask = (uint32_t)~0UL;
 
 	*res = NULL;
 
@@ -114,11 +142,14 @@ int __getaddrinfo(const char *node, const char *service, const struct addrinfo *
 	{
 		flags = hints->ai_flags;
 
-		if (flags & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST))
+		if (flags & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG))
 			return EAI_BADFLAGS;
 		/* only accept AF_INET and AF_UNSPEC */
 		if (hints->ai_family && (hints->ai_family != AF_INET))
 			return EAI_FAMILY;
+
+		if ((hints->ai_flags & AI_ADDRCONFIG) != 0 && addrconfig(&mask) < 0)
+			return EAI_FAIL;
 
 		/* protocol sanity check */
 		switch (hints->ai_socktype)
@@ -184,15 +215,16 @@ int __getaddrinfo(const char *node, const char *service, const struct addrinfo *
 		struct servent *sp;
 
 		d = strtoul(service, &end, 0);
-		if (!end[0]) {
-			if (d > 65535)
-				return (EAI_SERVICE);
+		if (!end[0])
+		{
+			if (d > 65535UL)
+				return EAI_SERVICE;
 			port = htons((unsigned short) d);
 		} else
 		{
 			sp = getservbyname(service, NULL);
 			if (sp == NULL)
-				return (EAI_SERVICE);
+				return EAI_SERVICE;
 			port = sp->s_port;
 		}
 	}
