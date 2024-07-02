@@ -15,7 +15,7 @@ int
 initgroups (const char *user, gid_t group)
 {
   struct group *g;
-  gid_t groups[NGROUPS_MAX];
+  unsigned short groups[NGROUPS_MAX];
   int n;
   long r;
 
