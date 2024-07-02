@@ -116,16 +116,16 @@ static int nextent(FILE *fp)
     for (cp = savbuf; *cp && *cp != ':'; cp++)
       ;
     curentry.gr_name = savbuf;
-    *cp++ = 0x00;
+    *cp++ = '\0';
     curentry.gr_passwd = cp;
     for (; *cp && *cp != ':'; cp++)
       ;
-    *cp++ = 0x00;
-    curentry.gr_gid = atoi (cp);
+    *cp++ = '\0';
+    curentry.gr_gid = strtoul (cp, NULL, 10);
     for (; *cp && *cp != ':'; cp++)
       ;
 
-    *cp++ = 0x00;
+    *cp++ = '\0';
 
     i = 0;
     while( *cp )
@@ -163,10 +163,10 @@ main (int argc, char **argv)
   setgrent ();
   while ((gr = getgrent ()) != NULL)
   {
-    printf ("%s:[%s] %d\n",
+    printf ("%s:[%s] %lu\n",
       gr->gr_name,
       gr->gr_passwd,
-      gr->gr_gid);
+      (unsigned long)gr->gr_gid);
     for (m = gr->gr_mem; *m; m++) {
       printf("\t%s\n", *m);
     }
@@ -174,19 +174,19 @@ main (int argc, char **argv)
   endgrent ();
 
   if (gr = getgrnam ("mail")) {
-    printf ("%s:[%s] %d\n",
+    printf ("%s:[%s] %lu\n",
       gr->gr_name,
       gr->gr_passwd,
-      gr->gr_gid);
+      (unsigned long)gr->gr_gid);
     for (m = gr->gr_mem; *m; m++) {
       printf("\t%s\n", *m);
     }
   }
   if (gr = getgrgid (1)) {
-    printf ("%s:[%s] %d\n",
+    printf ("%s:[%s] %lu\n",
       gr->gr_name,
       gr->gr_passwd,
-      gr->gr_gid);
+      (unsigned long)gr->gr_gid);
     for (m = gr->gr_mem; *m; m++) {
       printf("\t%s\n", *m);
     }
