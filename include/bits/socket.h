@@ -178,7 +178,7 @@ struct sockaddr
    exception of AF_UNIX).  We reserve 128 bytes.  */
 #define __ss_aligntype	unsigned long int
 #define _SS_SIZE	128
-#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_aligntype)))
+#define _SS_PADSIZE	(_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
 
 struct sockaddr_storage
   {
