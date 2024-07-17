@@ -52,7 +52,7 @@ size_t mbsnrtowcs(wchar_t *__restrict wcs, const char **__restrict src, size_t n
 				break;
 			}
 			/* have to roll back partial character */
-			*(unsigned *)st = 0;
+			st->__opaque1 = 0;
 			break;
 		}
 		s += l; n -= l;

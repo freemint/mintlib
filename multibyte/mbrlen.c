@@ -13,6 +13,6 @@
 
 size_t mbrlen(const char *__restrict s, size_t n, mbstate_t *__restrict st)
 {
-	static unsigned internal;
-	return mbrtowc(0, s, n, st ? st : (mbstate_t *)&internal);
+	static mbstate_t internal;
+	return mbrtowc(0, s, n, st ? st : &internal);
 }

@@ -17,7 +17,7 @@
              | x )
 #define F(x) ( ( x>=5 ? 0 : \
                  x==0 ? R(0x90,0xc0) : \
-                 x==4 ? R(0x80,0xa0) : \
+                 x==4 ? R(0x80,0x90) : \
                  R(0x80,0xc0) ) \
              | ( R(0x80,0xc0) >> 6 ) \
              | ( R(0x80,0xc0) >> 12 ) \
@@ -32,7 +32,3 @@ const uint32_t bittab[] = {
 	E(0x8),E(0x9),E(0xa),E(0xb),E(0xc),E(0xd),E(0xe),E(0xf),
 	F(0x0),F(0x1),F(0x2),F(0x3),F(0x4)
 };
-
-#ifdef BROKEN_VISIBILITY
-__asm__(".hidden __fsmu8");
-#endif
