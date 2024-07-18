@@ -23,6 +23,29 @@ __getsockopt (int fd, int level, int optname, void *optval, socklen_t *optlen)
 				__set_errno (-r);
 				return -1;
 			}
+			/*
+			 * kernel reports negative error codes,
+			 * but applications expect positive codes just like for errno
+			 */
+			if (optval && optlen && level == SOL_SOCKET && optname == SO_ERROR)
+			{
+				if (*optlen == sizeof(short))
+				{
+					short *p = optval;
+					if (*p < 0)
+						*p = -(*p);
+				} else if (*optlen == sizeof(char))
+				{
+					signed char *p = optval;
+					if (*p < 0)
+						*p = -(*p);
+				} else if (*optlen == sizeof(long))
+				{
+					long *p = optval;
+					if (*p < 0)
+						*p = -(*p);
+				}
+			}
 			return 0;
 		} else
 			__libc_newsockets = 0;
