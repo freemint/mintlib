@@ -14,8 +14,10 @@
 #include <sys/poll.h>
 #include <sys/time.h>
 
+__typeof__(poll) __poll;
+
 int
-__poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
+__poll (struct pollfd *fds, nfds_t nfds, __int32_t __timeout)
 {
 	long int retval;
 	unsigned long timeout = (unsigned long) __timeout;
@@ -36,9 +38,10 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 		unsigned long rfds = 0;
 		unsigned long wfds = 0;
 		unsigned long xfds = 0;
-		register unsigned long int i;
-		register struct pollfd* pfds = fds;
+		nfds_t i;
+		struct pollfd* pfds = fds;
 
+		retval = 0;
 		for (i = 0; i < nfds; i++) {
 			pfds[i].revents = 0;
 
@@ -47,6 +50,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 			 */
 			if (pfds[i].fd >= 32) {
 				pfds[i].revents = POLLNVAL;
+				retval++;
 				continue;
 			}
 
@@ -55,6 +59,7 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 
 			if ((pfds[i].events | LEGAL_FLAGS) != LEGAL_FLAGS) {
 				pfds[i].revents = POLLNVAL;
+				retval++;
 				continue;
 			}
 
@@ -65,6 +70,12 @@ __poll (struct pollfd *fds, unsigned long int nfds, __int32_t __timeout)
 			if (pfds[i].events & (POLLOUT | POLLWRNORM))
 				wfds |= (1L << (pfds[i].fd));
 		}
+		/*
+		 * if all the descriptors are out-of-range,
+		 * don't call Fselect() as this might block forever
+		 */
+		if (retval != 0 && rfds == 0 && wfds == 0 && xfds == 0)
+			return retval;
 
 		if (__timeout < 0) { 
 			retval = Fselect (0L, &rfds, &wfds, &xfds);
