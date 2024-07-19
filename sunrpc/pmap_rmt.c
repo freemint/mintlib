@@ -350,7 +350,7 @@ clnt_broadcast (
       msg.acpted_rply.ar_results.where = (caddr_t) & r;
       msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_rmtcallres;
       milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
-      switch (__poll(&fd, 1, milliseconds))
+      switch (poll(&fd, 1, milliseconds))
 	{
 
 	case 0:		/* timed out */

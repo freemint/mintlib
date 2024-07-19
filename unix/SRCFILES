@@ -65,6 +65,7 @@ SRCFILES = \
 	pause.c \
 	pipe.c \
 	poll.c \
+	ppoll.c \
 	ptrace.c \
 	read.c \
 	readlink.c \

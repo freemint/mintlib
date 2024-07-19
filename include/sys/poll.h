@@ -24,6 +24,10 @@
 #ifndef _FEATURES_H
 # include <features.h>
 #endif
+#ifdef __USE_GNU
+# include <bits/types/sigset_t.h>
+# include <sys/time.h>
+#endif
 
 __BEGIN_DECLS
 
@@ -54,8 +58,18 @@ struct pollfd
    or -1 for errors.  */
 extern int poll (struct pollfd *__fds, nfds_t __nfds,
 		 __int32_t __timeout) __THROW;
-extern int __poll (struct pollfd *__fds, nfds_t __nfds,
-		   __int32_t __timeout) __THROW;
+
+#ifdef __USE_GNU
+/* Like poll, but before waiting the threads signal mask is replaced
+   with that specified in the fourth parameter.  For better usability,
+   the timeout value is specified using a TIMESPEC object.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
+		  const struct timespec *__timeout,
+		  const __sigset_t *__ss);
+#endif
 
 __END_DECLS
 

@@ -16,6 +16,8 @@
 #include <string.h>
 #include <errno.h>
 
+__typeof__(poll) __poll;
+
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out

@@ -413,7 +413,7 @@ readunix (char *xprtptr, char *buf, int len)
     {
       pollfd.fd = sock;
       pollfd.events = POLLIN;
-      switch (__poll (&pollfd, 1, milliseconds))
+      switch (poll (&pollfd, 1, milliseconds))
 	{
 	case -1:
 	  if (errno == EINTR)

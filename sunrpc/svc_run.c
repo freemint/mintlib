@@ -74,7 +74,7 @@ svc_run (void)
 	  my_pollfd[i].revents = 0;
 	}
 
-      switch (i = __poll (my_pollfd, svc_max_pollfd, -1))
+      switch (i = poll (my_pollfd, svc_max_pollfd, -1))
 	{
 	case -1:
 	  free (my_pollfd);
