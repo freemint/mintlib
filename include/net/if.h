@@ -218,6 +218,10 @@ struct sockaddr_hw {
 	unsigned char	shw_addr[8];	/* address */
 };
 
+/* Convert an interface name to an index, and vice versa.  */
+extern unsigned short if_nametoindex (const char *__ifname) __THROW;
+extern char *if_indextoname (unsigned short __ifindex, char __ifname[IF_NAMESIZE]) __THROW;
+
 __END_DECLS
 
 #endif /* _NET_IF_H */
