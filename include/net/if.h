@@ -218,9 +218,18 @@ struct sockaddr_hw {
 	unsigned char	shw_addr[8];	/* address */
 };
 
+struct if_nameindex {
+	short	if_index;      /* 1, 2, ... */
+	char*	if_name;       /* null terminated name: "le0", ... */
+};
+
 /* Convert an interface name to an index, and vice versa.  */
 extern unsigned short if_nametoindex (const char *__ifname) __THROW;
 extern char *if_indextoname (unsigned short __ifindex, char __ifname[IF_NAMESIZE]) __THROW;
+/* Return a list of all interfaces and their indices.  */
+extern struct if_nameindex *if_nameindex (void) __THROW;
+/* Free the data returned from if_nameindex.  */
+extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
 
 __END_DECLS
 

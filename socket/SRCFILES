@@ -38,7 +38,9 @@ SRCFILES = \
 	hstrerror.c \
 	hton.c \
 	ident_sock.c \
+	if_freenameindex.c \
 	if_indextoname.c \
+	if_nameindex.c \
 	if_nametoindex.c \
 	inet_addr.c \
 	inet_lnaof.c \
