@@ -69,7 +69,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req, st
     else if (__builtin_expect (flags, 0) != 0){
         return EINVAL;
     }
-    else if (clock_id != CLOCK_REALTIME){
+    else if ((clock_id != CLOCK_REALTIME) && clock_id != CLOCK_MONOTONIC){
         /* Not supported.  */
         return ENOTSUP;
     }
