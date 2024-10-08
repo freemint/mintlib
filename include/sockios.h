@@ -56,4 +56,13 @@
 #define SIOCGARP	(('S' << 8) | 41)	/* get ARP table entry */
 #define SIOCSARP	(('S' << 8) | 42)	/* set ARP table entry */
 
+#ifdef __USE_GNU
+
+#ifdef SIOCGIFNAME
+#undef SIOCGIFNAME
+#define SIOCGIFNAME SIOCGIFNAME_ETH
+#endif
+
+#endif
+
 #endif /* _SOCKIOS_H */

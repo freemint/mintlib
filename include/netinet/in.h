@@ -295,6 +295,15 @@ struct ip_mreq_source
     /* IP address of source.  */
     struct in_addr imr_sourceaddr;
   };
+
+/* Like `struct ip_mreq' but including interface specification by index.  */
+struct ip_mreqn
+  {
+    struct in_addr imr_multiaddr;	/* IP multicast address of group */
+    struct in_addr imr_address;		/* local IP address of interface */
+    int	imr_ifindex;			/* Interface index */
+  };
+
 #endif
 
 #if !__USE_KERNEL_IPV6_DEFS
