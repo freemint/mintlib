@@ -277,6 +277,11 @@ extern int dysize (int __year) __THROW  __attribute__ ((__const__));
    __THROW.  */
 extern int nanosleep (__const struct timespec *__requested_time,
 		      struct timespec *__remaining);
+
+extern int clock_gettime(clockid_t clock_id, struct timespec *tp);
+
+extern int clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req, 
+            struct timespec *rem);
 # endif
 
 # ifdef __USE_XOPEN_EXTENDED
