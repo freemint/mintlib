@@ -36,6 +36,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	ifaddrs.h \
 	inttypes.h \
 	iovec.h \
+	langinfo.h \
 	lastlog.h \
 	libgen.h \
 	limits.h \
@@ -48,6 +49,7 @@ MISCFILES = 00README COPYMINT COPYING COPYING.LIB MISCFILES \
 	mintbind.h \
 	mntent.h \
 	netdb.h \
+	nl_types.h \
 	obstack.h \
 	osbind.h \
 	paths.h \
