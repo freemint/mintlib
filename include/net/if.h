@@ -145,6 +145,7 @@ struct	ifreq {
 		struct	sockaddr ifru_broadaddr;
 		struct	sockaddr ifru_netmask;
 		short	ifru_flags;
+		short	ifru_ifindex;
 		long	ifru_metric;
 		long	ifru_mtu;
 		struct	ifstat ifru_stats;
@@ -156,6 +157,7 @@ struct	ifreq {
 #define	ifr_broadaddr	ifr_ifru.ifru_broadaddr	/* broadcast address */
 #define	ifr_netmask	ifr_ifru.ifru_netmask	/* netmask */
 #define	ifr_flags	ifr_ifru.ifru_flags	/* flags */
+#define	ifr_ifindex	ifr_ifru.ifru_ifindex	/* ifindex */
 #define	ifr_metric	ifr_ifru.ifru_metric	/* metric */
 #define ifr_mtu		ifr_ifru.ifru_mtu	/* mtu */
 #define ifr_stats	ifr_ifru.ifru_stats	/* statistics */
@@ -215,6 +217,19 @@ struct sockaddr_hw {
 	unsigned short	shw_len;	/* address length */
 	unsigned char	shw_addr[8];	/* address */
 };
+
+struct if_nameindex {
+	short	if_index;      /* 1, 2, ... */
+	char*	if_name;       /* null terminated name: "le0", ... */
+};
+
+/* Convert an interface name to an index, and vice versa.  */
+extern unsigned short if_nametoindex (const char *__ifname) __THROW;
+extern char *if_indextoname (unsigned short __ifindex, char __ifname[IF_NAMESIZE]) __THROW;
+/* Return a list of all interfaces and their indices.  */
+extern struct if_nameindex *if_nameindex (void) __THROW;
+/* Free the data returned from if_nameindex.  */
+extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
 
 __END_DECLS
 

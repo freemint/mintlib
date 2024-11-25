@@ -46,6 +46,10 @@
 #define IP_MULTICAST_LOOP         11	/* i_char; set/get IP multicast loopback */
 #define IP_ADD_MEMBERSHIP         12	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP        13	/* ip_mreq; drop an IP group membership */
+
+#define MCAST_JOIN_GROUP 19 /* MCAST_JOIN_GROUP is protocol independent */
+#define MCAST_LEAVE_GROUP 22
+
 #if 0 /* not yet supported or defined */
 #define IP_UNBLOCK_SOURCE         14	/* ip_mreq_source: unblock data from source */
 #define IP_BLOCK_SOURCE           15	/* ip_mreq_source: block data from source */
@@ -122,14 +126,6 @@ struct ip_opts
   {
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
     char ip_opts[40];		/* Actually variable in size.  */
-  };
-
-/* Like `struct ip_mreq' but including interface specification by index.  */
-struct ip_mreqn
-  {
-    struct in_addr imr_multiaddr;	/* IP multicast address of group */
-    struct in_addr imr_address;		/* local IP address of interface */
-    int	imr_ifindex;			/* Interface index */
   };
 
 /* Structure used for IP_PKTINFO.  */
