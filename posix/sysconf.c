@@ -58,7 +58,7 @@ __sysconf (int var)
       return get_phys_pages();
     case _SC_AVPHYS_PAGES:
       return get_avphys_pages();
-	case _SC_NPROCESSORS_CONF:
+    case _SC_NPROCESSORS_CONF:
       return get_nprocs_conf();
     case _SC_NPROCESSORS_ONLN:
       return get_nprocs ();
