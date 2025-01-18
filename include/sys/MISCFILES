@@ -29,6 +29,7 @@ MISCFILES = MISCFILES \
 	statfs.h \
 	statvfs.h \
 	syscall.h \
+	sysinfo.h \
 	syslog.h \
 	sysmacros.h \
 	systeminfo.h \
