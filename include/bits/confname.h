@@ -44,6 +44,8 @@
 #define _SC_GETPW_R_SIZE_MAX	8 /* passwd buffer size */
 #define _SC_GETGR_R_SIZE_MAX	9 /* group buffer size */
 #define _SC_AVPHYS_PAGES	10	/* available physical pages */
+#define _SC_NPROCESSORS_CONF 11
+#define _SC_NPROCESSORS_ONLN 12
 
 #if (defined __USE_POSIX2 || defined __USE_UNIX98 \
      || defined __USE_FILE_OFFSET64 || defined __USE_LARGEFILE64 \

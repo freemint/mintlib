@@ -12,9 +12,12 @@
 #include <errno.h>
 #include <limits.h>
 #include <time.h>
+#include <sys/sysinfo.h>
 #include "lib.h"
 
+#ifndef UNLIMITED
 #define UNLIMITED	(0x7fffffffL)
+#endif
 
 long
 __sysconf (int var)
@@ -31,7 +34,7 @@ __sysconf (int var)
 
 	switch(var) {
 	case _SC_LAST:
-		return 4;
+		return 12;
 	case _SC_MEMR_MAX:
 		return UNLIMITED; /* not true for TOS < 1.4 :-( */
 	case _SC_ARG_MAX:
@@ -42,11 +45,23 @@ __sysconf (int var)
 	case _SC_NGROUPS_MAX:
 		return NGROUPS_MAX;
 	case _SC_CHILD_MAX:
-		return UNLIMITED; /* good 'ol TOS :-) */
+		return get_child_max();
 	case _SC_CLK_TCK:
 		return CLOCKS_PER_SEC;
 	case _SC_PAGE_SIZE:
 		return getpagesize();
+    case _SC_GETPW_R_SIZE_MAX:
+      return -1;
+    case _SC_GETGR_R_SIZE_MAX:
+      return -1;
+    case _SC_PHYS_PAGES:
+      return get_phys_pages();
+    case _SC_AVPHYS_PAGES:
+      return get_avphys_pages();
+	case _SC_NPROCESSORS_CONF:
+      return get_nprocs_conf();
+    case _SC_NPROCESSORS_ONLN:
+      return get_nprocs ();
 	default:
 		return -1;
 	}
