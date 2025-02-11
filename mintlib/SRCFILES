@@ -70,6 +70,7 @@ SRCFILES = \
 	posix_memalign.c \
 	profil-freq.c \
 	profil-posix.c \
+	program-name.c \
 	pselect.c \
 	putenv.c \
 	quickstat.c \

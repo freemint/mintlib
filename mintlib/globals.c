@@ -41,8 +41,3 @@ short _app = 1;
 
 /* Are we on a split addr mem ST.  */
 short _split_mem = 0;
-
-char *program_invocation_name = "unknown application";
-char *program_invocation_short_name = "unknown application";
-
-
