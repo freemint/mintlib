@@ -278,7 +278,12 @@ extern int dysize (int __year) __THROW  __attribute__ ((__const__));
 extern int nanosleep (__const struct timespec *__requested_time,
 		      struct timespec *__remaining);
 
-extern int clock_gettime(clockid_t clock_id, struct timespec *tp);
+/* Get resolution of clock CLOCK_ID.  */
+extern int clock_getres (clockid_t __clock_id, struct timespec *__res) __THROW;
+
+/* Get current value of clock CLOCK_ID and store it in TP.  */
+extern int clock_gettime(clockid_t clock_id, struct timespec *tp)
+     __THROW __nonnull((2));
 
 extern int clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req, 
             struct timespec *rem);

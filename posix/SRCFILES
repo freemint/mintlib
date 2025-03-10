@@ -21,6 +21,7 @@ SRCFILES = \
 	isfdtype.c \
 	nanosleep.c \
 	clock_gettime.c \
+	clock_getres.c \
 	clock_nanosleep.c \
 	posix_fallocate.c \
 	pread.c \
