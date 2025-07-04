@@ -21,6 +21,10 @@
 #ifndef _error_h_
 #define _error_h_
 
+#ifndef	_FEATURES_H
+# include <features.h>
+#endif
+
 #ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
 # if !__GNUC_PREREQ(2,5) || __STRICT_ANSI__
