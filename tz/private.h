@@ -10,7 +10,7 @@
 #define PRIVATE_H
 
 #define PKGVERSION "(mintlib) "
-#define TZVERSION  "2023d"
+#define TZVERSION  "2024a"
 #define REPORT_BUGS_TO "tz@iana.org"
 
 
@@ -832,6 +832,18 @@ char *ctime_r(time_t const *, char *);
 #define SECSPERHOUR	(SECSPERMIN * MINSPERHOUR)
 #define SECSPERDAY	((int_fast32_t) SECSPERHOUR * HOURSPERDAY)
 #define MONSPERYEAR	12
+
+/* How many years to generate (in zic.c) or search through (in localtime.c).
+   This is two years larger than the obvious 400, to avoid edge cases.
+   E.g., suppose a non-POSIX.1-2017 rule applies from 2012 on with transitions
+   in March and September, plus one-off transitions in November 2013.
+   If zic looked only at the last 400 years, it would set max_year=2413,
+   with the intent that the 400 years 2014 through 2413 will be repeated.
+   The last transition listed in the tzfile would be in 2413-09,
+   less than 400 years after the last one-off transition in 2013-11.
+   Two years is not overkill for localtime.c, as a one-year bump
+   would mishandle 2023d's America/Ciudad_Juarez for November 2422.  */
+enum { years_of_observations = YEARSPERREPEAT + 2 };
 
 enum {
   TM_SUNDAY,
