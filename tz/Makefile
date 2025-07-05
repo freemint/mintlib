@@ -10,7 +10,7 @@
 #
 # currently also duplicated at top of private.h; FIXME
 #
-TZVERSION = 2024a
+TZVERSION = 2024b
 TZ_BUGEMAIL = tz@iana.org
 PKGVERSION = mintlib
 

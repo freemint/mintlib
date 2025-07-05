@@ -808,6 +808,5 @@ static const struct state new_york =
     { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 },
     { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 },
     { 0, 0 }, { 0, 0 }
-  },
-  0  /* defaulttype */
+  }
 };

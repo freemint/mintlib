@@ -1039,7 +1039,8 @@ static void showextrema(timezone_t tz, char *zone, time_t lo, struct tm *lotmp, 
 #include <stdarg.h>
 
 /* A substitute for snprintf that is good enough for zdump.  */
-static int ATTRIBUTE_FORMAT((printf, 3, 4)) my_snprintf(char *s, size_t size, const char *format, ...)
+ATTRIBUTE_FORMAT((printf, 3, 4))
+static int my_snprintf(char *s, size_t size, const char *format, ...)
 {
 	int n;
 	va_list args;

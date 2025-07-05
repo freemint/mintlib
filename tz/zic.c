@@ -3214,10 +3214,10 @@ static int rule_cmp(struct rule const *a, struct rule const *b)
 	return a->r_dayofmonth - b->r_dayofmonth;
 }
 
-/* Store into RESULT a POSIX.1-2017 TZ string that represent the future
+/* Store into RESULT a proleptic TZ string that represent the future
    predictions for the zone ZPFIRST with ZONECOUNT entries.  Return a
    compatibility indicator (a TZDB release year) if successful, a
-   negative integer if no such TZ string exissts.  */
+   negative integer if no such TZ string exists.  */
 static int stringzone(char *result, const struct zone *zpfirst, ptrdiff_t zonecount)
 {
 	const struct zone *zp;
@@ -3420,7 +3420,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	{
 		if (!*envvar)
 		{
-			warning("%s %s", _("no POSIX.1-2017 environment variable for zone"), zpfirst->z_name);
+			warning("%s %s", _("no proleptic TZ string for zone"), zpfirst->z_name);
 		} else if (compat != 0)
 		{
 			/* Circa-COMPAT clients, and earlier clients, might
@@ -3688,7 +3688,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	{
 		/*
 		 ** If we're extending the explicitly listed observations for
-		 ** 400 years because we can't fill the POSIX.1-2017 TZ field,
+		 ** 400 years because we can't fill the proleptic TZ field,
 		 ** check whether we actually ended up explicitly listing
 		 ** observations through that period.  If there aren't any
 		 ** near the end of the 400-year period, add a redundant

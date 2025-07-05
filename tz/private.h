@@ -10,7 +10,7 @@
 #define PRIVATE_H
 
 #define PKGVERSION "(mintlib) "
-#define TZVERSION  "2024a"
+#define TZVERSION  "2024b"
 #define REPORT_BUGS_TO "tz@iana.org"
 
 
@@ -202,6 +202,27 @@
 
 #if HAVE_UNISTD_H
 #include "unistd.h"	/* for F_OK, R_OK, and other POSIX goodness */
+#endif
+
+/* SUPPORT_POSIX2008 means the tzcode library should support
+   POSIX.1-2017-and-earlier callers in addition to the usual support for
+   POSIX.1-2024-and-later callers; however, this can be
+   incompatible with POSIX.1-2024-and-later callers.
+   This macro is obsolescent, and the plan is to remove it
+   along with any code needed only when it is nonzero.
+   A good time to do that might be in the year 2034.
+   This macro's name is SUPPORT_POSIX2008 because _POSIX_VERSION == 200809
+   in POSIX.1-2017, a minor revision of POSIX.1-2008.  */
+#ifndef SUPPORT_POSIX2008
+# define SUPPORT_POSIX2008 1
+#endif
+
+#ifndef HAVE_DECL_ASCTIME_R
+# if SUPPORT_POSIX2008
+#  define HAVE_DECL_ASCTIME_R 1
+# else
+#  define HAVE_DECL_ASCTIME_R 0
+# endif
 #endif
 
 #ifndef HAVE_STRFTIME_L
@@ -835,8 +856,9 @@ char *ctime_r(time_t const *, char *);
 
 /* How many years to generate (in zic.c) or search through (in localtime.c).
    This is two years larger than the obvious 400, to avoid edge cases.
-   E.g., suppose a non-POSIX.1-2017 rule applies from 2012 on with transitions
-   in March and September, plus one-off transitions in November 2013.
+   E.g., suppose a rule applies from 2012 on with transitions
+   in March and September, plus one-off transitions in November 2013,
+   and suppose the rule cannot be expressed as a proleptic TZ string.
    If zic looked only at the last 400 years, it would set max_year=2413,
    with the intent that the 400 years 2014 through 2413 will be repeated.
    The last transition listed in the tzfile would be in 2413-09,

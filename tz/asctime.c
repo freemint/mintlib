@@ -1,4 +1,4 @@
-/* asctime and asctime_r a la POSIX and ISO C, except pad years before 1000.  */
+/* asctime a la ISO C.  */
 
 /*
 ** This file is in the public domain, so clarified as of
@@ -29,8 +29,8 @@
 ** leading zeroes to get the newline in the traditional place.
 ** The -4 ensures that we get four characters of output even if
 ** we call a strftime variant that produces fewer characters for some years.
-** The ISO C and POSIX standards prohibit padding the year,
-** but many implementations pad anyway; most likely the standards are buggy.
+** This conforms to recent ISO C and POSIX standards, which say behavior
+** is undefined when the year is less than 1000 or greater than 9999.
 */
 #ifdef __GNUC__
 #define ASCTIME_FMT	"%s %s%3d %2.2d:%2.2d:%2.2d %-4s\n"
@@ -78,6 +78,18 @@ static char buf_ctime[sizeof buf_asctime];
 ** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
 */
 
+/* Publish asctime_r and ctime_r only when supporting older POSIX.  */
+#if SUPPORT_POSIX2008
+# define asctime_static
+#else
+# define asctime_static static
+# undef asctime_r
+# undef ctime_r
+# define asctime_r static_asctime_r
+# define ctime_r static_ctime_r
+#endif
+
+asctime_static
 char *asctime_r(const struct tm *__restrict timeptr, char *__restrict buf)
 {
 	static const char wday_name[][4] = {
