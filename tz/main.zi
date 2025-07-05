@@ -285,13 +285,6 @@ Rule	Egypt	2007	only	-	Sep	Thu>=1	24:00	0	-
 # reproduced by other (more accessible) sites[, e.g.,]...
 # http://elgornal.net/news/news.aspx?id=4699258
 
-# From Paul Eggert (2014-06-04):
-# Sarah El Deeb and Lee Keath of AP report that the Egyptian government says
-# the change is because of blackouts in Cairo, even though Ahram Online (cited
-# above) says DST had no affect on electricity consumption.  There is
-# no information about when DST will end this fall.  See:
-# http://abcnews.go.com/International/wireStory/el-sissi-pushes-egyptians-line-23614833
-
 # From Steffen Thorsen (2015-04-08):
 # Egypt will start DST on midnight after Thursday, April 30, 2015.
 # This is based on a law (no 35) from May 15, 2014 saying it starts the last
@@ -1531,6 +1524,11 @@ Zone	Africa/Tunis	0:40:44 -	LMT	1881 May 12
 # - 2018 Oct  7 4:00 - 2019 Mar 17 3:00 - 2019 Oct  4 3:00 - 2020 Mar  8 3:00
 # and now - 2020 Oct  4 0:01
 
+# From Paul Eggert (2023-12-20):
+# Transitions from 2021 on are taken from:
+# https://www.timeanddate.com/time/zone/antarctica/casey
+# retrieved at various dates.
+
 # Zone	NAME		STDOFF	RULES	FORMAT	[UNTIL]
 Zone Antarctica/Casey	 0	-	-00	1969
 			 8:00	-	+08	2009 Oct 18  2:00
@@ -1544,7 +1542,12 @@ Zone Antarctica/Casey	 0	-	-00	1969
 			 8:00	-	+08	2019 Oct  4  3:00
 			11:00	-	+11	2020 Mar  8  3:00
 			 8:00	-	+08	2020 Oct  4  0:01
-			11:00	-	+11
+			11:00	-	+11	2021 Mar 14  0:00
+			 8:00	-	+08	2021 Oct  3  0:01
+			11:00	-	+11	2022 Mar 13  0:00
+			 8:00	-	+08	2022 Oct  2  0:01
+			11:00	-	+11	2023 Mar  9  3:00
+			 8:00	-	+08
 Zone Antarctica/Davis	0	-	-00	1957 Jan 13
 			7:00	-	+07	1964 Nov
 			0	-	-00	1969 Feb
@@ -1691,7 +1694,50 @@ Zone Antarctica/Troll	0	-	-00	2005 Feb 12
 #	year-round from 1960/61 to 1992
 
 # Vostok, since 1957-12-16, temporarily closed 1994-02/1994-11
-# See Asia/Urumqi.
+# From Craig Mundell (1994-12-15):
+# http://quest.arc.nasa.gov/antarctica/QA/computers/Directions,Time,ZIP
+# Vostok, which is one of the Russian stations, is set on the same
+# time as Moscow, Russia.
+#
+# From Lee Hotz (2001-03-08):
+# I queried the folks at Columbia who spent the summer at Vostok and this is
+# what they had to say about time there:
+# "in the US Camp (East Camp) we have been on New Zealand (McMurdo)
+# time, which is 12 hours ahead of GMT. The Russian Station Vostok was
+# 6 hours behind that (although only 2 miles away, i.e. 6 hours ahead
+# of GMT). This is a time zone I think two hours east of Moscow. The
+# natural time zone is in between the two: 8 hours ahead of GMT."
+#
+# From Paul Eggert (2001-05-04):
+# This seems to be hopelessly confusing, so I asked Lee Hotz about it
+# in person.  He said that some Antarctic locations set their local
+# time so that noon is the warmest part of the day, and that this
+# changes during the year and does not necessarily correspond to mean
+# solar noon.  So the Vostok time might have been whatever the clocks
+# happened to be during their visit.  So we still don't really know what time
+# it is at Vostok.
+#
+# From Zakhary V. Akulov (2023-12-17 22:00:48 +0700):
+# ... from December, 18, 2023 00:00 by my decision the local time of
+# the Antarctic research base Vostok will correspond to UTC+5.
+# (2023-12-19): We constantly interact with Progress base, with company who
+# builds new wintering station, with sledge convoys, with aviation - they all
+# use UTC+5. Besides, difference between Moscow time is just 2 hours now, not 4.
+# (2023-12-19, in response to the question "Has local time at Vostok
+# been UTC+6 ever since 1957, or has it changed before?"): No. At least
+# since my antarctic career start, 10 years ago, Vostok base has UTC+7.
+# (In response to a 2023-12-18 question "from 02:00 to 00:00 today"): This.
+#
+# From Paul Eggert (2023-12-18):
+# For lack of better info, guess Vostok was at +07 from founding through today,
+# except when closed.
+
+# Zone	NAME		STDOFF	RULES	FORMAT	[UNTIL]
+Zone Antarctica/Vostok	0	-	-00	1957 Dec 16
+			7:00	-	+07	1994 Feb
+			0	-	-00	1994 Nov
+			7:00	-	+07	2023 Dec 18  2:00
+			5:00	-	+05
 
 # S Africa - year-round bases
 # Marion Island, -4653+03752
@@ -2415,7 +2461,6 @@ Zone	Asia/Shanghai	8:05:43	-	LMT	1901
 			8:00	PRC	C%sT
 # Xinjiang time, used by many in western China; represented by Ürümqi / Ürümchi
 # / Wulumuqi.  (Please use Asia/Shanghai if you prefer Beijing time.)
-# Vostok base in Antarctica matches this since 1970.
 Zone	Asia/Urumqi	5:50:20	-	LMT	1928
 			6:00	-	+06
 
@@ -4451,6 +4496,40 @@ Zone	Asia/Pyongyang	8:23:00 -	LMT	1908 Apr  1
 
 
 # Lebanon
+#
+# From Saadallah Itani (2023-03-23):
+# Lebanon ... announced today delay of Spring forward from March 25 to April 20.
+#
+# From Paul Eggert (2023-03-27):
+# This announcement was by the Lebanese caretaker prime minister Najib Mikati.
+# https://www.mtv.com.lb/en/News/Local/1352516/lebanon-postpones-daylight-saving-time-adoption
+# A video was later leaked to the media of parliament speaker Nabih Berri
+# asking Mikati to postpone DST to aid observance of Ramadan, Mikati objecting
+# that this would cause problems such as scheduling airline flights, to which
+# Berri interjected, "What flights?"
+#
+# The change was controversial and led to a partly-sectarian divide.
+# Many Lebanese institutions, including the education ministry, the Maronite
+# church, and two news channels LCBI and MTV, ignored the announcement and
+# went ahead with the long-scheduled spring-forward on March 25/26, some
+# arguing that the prime minister had not followed the law because the change
+# had not been approved by the cabinet.  Google went with the announcement;
+# Apple ignored it.  At least one bank followed the announcement for its doors,
+# but ignored the announcement in internal computer systems.
+# Beirut international airport listed two times for each departure.
+# Dan Azzi wrote "My view is that this whole thing is a Dumb and Dumber movie."
+# Eventually the prime minister backed down, said the cabinet had decided to
+# stick with its 1998 decision, and that DST would begin midnight March 29/30.
+# https://www.nna-leb.gov.lb/en/miscellaneous/604093/lebanon-has-two-times-of-day-amid-daylight-savings
+# https://www.cnbc.com/2023/03/27/lebanon-in-two-different-time-zones-as-government-disagrees-on-daylight-savings.html
+#
+# Although we could model the chaos with two Zones, that would likely cause
+# more trouble than it would cure.  Since so many manual clocks and
+# computer-based timestamps ignored the announcement, stick with official
+# cabinet resolutions in the data while recording the prime minister's
+# announcement as a comment.  This is how we treated a similar situation in
+# Rio de Janeiro in spring 1993.
+#
 # Rule	NAME	FROM	TO	-	IN	ON	AT	SAVE	LETTER/S
 Rule	Lebanon	1920	only	-	Mar	28	0:00	1:00	S
 Rule	Lebanon	1920	only	-	Oct	25	0:00	0	-
@@ -4476,6 +4555,10 @@ Rule	Lebanon	1992	only	-	Oct	4	0:00	0	-
 Rule	Lebanon	1993	max	-	Mar	lastSun	0:00	1:00	S
 Rule	Lebanon	1993	1998	-	Sep	lastSun	0:00	0	-
 Rule	Lebanon	1999	max	-	Oct	lastSun	0:00	0	-
+# This one-time rule, announced by the prime minister first for April 21
+# then for March 30, is commented out for reasons described above.
+#Rule	Lebanon	2023	only	-	Mar	30	0:00	1:00	S
+
 # Zone	NAME		STDOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Beirut	2:22:00 -	LMT	1880
 			2:00	Lebanon	EE%sT
@@ -5149,6 +5232,9 @@ Zone	Asia/Karachi	4:28:12 -	LMT	1907
 # From Heba Hamad (2023-03-22):
 # ... summer time will begin in Palestine from Saturday 04-29-2023,
 # 02:00 AM by 60 minutes forward.
+# From Heba Hemad (2023-10-09):
+# ... winter time will begin in Palestine from Saturday 10-28-2023,
+# 02:00 AM by 60 minutes back.
 #
 # From Paul Eggert (2023-03-22):
 # For now, guess that spring and fall transitions will normally
@@ -5270,13 +5356,13 @@ Rule Palestine	2070	only	-	Oct	 4	2:00	0	-
 Rule Palestine	2071	only	-	Sep	19	2:00	0	-
 Rule Palestine	2072	only	-	Sep	10	2:00	0	-
 Rule Palestine	2072	only	-	Oct	15	2:00	1:00	S
+Rule Palestine	2072	max	-	Oct	Sat<=30	2:00	0	-
 Rule Palestine	2073	only	-	Sep	 2	2:00	0	-
 Rule Palestine	2073	only	-	Oct	 7	2:00	1:00	S
 Rule Palestine	2074	only	-	Aug	18	2:00	0	-
 Rule Palestine	2074	only	-	Sep	29	2:00	1:00	S
 Rule Palestine	2075	only	-	Aug	10	2:00	0	-
 Rule Palestine	2075	only	-	Sep	14	2:00	1:00	S
-Rule Palestine	2075	max	-	Oct	Sat<=30	2:00	0	-
 Rule Palestine	2076	only	-	Jul	25	2:00	0	-
 Rule Palestine	2076	only	-	Sep	 5	2:00	1:00	S
 Rule Palestine	2077	only	-	Jul	17	2:00	0	-
@@ -6216,8 +6302,14 @@ Zone Antarctica/Macquarie 0	-	-00	1899 Nov
 # Please note that there will not be any daylight savings time change
 # in Fiji for 2022-2023....
 # https://www.facebook.com/FijianGovernment/posts/pfbid0mmWVTYmTibn66ybpFda75pDcf34SSpoSaskJW5gXwaKo5Sgc7273Q4fXWc6kQV6Hl
+
+# From Almaz Mingaleev (2023-10-06):
+# Cabinet approved the suspension of Daylight Saving and appropriate
+# legislative changes will be considered including the repeal of the
+# Daylight Saving Act 1998
+# https://www.fiji.gov.fj/Media-Centre/Speeches/English/CABINET-DECISIONS-3-OCTOBER-2023
 #
-# From Paul Eggert (2022-10-27):
+# From Paul Eggert (2023-10-06):
 # For now, assume DST is suspended indefinitely.
 
 # Rule	NAME	FROM	TO	-	IN	ON	AT	SAVE	LETTER/S
@@ -9164,6 +9256,23 @@ Zone Atlantic/Faroe	-0:27:04 -	LMT	1908 Jan 11 # Tórshavn
 # 2. The shift *from* DST in 2023 happens as normal, but coincides with the
 #    shift to UTC-02 normaltime (people will not change their clocks here).
 # 3. After this, DST is still observed, but as -02/-01 instead of -03/-02.
+#
+# From Múte Bourup Egede via Jógvan Svabo Samuelsen (2023-03-15):
+# Greenland will not switch to Daylight Saving Time this year, 2023,
+# because the standard time for Greenland will change from UTC -3 to UTC -2.
+# However, Greenland will change to Daylight Saving Time again in 2024
+# and onwards.
+
+# From a contributor who wishes to remain anonymous for now (2023-10-29):
+# https://www.dr.dk/nyheder/seneste/i-nat-skal-uret-stilles-en-time-tilbage-men-foerste-gang-sker-det-ikke-i-groenland
+# with a link to that page:
+# https://naalakkersuisut.gl/Nyheder/2023/10/2710_sommertid
+# ... Ittoqqortoormiit joins the time of Nuuk at March 2024.
+# What would mean that America/Scoresbysund would either be in -01 year round
+# or in -02/-01 like America/Nuuk, but no longer in -01/+00.
+#
+# From Paul Eggert (2023-10-29):
+# For now, assume it will be like America/Nuuk.
 
 # Rule	NAME	FROM	TO	-	IN	ON	AT	SAVE	LETTER/S
 Rule	Thule	1991	1992	-	Mar	lastSun	2:00	1:00	D
@@ -9184,10 +9293,12 @@ Zone America/Danmarkshavn -1:14:40 -	LMT	1916 Jul 28
 Zone America/Scoresbysund -1:27:52 -	LMT	1916 Jul 28 # Ittoqqortoormiit
 			-2:00	-	-02	1980 Apr  6  2:00
 			-2:00	C-Eur	-02/-01	1981 Mar 29
-			-1:00	EU	-01/+00
+			-1:00	EU	-01/+00 2024 Mar 31
+			-2:00	EU	-02/-01
 Zone America/Nuuk	-3:26:56 -	LMT	1916 Jul 28 # Godthåb
 			-3:00	-	-03	1980 Apr  6  2:00
-			-3:00	EU	-03/-02	2023 Oct 29  1:00u
+			-3:00	EU	-03/-02	2023 Mar 26  1:00u
+			-2:00	-	-02	2023 Oct 29  1:00u
 			-2:00	EU	-02/-01
 Zone America/Thule	-4:35:08 -	LMT	1916 Jul 28 # Pituffik
 			-4:00	Thule	A%sT
@@ -11752,11 +11863,7 @@ Zone	Europe/Istanbul	1:55:52 -	LMT	1880
 # and not at 3:00 as would have been under EU rules.
 # This is why I have set the change to EU rules into May 1996,
 # so that the change in March is stil covered by the Ukraine rule.
-# The next change in October 1996 happened under EU rules....
-# TZ database holds three other zones for Ukraine.... I have not yet
-# worked out the consequences for these three zones, as we (me and my
-# US colleague David Cochrane) are still trying to get more
-# information upon these local deviations from Kiev rules.
+# The next change in October 1996 happened under EU rules.
 #
 # From Paul Eggert (2022-08-27):
 # For now, assume that Ukraine's zones all followed the same rules,
@@ -13368,7 +13475,7 @@ Rule	StJohns	1989	2006	-	Apr	Sun>=1	0:01	1:00	D
 Rule	StJohns	2007	2011	-	Mar	Sun>=8	0:01	1:00	D
 Rule	StJohns	2007	2010	-	Nov	Sun>=1	0:01	0	S
 #
-# St John's has an apostrophe, but Posix file names can't have apostrophes.
+# St John's has an apostrophe, but POSIX file names can't have apostrophes.
 # Zone	NAME		STDOFF	RULES	FORMAT	[UNTIL]
 Zone America/St_Johns	-3:30:52 -	LMT	1884
 			-3:30:52 StJohns N%sT	1918
@@ -17230,6 +17337,12 @@ Rule	Para	2010	2012	-	Apr	Sun>=8	0:00	0	-
 # From Carlos Raúl Perasso (2014-02-28):
 # Decree 1264 can be found at:
 # http://www.presidencia.gov.py/archivos/documentos/DECRETO1264_ey9r8zai.pdf
+#
+# From Paul Eggert (2023-07-26):
+# Transition dates are now set by Law No. 7115, not by presidential decree.
+# https://www.abc.com.py/politica/2023/07/12/promulgacion-el-cambio-de-hora-sera-por-ley/
+# From Carlos Raúl Perasso (2023-07-27):
+# http://silpy.congreso.gov.py/descarga/ley-144138
 Rule	Para	2013	max	-	Mar	Sun>=22	0:00	0	-
 
 # Zone	NAME		STDOFF	RULES	FORMAT	[UNTIL]
@@ -17827,7 +17940,6 @@ Link	America/Puerto_Rico	America/Tortola
 Link	Pacific/Port_Moresby	Antarctica/DumontDUrville
 Link	Pacific/Auckland	Antarctica/McMurdo
 Link	Asia/Riyadh		Antarctica/Syowa
-Link	Asia/Urumqi		Antarctica/Vostok
 Link	Europe/Berlin		Arctic/Longyearbyen
 Link	Asia/Riyadh		Asia/Aden
 Link	Asia/Qatar		Asia/Bahrain

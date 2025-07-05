@@ -10,7 +10,7 @@
 #
 # currently also duplicated at top of private.h; FIXME
 #
-TZVERSION = 2022g
+TZVERSION = 2023d
 TZ_BUGEMAIL = tz@iana.org
 PKGVERSION = mintlib
 
@@ -153,7 +153,7 @@ YDATA =	$(PRIMARY_YDATA) etcetera $(BACKWARD) $(PACKRATDATA)
 NDATA =	factory
 #SDATA =	solar87 solar88 solar89
 TDATA =	$(YDATA) $(NDATA) $(SDATA)
-ZONETABLES=	zone1970.tab zone.tab
+ZONETABLES=	zone.tab zone1970.tab zonenow.tab
 TABDATA = iso3166.tab $(TZDATA_TEXT) $(ZONETABLES)
 LEAP_DEPS =	$(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list
 TZDATA_ZI_DEPS=	ziguard.awk zishrink.awk $(TDATA) $(PACKRATDATA) $(PACKRATLIST)

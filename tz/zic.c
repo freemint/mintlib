@@ -173,7 +173,7 @@ static int symlink(const char *target, const char *linkname)
 #ifndef AT_SYMLINK_FOLLOW
 #if defined(HAVE_LINK) && HAVE_LINK
 #define linkat(targetdir, target, linknamedir, linkname, flag) \
-     (itssymlink(target) ? (errno = ENOTSUP, -1) : link(target, linkname))
+     (itssymlink(target, NULL) ? (errno = ENOTSUP, -1) : link(target, linkname))
 #else
 #define linkat(targetdir, target, linknamedir, linkname, flag) \
      (errno = ENOTSUP, -1)
@@ -202,7 +202,7 @@ static int inzcont(char **fields, int nfields);
 static int inzone(char **fields, int nfields);
 static int inzsub(char **fields, int nfields, int iscont);
 static int itsdir(const char *name);
-static int itssymlink(const char *);
+static int itssymlink(const char *, int *);
 static int is_alpha(char a);
 static char lowerit(char c);
 static void mkdirs(const char *filename, int ancestors);
@@ -924,7 +924,8 @@ static zic_t const max_time = MAXVAL(zic_t, TIME_T_BITS_IN_FILE);
 static zic_t lo_time = MINVAL(zic_t, TIME_T_BITS_IN_FILE);
 static zic_t hi_time = MAXVAL(zic_t, TIME_T_BITS_IN_FILE);
 
-/* The time specified by the -R option, defaulting to MIN_TIME.  */
+/* The time specified by the -R option, defaulting to MIN_TIME;
+   or lo_time, whichever is greater.  */
 static zic_t redundant_time = MINVAL(zic_t, TIME_T_BITS_IN_FILE);
 
 /* The time specified by an Expires line, or negative if no such line.  */
@@ -1146,6 +1147,8 @@ int main(int argc, char **argv)
 		fprintf(stderr, _("%s: -R time exceeds -r cutoff\n"), progname);
 		return EXIT_FAILURE;
 	}
+	if (redundant_time < lo_time)
+		redundant_time = lo_time;
 	if (bloat == 0)
 	{
 		static char const bloat_default[] = ZIC_BLOAT_DEFAULT;
@@ -1432,9 +1435,9 @@ static void rename_dest(char *tempname, char const *name)
 	}
 }
 
-/* Create symlink contents suitable for symlinking FROM to TO, as a
-   freshly allocated string.  FROM should be a relative file name, and
-   is relative to the global variable DIRECTORY.  TO can be either
+/* Create symlink contents suitable for symlinking TARGET to LINKNAME, as a
+   freshly allocated string.  TARGET should be a relative file name, and
+   is relative to the global variable DIRECTORY.  LINKNAME can be either
    relative or absolute.  */
 static char *relname(char const *target, char const *linkname)
 {
@@ -1486,11 +1489,24 @@ static int hardlinkerr(char const *from, char const *to)
 	return r == 0 ? 0 : errno;
 }
 
+/* Return true if A and B must have the same parent dir if A and B exist.
+   Return false if this is not necessarily true (though it might be true).
+   Keep it simple, and do not inspect the file system.  */
+static int same_parent_dirs(char const *a, char const *b)
+{
+	for (; *a == *b; a++, b++)
+		if (!*a)
+			return TRUE;
+	return ! (strchr(a, '/') || strchr(b, '/'));
+}
+
 static void dolink(const char *target, const char *linkname, int staysymlink)
 {
 	int linkdirs_made = FALSE;
 	int link_errno;
 	int to_absolute;
+	int targetissym = -2;
+	int linknameissym = -2;
 
 	check_for_signal();
 
@@ -1513,7 +1529,7 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 	 */
 	to_absolute = *linkname == '/';
 	if (staysymlink)
-		staysymlink = to_absolute || itssymlink(linkname);
+		staysymlink = to_absolute || itssymlink(linkname, &linknameissym);
 	if (!to_absolute || strcmp(directory, TZDIR) == 0)
 	{
 		if (remove(linkname) == 0)
@@ -1531,6 +1547,27 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 		}
 	}
 	link_errno = staysymlink ? ENOTSUP : hardlinkerr(target, linkname);
+	/* Linux 2.6.16 and 2.6.17 mishandle AT_SYMLINK_FOLLOW.  */
+	if (link_errno == EINVAL)
+		link_errno = ENOTSUP;
+#if defined(HAVE_LINK) && HAVE_LINK
+	/* If linkat is not supported, fall back on link(A, B).
+	     However, skip this if A is a relative symlink
+	     and A and B might not have the same parent directory.
+	     On some platforms link(A, B) does not follow a symlink A,
+	     and if A is relative it might misbehave elsewhere.  */
+	if (link_errno == ENOTSUP &&
+		(same_parent_dirs(target, linkname) || 0 <= itssymlink(target, &targetissym)))
+	{
+	    if (link(target, linkname) == 0)
+	    {
+			link_errno = 0;
+	    } else
+	    {
+			link_errno = errno;
+		}
+	}
+#endif
 	if (link_errno == ENOENT && !linkdirs_made)
 	{
 		if (!to_absolute)
@@ -1619,12 +1656,22 @@ static int itsdir(const char *name)
 	return FALSE;
 }
 
-/* Return TRUE if NAME is a symbolic link.  */
-static int itssymlink(char const *name)
+/* Return 1 if NAME is an absolute symbolic link, -1 if it is relative,
+   0 if it is not a symbolic link.  If *CACHE is not -2, it is the
+   cached result of a previous call to this function with the same NAME.  */
+static int itssymlink(char const *name, int *cache)
 {
 	char c;
+	int ccache = -2;
 
-	return 0 <= readlink(name, &c, 1);
+	if (cache == NULL)
+		cache = &ccache;
+	if (*cache == -2)
+	{
+		char c = '\0';
+	    *cache = readlink(name, &c, 1) < 0 ? 0 : c == '/' ? 1 : -1;
+	}
+	return *cache;
 }
 
 /*
@@ -3173,6 +3220,10 @@ static int rule_cmp(struct rule const *a, struct rule const *b)
 	return a->r_dayofmonth - b->r_dayofmonth;
 }
 
+/* Store into RESULT a POSIX TZ string that represent the future
+   predictions for the zone ZPFIRST with ZONECOUNT entries.  Return a
+   compatibility indicator (a TZDB release year) if successful, a
+   negative integer if no such TZ string exissts.  */
 static int stringzone(char *result, const struct zone *zpfirst, ptrdiff_t zonecount)
 {
 	const struct zone *zp;
@@ -3317,7 +3368,8 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	int compat;
 	int do_extend;
 	char version;
-	ptrdiff_t lastatmax = -1;
+	zic_t nonTZlimtime = ZIC_MIN;
+	int nonTZlimtype = -1;
 	zic_t max_year0;
 	int defaulttype = -1;
 
@@ -3442,8 +3494,6 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 
 	for (i = 0; i < zonecount; ++i)
 	{
-		struct rule *prevrp = NULL;
-
 		/*
 		 ** A guess that may well be corrected later.
 		 */
@@ -3453,9 +3503,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 		int useuntil = i < (zonecount - 1);
 		zic_t stdoff = zp->z_stdoff;
 		zic_t startoff = stdoff;
-		zic_t prevktime;
 
-		INITIALIZE(prevktime);
 		if (useuntil && zp->z_untiltime <= min_time)
 			continue;
 		eat(zp->z_filenum, zp->z_linenum);
@@ -3470,6 +3518,11 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 			if (usestart)
 			{
 				addtt(starttime, type);
+				if (useuntil && nonTZlimtime < starttime)
+				{
+					nonTZlimtime = starttime;
+					nonTZlimtype = type;
+				}
 				usestart = FALSE;
 			} else
 			{
@@ -3587,18 +3640,15 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 					eats(zp->z_filenum, zp->z_linenum, rp->r_filenum, rp->r_linenum);
 					doabbr(ab, zp, rp->r_abbrvar, rp->r_isdst, rp->r_save, FALSE);
 					offset = oadd(zp->z_stdoff, rp->r_save);
-					if (!want_bloat() && !useuntil && !do_extend
-						&& prevrp && lo_time <= prevktime
-						&& redundant_time <= ktime && rp->r_hiyear == ZIC_MAX && prevrp->r_hiyear == ZIC_MAX)
-						break;
 					type = addtype(offset, ab, rp->r_isdst, rp->r_todisstd, rp->r_todisut);
 					if (defaulttype < 0 && !rp->r_isdst)
 						defaulttype = type;
-					if (rp->r_hiyear == ZIC_MAX && !(0 <= lastatmax && ktime < attypes[lastatmax].at))
-						lastatmax = timecnt;
 					addtt(ktime, type);
-					prevrp = rp;
-					prevktime = ktime;
+					if (nonTZlimtime < ktime && (useuntil || rp->r_hiyear != ZIC_MAX))
+					{
+						nonTZlimtime = ktime;
+						nonTZlimtype = type;
+					}
 				}
 			}
 		}
@@ -3637,8 +3687,40 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	}
 	if (defaulttype < 0)
 		defaulttype = 0;
-	if (0 <= lastatmax)
-		attypes[lastatmax].dontmerge = TRUE;
+	if (!do_extend && !want_bloat())
+	{
+		/* Keep trailing transitions that are no greater than this.  */
+		zic_t keep_at_max;
+	
+		/* The earliest transition into a time governed by the TZ string.  */
+		zic_t TZstarttime = ZIC_MAX;
+	
+		for (i = 0; i < timecnt; i++)
+		{
+			zic_t at = attypes[i].at;
+
+			if (nonTZlimtime < at && at < TZstarttime)
+				TZstarttime = at;
+		}
+		if (TZstarttime == ZIC_MAX)
+			TZstarttime = nonTZlimtime;
+
+		/* Omit trailing transitions deducible from the TZ string,
+		   and not needed for -r or -R.  */
+		keep_at_max = max(TZstarttime, redundant_time);
+		for (i = j = 0; i < timecnt; i++)
+		{
+			if (attypes[i].at <= keep_at_max)
+			{
+				attypes[j].at = attypes[i].at;
+				attypes[j].dontmerge = (attypes[i].at == TZstarttime &&
+					(nonTZlimtype != attypes[i].type || strchr(envvar, ',')));
+				attypes[j].type = attypes[i].type;
+				j++;
+			}
+		}
+		timecnt = j;
+	}
 	if (do_extend)
 	{
 		/*

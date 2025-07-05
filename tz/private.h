@@ -5,11 +5,12 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <stddef.h>
 
 #define PRIVATE_H
 
 #define PKGVERSION "(mintlib) "
-#define TZVERSION  "2022g"
+#define TZVERSION  "2023d"
 #define REPORT_BUGS_TO "tz@iana.org"
 
 

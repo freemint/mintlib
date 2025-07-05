@@ -3,8 +3,8 @@
 
 MISCFILES = Arts.htm README README.1st Theory WWW.htm \
 africa antarctica asia australasia backward \
-checktab.awk etcetera europe factory iso3166.tab leapseconds \
+checktab.awk checknow.awk etcetera europe factory iso3166.tab leapseconds \
 northamerica solar87 solar88 solar89 southamerica \
 tzfile.5 tzinit.8 tzselect.8 tzselect.ksh usno1988 usno1989 \
 usno1989a usno1995 usno1997 usno1998 \
-zdump.8 zic.8 zone.tab zone1970.tab zonelist
+zdump.8 zic.8 zone.tab zone1970.tab zonenow.tab zonelist

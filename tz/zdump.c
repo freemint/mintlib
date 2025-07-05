@@ -678,7 +678,7 @@ int main(int argc, char *argv[])
 		if (tz == NULL)
 		{
 			char const *e = strerror(errno);
-			fprintf(stderr, _("%s: unknown timezone '%s': %s\n"), progname, argv[1], e);
+			fprintf(stderr, _("%s: unknown timezone '%s': %s\n"), progname, argv[i], e);
 			return EXIT_FAILURE;
 		}
 		if (!(iflag | vflag | Vflag))
