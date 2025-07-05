@@ -48,10 +48,6 @@ static void unlock(void)
 #define NETBSD_INSPIRED_EXTERN static
 #endif
 
-#ifndef TZ_ABBR_MAX_LEN
-#define TZ_ABBR_MAX_LEN 16
-#endif
-
 #ifndef TZ_ABBR_CHAR_SET
 #define TZ_ABBR_CHAR_SET \
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 :+-._"
@@ -131,11 +127,10 @@ static char const UNSPEC[] = "-00";
    for ttunspecified to work without crashing.  */
 #define CHARS_EXTRA (max(sizeof UNSPEC, 2) - 1)
 
-#ifdef TZNAME_MAX
-#define MY_TZNAME_MAX TZNAME_MAX
-#endif
-#ifndef TZNAME_MAX
-#define MY_TZNAME_MAX 255
+/* Limit to time zone abbreviation length in POSIX-style TZ strings.
+   This is distinct from TZ_MAX_CHARS, which limits TZif file contents.  */
+#ifndef TZNAME_MAXIMUM
+# define TZNAME_MAXIMUM 255
 #endif
 
 struct state
@@ -149,7 +144,7 @@ struct state
 	time_t ats[TZ_MAX_TIMES];
 	unsigned char types[TZ_MAX_TIMES];
 	struct ttinfo ttis[TZ_MAX_TYPES];
-	char chars[max(max(TZ_MAX_CHARS + CHARS_EXTRA, sizeof "UTC"), 2 * (MY_TZNAME_MAX + 1))];
+	char chars[max(max(TZ_MAX_CHARS + CHARS_EXTRA, sizeof "UTC"), 2 * (TZNAME_MAXIMUM + 1))];
 	struct lsinfo lsis[TZ_MAX_LEAPS];
 
 	/* The time type to use for early times or if no transitions.
@@ -220,7 +215,9 @@ static int lcl_is_set;
 ** Thanks to Paul Eggert for noting this.
 */
 
+#if SUPPORT_C89
 static struct tm tm;
+#endif
 
 #if 2 <= HAVE_TZNAME + TZ_TIME_T
 char *tzname[2] = {
@@ -348,27 +345,28 @@ static void settzname(void)
 #endif
 }
 
-static void scrub_abbrs(struct state *sp)
+/* Replace bogus characters in time zone abbreviations.
+   Return 0 on success, an errno value if a time zone abbreviation is
+   too long.  */
+static int scrub_abbrs(struct state *sp)
 {
 	int i;
 
-	/*
-	 ** First, replace bogus characters.
-	 */
+	/* Reject overlong abbreviations.  */
+	for (i = 0; i < sp->charcnt - (TZNAME_MAXIMUM + 1); )
+	{
+		int len = strlen(&sp->chars[i]);
+		if (TZNAME_MAXIMUM < len)
+			return EOVERFLOW;
+		i += len + 1;
+	}
+
+	/* Replace bogus characters.  */
 	for (i = 0; i < sp->charcnt; ++i)
 		if (strchr(TZ_ABBR_CHAR_SET, sp->chars[i]) == NULL)
 			sp->chars[i] = TZ_ABBR_ERR_CHAR;
-	/*
-	 ** Second, truncate long abbreviations.
-	 */
-	for (i = 0; i < sp->typecnt; ++i)
-	{
-		const struct ttinfo *const ttisp = &sp->ttis[i];
-		char *cp = &sp->chars[ttisp->tt_desigidx];
 
-		if (strlen(cp) > TZ_ABBR_MAX_LEN && strcmp(cp, GRANDPARENTED) != 0)
-			*(cp + TZ_ABBR_MAX_LEN) = '\0';
-	}
+	return 0;
 }
 
 /* Input buffer for data read from a compiled tz file.  */
@@ -1186,14 +1184,12 @@ static int tzparse(const char *name, struct state *sp, struct state *basep)
 		name = getzname(name);
 		stdlen = name - stdname;
 	}
-	if (stdlen == 0)
+	if (!(0 < stdlen && stdlen <= TZNAME_MAXIMUM))
 		return FALSE;
 	name = getoffset(name, &stdoffset);
 	if (name == NULL)
 		return FALSE;
 	charcnt = stdlen + 1;
-	if (sizeof sp->chars < charcnt)
-		return FALSE;
 	if (basep)
 	{
 		if (0 < basep->timecnt)
@@ -1242,11 +1238,9 @@ static int tzparse(const char *name, struct state *sp, struct state *basep)
 			name = getzname(name);
 			dstlen = name - dstname;	/* length of DST abbr. */
 		}
-		if (dstlen == 0)
+		if (! (0 < dstlen && dstlen <= TZNAME_MAXIMUM))
 			return FALSE;
 		charcnt += dstlen + 1;
-		if (sizeof sp->chars < charcnt)
-			return FALSE;
 		if (*name != '\0' && *name != ',' && *name != ';')
 		{
 			name = getoffset(name, &dstoffset);
@@ -1502,7 +1496,7 @@ static int zoneinit(struct state *sp, const char *name)
 		if (err != 0 && name && name[0] != ':' && tzparse(name, sp, NULL))
 			err = 0;
 		if (err == 0)
-			scrub_abbrs(sp);
+			err = scrub_abbrs(sp);
 		return err;
 	}
 }
@@ -1529,7 +1523,7 @@ static void tzsetlcl(const char *name)
 	lcl_is_set = lcl;
 }
 
-#ifdef STD_INSPIRED
+#if STD_INSPIRED
 void tzsetwall(void)
 {
 	if (lock() != 0)
@@ -1719,7 +1713,7 @@ static struct tm *localsub(struct state *sp, const time_t *timep, int_fast32_t s
 
 #if NETBSD_INSPIRED
 
-struct tm *localtime_rz(struct state *sp, const time_t *timep, struct tm *tmp)
+struct tm *localtime_rz(struct state *__restructsp, const time_t *__restructtimep, struct tm *__restructtmp)
 {
 	return localsub(sp, timep, 0, tmp);
 }
@@ -1744,13 +1738,16 @@ static struct tm *localtime_tzset(const time_t *timep, struct tm *tmp, int setna
 
 struct tm *localtime(const time_t *timep)
 {
+#if !SUPPORT_C89
+	static struct tm tm;
+#endif
 	return localtime_tzset(timep, &tm, TRUE);
 }
 
 /*
 ** Re-entrant version of localtime.
 */
-struct tm *localtime_r(const time_t *timep, struct tm *tmp)
+struct tm *localtime_r(const time_t *__restrict timep, struct tm *__restrict tmp)
 {
 	return localtime_tzset(timep, tmp, FALSE);
 }
@@ -1784,7 +1781,7 @@ static struct tm *gmtsub(struct state *sp, const time_t *timep, int_fast32_t off
 * Re-entrant version of gmtime.
 */
 
-struct tm *gmtime_r(const time_t * timep, struct tm *tmp)
+struct tm *gmtime_r(const time_t *__restrict timep, struct tm *__restrict tmp)
 {
 	gmtcheck();
 	return gmtsub(gmtptr, timep, 0, tmp);
@@ -1792,13 +1789,19 @@ struct tm *gmtime_r(const time_t * timep, struct tm *tmp)
 
 struct tm *gmtime(const time_t * timep)
 {
+#if !SUPPORT_C89
+	static struct tm tm;
+#endif
 	return gmtime_r(timep, &tm);
 }
 
-#ifdef STD_INSPIRED
+#if STD_INSPIRED
 
 struct tm *offtime(const time_t * timep, long offset)
 {
+#if !SUPPORT_C89
+	static struct tm tm;
+#endif
 	gmtcheck();
 	return gmtsub(gmtptr, timep, offset, &tm);
 }
@@ -2378,7 +2381,7 @@ static time_t mktime_tzname(struct state *sp, struct tm *tmp, int setname)
 
 #if NETBSD_INSPIRED
 
-time_t mktime_z(struct state *sp, struct tm *tmp)
+time_t mktime_z(struct state *__restrict sp, struct tm *__restrict tmp)
 {
 	return mktime_tzname(sp, tmp, FALSE);
 }
@@ -2401,7 +2404,7 @@ time_t mktime(struct tm *tmp)
 	return t;
 }
 
-#ifdef STD_INSPIRED
+#if STD_INSPIRED
 time_t timelocal(struct tm *tmp)
 {
 	if (tmp != NULL)
@@ -2447,7 +2450,7 @@ static int_fast32_t leapcorr(struct state const *sp, time_t t)
 	return 0;
 }
 
-#ifdef STD_INSPIRED
+#if STD_INSPIRED
 
 /*
 ** XXX--is the below the right way to conditionalize??

@@ -58,7 +58,7 @@ static void oops(const char *);
 static void reset(time_t, int);
 static int sametm(const struct tm *, const struct tm *);
 static void timeout(FILE *, const char *, const struct tm *);
-static void usage(void);
+static void usage(void) __attribute__ ((__noreturn__));
 static void wildinput(const char *, const char *, const char *);
 
 int main(int, char **);
@@ -122,7 +122,8 @@ int main(const int argc, char *argv[])
 				errno = ERANGE;
 			if (errno)
 			{
-				perror(optarg);
+				char const *e = strerror(errno);
+				fprintf(stderr, _("date: %s: %s\n"), optarg, e);
 				errensure();
 				exit(retval);
 			}

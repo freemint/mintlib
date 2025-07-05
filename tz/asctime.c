@@ -64,11 +64,21 @@
 
 static char buf_asctime[MAX_ASCTIME_BUF_SIZE];
 
+/* A similar buffer for ctime.
+   C89 requires that they be the same buffer.
+   This requirement was removed in C99, so support it only if requested,
+   as support is more likely to lead to bugs in badly written programs.  */
+#if SUPPORT_C89
+# define buf_ctime buf_asctime
+#else
+static char buf_ctime[sizeof buf_asctime];
+#endif
+
 /*
 ** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
 */
 
-char *asctime_r(const struct tm *timeptr, char *buf)
+char *asctime_r(const struct tm *__restrict timeptr, char *__restrict buf)
 {
 	static const char wday_name[][4] = {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
@@ -108,7 +118,7 @@ char *asctime_r(const struct tm *timeptr, char *buf)
 	sprintf(result,
 			((strlen(year) <= 4) ? ASCTIME_FMT : ASCTIME_FMT_B),
 			wn, mn, timeptr->tm_mday, timeptr->tm_hour, timeptr->tm_min, timeptr->tm_sec, year);
-	if (strlen(result) < STD_ASCTIME_BUF_SIZE || buf == buf_asctime)
+	if (strlen(result) < STD_ASCTIME_BUF_SIZE || buf == buf_asctime || buf == buf_ctime)
 		return strcpy(buf, result);
 	else
 	{

@@ -490,12 +490,14 @@ static char roll[TZ_MAX_LEAPS];
 ** Memory allocation.
 */
 
+__attribute__((__noreturn__))
 static void memory_exhausted(const char *msg)
 {
 	fprintf(stderr, _("%s: Memory exhausted: %s\n"), progname, msg);
 	exit(EXIT_FAILURE);
 }
 
+__attribute__((__noreturn__))
 static void size_overflow(void)
 {
 	memory_exhausted(_("size overflow"));
@@ -506,12 +508,10 @@ static ATTRIBUTE_PURE ptrdiff_t size_sum(size_t a, size_t b)
 #ifdef ckd_add
 	size_t sum;
 
-	if (!ckd_add(&sum, a, b) && sum <= SIZE_MAX)
+	if (!ckd_add(&sum, a, b) && sum <= INDEX_MAX)
 		return sum;
 #else
-	size_t sum_max = min((size_t)PTRDIFF_MAX, SIZE_MAX);
-
-	if (a <= sum_max && b <= sum_max - a)
+	if (a <= INDEX_MAX && b <= INDEX_MAX - a)
 		return a + b;
 #endif
 	size_overflow();
@@ -523,10 +523,10 @@ static ATTRIBUTE_PURE ptrdiff_t size_product(ptrdiff_t nitems, ptrdiff_t itemsiz
 #ifdef ckd_mul
 	ptrdiff_t product;
 
-	if (!ckd_mul(&product, nitems, itemsize) && product <= PTRDIFF_MAX)
+	if (!ckd_mul(&product, nitems, itemsize) && product <= INDEX_MAX)
 		return product;
 #else
-	ptrdiff_t nitems_max = min((size_t)PTRDIFF_MAX, SIZE_MAX) / itemsize;
+	ptrdiff_t nitems_max = INDEX_MAX / itemsize;
 
 	if (nitems <= nitems_max)
 		return nitems * itemsize;
@@ -574,12 +574,10 @@ static ptrdiff_t grow_nitems_alloc(ptrdiff_t *nitems_alloc, ptrdiff_t itemsize)
 	ptrdiff_t product;
 
 	if (!ckd_add(nitems_alloc, *nitems_alloc, addend) &&
-		!ckd_mul(&product, *nitems_alloc, itemsize) && product <= PTRDIFF_MAX)
+		!ckd_mul(&product, *nitems_alloc, itemsize) && product <= INDEX_MAX)
 		return product;
 #else
-	ptrdiff_t amax = min((size_t)PTRDIFF_MAX, SIZE_MAX);
-
-	if (*nitems_alloc <= ((amax - 1) / 3 * 2) / itemsize)
+	if (*nitems_alloc <= ((INDEX_MAX - 1) / 3 * 2) / itemsize)
 	{
 		*nitems_alloc += addend;
 		return *nitems_alloc * itemsize;
@@ -629,7 +627,8 @@ static void eat(int fnum, lineno num)
 	eats(fnum, num, 0, -1);
 }
 
-static void ATTRIBUTE_FORMAT((printf, 1, 0)) verror(const char *const string, va_list args)
+ATTRIBUTE_FORMAT((printf, 1, 0))
+static void verror(const char *const string, va_list args)
 {
 	/*
 	 ** Match the format of "cc" to allow sh users to
@@ -644,7 +643,8 @@ static void ATTRIBUTE_FORMAT((printf, 1, 0)) verror(const char *const string, va
 	fprintf(stderr, "\n");
 }
 
-static void ATTRIBUTE_FORMAT((printf, 1, 2)) error(const char *const string, ...)
+ATTRIBUTE_FORMAT((printf, 1, 2))
+static void error(const char *const string, ...)
 {
 	va_list args;
 
@@ -654,7 +654,8 @@ static void ATTRIBUTE_FORMAT((printf, 1, 2)) error(const char *const string, ...
 	errors = TRUE;
 }
 
-static void ATTRIBUTE_FORMAT((printf, 1, 2)) warning(const char *const string, ...)
+ATTRIBUTE_FORMAT((printf, 1, 2))
+static void warning(const char *const string, ...)
 {
 	va_list args;
 
@@ -682,6 +683,7 @@ static void close_file(FILE *stream, const char *dir, const char *name, const ch
 	}
 }
 
+__attribute__((__noreturn__))
 static void usage(FILE *stream, int status)
 {
 	fprintf(stream,
@@ -1440,7 +1442,7 @@ static char *relname(char const *target, char const *linkname)
 	size_t dir_len = 0;
 	size_t dotdots = 0;
 	ptrdiff_t dotdotetcsize;
-	ptrdiff_t linksize = min((size_t)PTRDIFF_MAX, SIZE_MAX);
+	ptrdiff_t linksize = INDEX_MAX;
 	const char *f = target;
 	char *result = NULL;
 
@@ -1775,7 +1777,7 @@ static void infile(int fnum, const char *name)
 	wantcont = FALSE;
 	for (num = 1;; ++num)
 	{
-		enum { bufsize_bound = (min(INT_MAX, min(PTRDIFF_MAX, SIZE_MAX)) / FORMAT_LEN_GROWTH_BOUND) };
+		enum { bufsize_bound = (min(INT_MAX, INDEX_MAX) / FORMAT_LEN_GROWTH_BOUND) };
 		char buf[min(_POSIX2_LINE_MAX, bufsize_bound)];
 		int nfields;
 		char *fields[MAX_FIELDS];
@@ -4077,6 +4079,7 @@ static int getfields(char *cp, char **array, int arrayelts)
 	return nsubs;
 }
 
+__attribute__((__noreturn__))
 static void time_overflow(void)
 {
 	error(_("time overflow"));

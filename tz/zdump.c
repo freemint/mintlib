@@ -172,6 +172,7 @@ static int is_alpha(char a)
 	}
 }
 
+__attribute__((__noreturn__))
 static void size_overflow(void)
 {
 	fprintf(stderr, _("%s: size overflow\n"), progname);
@@ -179,20 +180,29 @@ static void size_overflow(void)
 }
 
 /* Return A + B, exiting if the result would overflow either ptrdiff_t
-   or size_t.  */
+   or size_t.  A and B are both nonnegative.  */
 static ptrdiff_t sumsize(size_t a, size_t b)
 {
 #ifdef ckd_add
 	ptrdiff_t sum;
 
-	if (!ckd_add(&sum, a, b) && sum <= SIZE_MAX)
+	if (!ckd_add(&sum, a, b) && sum <= INDEX_MAX)
 		return sum;
 #else
-	ptrdiff_t sum_max = min(PTRDIFF_MAX, SIZE_MAX);
-
-	if (a <= sum_max && b <= sum_max - a)
+	if (a <= INDEX_MAX && b <= INDEX_MAX - a)
 		return a + b;
 #endif
+	size_overflow();
+}
+
+/* Return the size of of the string STR, including its trailing NUL.
+   Report an error and exit if this would exceed INDEX_MAX which means
+   pointer subtraction wouldn't work.  */
+static ptrdiff_t xstrsize(char const *str)
+{
+	size_t len = strlen(str);
+	if (len < INDEX_MAX)
+		return len + 1;
 	size_overflow();
 }
 
@@ -295,7 +305,8 @@ static timezone_t tzalloc(const char *val)
 #if HAVE_SETENV
 	if (setenv("TZ", val, 1) != 0)
 	{
-		perror("setenv");
+		char const *e = strerror(errno);
+		fprintf(stderr, _("%s: setenv: %s\n"), progname, e);
 		exit(EXIT_FAILURE);
 	}
 	tzset();
@@ -308,7 +319,7 @@ static timezone_t tzalloc(const char *val)
 	void *freeable = NULL;
 	char **env = fakeenv,
 		**initial_environ;
-	size_t valsize = strlen(val) + 1;
+	ptrdiff_t valsize = xstrsize(val);
 
 	if (fakeenv0size < valsize)
 	{
@@ -318,7 +329,7 @@ static timezone_t tzalloc(const char *val)
 
 		while (*e++)
 		{
-			if (initial_nenvptrs == min(PTRDIFF_MAX, SIZE_MAX) / sizeof *environ)
+			if (initial_nenvptrs == INDEX_MAX / sizeof *environ)
 				size_overflow();
 			initial_nenvptrs++;
 		}
@@ -362,7 +373,7 @@ static void gmtzinit(void)
 		   "Link GMT GMT0" line in the "backward" file, and which
 		   should work on all POSIX platforms.  The rest of zdump does not
 		   use the "GMT" abbreviation that comes from this setting, so it
-		   is OK to use "GMT" here rather than the more-modern "UTC" which
+		   is OK to use "GMT" here rather than the modern "UTC" which
 		   would not work on platforms that omit the "backward" file.  */
 		gmtz = tzalloc("GMT");
 		if (!gmtz)
@@ -372,7 +383,8 @@ static void gmtzinit(void)
 			gmtz = tzalloc(gmt0);
 			if (!gmtz)
 			{
-				perror(gmt0);
+				char const *e = strerror(errno);
+				fprintf(stderr, _("%s: unknown timezone '%s': %s\n"), progname, gmt0, e);
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -449,7 +461,7 @@ static void abbrok(const char *const abbrp, const char *const zone)
 
 /* Return a time zone abbreviation.  If the abbreviation needs to be
    saved, use *BUF (of size *BUFALLOC) to save it, and return the
-   abbreviation in the possibly-reallocated *BUF.  Otherwise, just
+   abbreviation in the possibly reallocated *BUF.  Otherwise, just
    return the abbreviation.  Get the abbreviation from TMP.
    Exit on memory allocation failure.  */
 static const char *saveabbr(char **buf, ptrdiff_t *bufalloc, const struct tm *tmp)
@@ -461,15 +473,15 @@ static const char *saveabbr(char **buf, ptrdiff_t *bufalloc, const struct tm *tm
 		return ab;
 	} else
 	{
-		size_t ablen = strlen(ab);
+	    ptrdiff_t absize = xstrsize(ab);
 
-		if (*bufalloc <= ablen)
-		{
+	    if (*bufalloc < absize)
+	    {
 			free(*buf);
 
 			/* Make the new buffer at least twice as long as the old,
 			   to avoid O(N**2) behavior on repeated calls.  */
-			*bufalloc = sumsize(*bufalloc, ablen + 1);
+			*bufalloc = sumsize(*bufalloc, absize);
 
 			*buf = xmalloc(*bufalloc);
 		}
@@ -665,7 +677,8 @@ int main(int argc, char *argv[])
 
 		if (tz == NULL)
 		{
-			perror(argv[i]);
+			char const *e = strerror(errno);
+			fprintf(stderr, _("%s: unknown timezone '%s': %s\n"), progname, argv[1], e);
 			return EXIT_FAILURE;
 		}
 		if (!(iflag | vflag | Vflag))
@@ -832,7 +845,8 @@ static time_t hunt(timezone_t tz, time_t lot, time_t hit, int only_ok)
 		   Avoid overflow, even on oddball C89 platforms
 		   where / rounds down and TIME_T_MIN == -TIME_T_MAX
 		   so lot / 2 + hit / 2 might overflow.  */
-		time_t t = (lot / 2 - ((lot % 2 + hit % 2) < 0) + ((lot % 2 + hit % 2) == 2) + hit / 2);
+		int rem_sum = lot % 2 + hit % 2;
+		time_t t = (rem_sum == 2) - (rem_sum < 0) + lot / 2 + hit / 2;
 
 		if (t == lot)
 			break;
@@ -1297,7 +1311,7 @@ static const char *abbr(const struct tm *tmp)
 
 static const char *tformat(void)
 {
-#if HAVE_GENERIC
+#if HAVE__GENERIC
 	/* C11-style _Generic is more likely to return the correct
 	   format when distinct types have the same size.  */
 	char const *fmt = _Generic(+(time_t) 0,

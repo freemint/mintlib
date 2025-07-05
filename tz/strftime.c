@@ -118,7 +118,7 @@ static char *_yconv(int, int, int, int, char *, const char *);
 #endif
 
 #if HAVE_STRFTIME_L
-size_t strftime_l(char *s, size_t maxsize, const char *format, const struct tm *t, locale_t locale)
+size_t strftime_l(char *__restrict s, size_t maxsize, const char *__restrict format, const struct tm *__restrict t, locale_t locale)
 {
 	/* Just call strftime, as only the C locale is supported.  */
 	(void) locale;
@@ -126,7 +126,7 @@ size_t strftime_l(char *s, size_t maxsize, const char *format, const struct tm *
 }
 #endif
 
-size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
+size_t strftime(char *__restrict s, size_t maxsize, const char *__restrict format, const struct tm *__restrict t)
 {
 	char *p;
 	int saved_errno = errno;
