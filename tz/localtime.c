@@ -103,13 +103,34 @@ static char *utc = etc_utc + sizeof "Etc/" - 1;
 #define TZDEFRULESTRING ",M3.2.0,M11.1.0"
 #endif
 
+/* Limit to time zone abbreviation length in proleptic TZ strings.
+   This is distinct from TZ_MAX_CHARS, which limits TZif file contents.
+   It defaults to 254, not 255, so that desigidx_type can be an unsigned char.
+   unsigned char suffices for TZif files, so the only reason to increase
+   TZNAME_MAXIMUM is to support TZ strings specifying abbreviations
+   longer than 254 bytes.  There is little reason to do that, though,
+   as strings that long are hardly "abbreviations".  */
+#ifndef TZNAME_MAXIMUM
+# define TZNAME_MAXIMUM 255
+#endif
+
+#if TZNAME_MAXIMUM < UCHAR_MAX
+typedef unsigned char desigidx_type;
+#elif TZNAME_MAXIMUM < INT_MAX
+typedef int desigidx_type;
+#elif TZNAME_MAXIMUM < PTRDIFF_MAX
+typedef ptrdiff_t desigidx_type;
+#else
+# error "TZNAME_MAXIMUM too large"
+#endif
+
 struct ttinfo
 {										/* time type information */
 	int_fast32_t tt_utoff;				/* UT offset in seconds */
-	int tt_isdst;						/* used to set tm_isdst */
-	int tt_desigidx;					/* abbreviation list index */
-	int tt_ttisstd;						/* transition is std time */
-	int tt_ttisut;						/* transition is UT */
+	desigidx_type tt_desigidx;			/* abbreviation list index */
+	unsigned char tt_isdst;				/* used to set tm_isdst */
+	char tt_ttisstd;					/* transition is std time */
+	char tt_ttisut;						/* transition is UT */
 };
 
 struct lsinfo
@@ -126,12 +147,6 @@ static char const UNSPEC[] = "-00";
    data isn't properly terminated, and it also needs to be big enough
    for ttunspecified to work without crashing.  */
 #define CHARS_EXTRA (max(sizeof UNSPEC, 2) - 1)
-
-/* Limit to time zone abbreviation length in proleptic TZ strings.
-   This is distinct from TZ_MAX_CHARS, which limits TZif file contents.  */
-#ifndef TZNAME_MAXIMUM
-# define TZNAME_MAXIMUM 255
-#endif
 
 /* A representation of the contents of a TZif file.  Ideally this
    would have no size limits; the following sizes should suffice for
@@ -238,7 +253,7 @@ long altzone;
 #endif
 
 /* Initialize *S to a value based on UTOFF, ISDST, and DESIGIDX.  */
-static void init_ttinfo(struct ttinfo *s, int_fast32_t utoff, int isdst, int desigidx)
+static void init_ttinfo(struct ttinfo *s, int_fast32_t utoff, int isdst, desigidx_type desigidx)
 {
 	s->tt_utoff = utoff;
 	s->tt_isdst = isdst;
@@ -408,10 +423,14 @@ union local_storage
 	char fullname[max(sizeof(struct file_analysis), sizeof tzdirslash + 1024)];
 };
 
-/* Load tz data from the file named NAME into *SP.  Read extended
-   format if DOEXTEND.  Use *LSP for temporary storage.  Return 0 on
+/* These tzload flags can be ORed together, and fit into 'char'.  */
+#define TZLOAD_FROMENV  1  /* The TZ string came from the environment.  */
+#define TZLOAD_TZSTRING 2  /* Read any newline-surrounded TZ string.  */
+
+/* Load tz data from the file named NAME into *SP.  Respect TZLOADFLAGS.
+   Use *LSP for temporary storage.  Return 0 on
    success, an errno value on failure.  */
-static int tzloadbody(const char *name, struct state *sp, int doextend, union local_storage *lsp)
+static int tzloadbody(const char *name, struct state *sp, char tzloadflags, union local_storage *lsp)
 {
 	int i;
 	int fid;
@@ -464,8 +483,25 @@ static int tzloadbody(const char *name, struct state *sp, int doextend, union lo
 			}
 		name = lsp->fullname;
 	}
-	if (doaccess && access(name, R_OK) != 0)
-		return errno;
+	if (doaccess && (tzloadflags & TZLOAD_FROMENV))
+	{
+		/* Check for security violations and for devices whose mere
+		   opening could have unwanted side effects.  Although these
+		   checks are racy, they're better than nothing and there is
+		   no portable way to fix the races.  */
+		if (access(name, R_OK) < 0)
+	    	return errno;
+#ifdef S_ISREG
+		{
+		 	struct stat st;
+
+			if (stat(name, &st) < 0)
+				return errno;
+			if (!S_ISREG(st.st_mode))
+				return EINVAL;
+		}
+#endif
+	}
 	fid = open(name, O_RDONLY | O_BINARY);
 	if (fid < 0)
 		return errno;
@@ -604,7 +640,7 @@ static int tzloadbody(const char *name, struct state *sp, int doextend, union lo
 				   correction must differ from the previous one's by 1
 				   second or less, except that the first correction can be
 				   any value; these requirements are more generous than
-				   RFC 8536, to allow future RFC extensions.  */
+			       RFC 9636, to allow future RFC extensions.  */
 				if (!(i == 0 || (prevcorr < corr ? corr == prevcorr + 1 : (corr == prevcorr || corr == prevcorr - 1))))
 					return EINVAL;
 				prevtr = tr;
@@ -658,7 +694,7 @@ static int tzloadbody(const char *name, struct state *sp, int doextend, union lo
 		if (version == '\0')
 			break;
 	}
-	if (doextend && nread > 2 && up->buf[0] == '\n' && up->buf[nread - 1] == '\n' && sp->typecnt + 2 <= TZ_MAX_TYPES)
+	if ((tzloadflags & TZLOAD_TZSTRING) && nread > 2 && up->buf[0] == '\n' && up->buf[nread - 1] == '\n' && sp->typecnt + 2 <= TZ_MAX_TYPES)
 	{
 		struct state *ts = &lsp->u.st;
 
@@ -741,9 +777,9 @@ static int tzloadbody(const char *name, struct state *sp, int doextend, union lo
 	return 0;
 }
 
-/* Load tz data from the file named NAME into *SP.  Read extended
-   format if DOEXTEND.  Return 0 on success, an errno value on failure.  */
-static int tzload(const char *name, struct state *sp, int doextend)
+/* Load tz data from the file named NAME into *SP.  Respect TZLOADFLAGS.
+   Return 0 on success, an errno value on failure.  */
+static int tzload(const char *name, struct state *sp, char tzloadflags)
 {
 #ifdef ALL_STATE
 	union local_storage *lsp = calloc(1, sizeof *lsp);
@@ -753,7 +789,7 @@ static int tzload(const char *name, struct state *sp, int doextend)
 		return errno;
 	} else
 	{
-		int err = tzloadbody(name, sp, doextend, lsp);
+		int err = tzloadbody(name, sp, tzloadflags, lsp);
 
 		free(lsp);
 		return err;
@@ -761,7 +797,7 @@ static int tzload(const char *name, struct state *sp, int doextend)
 #else
 	union local_storage ls;
 
-	return tzloadbody(name, sp, doextend, &ls);
+	return tzloadbody(name, sp, tzloadflags, &ls);
 #endif
 }
 
@@ -1105,7 +1141,7 @@ static int tzparse(const char *name, struct state *sp, const struct state *basep
 		memcpy(sp->lsis, basep->lsis, sp->leapcnt * sizeof *sp->lsis);
 	} else
 	{
-		load_result = tzload(TZDEFRULES, sp, FALSE);
+		load_result = tzload(TZDEFRULES, sp, 0);
 		if (load_result != 0)
 		{
 #ifdef __MINT__
@@ -1374,13 +1410,14 @@ static int tzparse(const char *name, struct state *sp, const struct state *basep
 
 static void gmtload(struct state *const sp)
 {
-	if (tzload(etc_utc, sp, TRUE) != 0)
+	if (tzload(etc_utc, sp, TZLOAD_TZSTRING) != 0)
 		tzparse("UTC0", sp, NULL);
 }
 
 /* Initialize *SP to a value appropriate for the TZ setting NAME.
+   Respect TZLOADFLAGS.
    Return 0 on success, an errno value on failure.  */
-static int zoneinit(struct state *sp, const char *name)
+static int zoneinit(struct state *sp, const char *name, char tzloadflags)
 {
 	if (name && !name[0])
 	{
@@ -1397,7 +1434,7 @@ static int zoneinit(struct state *sp, const char *name)
 		return 0;
 	} else
 	{
-		int err = tzload(name, sp, TRUE);
+		int err = tzload(name, sp, tzloadflags);
 
 		if (err != 0 && name && name[0] != ':' && tzparse(name, sp, NULL))
 			err = 0;
@@ -1420,8 +1457,11 @@ static void tzsetlcl(const char *name)
 #endif
 	if (sp)
 	{
-		if (zoneinit(sp, name) != 0)
-			zoneinit(sp, "");
+		if (zoneinit(sp, name, TZLOAD_FROMENV | TZLOAD_TZSTRING) != 0)
+		{
+			zoneinit(sp, "", 0);
+			strcpy(sp->chars, UNSPEC);
+		}
 		if (0 < lcl)
 			strcpy(lcl_TZname, name);
 	}
@@ -1478,7 +1518,7 @@ timezone_t tzalloc(const char *name)
 
 	if (sp)
 	{
-		int err = zoneinit(sp, name);
+		int err = zoneinit(sp, name, TZLOAD_TZSTRING);
 
 		if (err != 0)
 		{
@@ -1944,7 +1984,8 @@ static int tmcomp(const struct tm *const atmp, const struct tm *const btmp)
 		return atmp->tm_year < btmp->tm_year ? -1 : 1;
 	if ((result = (atmp->tm_mon - btmp->tm_mon)) == 0 &&
 		(result = (atmp->tm_mday - btmp->tm_mday)) == 0 &&
-		(result = (atmp->tm_hour - btmp->tm_hour)) == 0 && (result = (atmp->tm_min - btmp->tm_min)) == 0)
+		(result = (atmp->tm_hour - btmp->tm_hour)) == 0 &&
+		(result = (atmp->tm_min - btmp->tm_min)) == 0)
 		result = atmp->tm_sec - btmp->tm_sec;
 	return result;
 }

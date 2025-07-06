@@ -551,17 +551,17 @@ static void *memcheck(void *ptr)
 	return ptr;
 }
 
-static void *ATTRIBUTE_MALLOC emalloc(size_t size)
+static void *ATTRIBUTE_MALLOC xmalloc(size_t size)
 {
 	return memcheck(malloc(size));
 }
 
-static void *erealloc(void *ptr, size_t size)
+static void *xrealloc(void *ptr, size_t size)
 {
 	return memcheck(realloc(ptr, size));
 }
 
-static char *ATTRIBUTE_MALLOC estrdup(const char *str)
+static char *ATTRIBUTE_MALLOC xstrdup(const char *str)
 {
 	return memcheck(strdup(str));
 }
@@ -589,7 +589,7 @@ static ptrdiff_t grow_nitems_alloc(ptrdiff_t *nitems_alloc, ptrdiff_t itemsize)
 
 static void *growalloc(void *ptr, ptrdiff_t itemsize, ptrdiff_t nitems, ptrdiff_t *nitems_alloc)
 {
-	return nitems < *nitems_alloc ? ptr : erealloc(ptr, grow_nitems_alloc(nitems_alloc, itemsize));
+	return nitems < *nitems_alloc ? ptr : xrealloc(ptr, grow_nitems_alloc(nitems_alloc, itemsize));
 }
 
 /*
@@ -1362,7 +1362,7 @@ static void random_dirent(char const **name, char **namealloc)
 
 	if (!dst)
 	{
-		dst = emalloc(size_sum(dirlen, prefixlen + suffixlen + 1));
+		dst = xmalloc(size_sum(dirlen, prefixlen + suffixlen + 1));
 		memcpy(dst, src, dirlen);
 		memcpy(dst + dirlen, prefix, prefixlen);
 		dst[dirlen + prefixlen + suffixlen] = '\0';
@@ -1457,7 +1457,7 @@ static char *relname(char const *target, char const *linkname)
 		size_t targetsize = strlen(target) + 1;
 
 		linksize = size_sum(lenslash, targetsize);
-		f = result = emalloc(linksize);
+		f = result = xmalloc(linksize);
 		memcpy(result, directory, len);
 		result[len] = '/';
 		memcpy(result + lenslash, target, targetsize);
@@ -1472,7 +1472,7 @@ static char *relname(char const *target, char const *linkname)
 	if (dotdotetcsize <= linksize)
 	{
 		if (!result)
-			result = emalloc(dotdotetcsize);
+			result = xmalloc(dotdotetcsize);
 		for (i = 0; i < dotdots; i++)
 			memcpy(result + 3 * i, "../", 3);
 		memmove(result + 3 * dotdots, f + dir_len, taillen + 1);
@@ -1644,7 +1644,7 @@ static int itsdir(const char *name)
 	if (res == 0 || errno == EOVERFLOW)
 	{
 		size_t n = strlen(name);
-		char *nameslashdot = emalloc(n + 3);
+		char *nameslashdot = xmalloc(n + 3);
 		int dir;
 
 		memcpy(nameslashdot, name, n);
@@ -2024,8 +2024,8 @@ static void inrule(char **fields, int nfields)
 	if (!rulesub(&r, fields[RF_LOYEAR], fields[RF_HIYEAR],
 		fields[RF_COMMAND], fields[RF_MONTH], fields[RF_DAY], fields[RF_TOD]))
 		return;
-	r.r_name = estrdup(fields[RF_NAME]);
-	r.r_abbrvar = estrdup(fields[RF_ABBRVAR]);
+	r.r_name = xstrdup(fields[RF_NAME]);
+	r.r_abbrvar = xstrdup(fields[RF_ABBRVAR]);
 	if (max_abbrvar_len < (int) strlen(r.r_abbrvar))
 		max_abbrvar_len = (int) strlen(r.r_abbrvar);
 	rules = growalloc(rules, sizeof *rules, nrules, &nrules_alloc);
@@ -2109,7 +2109,8 @@ static int inzsub(char **fields, int nfields, int iscont)
 	z.z_filenum = filenum;
 	z.z_linenum = linenum;
 	z.z_stdoff = gethms(fields[i_stdoff], _("invalid UT offset"));
-	if ((cp = strchr(fields[i_format], '%')) != 0)
+	cp = strchr(fields[i_format], '%');
+	if (cp != 0)
 	{
 		if ((*++cp != 's' && *cp != 'z') || strchr(cp, '%') || strchr(fields[i_format], '/'))
 		{
@@ -2146,9 +2147,9 @@ static int inzsub(char **fields, int nfields, int iscont)
 			return FALSE;
 		}
 	}
-	z.z_name = iscont ? NULL : estrdup(fields[ZF_NAME]);
-	z.z_rule = estrdup(fields[i_rule]);
-	z.z_format = cp1 = estrdup(fields[i_format]);
+	z.z_name = iscont ? NULL : xstrdup(fields[ZF_NAME]);
+	z.z_rule = xstrdup(fields[i_rule]);
+	z.z_format = cp1 = xstrdup(fields[i_format]);
 	if (z.z_format_specifier == 'z')
 	{
 		cp1[cp - fields[i_format]] = 's';
@@ -2306,8 +2307,8 @@ static void inlink(char **fields, int nfields)
 		return;
 	l.l_filenum = filenum;
 	l.l_linenum = linenum;
-	l.l_target = estrdup(fields[LF_TARGET]);
-	l.l_linkname = estrdup(fields[LF_LINKNAME]);
+	l.l_target = xstrdup(fields[LF_TARGET]);
+	l.l_linkname = xstrdup(fields[LF_LINKNAME]);
 	links = growalloc(links, sizeof *links, nlinks, &nlinks_alloc);
 	links[nlinks++] = l;
 }
@@ -2335,7 +2336,7 @@ static int rulesub(
 	rp->r_month = lp->l_value;
 	rp->r_todisstd = FALSE;
 	rp->r_todisut = FALSE;
-	dp = estrdup(timep);
+	dp = xstrdup(timep);
 	if (*dp != '\0')
 	{
 		ep = dp + strlen(dp) - 1;
@@ -2425,7 +2426,7 @@ static int rulesub(
 	 ** Sun<=20
 	 ** Sun>=7
 	 */
-	dp = estrdup(dayp);
+	dp = xstrdup(dayp);
 	if ((lp = byword(dp, lasts)) != NULL)
 	{
 		rp->r_dycode = DC_DOWLEQ;
@@ -2588,7 +2589,7 @@ static void writezone(const char *const name, const char *const string, char ver
 	   as this is a bit faster.  Do not malloc(0) if !timecnt,
 	   as that might return NULL even on success.  */
 	ptrdiff_t nats = timecnt + !timecnt + WORK_AROUND_QTBUG_53071;
-	zic_t *ats = emalloc(size_product(nats, sizeof *ats + 1));
+	zic_t *ats = xmalloc(size_product(nats, sizeof *ats + 1));
 	void *typesptr = ats + nats;
 	unsigned char *types = typesptr;
 	struct timerange rangeall = { 0 };
@@ -2976,7 +2977,7 @@ static void writezone(const char *const name, const char *const string, char ver
 		{
 			/* Append a no-op leap correction indicating when the leap
 			   second table expires.  Although this does not conform to
-			   Internet RFC 8536, most clients seem to accept this and
+		       Internet RFC 9636, most clients seem to accept this and
 			   the plan is to amend the RFC to allow this in version 4
 			   TZif files.  */
 			puttzcodepass(leapexpires, fp, pass);
@@ -3238,7 +3239,7 @@ static int stringzone(char *result, const struct zone *zpfirst, ptrdiff_t zoneco
 
 	result[0] = '\0';
 
-	/* Internet RFC 8536 section 5.1 says to use an empty TZ string if
+	/* Internet RFC 9636 section 6.1 says to use an empty TZ string if
 	   future timestamps are truncated.  */
 	if (hi_time < max_time)
 		return -1;
@@ -3372,9 +3373,9 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	max_abbr_len = 2 + max_format_len + max_abbrvar_len;
 	max_envvar_len = 2 * max_abbr_len + 5 * 9;
 
-	startbuf = emalloc(max_abbr_len + 1);
-	ab = emalloc(max_abbr_len + 1);
-	envvar = emalloc(max_envvar_len + 1);
+	startbuf = xmalloc(max_abbr_len + 1);
+	ab = xmalloc(max_abbr_len + 1);
+	envvar = xmalloc(max_envvar_len + 1);
 	INITIALIZE(untiltime);
 	INITIALIZE(starttime);
 	/*
@@ -4299,7 +4300,7 @@ static void mkdirs(const char *argname, int ancestors)
 	if (argname == NULL || *argname == '\0')
 		return;
 	
-	cp = name = estrdup(argname);
+	cp = name = xstrdup(argname);
 
 	/* On MS-Windows systems, do not worry about drive letters or
 	   backslashes, as this should suffice in practice.  Time zone

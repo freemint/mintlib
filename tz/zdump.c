@@ -195,17 +195,6 @@ static ptrdiff_t sumsize(size_t a, size_t b)
 	size_overflow();
 }
 
-/* Return the size of of the string STR, including its trailing NUL.
-   Report an error and exit if this would exceed INDEX_MAX which means
-   pointer subtraction wouldn't work.  */
-static ptrdiff_t xstrsize(char const *str)
-{
-	size_t len = strlen(str);
-	if (len < INDEX_MAX)
-		return len + 1;
-	size_overflow();
-}
-
 /* Return a pointer to a newly allocated buffer of size SIZE, exiting
    on failure.  SIZE should be nonzero.  */
 static void *ATTRIBUTE_MALLOC xmalloc(size_t size)
@@ -319,7 +308,7 @@ static timezone_t tzalloc(const char *val)
 	void *freeable = NULL;
 	char **env = fakeenv,
 		**initial_environ;
-	ptrdiff_t valsize = xstrsize(val);
+	ptrdiff_t valsize = strlen(val) + 1;
 
 	if (fakeenv0size < valsize)
 	{
@@ -473,7 +462,7 @@ static const char *saveabbr(char **buf, ptrdiff_t *bufalloc, const struct tm *tm
 		return ab;
 	} else
 	{
-	    ptrdiff_t absize = xstrsize(ab);
+	    ptrdiff_t absize = strlen(ab) + 1;
 
 	    if (*bufalloc < absize)
 	    {
@@ -533,6 +522,7 @@ int main(int argc, char *argv[])
 	time_t cuthitime;
 	time_t now;
 	int iflag = FALSE;
+	size_t arglenmax = 0;
 
 	cutlotime = absolute_min_time;
 	cuthitime = absolute_max_time;
@@ -658,18 +648,23 @@ int main(int argc, char *argv[])
 	INITIALIZE(now);
 	if (!(iflag | vflag | Vflag))
 		now = time(NULL);
-	longest = 0;
 	for (i = optind; i < argc; i++)
 	{
 		size_t arglen = strlen(argv[i]);
 
-		if (longest < arglen)
-			longest = min(arglen, INT_MAX);
+		if (arglenmax < arglen)
+			arglenmax = arglen;
 	}
+	if (INDEX_MAX <= arglenmax)
+		size_overflow();
+	longest = min(arglenmax, INT_MAX - 2);
 
 	for (i = optind; i < argc; ++i)
 	{
-		timezone_t tz = tzalloc(argv[i]);
+		/* Treat "-" as standard input on platforms with /dev/stdin.
+		   It's not worth the bother of supporting "-" on other
+		   platforms, as that would need temp files.  */
+		timezone_t tz = tzalloc(strcmp(argv[i], "-") == 0 ? "/dev/stdin" : argv[i]);
 		const char *ab;
 		time_t t;
 		struct tm tm, newtm;
@@ -1033,9 +1028,7 @@ static void showextrema(timezone_t tz, char *zone, time_t lo, struct tm *lotmp, 
 	}
 }
 
-#if HAVE_SNPRINTF
-#define my_snprintf snprintf
-#else
+#if !HAVE_SNPRINTF
 #include <stdarg.h>
 
 /* A substitute for snprintf that is good enough for zdump.  */
@@ -1072,6 +1065,7 @@ static int my_snprintf(char *s, size_t size, const char *format, ...)
 	va_end(args);
 	return n;
 }
+#define snprintf my_snprintf
 #endif
 
 /* Store into BUF, of size SIZE, a formatted local time taken from *TM.
@@ -1088,8 +1082,8 @@ static int format_local_time(char *buf, ptrdiff_t size, const struct tm *tm)
 	int hh = tm->tm_hour;
 
 	return (ss
-			? my_snprintf(buf, size, "%02d:%02d:%02d", hh, mm, ss)
-			: mm ? my_snprintf(buf, size, "%02d:%02d", hh, mm) : my_snprintf(buf, size, "%02d", hh));
+			? snprintf(buf, size, "%02d:%02d:%02d", hh, mm, ss)
+			: mm ? snprintf(buf, size, "%02d:%02d", hh, mm) : snprintf(buf, size, "%02d", hh));
 }
 
 /* Store into BUF, of size SIZE, a formatted UT offset for the
@@ -1121,8 +1115,8 @@ static int format_utc_offset(char *buf, ptrdiff_t size, const struct tm *tm, tim
 	mm = off / 60 % 60;
 	hh = off / 60 / 60;
 	return (ss || 100 <= hh
-			? my_snprintf(buf, size, "%c%02ld%02d%02d", sign, hh, mm, ss)
-			: mm ? my_snprintf(buf, size, "%c%02ld%02d", sign, hh, mm) : my_snprintf(buf, size, "%c%02ld", sign, hh));
+			? snprintf(buf, size, "%c%02ld%02d%02d", sign, hh, mm, ss)
+			: mm ? snprintf(buf, size, "%c%02ld%02d", sign, hh, mm) : snprintf(buf, size, "%c%02ld", sign, hh));
 }
 
 /* Store into BUF (of size SIZE) a quoted string representation of P.
@@ -1249,12 +1243,12 @@ static int istrftime(char *buf, ptrdiff_t size, const char *time_fmt,
 						*b++ = '\t', s--;
 						for (abp = ab; is_alpha(*abp); abp++)
 							continue;
-						len = !*abp && *ab ? (size_t)my_snprintf(b, s, "%s", ab) : format_quoted_string(b, s, ab);
+						len = !*abp && *ab ? (size_t)snprintf(b, s, "%s", ab) : format_quoted_string(b, s, ab);
 						if (s <= len)
 							return FALSE;
 						b += len, s -= len;
 					}
-					formatted_len = (tm->tm_isdst ? my_snprintf(b, s, &"\t\t%d"[show_abbr], tm->tm_isdst) : 0);
+					formatted_len = (tm->tm_isdst ? snprintf(b, s, &"\t\t%d"[show_abbr], tm->tm_isdst) : 0);
 				}
 				break;
 			}

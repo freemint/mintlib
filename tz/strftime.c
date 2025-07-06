@@ -171,7 +171,12 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 		  label:
 			switch (*++format)
 			{
-			case '\0':
+			default:
+				/* Output unknown conversion specifiers as-is,
+				   to aid debugging.  This includes '%' at
+				   format end.  This conforms to C23 section
+				   7.29.3.5 paragraph 6, which says behavior
+				   is undefined here.  */
 				--format;
 				break;
 			case 'A':
@@ -307,6 +312,11 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 					tm.tm_mday = t->tm_mday;
 					tm.tm_mon = t->tm_mon;
 					tm.tm_year = t->tm_year;
+
+					/* Get the time_t value for TM.
+					   Native time_t, or its redefinition
+					   by localtime.c above, is wide enough
+					   so that this cannot overflow.  */
 #if defined TM_GMTOFF && STD_INSPIRED
 					mkt = timeoff(&tm, t->TM_GMTOFF);
 #else
@@ -559,12 +569,6 @@ static char *_fmt(const char *format, const struct tm *t, char *pt, const char *
 				pt = _fmt(Locale->date_fmt, t, pt, ptlim, warnp);
 				continue;
 			case '%':
-				/*
-				 ** X311J/88-090 (4.12.3.5): if conversion char is
-				 ** undefined, behavior is undefined. Print out the
-				 ** character itself as printf(3) also does.
-				 */
-			default:
 				break;
 			}
 		}

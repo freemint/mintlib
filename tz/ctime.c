@@ -8,6 +8,8 @@
 */
 char *ctime(const time_t *timep)
 {
+	/* Do not call localtime_r, as C23 requires ctime to initialize the
+	   static storage that localtime updates.  */
 	struct tm *tmp = localtime(timep);
 
 	return tmp ? asctime(tmp) : NULL;
