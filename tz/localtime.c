@@ -17,7 +17,11 @@
 #include "tzfile.h"
 #include "fcntl.h"
 
-#if defined THREAD_SAFE && THREAD_SAFE
+#ifndef THREAD_SAFE
+# define THREAD_SAFE 0
+#endif
+
+#if THREAD_SAFE
 #include <pthread.h>
 static pthread_mutex_t locallock = PTHREAD_MUTEX_INITIALIZER;
 static int lock(void)
@@ -30,14 +34,8 @@ static void unlock(void)
 	pthread_mutex_unlock(&locallock);
 }
 #else
-static int lock(void)
-{
-	return 0;
-}
-
-static void unlock(void)
-{
-}
+#define lock() 0
+#define unlock()
 #endif
 
 /* NETBSD_INSPIRED_EXTERN functions are exported to callers if
@@ -111,7 +109,7 @@ static char *utc = etc_utc + sizeof "Etc/" - 1;
    longer than 254 bytes.  There is little reason to do that, though,
    as strings that long are hardly "abbreviations".  */
 #ifndef TZNAME_MAXIMUM
-# define TZNAME_MAXIMUM 255
+# define TZNAME_MAXIMUM 254
 #endif
 
 #if TZNAME_MAXIMUM < UCHAR_MAX
@@ -159,8 +157,8 @@ struct state
 	int timecnt;
 	int typecnt;
 	int charcnt;
-	int goback;
-	int goahead;
+	char goback;
+	char goahead;
 	time_t ats[TZ_MAX_TIMES];
 	unsigned char types[TZ_MAX_TIMES];
 	struct ttinfo ttis[TZ_MAX_TYPES];
@@ -271,7 +269,7 @@ static int ttunspecified(struct state const *sp, int i)
 	return memcmp(abbr, UNSPEC, sizeof UNSPEC) == 0;
 }
 
-static int_fast32_t detzcode(const char *const codep)
+static int_fast32_t detzcode(const char *codep)
 {
 	int_fast32_t result;
 	int i;
@@ -282,7 +280,7 @@ static int_fast32_t detzcode(const char *const codep)
 	return result;
 }
 
-static int_fast64_t detzcode64(const char *const codep)
+static int_fast64_t detzcode64(const char *codep)
 {
 	int_fast64_t result;
 	int i;
@@ -359,7 +357,7 @@ static void settzname(void)
 			stddst_mask = may_update_tzname_etc(stddst_mask, sp, i);
 	}
 #if USG_COMPAT
-	daylight = stddst_mask >> 1 ^ 1;
+	daylight = (stddst_mask >> 1) ^ 1;
 #endif
 }
 
@@ -373,7 +371,7 @@ static int scrub_abbrs(struct state *sp)
 	/* Reject overlong abbreviations.  */
 	for (i = 0; i < sp->charcnt - (TZNAME_MAXIMUM + 1); )
 	{
-		int len = strlen(&sp->chars[i]);
+		int len = (int)strlen(&sp->chars[i]);
 		if (TZNAME_MAXIMUM < len)
 			return EOVERFLOW;
 		i += len + 1;
@@ -415,11 +413,11 @@ union local_storage
 	} u;
 
 	/* The name of the file to be opened.  Ideally this would have no
-       size limits, to support arbitrarily long Zone names.
-       Limiting Zone names to 1024 bytes should suffice for practical use.
-       However, there is no need for this to be smaller than struct
-       file_analysis as that struct is allocated anyway, as the other
-       union member.  */
+	   size limits, to support arbitrarily long Zone names.
+	   Limiting Zone names to 1024 bytes should suffice for practical use.
+	   However, there is no need for this to be smaller than struct
+	   file_analysis as that struct is allocated anyway, as the other
+	   union member.  */
 	char fullname[max(sizeof(struct file_analysis), sizeof tzdirslash + 1024)];
 };
 
@@ -516,6 +514,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 	}
 	if (close(fid) < 0)
 		return errno;
+
 	for (stored = 4; stored <= 8; stored *= 2)
 	{
 		char version = up->tzhead.tzh_version[0];
@@ -524,7 +523,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 		int_fast32_t ttisstdcnt = detzcode(up->tzhead.tzh_ttisstdcnt);
 		int_fast32_t ttisutcnt = detzcode(up->tzhead.tzh_ttisutcnt);
 		int_fast64_t prevtr = -1;
-		int_fast32_t prevcorr;
+		int_fast32_t prevcorr = 0;
 		int_fast32_t leapcnt = detzcode(up->tzhead.tzh_leapcnt);
 		int_fast32_t timecnt = detzcode(up->tzhead.tzh_timecnt);
 		int_fast32_t typecnt = detzcode(up->tzhead.tzh_typecnt);
@@ -550,18 +549,22 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 			+ ttisutcnt;		/* ttisuts */
 		if (nread < tzheadsize + datablock_size)
 			return EINVAL;
+		/*
+		 * THO: FIXME.
+		 * When storing into a 32bit time_t table, it does not make
+		 * much sense to skip the 32bit table from the file and use the
+		 * 64bit table instead, just to find out that most of the values
+		 * won't fit
+		 */
 		if (skip_datablock)
 		{
 			p += datablock_size;
 		} else
 		{
-			if (!((ttisstdcnt == typecnt || ttisstdcnt == 0) && (ttisutcnt == typecnt || ttisutcnt == 0)))
-				return EINVAL;
-
-			sp->leapcnt = leapcnt;
-			sp->timecnt = timecnt;
-			sp->typecnt = typecnt;
-			sp->charcnt = charcnt;
+			sp->leapcnt = (int)leapcnt;
+			sp->timecnt = (int)timecnt;
+			sp->typecnt = (int)typecnt;
+			sp->charcnt = (int)charcnt;
 
 			/* Read transitions, discarding those out of time_t range.
 			   But pretend the last transition before TIME_T_MIN
@@ -598,7 +601,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 				if (sp->types[i])
 					sp->types[timecnt++] = typ;
 			}
-			sp->timecnt = timecnt;
+			sp->timecnt = (int)timecnt;
 			for (i = 0; i < sp->typecnt; ++i)
 			{
 				struct ttinfo *ttisp;
@@ -653,7 +656,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 					leapcnt++;
 				}
 			}
-			sp->leapcnt = leapcnt;
+			sp->leapcnt = (int)leapcnt;
 
 			for (i = 0; i < sp->typecnt; ++i)
 			{
@@ -694,6 +697,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 		if (version == '\0')
 			break;
 	}
+
 	if ((tzloadflags & TZLOAD_TZSTRING) && nread > 2 && up->buf[0] == '\n' && up->buf[nread - 1] == '\n' && sp->typecnt + 2 <= TZ_MAX_TYPES)
 	{
 		struct state *ts = &lsp->u.st;
@@ -748,7 +752,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 				while (1 < sp->timecnt && (sp->types[sp->timecnt - 1] == sp->types[sp->timecnt - 2]))
 					sp->timecnt--;
 
-			    sp->goahead = ts->goahead;
+				sp->goahead = ts->goahead;
 
 				for (i = 0; i < ts->timecnt; i++)
 				{
@@ -771,6 +775,7 @@ static int tzloadbody(const char *name, struct state *sp, char tzloadflags, unio
 			}
 		}
 	}
+
 	if (sp->typecnt == 0)
 		return EINVAL;
 
@@ -1573,6 +1578,12 @@ static struct tm *localsub(struct state *sp, const time_t *timep, int_fast32_t s
 		/* Don't bother to set tzname etc.; tzset has already done it.  */
 		return gmtsub(gmtptr, timep, 0, tmp);
 	}
+
+/*
+ * THO: i think that code could be disabled when time_t is 32bit,
+ * because SECSPERREPEAT is 12622780800 (0x2F0605980) and does not
+ * fit into 32 bits. Also, neither goback nor goahead can be TRUE in this case
+ */
 	if ((sp->goback && t < sp->ats[0]) || (sp->goahead && t > sp->ats[sp->timecnt - 1]))
 	{
 		time_t newt;
@@ -1746,7 +1757,7 @@ struct tm *gmtime(const time_t * timep)
 /* This function is obsolescent and may disappear in future releases.
    Callers can instead use localtime_rz with a fixed-offset zone.  */
 
-struct tm *offtime(const time_t * timep, long offset)
+struct tm *offtime(const time_t *timep, long offset)
 {
 #if !SUPPORT_C89
 	static struct tm tm;
@@ -2514,7 +2525,7 @@ time_t posix2time(time_t t)
    define a function named 'tz_time' that returns tz_time_t.  The call
    to sys_time invokes the underlying system's 'time' function.  */
 
-time_t time(time_t * p)
+time_t time(time_t *p)
 {
 	time_t r = sys_time(0);
 

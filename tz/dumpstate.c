@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	{
 		if ((i % per_line) == 0)
 			fprintf(out, "    ");
-		fprintf(out, "{ %ld, %d, %d, %d, %d }", (long)sp->ttis[i].tt_gmtoff, sp->ttis[i].tt_isdst, sp->ttis[i].tt_abbrind, sp->ttis[i].tt_ttisstd, sp->ttis[i].tt_ttisgmt);
+		fprintf(out, "{ %ld, %d, %d, %d, %d }", (long)sp->ttis[i].tt_utoff, sp->ttis[i].tt_desigidx, sp->ttis[i].tt_isdst, sp->ttis[i].tt_ttisstd, sp->ttis[i].tt_ttisut);
 		i++;
 		if (i < max)
 			putc(',', out);
@@ -101,14 +101,13 @@ int main(int argc, char **argv)
 	{
 		if ((i % per_line) == 0)
 			fprintf(out, "    ");
-		fprintf(out, "{ %ld, %lld }", (long)sp->lsis[i].ls_trans, (long long)sp->lsis[i].ls_corr);
+		fprintf(out, "{ %ld, %ld }", (long)sp->lsis[i].ls_trans, (long)sp->lsis[i].ls_corr);
 		i++;
 		if (i < max)
 			putc(',', out);
 		putc((i % per_line) == 0 || i == max ? '\n' : ' ', out);
 	}
-	fprintf(out, "  },\n");
-	fprintf(out, "  %d  /* defaulttype */\n", sp->defaulttype);
+	fprintf(out, "  }\n");
 	fprintf(out, "};\n");
 	
 	fflush(out);

@@ -187,7 +187,7 @@ long _stksize = 64 * 1024l;
 #endif
 
 static void addtt(zic_t starttime, int type);
-static int addtype(zic_t gmtoff, const char *abbr, int isdst, int ttisstd, int ttisgmt);
+static int addtype(zic_t gmtoff, const char *abbr, const char *zonename, int isdst, int ttisstd, int ttisgmt);
 static void leapadd(zic_t t, int positive, int rolling);
 static void adjleap(void);
 static void associate(void);
@@ -208,7 +208,7 @@ static int itssymlink(const char *, int *);
 static int is_alpha(char a);
 static char lowerit(char c);
 static void mkdirs(const char *filename, int ancestors);
-static void newabbr(const char *abbr);
+static void newabbr(const char *abbr, const char *zonename);
 static zic_t oadd(zic_t t1, zic_t t2);
 static void outzone(const struct zone *zp, ptrdiff_t ntzones);
 static zic_t rpytime(const struct rule *rp, zic_t wantedy);
@@ -250,6 +250,17 @@ static ptrdiff_t timecnt;
 static ptrdiff_t timecnt_alloc;
 static int typecnt;
 static int unspecifiedtype;
+
+#define ZIC_INFO 0
+#if ZIC_INFO
+static int max_typecnt;
+static int max_charcnt;
+static int max_leapcnt;
+static ptrdiff_t max_timecnt;
+static char *max_typecnt_name;
+static char *max_charcnt_name;
+static char *max_timecnt_name;
+#endif
 
 /*
 ** Line codes.
@@ -506,7 +517,7 @@ static void size_overflow(void)
 static ATTRIBUTE_PURE ptrdiff_t size_sum(size_t a, size_t b)
 {
 #ifdef ckd_add
-	size_t sum;
+	ptrdiff_t sum;
 
 	if (!ckd_add(&sum, a, b) && sum <= INDEX_MAX)
 		return sum;
@@ -675,6 +686,8 @@ static void close_file(FILE *stream, const char *dir, const char *name, const ch
 
 	if (e)
 	{
+		if (name && *name == '/')
+			dir = NULL;
 		fprintf(stderr, "%s: %s%s%s%s%s\n", progname,
 				dir ? dir : "", dir ? "/" : "", name ? name : "", name ? ": " : "", e);
 		if (tempname)
@@ -985,6 +998,9 @@ static const char *psxrules;
 static const char *lcltime;
 static const char *directory;
 static const char *tzdefault;
+/* True if DIRECTORY ends in '/'.  */
+static int directory_ends_in_slash;
+
 
 /* -1 if the TZif output file should be slim, 0 if default, 1 if the
    output should be fat for backward compatibility.  ZIC_BLOAT_DEFAULT
@@ -1177,6 +1193,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	associate();
 	change_directory(directory);
+	directory_ends_in_slash = directory[strlen(directory) - 1] == '/';
 	catch_signals();
 	for (i = 0; i < nzones; i = j)
 	{
@@ -1200,6 +1217,16 @@ int main(int argc, char **argv)
 	}
 	if (warnings && (ferror(stderr) || fclose(stderr) != 0))
 		return EXIT_FAILURE;
+#if ZIC_INFO
+	if (max_timecnt > 0)
+		fprintf(stderr, "TZ_MAX_TIMES = %ld (%s)\n", (long)max_timecnt, max_timecnt_name);
+	if (max_typecnt > 0)
+		fprintf(stderr, "TZ_MAX_TYPES = %ld (%s)\n", (long)max_typecnt, max_typecnt_name);
+	if (max_leapcnt > 0)
+		fprintf(stderr, "TZ_MAX_LEAPS = %ld\n", (long)max_leapcnt);
+	if (max_charcnt > 0)
+		fprintf(stderr, "TZ_MAX_CHARS = %ld (%s)\n", (long)max_charcnt, max_charcnt_name);
+#endif
 	return errors ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
@@ -1380,6 +1407,19 @@ static void random_dirent(char const **name, char **namealloc)
 	}
 }
 
+/* For diagnostics the directory, and file name relative to that
+   directory, respectively.  A diagnostic routine can name FILENAME by
+   outputting diagdir(FILENAME), then diagslash(FILENAME), then FILENAME.  */
+static char const *diagdir(char const *filename)
+{
+	return *filename == '/' ? "" : directory;
+}
+
+static char const *diagslash(char const *filename)
+{
+	return &"/"[*filename == '/' || directory_ends_in_slash];
+}
+
 /* Prepare to write to the file *OUTNAME, using *TEMPNAME to store the
    name of the temporary file that will eventually be renamed to
    *OUTNAME.  Assign the temporary file's name to both *OUTNAME and
@@ -1408,7 +1448,7 @@ static FILE *open_outfile(char const **outname, char **tempname)
 			random_dirent(outname, tempname);
 		} else
 		{
-			fprintf(stderr, _("%s: Can't create %s/%s: %s\n"), progname, directory, *outname, strerror(fopen_errno));
+			fprintf(stderr, _("%s: Can't create %s%s%s: %s\n"), progname, diagdir(*outname), diagslash(*outname), *outname, strerror(fopen_errno));
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -1428,7 +1468,7 @@ static void rename_dest(char *tempname, char const *name)
 			int rename_errno = errno;
 
 			remove(tempname);
-			fprintf(stderr, _("%s: rename to %s/%s: %s\n"), progname, directory, name, strerror(rename_errno));
+			fprintf(stderr, _("%s: rename to %s%s%s: %s\n"), progname, diagdir(name), diagslash(name), name, strerror(rename_errno));
 			exit(EXIT_FAILURE);
 		}
 		free(tempname);
@@ -1438,7 +1478,8 @@ static void rename_dest(char *tempname, char const *name)
 /* Create symlink contents suitable for symlinking TARGET to LINKNAME, as a
    freshly allocated string.  TARGET should be a relative file name, and
    is relative to the global variable DIRECTORY.  LINKNAME can be either
-   relative or absolute.  */
+   relative or absolute.  Return a null pointer if the symlink contents
+   was not computed because LINKNAME is absolute but DIRECTORY is not.  */
 static char *relname(char const *target, char const *linkname)
 {
 	size_t i, taillen;
@@ -1456,6 +1497,8 @@ static char *relname(char const *target, char const *linkname)
 		size_t lenslash = len + (len && directory[len - 1] != '/');
 		size_t targetsize = strlen(target) + 1;
 
+		if (*directory != '/')
+			return NULL;
 		linksize = size_sum(lenslash, targetsize);
 		f = result = xmalloc(linksize);
 		memcpy(result, directory, len);
@@ -1489,15 +1532,15 @@ static int hardlinkerr(char const *from, char const *to)
 	return r == 0 ? 0 : errno;
 }
 
-/* Return true if A and B must have the same parent dir if A and B exist.
-   Return false if this is not necessarily true (though it might be true).
+/* Return TRUE if A and B must have the same parent dir if A and B exist.
+   Return FALSE if this is not necessarily true (though it might be true).
    Keep it simple, and do not inspect the file system.  */
 static int same_parent_dirs(char const *a, char const *b)
 {
 	for (; *a == *b; a++, b++)
 		if (!*a)
 			return TRUE;
-	return ! (strchr(a, '/') || strchr(b, '/'));
+	return !(strchr(a, '/') || strchr(b, '/'));
 }
 
 static void dolink(const char *target, const char *linkname, int staysymlink)
@@ -1542,7 +1585,7 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 			if (to_absolute)
 				fprintf(stderr, _("%s: Can't remove %s: %s\n"), progname, linkname, e);
 			else
-				fprintf(stderr, _("%s: Can't remove %s/%s: %s\n"), progname, directory, linkname, e);
+				fprintf(stderr, _("%s: Can't remove %s%s%s: %s\n"), progname, diagdir(linkname), diagslash(linkname), linkname, e);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -1582,16 +1625,19 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 		int absolute = *target == '/';
 		char *linkalloc = absolute ? NULL : relname(target, linkname);
 		char const *contents = absolute ? target : linkalloc;
-		int symlink_errno;
+		int symlink_errno = -1;
 
-		symlink_errno = symlink(contents, linkname) == 0 ? 0 : errno;
-		if (symlink_errno == EEXIST && to_absolute)
-			return;
-		if (!linkdirs_made && (symlink_errno == ENOENT || symlink_errno == ENOTSUP))
+		if (contents)
 		{
-			mkdirs(linkname, TRUE);
-			if (symlink_errno == ENOENT)
-				symlink_errno = symlink(contents, linkname) == 0 ? 0 : errno;
+			symlink_errno = symlink(contents, linkname) == 0 ? 0 : errno;
+			if (symlink_errno == EEXIST && to_absolute)
+				return;
+			if (!linkdirs_made && (symlink_errno == ENOENT || symlink_errno == ENOTSUP))
+			{
+				mkdirs(linkname, TRUE);
+				if (symlink_errno == ENOENT)
+					symlink_errno = symlink(contents, linkname) == 0 ? 0 : errno;
+			}
 		}
 		free(linkalloc);
 		if (symlink_errno == 0)
@@ -1608,7 +1654,7 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 			{
 				const char *e = strerror(errno);
 
-				fprintf(stderr, _("%s: Can't read %s/%s: %s\n"), progname, directory, target, e);
+				fprintf(stderr, _("%s: Can't read %s%s%s: %s\n"), progname, diagdir(target), diagslash(target), target, e);
 				exit(EXIT_FAILURE);
 			}
 			tp = fopen(linkname, "wb");
@@ -1616,7 +1662,7 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 			{
 				const char *e = strerror(errno);
 
-				fprintf(stderr, _("%s: Can't create %s/%s: %s\n"), progname, directory, linkname, e);
+				fprintf(stderr, _("%s: Can't create %s%s%s: %s\n"), progname, diagdir(linkname), diagslash(linkname), linkname, e);
 				exit(EXIT_FAILURE);
 			}
 			while ((c = getc(fp)) != EOF)
@@ -1625,6 +1671,8 @@ static void dolink(const char *target, const char *linkname, int staysymlink)
 			close_file(tp, directory, linkname, NULL);
 			if (link_errno != ENOTSUP)
 				warning(_("copy used because hard link failed: %s"), strerror(link_errno));
+			else if (symlink_errno < 0)
+				warning(_("copy used because symbolic link not obvious"));
 			else if (symlink_errno != ENOTSUP)
 				warning(_("copy used because symbolic link failed: %s"), strerror(symlink_errno));
 		}
@@ -1661,7 +1709,6 @@ static int itsdir(const char *name)
    cached result of a previous call to this function with the same NAME.  */
 static int itssymlink(char const *name, int *cache)
 {
-	char c;
 	int ccache = -2;
 
 	if (cache == NULL)
@@ -2625,6 +2672,13 @@ static void writezone(const char *const name, const char *const string, char ver
 				attypes[toi++] = attypes[fromi];
 		}
 		timecnt = toi;
+#if ZIC_INFO
+		if (timecnt > max_timecnt)
+		{
+			max_timecnt = timecnt;
+			max_timecnt_name = xstrdup(name);
+		}
+#endif
 	}
 
 	if (noise && timecnt > 1200)
@@ -2830,14 +2884,14 @@ static void writezone(const char *const name, const char *const string, char ver
 			if (hidst >= 0 && mrudst >= 0 && hidst != mrudst && utoffs[hidst] != utoffs[mrudst])
 			{
 				isdsts[mrudst] = -1;
-				type = addtype(utoffs[mrudst], &chars[desigidx[mrudst]], TRUE, ttisstds[mrudst], ttisuts[mrudst]);
+				type = addtype(utoffs[mrudst], &chars[desigidx[mrudst]], name, TRUE, ttisstds[mrudst], ttisuts[mrudst]);
 				isdsts[mrudst] = 1;
 				omittype[type] = FALSE;
 			}
 			if (histd >= 0 && mrustd >= 0 && histd != mrustd && utoffs[histd] != utoffs[mrustd])
 			{
 				isdsts[mrustd] = -1;
-				type = addtype(utoffs[mrustd], &chars[desigidx[mrustd]], FALSE, ttisstds[mrustd], ttisuts[mrustd]);
+				type = addtype(utoffs[mrustd], &chars[desigidx[mrustd]], name, FALSE, ttisstds[mrustd], ttisuts[mrustd]);
 				isdsts[mrustd] = 0;
 				omittype[type] = FALSE;
 			}
@@ -3454,7 +3508,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 	}
 
 	if (min_time < lo_time || hi_time < max_time)
-		unspecifiedtype = addtype(0, "-00", FALSE, FALSE, FALSE);
+		unspecifiedtype = addtype(0, "-00", zpfirst->z_name, FALSE, FALSE, FALSE);
 
 	for (i = 0; i < zonecount; ++i)
 	{
@@ -3478,7 +3532,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 
 			save = zp->z_save;
 			doabbr(startbuf, zp, NULL, zp->z_isdst, save, FALSE);
-			type = addtype(oadd(zp->z_stdoff, save), startbuf, zp->z_isdst, startttisstd, startttisut);
+			type = addtype(oadd(zp->z_stdoff, save), startbuf, zpfirst->z_name, zp->z_isdst, startttisstd, startttisut);
 			if (usestart)
 			{
 				addtt(starttime, type);
@@ -3604,7 +3658,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 					eats(zp->z_filenum, zp->z_linenum, rp->r_filenum, rp->r_linenum);
 					doabbr(ab, zp, rp->r_abbrvar, rp->r_isdst, rp->r_save, FALSE);
 					offset = oadd(zp->z_stdoff, rp->r_save);
-					type = addtype(offset, ab, rp->r_isdst, rp->r_todisstd, rp->r_todisut);
+					type = addtype(offset, ab, zpfirst->z_name, rp->r_isdst, rp->r_todisstd, rp->r_todisut);
 					if (defaulttype < 0 && !rp->r_isdst)
 						defaulttype = type;
 					addtt(ktime, type);
@@ -3628,7 +3682,7 @@ static void outzone(const struct zone *zpfirst, ptrdiff_t zonecount)
 				error(_("can't determine time zone abbreviation to use just after until time"));
 			} else
 			{
-				int type = addtype(startoff, startbuf, isdst, startttisstd, startttisut);
+				int type = addtype(startoff, startbuf, zpfirst->z_name, isdst, startttisstd, startttisut);
 
 				if (defaulttype < 0 && !isdst)
 					defaulttype = type;
@@ -3728,7 +3782,7 @@ static void addtt(zic_t starttime, int type)
 	++timecnt;
 }
 
-static int addtype(zic_t utoff, const char *abbr, int isdst, int ttisstd, int ttisut)
+static int addtype(zic_t utoff, const char *abbr, const char *zonename, int isdst, int ttisstd, int ttisut)
 {
 	int i;
 	int j;
@@ -3746,7 +3800,7 @@ static int addtype(zic_t utoff, const char *abbr, int isdst, int ttisstd, int tt
 			break;
 	if (j == charcnt)
 	{
-		newabbr(abbr);
+		newabbr(abbr, zonename);
 	} else
 	{
 		/* If there's already an entry, return its index.  */
@@ -3765,6 +3819,15 @@ static int addtype(zic_t utoff, const char *abbr, int isdst, int ttisstd, int tt
 		exit(EXIT_FAILURE);
 	}
 	i = typecnt++;
+#if ZIC_INFO
+	if (typecnt > max_typecnt)
+	{
+		max_typecnt = typecnt;
+		max_typecnt_name = xstrdup(zonename);
+	}
+#else
+	(void)zonename;
+#endif
 	utoffs[i] = utoff;
 	isdsts[i] = isdst;
 	ttisstds[i] = ttisstd;
@@ -3797,6 +3860,12 @@ static void leapadd(zic_t t, int correction, int rolling)
 	corr[i] = correction;
 	roll[i] = rolling;
 	++leapcnt;
+#if ZIC_INFO
+	if (leapcnt > max_leapcnt)
+	{
+		max_leapcnt = leapcnt;
+	}
+#endif
 }
 
 static void adjleap(void)
@@ -4256,7 +4325,7 @@ will not work with pre-2004 versions of zic"));
 	return tadd(t, rp->r_tod);
 }
 
-static void newabbr(const char *string)
+static void newabbr(const char *string, const char *zonename)
 {
 	int i;
 
@@ -4286,6 +4355,15 @@ static void newabbr(const char *string)
 	}
 	strcpy(&chars[charcnt], string);
 	charcnt += i;
+#if ZIC_INFO
+	if (charcnt > max_charcnt)
+	{
+		max_charcnt = charcnt;
+		max_charcnt_name = xstrdup(zonename);
+	}
+#else
+	(void)zonename;
+#endif
 }
 
 /* Ensure that the directories of ARGNAME exist, by making any missing

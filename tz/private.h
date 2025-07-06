@@ -10,7 +10,7 @@
 #define PRIVATE_H
 
 #define PKGVERSION "(mintlib) "
-#define TZVERSION  "2024b"
+#define TZVERSION  "2025b"
 #define REPORT_BUGS_TO "tz@iana.org"
 
 

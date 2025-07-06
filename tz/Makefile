@@ -10,7 +10,7 @@
 #
 # currently also duplicated at top of private.h; FIXME
 #
-TZVERSION = 2024b
+TZVERSION = 2025b
 TZ_BUGEMAIL = tz@iana.org
 PKGVERSION = mintlib
 
@@ -328,7 +328,7 @@ leapseconds:	$(LEAP_DEPS)
 		$(AWK) -f $(srcdir)/leapseconds.awk $(srcdir)/leap-seconds.list >$@.out
 		mv $@.out $@
 
-tzselect: $(srcdir)/tzselect.ksh
+tzselect: $(srcdir)/tzselect.ksh Makefile
 	sed \
 		-e 's|AWK=[^}]*|AWK=$(AWK)|g' \
 		-e 's|TZDIR=[^}]*|TZDIR=$(TZDIR)|' \
@@ -371,5 +371,10 @@ zonenames: tzdata.zi
 
 zonelist: tzdata.zi
 	$(MAKE_ZONENAMES) >$@
+
+checkdb:: $(OBJS_FOR_BUILD)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -o teststate teststate.c
+	: $${TZDIR=/usr/share/zoneinfo}; find $$TZDIR -type f | grep -v '\.tab' | grep -v '\.zi' | grep -v leap | xargs ./teststate
+	rm -f teststate
 
 -include $(top_srcdir)/phony
