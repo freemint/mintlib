@@ -271,24 +271,39 @@ static int ttunspecified(struct state const *sp, int i)
 
 static int_fast32_t detzcode(const char *codep)
 {
-	int_fast32_t result;
-	int i;
+	int32_t result;
 
-	result = (codep[0] & 0x80) ? -1 : 0;
-	for (i = 0; i < 4; ++i)
-		result = (result << 8) | (codep[i] & 0xff);
+	result = (signed char)*codep++;
+	result <<= 8;
+	result |= (unsigned char)*codep++;
+	result <<= 8;
+	result |= (unsigned char)*codep++;
+	result <<= 8;
+	result |= (unsigned char)*codep++;
 	return result;
 }
 
 static int_fast64_t detzcode64(const char *codep)
 {
-	int_fast64_t result;
-	int i;
+	int32_t hi;
+	uint32_t lo;
 
-	result = (codep[0] & 0x80) ? -1 : 0;
-	for (i = 0; i < 8; ++i)
-		result = (result << 8) | (codep[i] & 0xff);
-	return result;
+	hi = (signed char)*codep++;
+	hi <<= 8;
+	hi |= (unsigned char)*codep++;
+	hi <<= 8;
+	hi |= (unsigned char)*codep++;
+	hi <<= 8;
+	hi |= (unsigned char)*codep++;
+
+	lo = (unsigned char)*codep++;
+	lo <<= 8;
+	lo |= (unsigned char)*codep++;
+	lo <<= 8;
+	lo |= (unsigned char)*codep++;
+	lo <<= 8;
+	lo |= (unsigned char)*codep++;
+	return ((int_fast64_t)hi << 32) | (uint_fast64_t)lo;
 }
 
 static void update_tzname_etc(struct state *sp, const struct ttinfo *ttisp)
