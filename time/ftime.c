@@ -34,3 +34,6 @@ ftime (struct timeb *timebuf)
 
 	return 0;
 }
+
+link_warning (ftime,
+	      "`ftime' is deprecated, use `gettimeofday' instead")

@@ -35,7 +35,9 @@ struct timeb {
 };
 
 /* For compatibility reasons.  Actually obsoleted by gettimeofday().  */
-extern int ftime (struct timeb *__timebuf) __THROW;
+extern int ftime (struct timeb *__timebuf) __THROW
+  __nonnull ((1))
+  __attribute_deprecated_msg__ ("Use gettimeofday instead");
 
 __END_DECLS
 
