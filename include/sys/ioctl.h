@@ -24,8 +24,16 @@ __BEGIN_DECLS
 #define FTRUNCATE	(('F'<< 8) | 4)
 #define FIOEXCEPT	(('F'<< 8) | 5)
 #define FSTAT64		(('F'<< 8) | 6)		/* 1.15.4 extension, optional */
-#define FUTIME_UTC	(('F'<< 8) | 7)		/* 1.15.4 extension, optional */
+#define FUTIME_UTC32	(('F'<< 8) | 7)		/* 1.15.4 extension, optional */
 #define FIONBIO		(('F'<< 8) | 8)		/* just mintlib emulation */
+/* New: support for time64_t */
+#define FUTIME_UTC64 (('F'<< 8) | 9)
+#ifdef __USE_TIME_BITS64
+#define FUTIME_UTC FUTIME_UTC32
+#else
+#define FUTIME_UTC FUTIME_UTC64
+#endif
+#define FIBMAP		(('F'<< 8) | 10)
 
 #define TIOCGPGRP	(('T'<< 8) | 6)
 #define TIOCSPGRP	(('T'<< 8) | 7)

@@ -2380,6 +2380,25 @@ time_t mktime(struct tm *tmp)
 	return t;
 }
 
+#if __TIMESIZE == 32
+__time64_t __mktime64(struct tm *tmp);
+__time64_t __mktime64(struct tm *tmp)
+{
+	__time64_t t;
+	int err = lock();
+
+	if (err)
+	{
+		errno = err;
+		return -1;
+	}
+	tzset_unlocked();
+	t = mktime_tzname(lclptr, tmp, TRUE);
+	unlock();
+	return t;
+}
+#endif
+
 #if STD_INSPIRED
 /* This function is obsolescent and may disappear in future releases.
    Callers can instead use mktime.  */

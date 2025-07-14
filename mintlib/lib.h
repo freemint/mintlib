@@ -117,13 +117,6 @@ extern struct __open_file __open_stat[];
 #define FH_ISATTY	1
 #define FH_ISAFILE	2
 
-/*
- * macro for converting a long in DOS format to one in Unix format. "x"
- * _must_ be an lvalue!
- */
-#define __UNIXTIME(x) (x = __unixtime(((unsigned short *) &x)[0], \
-				      ((unsigned short *) &x)[1]))
-
 FILE *_fopen_i (const char *, const char *, FILE *);
 
 /* Maybe not the best place for this... */
@@ -178,5 +171,75 @@ int __printf_fphex (FILE *, const struct printf_info *, const void *const*);
 #endif
 
 int __open_v (const char *_filename, int iomode, va_list argp);
+
+/*
+ * 64bit time_t support
+ */
+struct utimbuf64;
+struct timezone;
+
+__time64_t __time64(__time64_t *__timer) __THROW;
+double __difftime64(__time64_t *__time1, __time64_t __time0) __THROW __attribute__ ((__const__));
+__time64_t __mktime64(struct tm *__tp) __THROW;
+struct tm *__gmtime64(const __time64_t *__timer) __THROW;
+struct tm *__gmtime64_r (const __time64_t *__restrict __timer, struct tm *__restrict __tp) __THROW;
+struct tm *__localtime64(const __time64_t *__timer) __THROW;
+struct tm *__localtime64_r(const __time64_t *__timer, struct tm *__restrict __tp) __THROW;
+char *__ctime64(const __time64_t *__timer) __THROW;
+char *__ctime64_r(const __time64_t *__timer, char *__restrict __buf) __THROW;
+__time64_t __timegm64(struct tm *__tp) __THROW;
+__time64_t __timelocal64(struct tm *__tp) __THROW;
+int __gettimeofday64(struct timeval64 *__restrict __tv, struct timezone *__restrict __tz) __THROW __nonnull ((1));
+int __settimeofday64(const struct timeval64 *__restrict __tv, const struct timezone *__restrict __tz) __THROW __nonnull ((1));
+int __stime64(const __time64_t *now) __THROW;
+int __adjtime64(__const struct timeval64 *__delta, struct timeval64 *__olddelta) __THROW;
+int __utime64(const char *__file, const struct utimbuf64 *__file_times) __THROW __nonnull ((1));
+int __utimes64(const char *__file, const struct timeval64 __tvp[2]) __THROW __nonnull ((1));
+int __futimes64(int __fd, const struct timeval64 __tvp[2]) __THROW;
+int __nanosleep64(const struct timespec64 *__requested_time, struct timespec64 *__remaining);
+int __clock_getres64(clockid_t __clock_id, struct timespec64 *__res) __THROW;
+int __clock_gettime64(clockid_t __clock_id, struct timespec64 *__tp) __THROW __nonnull((2));
+int __clock_settime64(clockid_t __clock_id, const struct timespec64 *__tp) __THROW __nonnull((2));
+int __clock_nanosleep_time64(clockid_t __clock_id, int __flags, const struct timespec64 *__req, struct timespec64 *__rem);
+
+#ifdef _SYS_TIME_H
+int __getitimer64(__itimer_which_t __which, struct itimerval64 *__value) __THROW;
+int __setitimer64(__itimer_which_t __which, const struct itimerval *__restrict __new, struct itimerval64 *__restrict __old) __THROW;
+#endif
+
+#ifdef _SYS_RESOURCE_H
+struct rusage64;
+int __getrusage64(__rusage_who_t __who, struct rusage64 *__usage) __THROW;
+#ifdef _WAIT_H
+pid_t __wait3_time64(__WP __stat_loc, int __options, struct rusage64 *__usage) __THROW;
+pid_t __wait4_time64(pid_t __pid, __WP __stat_loc, int __options, struct rusage64 *__usage) __THROW;
+#endif
+#endif
+
+#ifdef _SYS_SELECT_H
+int __select64(int __nfds, __fd_set *__readfds, __fd_set *__writefds, __fd_set *__exceptfds, struct timeval64 *__timeout);
+int __pselect64(int __nfds, __fd_set *__readfds, __fd_set *__writefds, __fd_set *__exceptfds, const struct timespec64 *__timeout, const __sigset_t *__sigmask);
+#endif
+
+#ifdef _SYS_POLL_H
+int __ppoll64(struct pollfd *__fds, nfds_t __nfds, const struct timespec64 *__timeout, const __sigset_t *__ss);
+#endif
+
+#ifdef _SYS_MSG_H
+int __msgctl64(int __msqid, int __cmd, struct msqid_ds64 *__buf) __THROW;
+#endif
+
+#ifdef _SYS_SEM_H
+int __semctl64(int __semid, int __semnum, int __cmd, ...) __THROW;
+#endif
+
+#ifdef _SEMAPHORE_H
+int __sem_timedwait64(sem_t *__restrict __sem, const struct timespec64 *__restrict __abstime) __nonnull ((1, 2));
+int __sem_clockwait64(sem_t *__restrict __sem, clockid_t clock, const struct timespec *__restrict __abstime) __nonnull ((1, 3));
+#endif
+
+#if defined(_SIGNAL_H) && 0 /* siginfo_t NYI */
+int __sigtimedwait64(const sigset_t *__restrict __set, siginfo_t *__restrict __info, const struct timespec64 *__restrict __timeout) __nonnull ((1));
+#endif
 
 #endif /* _LIB_H */

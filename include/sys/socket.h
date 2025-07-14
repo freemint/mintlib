@@ -144,14 +144,27 @@ extern int recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
 
 
 /* Send a message described MESSAGE on socket FD.
-   Returns the number of bytes sent, or -1 for errors.  */
-extern int sendmsg (int __fd, __const struct msghdr *__message, int __flags)
-     __THROW;
+   Returns the number of bytes sent, or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+# ifndef __USE_TIME_BITS64
+extern int sendmsg (int __fd, __const struct msghdr *__message, int __flags);
 
 /* Receive a message as described by MESSAGE from socket FD.
-   Returns the number of bytes read or -1 for errors.  */
-extern int recvmsg (int __fd, struct msghdr *__message, int __flags)
-     __THROW;
+   Returns the number of bytes read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int recvmsg (int __fd, struct msghdr *__message, int __flags);
+#else
+extern int __REDIRECT(sendmsg, (int __fd, const struct msghdr *__message,
+				     int __flags),
+			   __sendmsg64);
+extern int __REDIRECT (recvmsg,
+			   (int __fd, struct msghdr *__message, int __flags),
+			   __recvmsg64);
+#endif
 
 
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL

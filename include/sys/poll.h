@@ -66,9 +66,16 @@ extern int poll (struct pollfd *__fds, nfds_t __nfds,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+# ifndef __USE_TIME_BITS64
 extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
 		  const struct timespec *__timeout,
 		  const __sigset_t *__ss);
+#else
+extern int __REDIRECT (ppoll, (struct pollfd *__fds, nfds_t __nfds,
+                               const struct timespec *__timeout,
+                               const __sigset_t *__ss),
+                       __ppoll64);
+#endif
 #endif
 
 __END_DECLS

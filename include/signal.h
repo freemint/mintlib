@@ -214,8 +214,17 @@ extern int sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
 
 /* Select any of pending signals from SET and place information in INFO.
    Wait the imte specified by TIMEOUT if no signal is pending.  */
+#  ifndef __USE_TIME_BITS64
 extern int sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
 			      __const struct timespec *__timeout));
+#else
+extern int __REDIRECT (sigtimedwait,
+                       (const sigset_t *__restrict __set,
+                        siginfo_t *__restrict __info,
+                        const struct timespec *__restrict __timeout),
+                       __sigtimedwait64)
+     __nonnull ((1));
+#endif
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */

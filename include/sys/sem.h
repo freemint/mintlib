@@ -49,7 +49,11 @@ struct sembuf
 };
 
 /* Semaphore control operation.  */
+#ifndef __USE_TIME_BITS64
 extern int semctl (int __semid, int __semnum, int __cmd, ...) __THROW;
+#else
+extern int __REDIRECT_NTH (semctl,(int __semid, int __semnum, int __cmd, ...), __semctl64);
+#endif
 
 /* Get semaphore.  */
 extern int semget (key_t __key, int __nsems, int __semflg) __THROW;

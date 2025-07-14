@@ -31,9 +31,18 @@
 #define IPC_NOWAIT	04000		/* return error on wait */
 
 /* Control commands for `msgctl', `semctl', and `shmctl'.  */
-#define IPC_RMID	0		/* remove identifier */
-#define IPC_SET		1		/* set `ipc_perm' options */
-#define IPC_STAT	2		/* get `ipc_perm' options */
+#define IPC_RMID			0		/* remove identifier */
+#define IPC_SET_TIME32		1		/* set `ipc_perm' options */
+#define IPC_STAT_TIME32		2		/* get `ipc_perm' options */
+#define IPC_SET_TIME64		3		/* set `ipc_perm' options */
+#define IPC_STAT_TIME64		4		/* get `ipc_perm' options */
+#ifdef __USE_TIME_BITS64
+#define IPC_SET  IPC_SET_TIME64
+#define IPC_STAT IPC_STAT_TIME64
+#else
+#define IPC_SET  IPC_SET_TIME32
+#define IPC_STAT IPC_STAT_TIME32
+#endif
 
 /* Special key values.  */
 #define IPC_PRIVATE	((key_t) 0)	/* private key */

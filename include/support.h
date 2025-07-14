@@ -25,6 +25,7 @@ int	dos2unx (const char *, char *);
 
 time_t	__dostime (time_t);
 time_t	__unixtime (unsigned int, unsigned int);
+void __unixtime64(__time64_t *, unsigned int, unsigned int);
 
 char *	_buffindfile (const char *, const char *,
 			char const *const *, char *);

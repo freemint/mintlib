@@ -88,19 +88,20 @@ typedef union wait __union_wait_t;
 #endif
 
 extern pid_t wait (__WP status) __THROW;
-extern pid_t __wait (__WP status) __THROW;
 
 #ifdef __USE_BSD
 struct rusage;  /* Don't depend on sys/resource.h.  */
 
+#ifndef __USE_TIME_BITS64
 extern pid_t wait3 (__WP status, int mode, struct rusage *rusage) __THROW;
-extern pid_t __wait3 (__WP status, int mode, struct rusage *rusage) __THROW;
 extern pid_t wait4 (pid_t pid, __WP status, int options, struct rusage *rusage) __THROW;
-extern pid_t __wait4 (pid_t pid, __WP status, int options, struct rusage *rusage) __THROW;
+#else
+extern pid_t __REDIRECT_NTH(wait3, (__WP __stat_loc, int __options, struct rusage * __usage), __wait3_time64);
+extern pid_t __REDIRECT_NTH(wait4, (pid_t __pid, __WP __stat_loc, int __options, struct rusage *__usage), __wait4_time64);
+#endif
 #endif /* __USE_BSD */
 
 extern pid_t waitpid (pid_t pid, int* status, int options) __THROW;
-extern pid_t __waitpid (pid_t pid, int* status, int options) __THROW;
 
 __END_DECLS
 

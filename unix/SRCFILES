@@ -48,6 +48,7 @@ SRCFILES = \
 	getrusage.c \
 	getsid.c \
 	gettimeofday.c \
+	gettimeofday64.c \
 	getuid.c \
 	gtty.c \
 	ioctl.c \
@@ -89,6 +90,7 @@ SRCFILES = \
 	setrlimit.c \
 	setsid.c \
 	settimeofday.c \
+	settimeofday64.c \
 	setuid.c \
 	sigaction.c \
 	sigblock.c \
@@ -104,12 +106,14 @@ SRCFILES = \
 	statfs.c \
 	statvfs.c \
 	stime.c \
+	stime64.c \
 	stty.c \
 	symlink.c \
 	sync.c \
 	sysctl.c \
 	sysinfo.c \
 	time.c \
+	time64.c \
 	times.c \
 	truncate.c \
 	umask.c \

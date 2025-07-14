@@ -137,8 +137,11 @@ enum __rusage_who
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int getrusage (__rusage_who_t __who,
-                      struct rusage *__usage) __THROW;
+#ifndef __USE_TIME_BITS64
+extern int getrusage (__rusage_who_t __who, struct rusage *__usage) __THROW;
+#else
+extern int __REDIRECT_NTH (getrusage, (__rusage_who_t __who, struct rusage *__usage), __getrusage64);
+#endif
 
 #if 0
 /* Function depends on CMD:

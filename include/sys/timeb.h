@@ -41,9 +41,14 @@ struct timeb64 {
 };
 
 /* For compatibility reasons.  Actually obsoleted by gettimeofday().  */
+# ifndef __USE_TIME_BITS64
 extern int ftime (struct timeb *__timebuf) __THROW
   __nonnull ((1))
   __attribute_deprecated_msg__ ("Use gettimeofday instead");
+#else
+extern int __REDIRECT_NTH (ftime, (struct timeb *__timebuf),
+                           __ftime64) __nonnull ((1));
+#endif
 
 __END_DECLS
 

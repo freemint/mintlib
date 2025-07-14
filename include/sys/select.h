@@ -74,21 +74,46 @@ typedef __fd_set fd_set;
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
-   descriptors, or -1 for errors.  */
-extern int select (int __nfds, __fd_set *__readfds,
-		   __fd_set *__writefds, __fd_set *__exceptfds,
+   descriptors, or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+#ifndef __USE_TIME_BITS64
+extern int select (int __nfds, fd_set *__readfds,
+		   fd_set *__writefds, fd_set *__exceptfds,
 		   struct timeval *__timeout) __THROW;
+#else
+extern int __REDIRECT (select,
+                       (int __nfds, fd_set *__restrict __readfds,
+                        fd_set *__restrict __writefds,
+                        fd_set *__restrict __exceptfds,
+                        struct timeval *__restrict __timeout),
+                       __select64);
+#endif
 
 #ifdef __USE_GNU
 /* XXX Once/if POSIX.1g gets official this prototype will be available
    when defining __USE_POSIX.  */
 /* Same as above only that the TIMEOUT value is given with higher
    resolution and a sigmask which is been set temporarily.  This version
-   should be used.  */
-extern int pselect (int __nfds, __fd_set *__readfds,
-		    __fd_set *__writefds, __fd_set *__exceptfds,
+   should be used.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+# ifndef __USE_TIME_BITS64
+extern int pselect (int __nfds, fd_set *__readfds,
+		    fd_set *__writefds, fd_set *__exceptfds,
 		    const struct timespec *__timeout,
 		    const __sigset_t *__sigmask) __THROW;
+#else
+extern int __REDIRECT (pselect,
+                       (int __nfds, fd_set *__restrict __readfds,
+                        fd_set *__restrict __writefds,
+                        fd_set *__restrict __exceptfds,
+                        const struct timespec *__restrict __timeout,
+                        const __sigset_t *__restrict __sigmask),
+                       __pselect64);
+#endif
 #endif
 
 __END_DECLS

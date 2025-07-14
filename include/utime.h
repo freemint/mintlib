@@ -20,7 +20,13 @@ struct utimbuf64 {			/* type for __utime64() call */
 	__time64_t	modtime;
 };
 
-extern int utime (const char *path, const struct utimbuf *times);
+#ifndef __USE_TIME_BITS64
+extern int utime(const char *path, const struct utimbuf *times) __THROW __nonnull ((1));
+#else
+extern int __REDIRECT_NTH (utime, (const char *__file,
+                                   const struct utimbuf *__file_times),
+                           __utime64);
+#endif
 
 __END_DECLS
 

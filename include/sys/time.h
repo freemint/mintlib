@@ -70,8 +70,14 @@ typedef void *__restrict __timezone_ptr_t;
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
+#ifndef __USE_TIME_BITS64
 extern int gettimeofday (struct timeval *__tv,
 			 struct timezone *__tz) __THROW __nonnull ((1));
+#else
+extern int __REDIRECT_NTH (gettimeofday, (struct timeval *__restrict __tv,
+                                          struct timezone *__restrict __tz),
+                           __gettimeofday64) __nonnull ((1));
+#endif
 
 #ifdef __USE_BSD
 /* Set the current time of day and timezone information.
@@ -128,10 +134,10 @@ typedef enum __itimer_which __itimer_which_t;
 typedef int __itimer_which_t;
 #endif
 
+#ifndef __USE_TIME_BITS64
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-extern int getitimer (__itimer_which_t __which,
-		      struct itimerval *__value) __THROW;
+extern int getitimer (__itimer_which_t __which, struct itimerval *__value) __THROW;
 
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
@@ -145,14 +151,35 @@ extern int setitimer (__itimer_which_t __which,
    Returns 0 on success, -1 on errors.  */
 extern int utimes (__const char *__file, __const struct timeval __tvp[2])
      __THROW;
+#else
+extern int __REDIRECT_NTH (getitimer, (__itimer_which_t __which,
+                                       struct itimerval *__value),
+                           __getitimer64);
+extern int __REDIRECT_NTH (setitimer, (__itimer_which_t __which,
+                                       const struct itimerval *__restrict __new,
+                                       struct itimerval *__restrict __old),
+                           __setitimer64);
+extern int __REDIRECT_NTH (utimes, (const char *__file,
+                                    const struct timeval __tvp[2]),
+                           __utimes64) __nonnull ((1));
+#endif
 
 #ifdef __USE_MISC
+# ifndef __USE_TIME_BITS64
 /* Same as `utimes', but does not follow symbolic links.  */
 extern int lutimes (const char *__file, const struct timeval __tvp[2])
      __THROW __nonnull ((1));
 
 /* Same as `utimes', but takes an open file descriptor instead of a name.  */
 extern int futimes (int __fd, const struct timeval __tvp[2]) __THROW;
+#else
+extern int __REDIRECT_NTH (lutimes, (const char *__file,
+                                     const struct timeval __tvp[2]),
+                           __lutimes64) __nonnull ((1));
+
+extern int __REDIRECT_NTH (futimes, (int __fd, const struct timeval __tvp[2]),
+                           __futimes64);
+#endif
 #endif
 
 

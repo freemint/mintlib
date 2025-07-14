@@ -1,5 +1,6 @@
-/*  time.c -- MiNTLib.
-    Copyright (C) 1999 Guido Flohr <guido@freemint.de>
+/*  time64.c -- MiNTLib.
+    64bit version of time()
+    Copyright (C) 2025 Thorsten Otto
 
     This file is part of the MiNTLib project, and may only be used
     modified and distributed under the terms of the MiNTLib project
@@ -10,20 +11,17 @@
 
 #include <time.h>
 #include <sys/time.h>
+#include "lib.h"
 
-__typeof__(time) __time;
-
-time_t 
-__time (time_t *buf)
+__time64_t __time64(__time64_t *buf)
 {
-	struct timeval now;
+	struct timeval64 now;
 
-	if (gettimeofday (&now, NULL) != 0)
-		return ((time_t) -1);
+	if (__gettimeofday64(&now, NULL) != 0)
+		return ((__time64_t) -1);
 
 	if (buf)
 		*buf = now.tv_sec;
 
 	return now.tv_sec;
 }
-weak_alias (__time, time)

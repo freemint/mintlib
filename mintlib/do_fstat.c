@@ -108,15 +108,19 @@ __do_fstat (int fd, struct stat *st, int exact)
 			st->st_mode = S_IFCHR | 0600;
 			st->st_flags = 0;
 			if (exact)
-				st->st_mtime = st->st_ctime = st->st_atime =
-					time ((time_t*) 0) - 2;
-					
+			{
+				__time64_t *t64 = (__time64_t *)&st->__st_high_mtime;
+				*t64 = __time64((__time64_t*) 0) - 2;
+				st->st_atime = st->st_ctime = st->st_mtime;
+			}
 			st->st_size = 0;
 		}
 		else {
 			if (exact)
-				st->st_mtime = st->st_atime = st->st_ctime =
-					__unixtime(timeptr.time, timeptr.date);
+			{
+				__unixtime64((__time64_t *)&st->__st_high_mtime, timeptr.time, timeptr.date);
+				st->st_atime = st->st_ctime = st->st_mtime;
+			}
 			st->st_mode = S_IFREG | 0644;	/* this may be false */
 			st->st_flags = 0;		/* because this is */
 
