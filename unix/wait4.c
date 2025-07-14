@@ -18,6 +18,8 @@
 
 #include "lib.h"
 
+__typeof__(wait4) __wait4;
+
 extern long __waitval, __waittime;
 
 pid_t __wait4 (pid_t pid, __WP stat_loc, int options, struct rusage *usage)

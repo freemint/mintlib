@@ -49,7 +49,7 @@ logwtmp (const char *line, const char *name, const char *host)
 #endif
 
 #if _HAVE_UT_TV - 0
-  __gettimeofday (&ut.ut_tv, NULL);
+  gettimeofday (&ut.ut_tv, NULL);
 #else
   time (&ut.ut_time);
 #endif

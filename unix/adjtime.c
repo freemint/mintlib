@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(adjtime) __adjtime;
+
 int __adjtime (__const struct timeval *__delta,
 		    struct timeval *__olddelta)
 {
@@ -37,7 +39,7 @@ int __adjtime (__const struct timeval *__delta,
   
   if (__delta != NULL) {
     struct timeval tv;
-    int retval = __gettimeofday (&tv, NULL);
+    int retval = gettimeofday (&tv, NULL);
     if (retval < 0)
 	return retval;
 
@@ -49,7 +51,7 @@ int __adjtime (__const struct timeval *__delta,
     }
     tv.tv_sec += __delta->tv_sec;
 
-    __settimeofday(&tv, NULL);
+    settimeofday(&tv, NULL);
   }
     
   return 0;

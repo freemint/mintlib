@@ -14,6 +14,12 @@
 #include <sys/time.h>
 #include <mint/mintbind.h>
 
+__typeof__(gettimeofday) __gettimeofday;
+
+#if __GNUC_PREREQ(7, 0)
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 int 
 __gettimeofday (struct timeval *tp, struct timezone *tzp)
 {

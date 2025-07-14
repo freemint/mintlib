@@ -46,7 +46,7 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const
      should be an atomic operation.  This can't be done without kernel
      help.  */
   __sigprocmask (SIG_SETMASK, sigmask, &savemask);
-  retval = __select (nfds, readfds, writefds, exceptfds,
+  retval = select (nfds, readfds, writefds, exceptfds,
 		     timeout != NULL ? &tval : NULL);
   __sigprocmask (SIG_SETMASK, &savemask, NULL);
 

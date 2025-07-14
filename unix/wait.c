@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
+__typeof__(wait) __wait;
+
 pid_t
 __wait (__WP stat_loc)
 {

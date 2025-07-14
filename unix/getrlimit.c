@@ -10,6 +10,8 @@
 
 long __sysconf (int var);
 
+__typeof__(getrlimit) __getrlimit;
+
 int
 __getrlimit (__rlimit_resource_t kind, struct rlimit *rl)
 {

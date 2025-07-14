@@ -12,6 +12,8 @@
 #include <sys/wait.h>
 #include <sys/resource.h>
 
+__typeof__(wait3) __wait3;
+
 pid_t
 __wait3 (__WP stat_loc, int options, struct rusage *usage)
 {

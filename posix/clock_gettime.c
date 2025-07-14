@@ -7,7 +7,7 @@ static inline int
 realtime_gettime(struct timespec *tp)
 {
 	struct timeval tv;
-	int retval = __gettimeofday(&tv, NULL);
+	int retval = gettimeofday(&tv, NULL);
 	if (retval == 0)
     /* Convert into `timespec'.  */
 		TIMEVAL_TO_TIMESPEC(&tv, tp);

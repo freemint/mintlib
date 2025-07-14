@@ -24,7 +24,7 @@ ftime (struct timeb *timebuf)
 {
 	struct timeval now;
 
-	if (__gettimeofday (&now, NULL) != 0)
+	if (gettimeofday (&now, NULL) != 0)
 		return -1;
 	timebuf->time = now.tv_sec;
 	timebuf->millitm = now.tv_usec / 1000;

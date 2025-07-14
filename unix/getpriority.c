@@ -18,6 +18,8 @@ static int have_Pgetpriority = 1;
 static int have_Prenice = 1;
 static int have_Pnice = 1;
 
+__typeof__(getpriority) __getpriority;
+
 int
 __getpriority (__priority_which_t class, int id)
 {

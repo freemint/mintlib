@@ -13,6 +13,12 @@
 #include <errno.h>
 #include <mintbind.h>
 
+__typeof__(settimeofday) __settimeofday;
+
+#if __GNUC_PREREQ(7, 0)
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 int 
 __settimeofday (const struct timeval *tp, const struct timezone *tzp)
 {
@@ -60,7 +66,7 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
     /* The T[gs]et(date|time) system calls always expect local
      * times.
      */    
-    localtime_r((time_t*) &tp->tv_sec, &then);
+    localtime_r(&tp->tv_sec, &then);
     
     if (then.tm_year < 80) {
       __set_errno (EINVAL);

@@ -78,9 +78,6 @@ typedef __fd_set fd_set;
 extern int select (int __nfds, __fd_set *__readfds,
 		   __fd_set *__writefds, __fd_set *__exceptfds,
 		   struct timeval *__timeout) __THROW;
-extern int __select (int __nfds, __fd_set *__readfds,
-		     __fd_set *__writefds, __fd_set *__exceptfds,
-		     struct timeval *__timeout) __THROW;
 
 #ifdef __USE_GNU
 /* XXX Once/if POSIX.1g gets official this prototype will be available

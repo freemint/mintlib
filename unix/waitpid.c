@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
+__typeof__(waitpid) __waitpid;
 
 pid_t
 __waitpid (pid_t pid, int *stat_loc, int options)

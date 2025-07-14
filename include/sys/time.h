@@ -71,25 +71,19 @@ typedef void *__restrict __timezone_ptr_t;
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
 extern int gettimeofday (struct timeval *__tv,
-			 struct timezone *__tz) __THROW;
-extern int __gettimeofday (struct timeval *__tv,
-			   struct timezone *__tz) __THROW;
+			 struct timezone *__tz) __THROW __nonnull ((1));
 
 #ifdef __USE_BSD
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
 extern int settimeofday (const struct timeval *__tv,
-			      const struct timezone *__tz) __THROW;
-extern int __settimeofday (const struct timeval *__tv,
-			      const struct timezone *__tz) __THROW;
+			      const struct timezone *__tz) __THROW __nonnull ((1));
 
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `adjtime' call.
    This call is restricted to the super-user.  */
 extern int adjtime (__const struct timeval *__delta,
-		    struct timeval *__olddelta) __THROW;
-extern int __adjtime (__const struct timeval *__delta,
 		    struct timeval *__olddelta) __THROW;
 #endif
 

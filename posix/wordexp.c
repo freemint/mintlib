@@ -914,7 +914,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	{
 	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
+	      if (waitpid (pid, NULL, WNOHANG) == 0)
 		continue;
 	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 		break;
@@ -939,7 +939,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	{
 	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
+	      if (waitpid (pid, NULL, WNOHANG) == 0)
 		continue;
 	      if ((__read (fildes[0], buffer, bufsize)) < 1)
 		break;
@@ -1023,7 +1023,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
 no_space:
   __kill (pid, SIGKILL);
-  __waitpid (pid, NULL, 0);
+  waitpid (pid, NULL, 0);
   __close (fildes[0]);
   return WRDE_NOSPACE;
 }

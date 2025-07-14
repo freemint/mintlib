@@ -7,6 +7,8 @@
 #include <sys/time.h>
 #include <mint/mintbind.h>
 
+__typeof__(setrlimit) __setrlimit;
+
 int
 __setrlimit (__rlimit_resource_t kind, struct rlimit *rl)
 {

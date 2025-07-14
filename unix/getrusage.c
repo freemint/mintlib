@@ -10,6 +10,7 @@
 
 #include "lib.h"
 
+__typeof__(getrusage) __getrusage;
 
 static void
 _ms2tval(unsigned long milliseconds, struct timeval *tval)

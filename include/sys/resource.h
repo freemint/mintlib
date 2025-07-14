@@ -117,16 +117,12 @@ typedef int __priority_which_t;
    Returns 0 if successful, -1 if not (and sets errno).  */
 extern int getrlimit (__rlimit_resource_t __resource,
 		      struct rlimit *__rlimits) __THROW;
-extern int __getrlimit (__rlimit_resource_t __resource,
-		        struct rlimit *__rlimits) __THROW;
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 extern int setrlimit (__rlimit_resource_t __resource,
 		      struct rlimit *__rlimits) __THROW;
-extern int __setrlimit (__rlimit_resource_t __resource,
-		        struct rlimit *__rlimits) __THROW;
 
 /* Possible values for first argument to `getrusage'.  */
 enum __rusage_who 
@@ -143,8 +139,6 @@ enum __rusage_who
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
 extern int getrusage (__rusage_who_t __who,
                       struct rusage *__usage) __THROW;
-extern int __getrusage (__rusage_who_t __who,
-                        struct rusage *__usage) __THROW;
 
 #if 0
 /* Function depends on CMD:
@@ -187,19 +181,15 @@ enum __priority_which
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
 extern int getpriority (__priority_which_t __which, int __who) __THROW;
-extern int __getpriority (__priority_which_t __which, int __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
 extern int setpriority (__priority_which_t __which, int __who,
 			int __prio) __THROW;
-extern int __setpriority (__priority_which_t __which, int __who,
-			  int __prio) __THROW;
 
 /* Increment the priority of the current process by INCREMENT.  Return
    value is not meaningful.  */
 extern int nice (int increment) __THROW;
-extern int __nice (int increment) __THROW;
 
 __END_DECLS
 

@@ -17,6 +17,7 @@
 #include <errno.h>
 
 __typeof__(poll) __poll;
+__typeof__(select) __select;
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
