@@ -24,6 +24,8 @@
 
 #include "lib.h"
 
+__typeof__(utime) __utime;
+
 int
 __utime (const char *_filename, const struct utimbuf *_tset)
 {

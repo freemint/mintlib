@@ -40,6 +40,8 @@ MISCFILES = MISCFILES \
 	string.h \
 	termios.h \
 	time.h \
+	time64.h \
+	timesize.h \
 	types.h \
 	uintn-id.h \
 	xopen_lim.h

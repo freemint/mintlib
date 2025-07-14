@@ -118,6 +118,13 @@ struct itimerval
     /* Time to the next timer expiration.  */
     struct timeval it_value;
   };
+struct itimerval64
+  {
+    /* Value to put into `it_value' when the timer expires.  */
+    struct timeval64 it_interval;
+    /* Time to the next timer expiration.  */
+    struct timeval64 it_value;
+  };
 
 #if defined __USE_GNU && !defined __cplusplus
 /* Use the nicer parameter type only in GNU mode and not for C++ since the

@@ -39,14 +39,26 @@ struct stat {
   __uid_t st_uid;		/* User ID of the file's owner.  */
   __gid_t st_gid;		/* Group ID of the file's group.  */
   __dev_t st_rdev;		/* Device number, if device.  */
+#ifdef __USE_TIME_BITS64
+  __time64_t st_atime;
+#else
   long __st_high_atime;
   __time_t st_atime;		/* Time of last access, UTC.  */
+#endif
   struct __st_mtim st_atim;
+#ifdef __USE_TIME_BITS64
+  __time64_t st_mtime;
+#else
   long __st_high_mtime;
   __time_t st_mtime;		/* Time of last access, UTC.  */
+#endif
   struct __st_mtim st_mtim;
+#ifdef __USE_TIME_BITS64
+  __time64_t st_ctime;
+#else
   long __st_high_ctime;
   __time_t st_ctime;		/* Time of last status change, UTC.  */
+#endif
   struct __st_mtim st_ctim;
   unsigned long __st_hi_size;	/* Upper 4 bytes of st_size.  */
   __off_t st_size;		/* File size, in bytes.  */

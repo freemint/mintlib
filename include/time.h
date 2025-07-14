@@ -73,7 +73,7 @@ typedef __time_t time_t;
 typedef __clockid_t clockid_t;
 
 #endif /* clockid_t not defined and <time.h> or need clockid_t.  */
-#undef	__clockid_time_t
+#undef	__need_clockid_t
 
 #if !defined __timer_t_defined && \
     ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_timer_t)
@@ -97,6 +97,11 @@ typedef __timer_t timer_t;
 struct timespec
   {
     __time_t tv_sec;		/* Seconds.  */
+    long int tv_nsec;		/* Nanoseconds.  */
+  };
+struct timespec64
+  {
+    __time64_t tv_sec;		/* Seconds.  */
     long int tv_nsec;		/* Nanoseconds.  */
   };
 
@@ -134,6 +139,11 @@ struct itimerspec
   {
     struct timespec it_interval;
     struct timespec it_value;
+  };
+struct itimerspec64
+  {
+    struct timespec64 it_interval;
+    struct timespec64 it_value;
   };
 
 /* We can use a simple forward declaration.  */
@@ -296,7 +306,7 @@ extern int clock_nanosleep (clockid_t clock_id, int flags, const struct timespec
      3  failed to get file status information,
      4  the template file is not a regular file,
      5  an error is encountered while reading the template file,
-     6  memory allication failed (not enough memory available),
+     6  memory allocation failed (not enough memory available),
      7  there is no line in the template that matches the input,
      8  invalid input specification Example: February 31 or a time is
         specified that can not be represented in a time_t (representing

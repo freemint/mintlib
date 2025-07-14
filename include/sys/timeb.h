@@ -33,6 +33,12 @@ struct timeb {
   short int timezone;		/* Minutes west of GMT.  */
   short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
 };
+struct timeb64 {
+  __time64_t time;		        /* Seconds since epoch, as from `time'.  */
+  unsigned short int millitm;	/* Additional milliseconds.  */
+  short int timezone;		/* Minutes west of GMT.  */
+  short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
+};
 
 /* For compatibility reasons.  Actually obsoleted by gettimeofday().  */
 extern int ftime (struct timeb *__timebuf) __THROW

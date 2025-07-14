@@ -11,13 +11,16 @@
 
 __BEGIN_DECLS
 
-struct utimbuf {			/* type for times() call */
+struct utimbuf {			/* type for utime() call */
 	time_t	actime;
 	time_t	modtime;
 };
+struct utimbuf64 {			/* type for __utime64() call */
+	__time64_t	actime;
+	__time64_t	modtime;
+};
 
 extern int utime (const char *path, const struct utimbuf *times);
-extern int __utime (const char *path, const struct utimbuf *times);
 
 __END_DECLS
 

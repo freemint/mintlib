@@ -46,3 +46,14 @@ struct msqid_ds
   __pid_t msg_lspid;		/* pid of last msgsnd() */
   __pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
+struct msqid_ds64
+{
+  struct ipc_perm msg_perm;	/* structure describing operation permission */
+  __time64_t msg_stime;		/* time of last msgsnd command */
+  __time64_t msg_rtime;		/* time of last msgrcv command */
+  __time64_t msg_ctime;		/* time of last change */
+  msgqnum_t msg_qnum;		/* number of messages currently on queue */
+  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
+  __pid_t msg_lspid;		/* pid of last msgsnd() */
+  __pid_t msg_lrpid;		/* pid of last msgrcv() */
+};

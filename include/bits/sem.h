@@ -51,6 +51,17 @@ struct semid_ds
   unsigned long int __unused3;
   unsigned long int __unused4[4];
 };
+struct semid_ds64
+{
+  struct ipc_perm sem_perm;		/* operation permission struct */
+  unsigned long int __unused1;
+  unsigned short int sem_nsems;		/* number of semaphores in set */
+  __time64_t sem_otime;			/* last semop() time */
+  unsigned long int __unused2;
+  __time64_t sem_ctime;			/* last time changed by semctl() */
+  unsigned long int __unused3;
+  unsigned long int __unused4[4];
+};
 
 /* The user should define a union like the following to use it for arguments
    for `semctl'.

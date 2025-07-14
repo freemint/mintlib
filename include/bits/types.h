@@ -11,6 +11,7 @@
 
 #define __need_size_t
 #include <stddef.h>
+#include <bits/timesize.h>
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
@@ -70,7 +71,13 @@ typedef __uint32_t __id_t;	/* General type for IDs.  */
 /* Everythin' else.  */
 typedef __int32_t __daddr_t;	/* The type of a disk address.  */
 typedef char* __caddr_t;
-typedef __int32_t __time_t;
+typedef __int32_t __time32_t;
+typedef __int64_t __time64_t;
+#ifdef __USE_TIME_BITS64
+typedef __time64_t __time_t;
+#else
+typedef __time32_t __time_t;
+#endif
 typedef __uint32_t __useconds_t;
 typedef long int __suseconds_t;
 typedef __int32_t __swblk_t;	/* Type of a swap block maybe?  */

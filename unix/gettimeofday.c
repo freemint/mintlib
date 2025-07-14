@@ -29,7 +29,13 @@ __gettimeofday (struct timeval *tp, struct timezone *tzp)
      */
     struct __mint_timezone minttz;
 
-    retval = Tgettimeofday(tp, &minttz);
+    /*
+     * Note: always passing a pointer to a TZ structure
+     * to Tgettimeofday() here does not cause the kernel
+     * to do expensive calculations for the timezone,
+     * it just copies an internal variable
+     */
+     retval = Tgettimeofday(tp, &minttz);
     if (retval == -ENOSYS) {
       have_Tgettimeofday = 0;
     } else if (retval < 0) {

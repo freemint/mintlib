@@ -384,6 +384,8 @@
 # endif
 #endif
 
+#include <bits/time64.h>
+
 #if defined _BSD_SOURCE || defined _SVID_SOURCE
 # define __USE_MISC	1
 #endif
