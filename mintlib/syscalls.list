@@ -126,6 +126,8 @@ getdomainname		int	ptr int
 gethostname		int	ptr int
 setdomainname		int	ptr int
 sethostname		int	ptr int
+gettimeofday64		int	ptr ptr
+settimeofday64		int	ptr ptr
 
 #reboot			int	int
 #ptrace			int	int int ptr int

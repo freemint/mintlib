@@ -658,6 +658,10 @@ __extension__								\
 		trap_1_ww(0x182, (short)(fh))
 #define Fdirfd(handle) \
 		trap_1_wl(0x183, (long)(handle))
+#define Tgettimeofday64(tvp, tzp) \
+		trap_1_wll(0x184, (long)(tvp), (long)(tzp))
+#define Tsettimeofday64(tvp, tzp) \
+		trap_1_wll(0x185, (long)(tvp), (long)(tzp))
 
 __END_DECLS
 

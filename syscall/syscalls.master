@@ -517,8 +517,8 @@ opcode	ret	class name	args */
 0x181	long	Fchdir		(short fd) /* since 1.17 */
 0x182	long	Ffdopendir	(short fd) /* since 1.17 */
 0x183	long	Fdirfd		(long handle) /* since 1.17 */
-0x184		undefined
-0x185		undefined
+0x184	long	Tgettimeofday64	(struct timeval64 *tv, struct timezone *tz)
+0x185	long	Tsettimeofday64	(struct timeval64 *tv, struct timezone *tz)
 0x186		undefined
 0x187		undefined
 0x188		undefined
