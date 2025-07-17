@@ -12,6 +12,7 @@
 #include <time.h>
 #include <errno.h>
 #include <mintbind.h>
+#include "lib.h"
 
 __typeof__(settimeofday) __settimeofday;
 
@@ -39,6 +40,11 @@ __settimeofday (const struct timeval *tp, const struct timezone *tzp)
       minttzp = &minttz;
     }
     retval = Tsettimeofday(tp, minttzp);
+    if (retval == 0 && tp)
+    {
+      if ((__uint32_t)tp->tv_sec >= TIME32_MAX)
+        retval = -EOVERFLOW;
+    }
     if (retval == -ENOSYS) {
       have_Tsettimeofday = 0;
     } else if (retval < 0) {

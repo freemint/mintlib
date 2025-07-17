@@ -36,7 +36,19 @@ int __settimeofday64(const struct timeval64 *tp, const struct timezone *tzp)
       minttz.tz_dsttime = tzp->tz_dsttime;
       minttzp = &minttz;
     }
-    retval = Tsettimeofday(tp, minttzp);
+    retval = Tsettimeofday64(tp, minttzp);
+    if (retval == -ENOSYS && tp) {
+      struct timeval tv;
+      if ((__uint32_t)tp->tv_sec >= TIME32_MAX)
+      {
+      	retval = -EOVERFLOW;
+      } else
+      {
+        tv.tv_sec = tp->tv_sec;
+        tv.tv_usec = tp->tv_usec;
+        retval = Tsettimeofday(&tv, minttzp);
+      }
+    }
     if (retval == -ENOSYS) {
       have_Tsettimeofday = 0;
     } else if (retval < 0) {
@@ -98,4 +110,4 @@ int __settimeofday64(const struct timeval64 *tp, const struct timezone *tzp)
     
   return 0;
 }
-weak_alias (__settimeofday, settimeofday)
+weak_alias (__settimeofday64, settimeofday64)
