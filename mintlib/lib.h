@@ -178,6 +178,10 @@ int __open_v (const char *_filename, int iomode, va_list argp);
 struct utimbuf64;
 struct timezone;
 
+#define MAX_TZ_OFFSET (50400UL)
+/* a bit of safety, so that adding the timezone does not overflow, either */
+#define TIME32_MAX (2147483647UL - MAX_TZ_OFFSET)
+
 __time64_t __time64(__time64_t *__timer) __THROW;
 double __difftime64(__time64_t *__time1, __time64_t __time0) __THROW __attribute__ ((__const__));
 __time64_t __mktime64(struct tm *__tp) __THROW;

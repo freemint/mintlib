@@ -13,6 +13,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <mint/mintbind.h>
+#include "lib.h"
 
 __typeof__(gettimeofday) __gettimeofday;
 
@@ -41,7 +42,12 @@ __gettimeofday (struct timeval *tp, struct timezone *tzp)
      * to do expensive calculations for the timezone,
      * it just copies an internal variable
      */
-     retval = Tgettimeofday(tp, &minttz);
+    retval = Tgettimeofday(tp, &minttz);
+    if (retval == 0 && tp)
+    {
+      if ((__uint32_t)tp->tv_sec >= TIME32_MAX)
+        retval = -EOVERFLOW;
+    }
     if (retval == -ENOSYS) {
       have_Tgettimeofday = 0;
     } else if (retval < 0) {

@@ -28,6 +28,7 @@ int __gettimeofday64(struct timeval64 *tp, struct timezone *tzp)
   
   if (have_Tgettimeofday != 0) {
     long retval;
+
     /*
      * MiNTs timezone structure is different than ours
      */
@@ -39,7 +40,23 @@ int __gettimeofday64(struct timeval64 *tp, struct timezone *tzp)
      * to do expensive calculations for the timezone,
      * it just copies an internal variable
      */
-     retval = Tgettimeofday(tp, &minttz);
+    retval = Tgettimeofday64(tp, &minttz);
+    if (retval == -ENOSYS) {
+      struct timeval tv;
+
+      retval = Tgettimeofday(&tv, &minttz);
+      if (retval == 0 && tp)
+      {
+      	if ((__uint32_t)tv.tv_sec >= TIME32_MAX)
+      	{
+      	  retval = -EOVERFLOW;
+      	} else
+      	{
+      	  tp->tv_sec = tv.tv_sec;
+      	  tp->tv_usec = tv.tv_usec;
+      	}
+      }
+    }
     if (retval == -ENOSYS) {
       have_Tgettimeofday = 0;
     } else if (retval < 0) {
@@ -53,8 +70,8 @@ int __gettimeofday64(struct timeval64 *tp, struct timezone *tzp)
       }
       return 0;
     }
-  } /* have_Tgettimeofday != 0 */
-    
+  }
+
   /* Don't use `else' here.  The have_Tgettimeofday flag may have
    * changed and we want to fall back to the emulation.
    */
@@ -70,7 +87,7 @@ int __gettimeofday64(struct timeval64 *tp, struct timezone *tzp)
   now.tm_isdst = -1;  /* Dunno.  */
      
   if (tp != NULL) {
-    tp->tv_sec = mktime (&now);
+    tp->tv_sec = __mktime64(&now);
     tp->tv_usec = (clock() * (1000000UL / CLOCKS_PER_SEC)) % 2000000UL;
     if (tp->tv_usec >= 1000000UL)
     {
@@ -110,4 +127,4 @@ int __gettimeofday64(struct timeval64 *tp, struct timezone *tzp)
   return 0;
 }
 
-weak_alias (__gettimeofday, gettimeofday)
+weak_alias (__gettimeofday64, gettimeofday64)
