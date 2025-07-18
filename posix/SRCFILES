@@ -20,6 +20,7 @@ SRCFILES = \
 	glob.c \
 	isfdtype.c \
 	nanosleep.c \
+	nanosleep64.c \
 	clock_gettime.c \
 	clock_getres.c \
 	clock_nanosleep.c \

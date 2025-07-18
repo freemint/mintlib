@@ -13,7 +13,7 @@
 #define USEC_PER_TICK (1000000L / ((unsigned long)CLOCKS_PER_SEC))
 #define	USEC_TO_CLOCK_TICKS(us)	((us) / USEC_PER_TICK )
 
-enum { BILLION = 1000 * 1000 * 1000 };
+#define BILLION 1000000000L
 
 int
 nanosleep(const struct timespec *req, struct timespec *rem)
