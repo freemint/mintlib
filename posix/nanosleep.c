@@ -54,6 +54,7 @@ nanosleep(const struct timespec *req, struct timespec *rem)
 	if (rem)
 		gettimeofday(&start, NULL);
 
+	/* FIXME: use Fselect() directly here, to avoid pulling in poll */
 	ret = select(0, NULL, NULL, NULL, &wait);
 
 	if (ret == 0)

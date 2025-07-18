@@ -24,6 +24,7 @@ SRCFILES = \
 	clock_gettime.c \
 	clock_getres.c \
 	clock_nanosleep.c \
+	clock_nanosleep64.c \
 	posix_fallocate.c \
 	pread.c \
 	pwrite.c \
