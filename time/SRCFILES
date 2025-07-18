@@ -8,5 +8,6 @@ SRCFILES = \
 	clock.c \
 	dysize.c \
 	ftime.c \
+	ftime64.c \
 	getdate.c \
 	strptime.c

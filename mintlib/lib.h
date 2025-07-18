@@ -211,6 +211,10 @@ int __getitimer64(__itimer_which_t __which, struct itimerval64 *__value) __THROW
 int __setitimer64(__itimer_which_t __which, const struct itimerval *__restrict __new, struct itimerval64 *__restrict __old) __THROW;
 #endif
 
+#ifdef _SYS_TIMEB_H
+int __ftime64(struct timeb64 *timebuf);
+#endif
+
 #ifdef _SYS_RESOURCE_H
 struct rusage64;
 int __getrusage64(__rusage_who_t __who, struct rusage64 *__usage) __THROW;
