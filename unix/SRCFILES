@@ -30,6 +30,7 @@ SRCFILES = \
 	fsync.c \
 	ftruncate.c \
 	futimes.c \
+	futimes64.c \
 	getdomainname.c \
 	getdtabl.c \
 	getegid.c \

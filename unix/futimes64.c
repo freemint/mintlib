@@ -1,4 +1,4 @@
-/*  futimes.c -- MiNTLib.
+/*  futimes.c -- MiNTLib, 64bit version.
     Copyright (C) 2019 Thorsten Otto <admin@tho-otto.de>
 
     This file is part of the MiNTLib project, and may only be used
@@ -18,12 +18,10 @@
 #include <unistd.h>
 #include "lib.h"
 
-__typeof__(futimes) __futimes;
-
 /* There is no use faking odd seconds or fractional parts here.  The
  * operating system doesn't support for now.
  */
-int __futimes (int fd, const struct timeval tvp[2])
+int __futimes64 (int fd, const struct timeval64 tvp[2])
 {
 	struct _mutimbuf settime;
 	struct _mutimbuf* tset = NULL;
@@ -64,4 +62,3 @@ int __futimes (int fd, const struct timeval tvp[2])
 	
 	return 0;
 }
-weak_alias (__futimes, futimes)
