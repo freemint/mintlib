@@ -12,6 +12,7 @@
 #include <time.h>
 #include <errno.h>
 #include <mintbind.h>
+#include "lib.h"
 
 __typeof__(adjtime) __adjtime;
 
