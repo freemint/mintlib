@@ -47,6 +47,7 @@ SRCFILES = \
 	getpriority.c \
 	getrlimit.c \
 	getrusage.c \
+	getrusage64.c \
 	getsid.c \
 	gettimeofday.c \
 	gettimeofday64.c \
@@ -131,6 +132,8 @@ SRCFILES = \
 	swapcontext.S \
 	wait.c \
 	wait3.c \
+	wait3_time64.c \
 	wait4.c \
+	wait4_time64.c \
 	waitpid.c \
 	write.c

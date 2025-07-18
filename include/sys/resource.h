@@ -42,6 +42,29 @@ struct rusage
     long ru_nvcsw;	    /* Voluntary context switches.  */
     long ru_nivcsw;	    /* Involuntary context switches.  */
   };
+struct rusage64
+  {
+    struct timeval64 ru_utime;  /* User time used.  */
+    struct timeval64 ru_stime;  /* System time used.  */
+    
+    /* The following rusage elements are fake.  They will all contain 
+       0 or some other fake value until such time as they are supported 
+       under MiNT.  */
+    long ru_maxrss;	    /* Maximum resident set size.  */
+    long ru_ixrss;	    /* Integral shared memory size.  */
+    long ru_idrss;	    /* Integral unshared data size.  */
+    long ru_isrss;	    /* Integral unshared stack size.  */
+    long ru_minflt;	    /* Page reclaims.  */
+    long ru_majflt;	    /* Page faults (requiring I/O).  */
+    long ru_nswap;	    /* Memory swaps.  */
+    long ru_inblock;	    /* Block input operations.  */
+    long ru_oublock;	    /* Block output operations.  */
+    long ru_msgsnd;	    /* Messages sent.  */
+    long ru_msgrcv;	    /* Messages received.  */
+    long ru_nsignals;	    /* Signals received.  */
+    long ru_nvcsw;	    /* Voluntary context switches.  */
+    long ru_nivcsw;	    /* Involuntary context switches.  */
+  };
 
 
 /* Values for the first argument to `getrlimit' and `setrlimit'.  */

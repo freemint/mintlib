@@ -214,6 +214,27 @@ int __setitimer64(__itimer_which_t __which, const struct itimerval *__restrict _
 #ifdef _SYS_RESOURCE_H
 struct rusage64;
 int __getrusage64(__rusage_who_t __who, struct rusage64 *__usage) __THROW;
+static __inline void __rusage_to_rusage64(struct rusage64 *data, struct rusage *data32)
+{
+	data->ru_utime.tv_sec = data32->ru_utime.tv_sec;
+	data->ru_utime.tv_usec = data32->ru_utime.tv_usec;
+	data->ru_stime.tv_sec = data32->ru_stime.tv_sec;
+	data->ru_stime.tv_usec = data32->ru_stime.tv_usec;
+	data->ru_maxrss = data32->ru_maxrss;
+	data->ru_ixrss = data32->ru_ixrss;
+	data->ru_idrss = data32->ru_idrss;
+	data->ru_isrss = data32->ru_isrss;
+	data->ru_minflt = data32->ru_minflt;
+	data->ru_majflt = data32->ru_majflt;
+	data->ru_nswap = data32->ru_nswap;
+	data->ru_inblock = data32->ru_inblock;
+	data->ru_oublock = data32->ru_oublock;
+	data->ru_msgsnd = data32->ru_msgsnd;
+	data->ru_msgrcv = data32->ru_msgrcv;
+	data->ru_nsignals = data32->ru_nsignals;
+	data->ru_nvcsw = data32->ru_nvcsw;
+	data->ru_nivcsw = data32->ru_nivcsw;
+}
 #ifdef _WAIT_H
 pid_t __wait3_time64(__WP __stat_loc, int __options, struct rusage64 *__usage) __THROW;
 pid_t __wait4_time64(pid_t __pid, __WP __stat_loc, int __options, struct rusage64 *__usage) __THROW;
