@@ -33,6 +33,7 @@ static inline int valid_nanoseconds(long ns)
 
 int __sem_wait_fast(sem_t *sem, int definitive_result);
 int __sem_wait_slow(sem_t *sem, __clockid_t clockid, const struct timespec *abstime);
+int __sem_wait_slow64(sem_t *sem, __clockid_t clockid, const struct timespec64 *abstime);
 
 /*
  * pseudo "atomic" functions for now

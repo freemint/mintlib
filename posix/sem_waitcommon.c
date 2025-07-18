@@ -196,6 +196,49 @@ static int __attribute__((noinline)) do_futex_wait(sem_t *sem, clockid_t clockid
 }
 
 
+static int __attribute__((noinline)) do_futex_wait64(sem_t *sem, clockid_t clockid, const struct timespec64 *abstime)
+{
+	int err;
+
+#if 0
+	err = __futex_abstimed_wait_cancelable64(&sem->value, SEM_NWAITERS_MASK, clockid, abstime, sem->__private);
+#else
+	if (abstime)
+	{
+		/*
+		 * abstime is an absolute time in seconds since the epoch,
+		 * but Psemaphore expects a relative timeout value in milliseconds
+		 */
+		struct timeval64 tv;
+		__time64_t timeout;
+		unsigned long now;
+		
+		timeout = (abstime->tv_sec * 1000000000UL + abstime->tv_nsec) / 1000000UL;
+		Tgettimeofday64(&tv, NULL);
+		now = (tv.tv_sec * 1000000UL + tv.tv_usec) / 1000UL;
+		if (now > timeout)
+		{
+			err = -ETIMEDOUT;
+		} else
+		{
+			timeout -= now;
+			if (timeout > 2147483647L)
+				err = -EINVAL;
+			else
+				err = Psemaphore(2, sem->sem_id, timeout);
+		}
+	} else
+	{
+		err = Psemaphore(2, sem->sem_id, -1);
+	}
+#endif
+	if (err == -EACCES)
+		err = -ETIMEDOUT;
+
+	return err;
+}
+
+
 /* Slow path that blocks.  */
 int __sem_wait_slow(sem_t *sem, clockid_t clockid, const struct timespec *abstime)
 {
@@ -261,9 +304,75 @@ int __sem_wait_slow(sem_t *sem, clockid_t clockid, const struct timespec *abstim
 			{
 				/* See __HAVE_64B_ATOMICS variant.  */
 				err = do_futex_wait(sem, clockid, abstime);
-				if (err == ETIMEDOUT || err == EINTR)
+				if (err == -ETIMEDOUT || err == -EINTR)
 				{
-					__set_errno(err);
+					__set_errno(-err);
+					err = -1;
+					goto error;
+				}
+				err = 0;
+				/* We blocked, so there might be a token now.  Relaxed MO is
+				   sufficient (see above).  */
+				v = atomic_load_relaxed(&sem->value);
+			}
+			/* If there is no token, we must not try to grab one.  */
+		} while ((v >> SEM_VALUE_SHIFT) == 0);
+
+		/* Try to grab a token.  We need acquire MO so this synchronizes with
+		   all token providers (i.e., the RMW operation we read from or all those
+		   before it in modification order; also see sem_post).  */
+	} while (!atomic_compare_exchange_weak_acquire(&sem->value, &v, v - (1 << SEM_VALUE_SHIFT)));
+
+  error:
+#ifdef HAVE_PTHREAD_H
+	pthread_cleanup_pop(0);
+#endif
+
+	__sem_wait_finish(sem);
+
+	return err;
+}
+
+
+/* 64bit version of above.  */
+int __sem_wait_slow64(sem_t *sem, clockid_t clockid, const struct timespec64 *abstime)
+{
+	int err = 0;
+	unsigned long v;
+	atomic_fetch_add_acquire(&sem->nwaiters, 1);
+
+#ifdef HAVE_PTHREAD_H
+	pthread_cleanup_push(__sem_wait_cleanup, sem);
+#endif
+
+	/* Wait for a token to be available.  Retry until we can grab one.  */
+	/* We do not need any ordering wrt. to this load's reads-from, so relaxed
+	   MO is sufficient.  The acquire MO above ensures that in the problematic
+	   case, we do see the unsetting of the bit by another waiter.  */
+	v = atomic_load_relaxed(&sem->value);
+	do
+	{
+		do
+		{
+			/* We are about to block, so make sure that the nwaiters bit is
+			   set.  We need release MO on the CAS to ensure that when another
+			   waiter unsets the nwaiters bit, it will also observe that we
+			   incremented nwaiters in the meantime (also see the unsetting of
+			   the bit below).  Relaxed MO on CAS failure is sufficient (see
+			   above).  */
+			do
+			{
+				if ((v & SEM_NWAITERS_MASK) != 0)
+					break;
+			} while (!atomic_compare_exchange_weak_release(&sem->value, &v, v | SEM_NWAITERS_MASK));
+			/* If there is no token, wait.  */
+			if ((v >> SEM_VALUE_SHIFT) == 0)
+			{
+				/* See __HAVE_64B_ATOMICS variant.  */
+				err = do_futex_wait64(sem, clockid, abstime);
+				if (err == -ETIMEDOUT || err == -EINTR)
+				{
+					__set_errno(-err);
 					err = -1;
 					goto error;
 				}

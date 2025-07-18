@@ -36,6 +36,7 @@ SRCFILES = \
 	sem_init.c \
 	sem_post.c \
 	sem_timedwait.c \
+	sem_timedwait64.c \
 	sem_trywait.c \
 	sem_wait.c \
 	sem_waitcommon.c \
