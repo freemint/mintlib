@@ -40,6 +40,7 @@ SRCFILES = \
 	gethostid.c \
 	gethostname.c \
 	getitimer.c \
+	getitimer64.c \
 	getpagesize.c \
 	getpgid.c \
 	getpgrp.c \
@@ -87,6 +88,7 @@ SRCFILES = \
 	setgroups.c \
 	sethostname.c \
 	setitimer.c \
+	setitimer64.c \
 	setpgid.c \
 	setpgrp.c \
 	setpriority.c \

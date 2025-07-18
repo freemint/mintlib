@@ -208,7 +208,7 @@ int __clock_nanosleep_time64(clockid_t __clock_id, int __flags, const struct tim
 
 #ifdef _SYS_TIME_H
 int __getitimer64(__itimer_which_t __which, struct itimerval64 *__value) __THROW;
-int __setitimer64(__itimer_which_t __which, const struct itimerval *__restrict __new, struct itimerval64 *__restrict __old) __THROW;
+int __setitimer64(__itimer_which_t __which, const struct itimerval64 *__restrict __new, struct itimerval64 *__restrict __old) __THROW;
 #endif
 
 #ifdef _SYS_TIMEB_H
