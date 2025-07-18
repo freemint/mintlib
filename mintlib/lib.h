@@ -239,7 +239,7 @@ int __semctl64(int __semid, int __semnum, int __cmd, ...) __THROW;
 
 #ifdef _SEMAPHORE_H
 int __sem_timedwait64(sem_t *__restrict __sem, const struct timespec64 *__restrict __abstime) __nonnull ((1, 2));
-int __sem_clockwait64(sem_t *__restrict __sem, clockid_t clock, const struct timespec *__restrict __abstime) __nonnull ((1, 3));
+int __sem_clockwait64(sem_t *__restrict __sem, clockid_t clock, const struct timespec64 *__restrict __abstime) __nonnull ((1, 3));
 #endif
 
 #if defined(_SIGNAL_H) && 0 /* siginfo_t NYI */

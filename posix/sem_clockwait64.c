@@ -3,10 +3,11 @@
 #include <errno.h>
 #include <time.h>
 #include "semaphoreP.h"
+#include "lib.h"
 
 /* Adapted to MiNTLib by Thorsten Otto */
 
-int sem_clockwait(sem_t *sem, clockid_t clockid, const struct timespec *abstime)
+int __sem_clockwait64(sem_t *sem, clockid_t clockid, const struct timespec64 *abstime)
 {
 	long ret;
 
@@ -38,5 +39,5 @@ int sem_clockwait(sem_t *sem, clockid_t clockid, const struct timespec *abstime)
 		return 0;
 	}
 
-	return __sem_wait_slow(sem, clockid, abstime);
+	return __sem_wait_slow64(sem, clockid, abstime);
 }

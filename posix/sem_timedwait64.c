@@ -11,8 +11,7 @@
 #include <errno.h>
 #include <time.h>
 #include "semaphoreP.h"
-
-int __sem_timedwait64(sem_t *sem, const struct timespec64 *abstime);
+#include "lib.h"
 
 /* This is in a separate file because because sem_timedwait is only provided
    if __USE_XOPEN2K is defined.  */
