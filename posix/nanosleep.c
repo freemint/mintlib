@@ -19,7 +19,6 @@ int
 nanosleep(const struct timespec *req, struct timespec *rem)
 {
 	struct timeval start, stop, remain, wait;
-	int savederrno;
 	int ret;
 
 	if (req->tv_nsec < 0 || BILLION <= req->tv_nsec) {
@@ -52,24 +51,29 @@ nanosleep(const struct timespec *req, struct timespec *rem)
 		}
 	}
 
-	gettimeofday(&start, NULL);
+	if (rem)
+		gettimeofday(&start, NULL);
 
 	ret = select(0, NULL, NULL, NULL, &wait);
 
 	if (ret == 0)
 		return 0;
 
-	savederrno = errno;
-	gettimeofday (&stop, NULL);
+	if (rem && errno == EINTR)
+	{
+		int savederrno = errno;
 
-	remain.tv_sec = wait.tv_sec - (stop.tv_sec - start.tv_sec);
-	remain.tv_usec = wait.tv_usec - (stop.tv_usec - start.tv_usec);
-	remain.tv_sec += remain.tv_usec / 1000000L;
-	remain.tv_usec %= 1000000L;
-
-	TIMEVAL_TO_TIMESPEC(&remain, rem)
-
-	errno = savederrno;
+		gettimeofday (&stop, NULL);
+	
+		remain.tv_sec = wait.tv_sec - (stop.tv_sec - start.tv_sec);
+		remain.tv_usec = wait.tv_usec - (stop.tv_usec - start.tv_usec);
+		remain.tv_sec += remain.tv_usec / 1000000L;
+		remain.tv_usec %= 1000000L;
+	
+		TIMEVAL_TO_TIMESPEC(&remain, rem)
+	
+		errno = savederrno;
+	}
 
 	return -1;
 }
