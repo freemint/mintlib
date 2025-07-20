@@ -24,26 +24,29 @@
 
 #include "lib.h"
 
-__typeof__(utime) __utime;
-
-int
-__utime (const char *_filename, const struct utimbuf *_tset)
+int __utime64(const char *_filename, const struct utimbuf64 *_tset)
 {
 	char filenamebuf[PATH_MAX];
 	const char* filename = _filename;
 	long retval;
 	struct _mutimbuf settime;
-	struct _mutimbuf* tset = NULL;
+	struct _mutimbuf *tset = NULL;
 	int fh;
 	
 	if (!__libc_unix_names) {
-		(void) _unx2dos(_filename, filenamebuf, sizeof filenamebuf);
+    	(void) _unx2dos(_filename, filenamebuf, sizeof filenamebuf);
 		filename = filenamebuf;
 	}
 	
-	retval = Dcntl (FUTIME_UTC, filename, (long) _tset);
+	retval = Dcntl (FUTIME_UTC64, filename, (long) _tset);
 	if (retval == 0)
-	      	return 0;
+		return 0;
+	/*
+	 * Prefer to fallback directly to use GEMDOS time here:
+	 * that should work atleast until 1.1.2098,
+	 * while falling back to use FUTIME_UTC32 will fail
+	 * in 2038
+	 */
 	/* FIXME: How can we distinguish between a failure where FUTIME_UTC
 	   is not recognized by kernel/filesystem and a real failure?  */
 	
@@ -138,4 +141,3 @@ __utime (const char *_filename, const struct utimbuf *_tset)
 	
 	return 0;
 }
-weak_alias (__utime, utime)
