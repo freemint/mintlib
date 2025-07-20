@@ -38,22 +38,23 @@ typedef unsigned short int msglen_t;
 struct msqid_ds
 {
   struct ipc_perm msg_perm;	/* structure describing operation permission */
-  __time_t msg_stime;		/* time of last msgsnd command */
-  __time_t msg_rtime;		/* time of last msgrcv command */
-  __time_t msg_ctime;		/* time of last change */
-  msgqnum_t msg_qnum;		/* number of messages currently on queue */
-  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
-  __pid_t msg_lspid;		/* pid of last msgsnd() */
-  __pid_t msg_lrpid;		/* pid of last msgrcv() */
-};
-struct msqid_ds64
-{
-  struct ipc_perm msg_perm;	/* structure describing operation permission */
+#ifdef __USE_TIME_BITS64
   __time64_t msg_stime;		/* time of last msgsnd command */
   __time64_t msg_rtime;		/* time of last msgrcv command */
   __time64_t msg_ctime;		/* time of last change */
+#else
+  __int32_t __msg_stime_high;
+  __time_t msg_stime;		/* time of last msgsnd command */
+  __int32_t __msg_rtime_high;
+  __time_t msg_rtime;		/* time of last msgrcv command */
+  __int32_t __msg_ctime_high;
+  __time_t msg_ctime;		/* time of last change */
+#endif
+  size_t __msg_cbytes;		/* current number of bytes on queue */
   msgqnum_t msg_qnum;		/* number of messages currently on queue */
   msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
   __pid_t msg_lspid;		/* pid of last msgsnd() */
   __pid_t msg_lrpid;		/* pid of last msgrcv() */
+  unsigned long int __unused3;
+  unsigned long int __unused4;
 };
