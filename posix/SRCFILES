@@ -22,6 +22,7 @@ SRCFILES = \
 	nanosleep.c \
 	nanosleep64.c \
 	clock_gettime.c \
+	clock_gettime64.c \
 	clock_getres.c \
 	clock_getres64.c \
 	clock_nanosleep.c \

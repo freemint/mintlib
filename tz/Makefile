@@ -75,7 +75,7 @@ endif
 ifeq ($(CROSS),yes)
 
 zic = ./zic_for_build$(EXEEXT_FOR_BUILD)
-OBJS_FOR_BUILD = localtime_for_build.o asctime_for_build.o strftime_for_build.o
+OBJS_FOR_BUILD = localtime_for_build.o asctime_for_build.o strftime_for_build.o tzname_for_build.o
 
 zic_for_build$(EXEEXT_FOR_BUILD): zic_for_build.o $(OBJS_FOR_BUILD)
 	$(AM_V_LD)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $^
@@ -91,6 +91,8 @@ localtime_for_build.o: localtime.c
 asctime_for_build.o: asctime.c
 	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
 strftime_for_build.o: strftime.c
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+tzname_for_build.o: tzname.c
 	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
 else
 
