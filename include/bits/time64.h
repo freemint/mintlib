@@ -16,12 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined(_LIBC)
-#include <bits/timesize.h>
-#undef _TIME_BITS
-#define _TIME_BITS __TIMESIZE
-#endif
-
 #if defined(_TIME_BITS)
 # if _TIME_BITS == 64
 #  define __USE_TIME_BITS64	1

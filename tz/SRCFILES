@@ -3,7 +3,11 @@
 
 SRCFILES = asctime.c \
 	   ctime.c \
+	   ctime64.c \
 	   difftime.c \
+	   difftime64.c \
            localtime.c \
+           localtime64.c \
 	   strftime.c \
+	   tzname.c \
 	   ident_tz.c

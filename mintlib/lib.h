@@ -183,7 +183,7 @@ struct timezone;
 #define TIME32_MAX (2147483647UL - MAX_TZ_OFFSET)
 
 __time64_t __time64(__time64_t *__timer) __THROW;
-double __difftime64(__time64_t *__time1, __time64_t __time0) __THROW __attribute__ ((__const__));
+double __difftime64(__time64_t __time1, __time64_t __time0) __THROW __attribute__ ((__const__));
 __time64_t __mktime64(struct tm *__tp) __THROW;
 struct tm *__gmtime64(const __time64_t *__timer) __THROW;
 struct tm *__gmtime64_r (const __time64_t *__restrict __timer, struct tm *__restrict __tp) __THROW;

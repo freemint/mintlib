@@ -63,31 +63,6 @@ static void unlock(void)
 # define O_BINARY 0
 #endif
 
-#ifndef WILDABBR
-/*
-** Someone might make incorrect use of a time zone abbreviation:
-**	1.	They might reference tzname[0] before calling tzset (explicitly
-**		or implicitly).
-**	2.	They might reference tzname[1] before calling tzset (explicitly
-**		or implicitly).
-**	3.	They might reference tzname[1] after setting to a time zone
-**		in which Daylight Saving Time is never observed.
-**	4.	They might reference tzname[0] after setting to a time zone
-**		in which Standard Time is never observed.
-**	5.	They might reference tm.TM_ZONE after calling offtime.
-** What's best to do in the above cases is open to debate;
-** for now, we just set things up so that in any of the five cases
-** WILDABBR is used. Another possibility: initialize tzname[0] to the
-** string "tzname[0] used before set", and similarly for the other cases.
-** And another: initialize tzname[0] to "ERA", with an explanation in the
-** manual page of what this "time zone abbreviation" means (doing this so
-** that tzname[0] has the "normal" length of three characters).
-*/
-#define WILDABBR "   "
-#endif
-
-static char wildabbr[] = WILDABBR;
-
 static char etc_utc[] = "Etc/UTC";
 static char *utc = etc_utc + sizeof "Etc/" - 1;
 
@@ -235,21 +210,6 @@ static int lcl_is_set;
 static struct tm tm;
 #endif
 
-#if 2 <= HAVE_TZNAME + TZ_TIME_T
-char *tzname[2] = {
-	wildabbr,
-	wildabbr
-};
-#endif
-
-#if 2 <= USG_COMPAT + TZ_TIME_T
-long timezone = 0;
-int daylight = 0;
-#endif
-#if 2 <= ALTZONE + TZ_TIME_T
-long altzone;
-#endif
-
 /* Initialize *S to a value based on UTOFF, ISDST, and DESIGIDX.  */
 static void init_ttinfo(struct ttinfo *s, int_fast32_t utoff, int isdst, desigidx_type desigidx)
 {
@@ -261,9 +221,9 @@ static void init_ttinfo(struct ttinfo *s, int_fast32_t utoff, int isdst, desigid
 }
 
 /* Return TRUE if SP's time type I does not specify local time.  */
-static int ttunspecified(struct state const *sp, int i)
+static int ttunspecified(const struct state *sp, int i)
 {
-	char const *abbr = &sp->chars[sp->ttis[i].tt_desigidx];
+	const char *abbr = &sp->chars[sp->ttis[i].tt_desigidx];
 
 	/* memcmp is likely faster than strcmp, and is safe due to CHARS_EXTRA.  */
 	return memcmp(abbr, UNSPEC, sizeof UNSPEC) == 0;
@@ -327,7 +287,7 @@ static void update_tzname_etc(struct state *sp, const struct ttinfo *ttisp)
    Otherwise, return STDDST_MASK.  See settzname for STDDST_MASK.  */
 static int may_update_tzname_etc(int stddst_mask, struct state *sp, int type)
 {
-	struct ttinfo *ttisp = &sp->ttis[type];
+	const struct ttinfo *ttisp = &sp->ttis[type];
 	int this_bit = 1 << ttisp->tt_isdst;
 
 	if (stddst_mask & this_bit)
@@ -339,9 +299,10 @@ static int may_update_tzname_etc(int stddst_mask, struct state *sp, int type)
 	return stddst_mask;
 }
 
-static void settzname(void)
+
+static void __settzname(void)
 {
-	struct state *const sp = lclptr;
+	struct state *sp = lclptr;
 	int i;
 
 	/* If STDDST_MASK & 1 we need info about a standard time.
@@ -350,7 +311,7 @@ static void settzname(void)
 	int stddst_mask = 0;
 
 #if HAVE_TZNAME
-	tzname[0] = tzname[1] = sp ? wildabbr : utc;
+	tzname[0] = tzname[1] = sp ? __tz_wildabbr : utc;
 	stddst_mask = 3;
 #endif
 #if USG_COMPAT
@@ -375,6 +336,7 @@ static void settzname(void)
 	daylight = (stddst_mask >> 1) ^ 1;
 #endif
 }
+
 
 /* Replace bogus characters in time zone abbreviations.
    Return 0 on success, an errno value if a time zone abbreviation is
@@ -1485,7 +1447,7 @@ static void tzsetlcl(const char *name)
 		if (0 < lcl)
 			strcpy(lcl_TZname, name);
 	}
-	settzname();
+	__settzname();
 	lcl_is_set = lcl;
 }
 
@@ -1740,7 +1702,7 @@ static struct tm *gmtsub(struct state *sp, const time_t *timep, int_fast32_t off
 	 ** "+xx" or "-xx" if offset is non-zero,
 	 ** but this is no time for a treasure hunt.
 	 */
-	tmp->TM_ZONE = offset ? wildabbr :
+	tmp->TM_ZONE = offset ? __tz_wildabbr :
 #ifdef ALL_STATE
 		!gmtptr ? utc :
 #endif
@@ -2379,25 +2341,6 @@ time_t mktime(struct tm *tmp)
 	unlock();
 	return t;
 }
-
-#if __TIMESIZE == 32
-__time64_t __mktime64(struct tm *tmp);
-__time64_t __mktime64(struct tm *tmp)
-{
-	__time64_t t;
-	int err = lock();
-
-	if (err)
-	{
-		errno = err;
-		return -1;
-	}
-	tzset_unlocked();
-	t = mktime_tzname(lclptr, tmp, TRUE);
-	unlock();
-	return t;
-}
-#endif
 
 #if STD_INSPIRED
 /* This function is obsolescent and may disappear in future releases.

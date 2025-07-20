@@ -515,7 +515,7 @@ typedef unsigned long uintmax_t;
 */
 
 #ifndef asctime_r
-extern char *	asctime_r(struct tm const *, char *);
+extern char *asctime_r(struct tm const *, char *);
 #endif
 
 /*
@@ -531,6 +531,8 @@ extern char *	asctime_r(struct tm const *, char *);
 # define TZ_TIME_T 0
 #endif
 
+extern char __tz_wildabbr[];
+
 #if TZ_TIME_T
 # ifdef LOCALTIME_IMPLEMENTATION
 static time_t sys_time(time_t *x) { return time(x); }
@@ -539,73 +541,101 @@ static time_t sys_time(time_t *x) { return time(x); }
 typedef time_tz tz_time_t;
 
 # undef  ctime
-# define ctime tz_ctime
 # undef  ctime_r
-# define ctime_r tz_ctime_r
 # undef  difftime
-# define difftime tz_difftime
 # undef  gmtime
-# define gmtime tz_gmtime
 # undef  gmtime_r
-# define gmtime_r tz_gmtime_r
 # undef  localtime
-# define localtime tz_localtime
 # undef  localtime_r
-# define localtime_r tz_localtime_r
 # undef  localtime_rz
-# define localtime_rz tz_localtime_rz
 # undef  mktime
-# define mktime tz_mktime
 # undef  mktime_z
-# define mktime_z tz_mktime_z
 # undef  offtime
-# define offtime tz_offtime
 # undef  posix2time
-# define posix2time tz_posix2time
 # undef  posix2time_z
-# define posix2time_z tz_posix2time_z
 # undef  strftime
-# define strftime tz_strftime
 # undef  time
-# define time tz_time
 # undef  time2posix
-# define time2posix tz_time2posix
 # undef  time2posix_z
-# define time2posix_z tz_time2posix_z
 # undef  time_t
-# define time_t tz_time_t
 # undef  timegm
-# define timegm tz_timegm
 # undef  timelocal
-# define timelocal tz_timelocal
 # undef  timeoff
-# define timeoff tz_timeoff
 # undef  tzalloc
-# define tzalloc tz_tzalloc
 # undef  tzfree
-# define tzfree tz_tzfree
 # undef  tzset
-# define tzset tz_tzset
 # undef  tzsetwall
+# undef  strftime_l
+# undef  tzname
+# undef  daylight
+# undef  timezone
+# undef  altzone
+
+#if defined(__MINT__) && defined(_TIME_BITS) && _TIME_BITS == 64
+# define ctime __ctime64
+# define ctime_r __ctime64_r
+# define difftime __difftime64
+# define gmtime __gmtime64
+# define gmtime_r __gmtime64_r
+# define localtime __localtime64
+# define localtime_r __localtime64_r
+# define localtime_rz __localtime64_rz
+# define mktime __mktime64
+# define mktime_z __mktime64_z
+# define offtime __offtime64
+# define posix2time __posix2time64
+# define posix2time_z __posix2time64_z
+# define time __time64
+# define time2posix __time2posix64
+# define time2posix_z __time2posix64_z
+# define time_t tz_time_t
+# define timegm __timegm64
+# define timelocal __timelocal64
+# define timeoff __timeoff64
+# define tzalloc __tzalloc64
+# define tzfree __tzfree64
+# define tzset __tzset64
+# define tzsetwall __tzsetwall64
+#else
+# define ctime tz_ctime
+# define ctime_r tz_ctime_r
+# define difftime tz_difftime
+# define gmtime tz_gmtime
+# define gmtime_r tz_gmtime_r
+# define localtime tz_localtime
+# define localtime_r tz_localtime_r
+# define localtime_rz tz_localtime_rz
+# define mktime tz_mktime
+# define mktime_z tz_mktime_z
+# define offtime tz_offtime
+# define posix2time tz_posix2time
+# define posix2time_z tz_posix2time_z
+# define time tz_time
+# define time2posix tz_time2posix
+# define time2posix_z tz_time2posix_z
+# define time_t tz_time_t
+# define timegm tz_timegm
+# define timelocal tz_timelocal
+# define timeoff tz_timeoff
+# define tzalloc tz_tzalloc
+# define tzfree tz_tzfree
+# define tzset tz_tzset
 # define tzsetwall tz_tzsetwall
+# define strftime tz_strftime
 # if HAVE_STRFTIME_L
-#  undef  strftime_l
 #  define strftime_l tz_strftime_l
 # endif
 # if HAVE_TZNAME
-#  undef  tzname
 #  define tzname tz_tzname
 # endif
 # if USG_COMPAT
-#  undef  daylight
 #  define daylight tz_daylight
-#  undef  timezone
 #  define timezone tz_timezone
 # endif
 # if ALTZONE
-#  undef  altzone
 #  define altzone tz_altzone
 # endif
+#endif
 
 char *ctime(time_t const *);
 char *ctime_r(time_t const *, char *);

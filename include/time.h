@@ -270,11 +270,19 @@ extern char *tzname[2];		/* Current timezone names.  */
 
 /* Set time conversion information from the TZ environment variable.
    If TZ is not defined, a system-dependent default is used.  */
+#ifndef __USE_TIME_BITS64
 extern void tzset (void) __THROW;
+#else
+extern void __REDIRECT_NTH(tzset, (void), __tzset64);
+#endif
 #endif
 
 #if defined __USE_BSD
+#ifndef __USE_TIME_BITS64
 extern void tzsetwall (void) __THROW;
+#else
+extern void __REDIRECT_NTH(tzsetwall, (void), __tzsetwall64);
+#endif
 #endif
 
 #if defined __USE_SVID || defined __USE_XOPEN
@@ -313,7 +321,7 @@ extern time_t timegm (struct tm *__tp) __THROW;
 extern time_t timelocal (struct tm *__tp) __THROW;
 #else
 extern time_t __REDIRECT_NTH (timegm, (struct tm *__tp), __timegm64);
-extern time_t __REDIRECT_NTH (timelocal, (struct tm *__tp), __mktime64);
+extern time_t __REDIRECT_NTH (timelocal, (struct tm *__tp), __timelocal64);
 #endif
 
 /* Return the number of days in YEAR.  */
