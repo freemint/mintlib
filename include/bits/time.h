@@ -31,7 +31,10 @@
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
 #   define CLOCK_REALTIME	0
+/* Monotonic system-wide clock.  */
 #   define CLOCK_MONOTONIC	1
+/* Monotonic system-wide clock that includes time spent in suspension.  */
+# define CLOCK_BOOTTIME			7
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME	1

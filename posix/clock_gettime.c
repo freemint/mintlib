@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <time.h>
 #include <sys/time.h>
+#include <mint/sysctl.h>
+#include <mint/mintbind.h>
 
 static inline int
 realtime_gettime(struct timespec *tp)
@@ -25,12 +27,33 @@ __clock_gettime(clockid_t clock_id, struct timespec *tp)
 
 	switch (clock_id)
 	{
-		case CLOCK_MONOTONIC:
-		case CLOCK_REALTIME:
-			retval = realtime_gettime(tp);
+	case CLOCK_MONOTONIC:
+	case CLOCK_REALTIME:
+		retval = realtime_gettime(tp);
 		break;
-		default:
-			__set_errno(EINVAL);
+	case CLOCK_BOOTTIME:
+		{
+			long name[2];
+			unsigned long len;
+			long r;
+			struct timeval tv;
+
+			name[0] = CTL_KERN;
+			name[1] = KERN_BOOTTIME;
+			len = sizeof(tv);
+			r = Psysctl(name, 2, &tv, &len, NULL, 0);
+			if (r == 0)
+			{
+				TIMEVAL_TO_TIMESPEC(&tv, tp);
+				retval = 0;
+			} else
+			{
+				__set_errno(-(int)r);
+			}
+		}
+		break;
+	default:
+		__set_errno(EINVAL);
 		break;
     }
 	return retval;
