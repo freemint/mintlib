@@ -17,6 +17,10 @@ __typeof__(utimes) __utimes;
 __typeof__(utime) __utime;
 
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /* There is no use faking odd seconds or fractional parts here.  The
  * operating system doesn't support for now.
  */

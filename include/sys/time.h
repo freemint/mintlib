@@ -150,7 +150,7 @@ extern int setitimer (__itimer_which_t __which,
    FILE to TVP[1].  If TVP is a null pointer, use the current time instead.
    Returns 0 on success, -1 on errors.  */
 extern int utimes (__const char *__file, __const struct timeval __tvp[2])
-     __THROW;
+     __THROW __nonnull ((1));
 #else
 extern int __REDIRECT_NTH (getitimer, (__itimer_which_t __which,
                                        struct itimerval *__value),

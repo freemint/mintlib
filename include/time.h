@@ -158,6 +158,11 @@ typedef __pid_t pid_t;
 # endif
 #endif
 
+#ifdef __USE_ISOC11
+/* Time base values for timespec_get.  */
+# define TIME_UTC 1
+#endif
+
 
 /* Time used by the program so far (user time + system time).
    The result / CLOCKS_PER_SECOND is program time in seconds.  
@@ -362,6 +367,26 @@ extern int __REDIRECT (clock_nanosleep, (clockid_t __clock_id, int __flags,
                        __clock_nanosleep_time64);
 #endif
 # endif
+
+#ifdef __USE_ISOC11
+# ifndef __USE_TIME_BITS64
+/* Set TS to calendar time based in time base BASE.  */
+extern int timespec_get (struct timespec *__ts, int __base) __THROW __nonnull ((1));
+# else
+extern int __REDIRECT_NTH (timespec_get, (struct timespec *__ts, int __base), __timespec_get64) __nonnull ((1));
+# endif
+#endif
+
+
+#if __GLIBC_USE (ISOC2X)
+# ifndef __USE_TIME_BITS64
+/* Set TS to resolution of time base BASE.  */
+extern int timespec_getres (struct timespec *__ts, int __base) __THROW;
+# else
+extern int __REDIRECT_NTH (timespec_getres, (struct timespec *__ts, int __base), __timespec_getres64);
+# endif
+#endif
+
 
 # ifdef __USE_XOPEN_EXTENDED
 /* Set to one of the following values to indicate an error.

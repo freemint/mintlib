@@ -205,6 +205,8 @@ int __clock_getres64(clockid_t __clock_id, struct timespec64 *__res) __THROW;
 int __clock_gettime64(clockid_t __clock_id, struct timespec64 *__tp) __THROW __nonnull((2));
 int __clock_settime64(clockid_t __clock_id, const struct timespec64 *__tp) __THROW __nonnull((2));
 int __clock_nanosleep_time64(clockid_t __clock_id, int __flags, const struct timespec64 *__req, struct timespec64 *__rem);
+int __timespec_get64 (struct timespec64 *ts, int base);
+int __timespec_getres64(struct timespec64 *ts, int base);
 
 #ifdef _SYS_TIME_H
 int __getitimer64(__itimer_which_t __which, struct itimerval64 *__value) __THROW;

@@ -10,4 +10,8 @@ SRCFILES = \
 	ftime.c \
 	ftime64.c \
 	getdate.c \
-	strptime.c
+	strptime.c \
+	timespec_get.c \
+	timespec_get64.c \
+	timespec_getres.c \
+	timespec_getres64.c

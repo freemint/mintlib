@@ -14,6 +14,10 @@
 #include <sys/time.h>
 #include "lib.h"
 
+#if __GNUC_PREREQ(7, 0)
+# pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 int __utimes64(const char *filename, const struct timeval64 tvp[2])
 {
 	struct utimbuf64 utimbuf;
