@@ -34,7 +34,18 @@
 #define IPC_RMID			0		/* remove identifier */
 #define IPC_SET_TIME32		1		/* set `ipc_perm' options */
 #define IPC_STAT_TIME32		2		/* get `ipc_perm' options */
+#ifndef __MINT__ /* needs struct seminfo */
 #define IPC_INFO            3		/* see ipcs */
+#endif
+#define IPC_SET_TIME64		101		/* set `ipc_perm' options */
+#define IPC_STAT_TIME64		102		/* get `ipc_perm' options */
+#ifdef __USE_TIME_BITS64
+#define IPC_SET IPC_SET_TIME64
+#define IPC_STAT IPC_STAT_TIME64
+#else
+#define IPC_SET IPC_SET_TIME32
+#define IPC_STAT IPC_STAT_TIME32
+#endif
 
 /* Special key values.  */
 #define IPC_PRIVATE	((key_t) 0)	/* private key */
