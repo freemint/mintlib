@@ -10,22 +10,22 @@
 
 #include <stdlib.h>
 #include <mint/sysctl.h>
+#include <mint/mintbind.h>
 #include <unistd.h>
 
 __typeof__(getpagesize) __getpagesize;
-__typeof__(sysctl) __sysctl;
 
 #define DEF_PAGESIZE 8192	/* default page size for TOS */
 
 int
 __getpagesize (void)
 {
-	int call[2] = { CTL_HW, HW_PAGESIZE };
-	int val;
+	unsigned long call[2] = { CTL_HW, HW_PAGESIZE };
+	unsigned long val;
 	unsigned long valsize = sizeof (val);
 	int ret;
 
-	ret = __sysctl (call, 2, &val, &valsize, NULL, 0);
+	ret = Psysctl(call, 2, &val, &valsize, NULL, 0);
 	if (ret == 0)
 		return val;
 
