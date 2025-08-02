@@ -301,4 +301,15 @@
 # endif
 #endif
 
+#if (!defined _Noreturn \
+     && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
+     &&  !(__GNUC_PREREQ (4,7) \
+           || (3 < __clang_major__ + (5 <= __clang_minor__))))
+# if __GNUC_PREREQ (2,8)
+#  define _Noreturn __attribute__ ((__noreturn__))
+# else
+#  define _Noreturn
+# endif
+#endif
+
 #endif	 /* sys/cdefs.h */

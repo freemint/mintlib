@@ -845,7 +845,7 @@ extern void funlockfile __P ((FILE *__stream));
 #endif
 
 /* Print out MESSAGE on stderr and abort.  */
-extern void __libc_fatal __P ((const char* __message));
+_Noreturn void __libc_fatal __P ((const char* __message));
 
 __END_DECLS
 
