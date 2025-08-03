@@ -32,4 +32,6 @@ make -C tz DESTDIR="${INSTALL_DIR}" type=m68000 install
 cd "${INSTALL_DIR}"
 :  ${CROSS_TOOL}-strip $BINFILES
 tar cjf "${DEPLOY_DIR}/${ARCHIVE_NAME}-000.${DEPLOY_ARCHIVE}" $BINFILES usr/share/zoneinfo
+rm -f $BINFILES
+rmdir sbin usr/sbin
 cd -
