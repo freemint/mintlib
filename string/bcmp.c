@@ -5,6 +5,10 @@
 #undef ODD
 #define ODD(x) ((int)((long)(x) & 1L))
 
+#if __GNUC_PREREQ(7, 0)
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
+
 /*
  * compare n bytes efficientlty
  *
