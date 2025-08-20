@@ -25,7 +25,7 @@
 __BEGIN_DECLS
 
 typedef void *SLB_HANDLE;
-typedef long (*SLB_EXEC)(SLB_HANDLE sl, long fn, short nargs, ...);
+typedef long __CDECL (*SLB_EXEC)(SLB_HANDLE sl, long fn, short nargs, ...);
 
 typedef struct {
 	SLB_HANDLE	handle;
