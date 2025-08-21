@@ -31,7 +31,12 @@ extern "C" {
 
 typedef struct
 {
-	unsigned __opaque1, __opaque2;
+  long __count;
+  union
+  {
+    unsigned long __wch;
+    char __wchb[4];
+  } __value;		/* Value so far.  */
 } mbstate_t;
 
 wchar_t *wcscpy (wchar_t *__restrict, const wchar_t *__restrict);

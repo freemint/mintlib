@@ -13,5 +13,5 @@
 
 int mbsinit(const mbstate_t *st)
 {
-	return !st || !st->__opaque1;
+	return !st || !st->__count;
 }
