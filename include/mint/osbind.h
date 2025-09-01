@@ -1085,6 +1085,7 @@ __extension__								\
        (short)trap_1_w((short)(0x30))
 #define	       Ptermres(save,rv)				       \
        (void)trap_1_wlw((short)(0x31),(long)(save),(short)(rv))
+#define Sconfig(a,b) (long)trap_1_wwl(0x33,(short)(a),(long)(b))
 #define	       Dfree(buf,d)					       \
        (long)trap_1_wlw((short)(0x36),(long)(buf),(short)(d))
 #define	       Dcreate(path)					       \
