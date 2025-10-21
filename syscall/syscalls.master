@@ -563,7 +563,7 @@ opcode	ret	class name	args */
 0x002	void *	Physbase	(void) passthrough
 0x003	void *	Logbase		(void) passthrough
 0x004	short	Getrez		(void) passthrough
-0x005	void	VsetScreen	(long log, long phys, short rez, short mode)
+0x005	short	VsetScreen	(long log, long phys, short rez, short mode)
 0x006	void	Setpalette	(void *palptr) passthrough
 0x007	short	Setcolor	(short colornum, short mixture) passthrough
 0x008	short	Floprd		(void *buf, long x, short d, short sect, short trk,

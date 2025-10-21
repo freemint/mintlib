@@ -238,7 +238,7 @@ enum montypes {STmono=0, STcolor, VGAcolor, TVcolor};
 #define BLOCK_UBYTE 2
 
 #define VsetScreen(lscrn,pscrn,rez,mode)					\
-	(void)trap_14_wllww((short)5,(long)(lscrn),(long)(pscrn),	\
+	(short)trap_14_wllww((short)5,(long)(lscrn),(long)(pscrn),	\
 		(short)(rez),(short)(mode))
 #define VsetMode(mode)							\
 	(short)trap_14_ww((short)88,(short)(mode))
