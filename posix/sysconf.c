@@ -31,7 +31,7 @@ __sysconf (int var)
 
 	switch(var) {
 	case _SC_LAST:
-		return 4;
+		return 6;
 	case _SC_MEMR_MAX:
 		return UNLIMITED; /* not true for TOS < 1.4 :-( */
 	case _SC_ARG_MAX:
