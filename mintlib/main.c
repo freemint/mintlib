@@ -141,12 +141,11 @@ __libc_main (long _argc, char **_argv, char **_envp)
 	else if (_rootdir < 'a' || _rootdir > 'z')
 		_rootdir = 0;
 
-	/* if we're running under MiNT, and the current drive is U:, then this
+	/* if we're running under MiNT, and the drive U: exists, then this
 	 * must be our preferred drive
 	 */
-	if (!_rootdir && __mint >= 9) {
-		if (Dgetdrv() == 'U'-'A')
-			_rootdir = 'u';
+	if (!_rootdir && (Drvmap() & (1L << ('U'-'A')))) {
+		_rootdir = 'u';
 	}
 
 	/* If running under some recent MiNT there is no reason to convert 

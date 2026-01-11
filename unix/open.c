@@ -54,7 +54,7 @@ failsafe_Fopen (const char* name, int flags)
 }
 
 int
-__open_v (const char *_filename, int iomode, va_list argp)
+__open_v (const char *filename, int iomode, va_list argp)
 {
 	int rv;
 	int modemask;			/* which bits get passed to the OS? */
@@ -62,21 +62,20 @@ __open_v (const char *_filename, int iomode, va_list argp)
 	long fcbuf;			/* a temporary buffer for Fcntl */
 	struct stat sb;
 	unsigned int pmode = 0;
-	char *filename = (char *) _filename;
 
-	if (!_filename) {
+	if (!filename) {
 		__set_errno (EFAULT);
 	    	return -1;
 	}
 	
-	if (*_filename == '\0') {
+	if (*filename == '\0') {
 		__set_errno (ENOENT);
 		return -1;
 	}
 	
 	if (!__libc_unix_names) {
+	    	_unx2dos(filename, filenamebuf, sizeof (filenamebuf));
 	    	filename = filenamebuf;
-	    	_unx2dos(_filename, filename, sizeof (filenamebuf));
 	}
 
 	if (iomode & O_CREAT)
