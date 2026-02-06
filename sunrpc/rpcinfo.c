@@ -201,10 +201,7 @@ main (int argc, char **argv)
 }
 
 static void
-udpping (portnum, argc, argv)
-     u_short portnum;
-     int argc;
-     char **argv;
+udpping (u_short portnum, int argc, char **argv)
 {
   struct timeval to;
   struct sockaddr_in addr;
@@ -356,10 +353,7 @@ udpping (portnum, argc, argv)
 }
 
 static void
-tcpping (portnum, argc, argv)
-     u_short portnum;
-     int argc;
-     char **argv;
+tcpping (u_short portnum, int argc, char **argv)
 {
   struct timeval to;
   struct sockaddr_in addr;
@@ -505,10 +499,7 @@ tcpping (portnum, argc, argv)
  * a good error message.
  */
 static int
-pstatus (client, prognum, vers)
-     register CLIENT *client;
-     u_long prognum;
-     u_long vers;
+pstatus (CLIENT *client, u_long prognum, u_long vers)
 {
   struct rpc_err rpcerr;
 
@@ -527,9 +518,7 @@ pstatus (client, prognum, vers)
 }
 
 static void
-pmapdump (argc, argv)
-     int argc;
-     char **argv;
+pmapdump (int argc, char **argv)
 {
   struct sockaddr_in server_addr;
   register struct hostent *hp;
@@ -610,9 +599,8 @@ pmapdump (argc, argv)
 
 /*ARGSUSED */
 static bool_t
-reply_proc (res, who)
-     void *res;			/* Nothing comes back */
-     struct sockaddr_in *who;	/* Who sent us the reply */
+reply_proc (void *res,			/* Nothing comes back */
+	struct sockaddr_in *who)	/* Who sent us the reply */
 {
   register struct hostent *hp;
 
@@ -624,9 +612,7 @@ reply_proc (res, who)
 }
 
 static void
-brdcst (argc, argv)
-     int argc;
-     char **argv;
+brdcst (int argc, char **argv)
 {
   enum clnt_stat rpc_stat;
   u_long prognum, vers;
@@ -651,9 +637,7 @@ brdcst (argc, argv)
 }
 
 static void
-deletereg (argc, argv)
-     int argc;
-     char **argv;
+deletereg (int argc, char **argv)
 {
   u_long prog_num, version_num;
 
@@ -678,7 +662,7 @@ deletereg (argc, argv)
 }
 
 static void
-usage ()
+usage (void)
 {
   fputs (_("Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"),
 	 stderr);
@@ -690,8 +674,7 @@ usage ()
 }
 
 static u_long
-getprognum (arg)
-     char *arg;
+getprognum (char *arg)
 {
   register struct rpcent *rpc;
   register u_long prognum;
@@ -715,8 +698,7 @@ getprognum (arg)
 }
 
 static u_long
-getvers (arg)
-     char *arg;
+getvers (char *arg)
 {
   register u_long vers;
 
@@ -725,9 +707,7 @@ getvers (arg)
 }
 
 static void
-get_inet_address (addr, host)
-     struct sockaddr_in *addr;
-     char *host;
+get_inet_address (struct sockaddr_in *addr, char *host)
 {
   register struct hostent *hp;
 

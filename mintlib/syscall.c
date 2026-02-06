@@ -20,7 +20,11 @@ struct _dispatch
 
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 
+#if __GNUC_PREREQ(13, 0)
+typedef long (*func) (...);
+#else
 typedef long (*func) ();
+#endif
 
 /* Grab the array.  */
 #include "syscalls.h"
