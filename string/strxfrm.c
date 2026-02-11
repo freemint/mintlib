@@ -3,10 +3,10 @@
 
 #include <string.h>
 
-size_t
-strxfrm (char *to, const char *from, size_t maxsize)
+size_t strxfrm(char *dest, const char *src, size_t n)
 {
-  (void)strncpy (to, from, maxsize - 1);
-  to[maxsize] = '\0';
-  return strlen (to);
+	size_t l = strlen(src);
+	if (n > l)
+		strcpy(dest, src);
+	return l;
 }
