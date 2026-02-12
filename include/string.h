@@ -57,7 +57,7 @@ __EXTERN void* memrchr __P ((const void *__s, int __c, size_t __n));
 
 /* Copy SRC to DEST.  */
 __EXTERN char* strcpy __P ((char* __dest,
-			    const char* __src));
+			    const char* __src)) __THROW __nonnull ((1, 2));
 /* Copy no more than N characters of SRC to DEST.  */
 __EXTERN char* strncpy __P ((char* __dest,
 			     const char* __src, size_t __n));
@@ -397,6 +397,24 @@ extern __inline __attribute__((__gnu_inline__)) int __inline_strcmp(const char *
 }
 #ifdef __OPTIMIZE__
 #define strcmp(s1, s2) __inline_strcmp(s1, s2)
+#endif
+
+extern __inline __attribute__((__gnu_inline__)) char *__inline_strcpy(char *dest, const char *src);
+extern __inline __attribute__((__gnu_inline__)) char *__inline_strcpy(char *dest, const char *src)
+{
+	char *dscan = dest;
+
+	__asm__ __volatile__(
+	   "1:\n"
+		" move.b	(%[src])+,(%[dest])+\n"
+		" bne.s 	1b\n"
+	: [src]"+a"(src), [dest]"+a"(dscan)
+	:
+	: "cc" AND_MEMORY);
+	return dest;
+}
+#ifdef __OPTIMIZE__
+#define strcpy(dest, src) (__builtin_constant_p(src) && strlen(src) < 2 ? __builtin_strcpy(dest, src) : __inline_strcpy(dest, src))
 #endif
 
 __END_DECLS
