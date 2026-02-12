@@ -345,12 +345,17 @@ extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const cha
 {
 	const char *start = scan;
 
-	while (*scan++ != '\0')
-		continue;
+	__asm__ __volatile__(
+		"1:\n"
+		" tst.b (%0)+\n"
+		" bne.s 1b"
+	: "+a"(scan)
+	:
+	: "cc");
 	return scan - start - 1;
 }
 #ifdef __OPTIMIZE__
-#define strlen(s) __inline_strlen(s)
+#define strlen(s) (__builtin_constant_p(s) ? __builtin_strlen(s) : __inline_strlen(s))
 #endif
 
 
