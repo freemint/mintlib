@@ -180,12 +180,12 @@ __EXTERN void* mempcpy __P ((void*  __dest,
 
 
 /* Return the length of S.  */
-__EXTERN size_t strlen __P ((const char* __s));
+__EXTERN size_t strlen __P ((const char* __s)) __THROW __attribute_pure__ __nonnull ((1));
 
 #ifdef	__USE_GNU
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
-__EXTERN size_t strnlen __P ((const char* __string, size_t __maxlen));
+__EXTERN size_t strnlen __P ((const char* __string, size_t __maxlen)) __THROW __attribute_pure__ __nonnull ((1));
 #endif
 
 
@@ -335,6 +335,23 @@ __EXTERN int strncmpi __P (( const char* , const char* , size_t ));
 /* BSD? */
 __EXTERN size_t strlcpy __P ((char *dst, const char *src, size_t siz));
 __EXTERN size_t strlcat __P ((char *dst, const char *src, size_t siz));
+
+
+/*
+ * inline versions of some functions.
+ */
+extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const char *scan);
+extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const char *scan)
+{
+	const char *start = scan;
+
+	while (*scan++ != '\0')
+		continue;
+	return scan - start - 1;
+}
+#ifdef __OPTIMIZE__
+#define strlen(s) __inline_strlen(s)
+#endif
 
 __END_DECLS
 
