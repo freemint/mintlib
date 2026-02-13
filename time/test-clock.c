@@ -3,6 +3,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sched.h>
 
 volatile int gotit = 0;
 
@@ -27,7 +28,7 @@ main (int argc, char ** argv)
     }
   alarm(1);
   start = clock ();
-  while (!gotit);
+  while (!gotit) sched_yield();
   stop = clock ();
 
   printf ("%ld clock ticks per second (start=%ld,stop=%ld)\n",

@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sched.h>
 
 /* Some modifications for the MiNTLib.  Especially also test MD5
    encryption.  */
@@ -159,6 +160,7 @@ main ()
 #else
 	s = crypt (s, SALT);
 #endif
+	sched_yield();
     }
   
   return 1;
