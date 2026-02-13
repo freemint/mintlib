@@ -37,12 +37,12 @@ CFLAGS-md5speeds.c = -O3 -fomit-frame-pointer
 
 include $(top_srcdir)/checkrules
 
-check-local: $(EXTRAPRGS)
-	@echo "====================================================="
-	@echo "=== Benchmarking libc crypt (DES and MD5 version) ==="
-	@echo "====================================================="
-	./speeds
-	./md5speeds
+#check-local: $(EXTRAPRGS)
+#	@echo "====================================================="
+#	@echo "=== Benchmarking libc crypt (DES and MD5 version) ==="
+#	@echo "====================================================="
+#	./speeds
+#	./md5speeds
 	
 install-include:
 
