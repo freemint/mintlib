@@ -3,6 +3,7 @@
 #include <error.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 void noop (void);
 

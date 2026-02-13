@@ -19,10 +19,13 @@
 # define _GNU_SOURCE	1
 #endif
 
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* cannot use <math.h> here, because that is no longer part of mintlib */
+#define NAN __builtin_nan("")
+#define INFINITY __builtin_inf()
 
 int error_count;
 

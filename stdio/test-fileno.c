@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 static int
 check (const char *name, FILE *stream, int fd)

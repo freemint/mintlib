@@ -34,10 +34,6 @@ TESTS = cert md5_1 md5_2 ufc
 EXTRAPRGS = speeds md5speeds
 CFLAGS-speeds.c = -O3 -fomit-frame-pointer
 CFLAGS-md5speeds.c = -O3 -fomit-frame-pointer
-# This is necessary in order to get md5.h to include <limits.h> to find
-# the correct size of md5_uint32_t.
-DEFS-test-md5_1.c = -D_LIBC -U_GNU_SOURCE -I$(top_srcdir)/mintlib
-DEFS-test-md5_2.c = -D_LIBC -U_GNU_SOURCE -I$(top_srcdir)/mintlib
 
 include $(top_srcdir)/checkrules
 

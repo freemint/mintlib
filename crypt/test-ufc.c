@@ -25,12 +25,11 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <crypt.h>
 
-char *crypt();
-
-main(argc, argv)
-  int argc;
-  char **argv;
+int main(int argc, char **argv)
   { char *s;
     unsigned long i,iterations;
 

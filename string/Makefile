@@ -29,7 +29,7 @@ all-here:
 include $(top_srcdir)/rules $(top_srcdir)/phony
 
 # FIXME: stratcliff still missing because of missing mman.h.
-TESTS = common copy ffs inlcall inline noinline strlen svc
+TESTS = common copy ffs inlcall inline noinline strlen svc strcmp
 EXTRAPRGS =
 CFLAGS-test-noinline.c = -fno-builtin
 CFLAGS-test-strlen.c = -fno-builtin

@@ -15,6 +15,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+int do_test (int argc, char* argv[]);
+
 #include <test-skeleton.c>
 
 #define MAX_HANDLE(a, b) (a > b ? a : b)

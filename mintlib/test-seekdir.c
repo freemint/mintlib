@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 
 /* Modified by Guido Flohr <guido@freemint.de>:

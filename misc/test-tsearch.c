@@ -36,7 +36,8 @@
 #endif
 
 #if BALANCED
-#include <math.h>
+/* cannot use <math.h> here, because that is no longer part of mintlib */
+double log(double x);
 #define SIZE 1000
 #else
 #define SIZE 100
@@ -253,7 +254,7 @@ main (int argc, char **argv)
   void *root = NULL;
   int i, j;
 
-  initstate (SEED, state, 8);
+  initstate (SEED, (void *)state, 8);
 
   for (i = 0; i < SIZE; ++i)
     x[i] = i;

@@ -118,6 +118,7 @@ string/test-inline
 string/test-noinline
 string/test-strlen
 string/test-svc
+string/test-strcmp
 sunrpc/rpcgen
 sunrpc/rpcinfo
 sunrpc/*.stmp

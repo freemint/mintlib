@@ -10,6 +10,7 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* Some modifications for the MiNTLib.  Especially also test MD5
    encryption.  */

@@ -26,8 +26,8 @@ default: all
 
 TESTS = iioformat iioscanf iiowc-printf
 
-libs-test-iioformat = $(top_srcdir)/lib$(type)/libiio.a
-libs-test-iioscanf = $(top_srcdir)/lib$(type)/libiio.a
+libs-test-iioformat = $(top_srcdir)/build/$(type)/libiio.a
+libs-test-iioscanf = $(top_srcdir)/build/$(type)/libiio.a
 
 include $(top_srcdir)/checkrules
 

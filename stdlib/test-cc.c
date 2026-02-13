@@ -15,6 +15,7 @@
 #include <sys/cdefs.h>
 #include <ieee754.h>
 #include <signal.h>
+#include <unistd.h>
 
 #define STRINGIFY(c) (c), __STRING(c)
 

@@ -216,8 +216,8 @@ I am ready for my first lesson today.";
     
     printf ("snprintf (\"%%30s\", \"foo\") == %d, \"%.*s\"\n",
 	    retval = snprintf (buf, sizeof (buf), "%30s", "foo"), 
-	    sizeof (buf), buf);
-    if (retval == -1)
+	    (int)sizeof (buf), buf);
+    if (retval == 30)
       {
         puts ("Test ok.");
       }
