@@ -340,8 +340,8 @@ __EXTERN size_t strlcat __P ((char *dst, const char *src, size_t siz));
 /*
  * inline versions of some functions.
  */
-extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const char *scan);
-extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const char *scan)
+#ifdef __OPTIMIZE__
+extern __inline __attribute__((__gnu_inline__)) size_t strlen(const char *scan)
 {
 	const char *start = scan;
 
@@ -354,13 +354,11 @@ extern __inline __attribute__((__gnu_inline__)) size_t __inline_strlen(const cha
 	: "cc");
 	return scan - start - 1;
 }
-#ifdef __OPTIMIZE__
-#define strlen(s) (__builtin_constant_p(s) ? __builtin_strlen(s) : __inline_strlen(s))
 #endif
 
 
-extern __inline __attribute__((__gnu_inline__)) int __inline_strcmp(const char *s1, const char *s2);
-extern __inline __attribute__((__gnu_inline__)) int __inline_strcmp(const char *s1, const char *s2)
+#ifdef __OPTIMIZE__
+extern __inline __attribute__((__gnu_inline__)) int strcmp(const char *s1, const char *s2)
 {
 #ifdef __mcoldfire__
 	unsigned long cmp;
@@ -400,9 +398,8 @@ extern __inline __attribute__((__gnu_inline__)) int __inline_strcmp(const char *
 	return cmp;
 #endif
 }
-#ifdef __OPTIMIZE__
-#define strcmp(s1, s2) __inline_strcmp(s1, s2)
 #endif
+
 
 extern __inline __attribute__((__gnu_inline__)) char *__inline_strcpy(char *dest, const char *src);
 extern __inline __attribute__((__gnu_inline__)) char *__inline_strcpy(char *dest, const char *src)

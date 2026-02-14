@@ -33,6 +33,7 @@ TESTS = common copy ffs inlcall inline noinline strlen svc strcmp
 EXTRAPRGS =
 CFLAGS-test-noinline.c = -fno-builtin
 CFLAGS-test-strlen.c = -fno-builtin
+CFLAGS-test-strcmp.c = -fno-builtin
 CFLAGS-test-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 # If you don't optimize you cannot test the inline versions.
