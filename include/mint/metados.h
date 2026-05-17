@@ -93,8 +93,8 @@ __extension__	\
 	(long)trap_14_wwllw((short)0x33,(short)drive,(long)buffer,(long)first_block,(short)nb_blocks)
 #define Metawrite(drive,buffer,first_block,nb_blocks)	\
 	(long)trap_14_wwllw((short)0x34,(short)drive,(long)buffer,(long)first_block,(short)nb_blocks)
-#define Metaseek(drive,dummy,offset)	\
-	(long)trap_14_wwll((short)0x35,(short)(drive),(long)(dummy),(long)(offset))
+#define Metaseek(drive,offset)	\
+	(long)trap_14_wwl((short)0x35,(short)(drive),(long)(offset))
 #define Metastatus(drive,buffer)	\
 	(long)trap_14_wwl((short)0x36,(short)(drive),(long)(buffer))
 #define Metaioctl(drive,magic,opcode,buffer)	\
@@ -112,6 +112,11 @@ __extension__	\
 	(long)trap_14_wwl((short)(0x3f),(short)(drive),(long)(metadiscinfo_t_p))
 
 #define METADOS_IOCTL_MAGIC	0x4643544CL /* 'FCTL' */
+
+/* Leadout track marker returned by Metagettoc() in metatocentry_t.track
+   for the last TOC entry. Differs from the Fcntl-level CDROM_LEADOUT
+   (0xAA) in <mint/cdromio.h>; this value follows the CDAR-504/raw-subchannel
+   convention used by the MetaDOS BOS interface. */
 
 #define CDROM_LEADOUT_CDAR	0xa2
 
@@ -160,9 +165,9 @@ typedef struct {
 
 typedef struct {	/* Discinfo for MetaDiscInfo() function */
 	unsigned char disctype, first, last, current;
-	metadisc_msf_t	relative;
-	metadisc_msf_t	absolute;
-	metadisc_msf_t	end;
+	metadisc_msf_t	relative;	/* MSF fields are in BCD format */
+	metadisc_msf_t	absolute;	/* MSF fields are in BCD format */
+	metadisc_msf_t	end;		/* MSF fields are in BCD format */
 	unsigned char index, reserved1[3];
 	unsigned long reserved2[123];
 } metadiscinfo_t __attribute__((packed));

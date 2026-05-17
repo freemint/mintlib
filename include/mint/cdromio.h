@@ -201,7 +201,10 @@ struct cdrom_read
 #define CDROM_DATA_TRACK        0x04
 #define CDROM_FOUR_CHANNEL      0x08
 
-/* The leadout track is always 0xAA, regardless of # of tracks on disc */
+/* The leadout track is always 0xAA, regardless of # of tracks on disc.
+   Used as the cdte_track value with CDROMREADTOCENTRY (Fcntl/Dcntl on a
+   MiNT-mounted CD filesystem). The XBIOS BOS-level Metagettoc() uses a
+   different value: see CDROM_LEADOUT_CDAR in <mint/metados.h>. */
 
 #define CDROM_LEADOUT   0xAA
 
