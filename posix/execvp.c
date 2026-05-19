@@ -17,6 +17,7 @@
 #include <support.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "lib.h"
 
@@ -94,8 +95,20 @@ execvp (const char *file, char *const *argv)
 		
 		ext = exts;
 		while (*ext) {
+			struct stat st;
+
 			strcpy (extpos, *ext);
-			
+
+			/* Fast-fail: avoid the expensive kernel exec round-trip
+			   for PATH entries where the file plainly isn't there.
+			   Only short-circuit on ENOENT/ENOTDIR so EACCES and
+			   other diagnostics still flow through __execve below.  */
+			if (__quickstat (name, &st, 0) < 0
+			    && (errno == ENOENT || errno == ENOTDIR)) {
+				ext++;
+				continue;
+			}
+
 			/* Try to execute this name.  If it works, execve
 			   will not return.  */
 			__execve (name, argv, NULL);

@@ -47,6 +47,7 @@
 #include <support.h>
 
 #include <sys/param.h>
+#include <sys/stat.h>
 #include <mint/mintbind.h>
 
 #include "lib.h"
@@ -206,6 +207,18 @@ _spawnve(int mode, const char *_path, char *const *argv, char *const *envp)
 	    path = pathbuf;
 	    (void)_unx2dos (_path, path, sizeof (pathbuf)); /* convert filename, if necessary */
 	  }
+
+	/* Fast-fail: skip the expensive environment/argv construction below
+	 * when the file plainly isn't there.  Only short-circuit on ENOENT
+	 * so other diagnostics (EACCES, ENOEXEC for scripts, ...) still
+	 * flow through Pexec.
+	 */
+	{
+		struct stat st;
+		if (__quickstat (path, &st, 0) < 0 && errno == ENOENT)
+			return -1;	/* errno already ENOENT */
+	}
+
 	if (!envp)
 		envp = environ;
 
