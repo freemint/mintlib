@@ -228,6 +228,8 @@ uninstall:
 		rm -f $(DESTDIR)$(bootsbindir)/$$file; \
 	done
 	
+install-lib:
+	@:
 uninstall-include:
 uninstall-lib:
 

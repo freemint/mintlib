@@ -28,7 +28,7 @@ uninstall: uninstall-recursive uninstall-include uninstall-lib uninstall-man
 
 baselibs = $(basename $(LIBS))
 
-install-lib:
+install-lib: all-here
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(instdir)
 	@list='$(LIBS) $(CRT0OBJS)'; for p in $$list; do \
 	  if test -f $$p; then \
