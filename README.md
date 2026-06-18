@@ -1,8 +1,8 @@
 [![Build Status](https://github.com/freemint/mintlib/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/freemint/mintlib/actions) 
 
-* Latest snapshot: [Download (mint)](https://tho-otto.de/snapshots/mintlib/mintlib-mint-latest.tar.bz2)
-* Latest snapshot: [Download (mintelf)](https://tho-otto.de/snapshots/mintlib/mintlib-mintelf-latest.tar.bz2)
-* [Archive](https://tho-otto.de/snapshots/mintlib/)
+* Latest snapshot: [Download (mint)](https://atari.joska.no/snapshots/mintlib/mintlib-mint-latest.tar.bz2)
+* Latest snapshot: [Download (mintelf)](https://atari.joska.no/snapshots/mintlib/mintlib-mintelf-latest.tar.bz2)
+* [Archive](https://atari.joska.no/snapshots/mintlib/)
 
 This is the MiNTLib.  The MiNTLib is the standard libc for FreeMiNT.
 It will also work to some extent on non-MiNT systems, it tries its 
