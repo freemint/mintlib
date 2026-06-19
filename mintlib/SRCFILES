@@ -16,7 +16,6 @@ SRCFILES = \
 	assert-perr.c \
 	assert.c \
 	buffindf.c \
-	calloc.c \
 	checkcpu.S \
 	console.c \
 	crtinit.c \
@@ -67,14 +66,12 @@ SRCFILES = \
 	malloc.c \
 	mcount.c \
 	modf.S \
-	posix_memalign.c \
 	profil-freq.c \
 	profil-posix.c \
 	program-name.c \
 	pselect.c \
 	putenv.c \
 	quickstat.c \
-	realloc.c \
 	regexp.c \
 	regsup.c \
 	rtent.c \
@@ -110,7 +107,6 @@ SRCFILES = \
 	uidgid.c \
 	unixtime.c \
 	unx2dos.c \
-	valloc.c \
 	wctrans.c \
 	wctype.c \
 	wcwidth.c \
