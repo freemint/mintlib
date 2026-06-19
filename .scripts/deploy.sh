@@ -11,7 +11,8 @@ fi
 
 toolsuffix=${CROSS_TOOL##*-}
 
-ARCHIVE_NAME="${PROJECT_NAME}-${PROJECT_VERSION}-${SHORT_ID}"
+ARCHIVE_NAME="${PROJECT_NAME}-${PROJECT_VERSION}-${LONG_ID}"
+BIN_NAME="${PROJECT_NAME}-bin-${PROJECT_VERSION}-${LONG_ID}"
 ARCHIVE_PATH="${DEPLOY_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}"
 
 mkdir -p "${DEPLOY_DIR}"
@@ -65,13 +66,12 @@ link_file() {
 }
 
 upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}"
-for f in -000 -020 -v4e; do
-	upload_file "${DEPLOY_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${ARCHIVE_NAME}${f}.${DEPLOY_ARCHIVE}"
+for f in -000 -02060 -col; do
+	upload_file "${DEPLOY_DIR}/${BIN_NAME}${f}.${DEPLOY_ARCHIVE}" "${UPLOAD_DIR}/${PROJECT_DIR}/${BIN_NAME}${f}.${DEPLOY_ARCHIVE}"
+	link_file "${BIN_NAME}${f}.${DEPLOY_ARCHIVE}" "${PROJECT_DIR}-bin-latest${f}.${DEPLOY_ARCHIVE}"
 done
 if test -z "${CPU_TARGET}"
 then
 	link_file "${ARCHIVE_NAME}-${toolsuffix}.${DEPLOY_ARCHIVE}" "${PROJECT_DIR}-${toolsuffix}-latest.${DEPLOY_ARCHIVE}"
 fi
 
-echo ${PROJECT_NAME}-${PROJECT_VERSION}-${SHORT_ID} > .latest_version
-upload_file .latest_version "${UPLOAD_DIR}/${PROJECT_DIR}/.latest_version"

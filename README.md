@@ -2,6 +2,9 @@
 
 * Latest snapshot: [Download (mint)](https://atari.joska.no/snapshots/mintlib/mintlib-mint-latest.tar.bz2)
 * Latest snapshot: [Download (mintelf)](https://atari.joska.no/snapshots/mintlib/mintlib-mintelf-latest.tar.bz2)
+* Latest timezone tools: [Download (000)](https://atari.joska.no/snapshots/mintlib/mintlib-bin-latest-000.tar.bz2)
+* Latest timezone tools: [Download (02060)](https://atari.joska.no/snapshots/mintlib/mintlib-bin-latest-02060.tar.bz2)
+* Latest timezone tools: [Download (col)](https://atari.joska.no/snapshots/mintlib/mintlib-bin-latest-col.tar.bz2)
 * [Archive](https://atari.joska.no/snapshots/mintlib/)
 
 This is the MiNTLib.  The MiNTLib is the standard libc for FreeMiNT.
