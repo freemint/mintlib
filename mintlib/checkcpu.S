@@ -13,6 +13,9 @@
 | If it is not compatible, it displays an error message then exits with the
 | error code -1. In that case, this function never returns.
 |
+| On 680x0 it also stores the _CPU cookie value in __mcpu (0 if missing),
+| so the library can use faster code on 68020+ even in 68000 builds.
+|
 | WARNING: This function is called from the startup code before knowing the
 | actual CPU type. So it must be compatible with any processor (including
 | 680x0 and ColdFire models). So it must be written carefully by using only
@@ -23,10 +26,11 @@
 #include "libc-symbols.h"
 
 	.extern	C_SYMBOL_NAME(Getcookie)		| int Getcookie(long cookie, long *val);
+	.extern	C_SYMBOL_NAME(__mcpu)		| long __mcpu;
 
 	.globl	C_SYMBOL_NAME(_checkcpu)
 C_SYMBOL_NAME(_checkcpu):
-#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
+#ifndef __mcoldfire__
 	subql	#4,%sp			| Local variable for cookie value
 
 #ifdef __FASTCALL__
@@ -42,6 +46,13 @@ C_SYMBOL_NAME(_checkcpu):
 
 	movel	%sp@+,%d1			| Cookie value
 
+	tstl	%d0
+	bnes	.nocpu			| _CPU cookie not found, keep 0
+	movel	%d1,C_SYMBOL_NAME(__mcpu)
+.nocpu:
+#endif
+
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
 	tstl	%d0
 	bnes	.bad020			| _CPU cookie not found
 

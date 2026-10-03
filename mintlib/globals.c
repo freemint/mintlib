@@ -30,6 +30,10 @@ int __libc_unix_names = 0;
 
 long __has_no_ssystem;
 
+/* Value of the _CPU cookie (0 if missing), set by _checkcpu() at startup.
+   Code running before that sees 0 and must work on any 680x0.  */
+long __mcpu;
+
 BASEPAGE *_base;
 char **environ;
 

@@ -13,6 +13,9 @@
 	.globl C_SYMBOL_NAME(bcopy)
 	.globl C_SYMBOL_NAME(memcpy)
 	.globl C_SYMBOL_NAME(memmove)
+#if !defined(__mcoldfire__) && !(defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__))
+	.extern C_SYMBOL_NAME(__mcpu)	| long __mcpu, _CPU cookie value or 0
+#endif
 
 #ifndef __FASTCALL__
 
@@ -70,6 +73,13 @@ common2:
 	| overlay ?
 	cmp.l	%a1,%a0
 	jgt	top_down
+
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
+	jra	long_copy	| 68020+ can access longs at any address
+#elif !defined(__mcoldfire__)
+	cmp.l	#20,C_SYMBOL_NAME(__mcpu)	| __mcpu is 0 until _checkcpu() has run
+	jcc	long_copy	| 68020+ can access longs at any address
+#endif
 
 #ifdef __mcoldfire__
 	move.l	%a1,%d1		| test for alignment
@@ -184,6 +194,38 @@ exit:
 	move.l 	%a0,%d0		| return dest (for memcpy only)
 	rts
 
+#ifndef __mcoldfire__
+| 68020+: align dest to 4 bytes and copy longs, src may stay misaligned
+long_copy:
+	cmp.l	#4,%d0
+	jcs	both_even	| too short to align, copy as it is
+	move.l	%a0,%d1
+	neg.l	%d1
+	and.l	#3,%d1		| d1 = bytes up to the next long of dest
+	sub.l	%d1,%d0
+	lsr.l	#1,%d1
+	jcc	1f
+	move.b	(%a1)+,(%a0)+
+1:	lsr.l	#1,%d1
+	jcc	both_even
+	move.w	(%a1)+,(%a0)+
+	jra	both_even
+
+long_copy_d:
+	cmp.l	#4,%d0
+	jcs	both_even_d	| too short to align, copy as it is
+	move.l	%a0,%d1
+	and.l	#3,%d1		| d1 = bytes above the last long of dest
+	sub.l	%d1,%d0
+	lsr.l	#1,%d1
+	jcc	1f
+	move.b	-(%a1),-(%a0)
+1:	lsr.l	#1,%d1
+	jcc	both_even_d
+	move.w	-(%a1),-(%a0)
+	jra	both_even_d
+#endif
+
 slow_copy:			| byte by bytes copy
 #ifdef __mcoldfire__
 	move.l	%d0,%d1
@@ -218,6 +260,13 @@ scopy:
 top_down:
 	add.l	%d0,%a1		| a1 byte after end of src
 	add.l	%d0,%a0		| a0 byte after end of dest
+
+#if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__) || defined(__mc68060__)
+	jra	long_copy_d	| 68020+ can access longs at any address
+#elif !defined(__mcoldfire__)
+	cmp.l	#20,C_SYMBOL_NAME(__mcpu)	| __mcpu is 0 until _checkcpu() has run
+	jcc	long_copy_d	| 68020+ can access longs at any address
+#endif
 
 #ifdef __mcoldfire__
 	move.l	%a1,%d1		| exact the same as above, only with predec

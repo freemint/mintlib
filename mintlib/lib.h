@@ -56,6 +56,7 @@ void	_monstartup	(void *lowpc, void *highpc);
 
 extern int __mint;
 extern long __has_no_ssystem;
+extern long __mcpu;
 extern int __libc_enable_secure;
 extern int __libc_unix_names;
 
