@@ -52,10 +52,9 @@ static void __CDECL startup(BASEPAGE *b)
 	func = (int (*)(long))b->p_dbase;
 	arg = b->p_dlen;
 
-	/* If this is a thread, it doesn't need
-	 * own copy of the environment, right?
+	/* use the parent's environment; tfork() frees the copy
+	 * made by Pexec(PE_CBASEPAGE)
 	 */
-	Mfree(b->p_env);
 	b->p_env = parent->p_env;
 
 	/* copy from parents basepage for debuggers... */
@@ -75,6 +74,7 @@ long
 tfork(int (*func)(long), long arg)
 {
 	BASEPAGE *b;
+	char *env;
 	long pid;
 	long savpending, savmask;
 	sighandler_t savhandler[NSIG];
@@ -85,6 +85,8 @@ tfork(int (*func)(long), long arg)
 	b = (BASEPAGE *)Pexec(PE_CBASEPAGE, 0L, "", 0L);
 	if ((long)b <= 0)
 		return (long)b;
+	/* startup() overwrites b->p_env, so remember the copy */
+	env = b->p_env;
 	(void)Mshrink(b, stacksize + sizeof(*b));
 	b->p_tbase = (char *)startup;
 	b->p_dbase = (char *)func;
@@ -123,16 +125,14 @@ tfork(int (*func)(long), long arg)
 			raise(SIGCHLD);
 			__waittime = _clock() - now;
 			_childtime += __waittime;
-			/* child already terminated, but memory of basepage & env is still owned by us */
-			(void)Mfree(b->p_env);	/* free the memory */
-			(void)Mfree(b);
 		}
 	}
-	if (pid < 0)
-	{
-		(void)Mfree(b->p_env);	/* free the memory */
-		(void)Mfree(b);
-	}
-	/* memory of basepage & env is now owned by child */
+	/* Under MiNT, Pexec(PE_ASYNC_GO) attaches the environment copy
+	 * and the basepage to the child as well, so Mfree() only drops
+	 * our references. Otherwise the child has already terminated or
+	 * never ran.
+	 */
+	(void)Mfree(env);
+	(void)Mfree(b);
 	return pid;
 }
