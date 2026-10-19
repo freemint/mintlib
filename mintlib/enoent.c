@@ -44,7 +44,10 @@ _enoent (const char *path)
 			{
 				tmp = malloc(s - path + 1);
 				if (!tmp)
+				{
+					(void) Psigsetmask (oldmask);
 					return 0;
+				}
 
 				strncpy(tmp, path, s - path);
 			}
