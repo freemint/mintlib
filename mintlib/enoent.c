@@ -20,8 +20,13 @@ _enoent (const char *path)
 	long oldmask;
 	int dir_seen = 0;
 	char *tmp = NULL;
+	struct stat st;
 
 	if (!path)
+		return 0;
+
+	if (__sys_stat (path, &st, 0, 0) == 0
+	    && (st.st_mode & S_IFMT) != S_IFDIR)
 		return 0;
 
 	for (s = path; *s; s++)
@@ -31,7 +36,6 @@ _enoent (const char *path)
 
 	for ( ; s != path; s--) {
 		if (*s == '\\' || *s == '/') {
-			struct stat st;
 			long r;
 
 			dir_seen = 1;
