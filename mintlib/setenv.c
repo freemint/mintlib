@@ -49,9 +49,11 @@ extern int errno;
 __typeof__(setenv) __setenv;
 __typeof__(unsetenv) __unsetenv;
 __typeof__(clearenv) __clearenv;
+__typeof__(putenv) __putenv;
 # define setenv __setenv
 # define unsetenv __unsetenv
 # define clearenv __clearenv
+# define putenv __putenv
 #endif
 
 #undef USE_TSEARCH
@@ -290,13 +292,40 @@ int clearenv (void)
 
   return 0;
 }
+
+int
+putenv (const char *string)
+{
+  const char *const name_end = strchr (string, '=');
+
+  if (name_end != NULL)
+    {
+      size_t namelen = name_end - string;
+      char *name = malloc (namelen + 1);
+      int result;
+
+      if (name == NULL)
+	return -1;
+      memcpy (name, string, namelen);
+      name[namelen] = '\0';
+      result = __add_to_environ (name, NULL, string, 1);
+      free (name);
+      return result;
+    }
+
+  /* A string without '=' removes the variable, as in glibc.  */
+  unsetenv (string);
+  return 0;
+}
 #ifdef _LIBC
 # ifdef HAVE_WEAK_SYMBOLS
 #  undef setenv
 #  undef unsetenv
 #  undef clearenv
+#  undef putenv
 weak_alias (__setenv, setenv)
 weak_alias (__unsetenv, unsetenv)
 weak_alias (__clearenv, clearenv)
+weak_alias (__putenv, putenv)
 # endif
 #endif

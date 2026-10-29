@@ -72,7 +72,6 @@ SRCFILES = \
 	profil-posix.c \
 	program-name.c \
 	pselect.c \
-	putenv.c \
 	quickstat.c \
 	realloc.c \
 	regexp.c \
