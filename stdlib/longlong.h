@@ -534,6 +534,9 @@ extern USItype __udiv_qrnnd ();
 	     "g" ((USItype)(bl)))
 #if (defined (__mc68020__) || defined(__mc68030__) || defined(__mc68040__) \
   || defined(__mc68060__) || defined (__NeXT__))
+/* The 68060 has no hardware 32x32->64 mulu.l and 64/32 divu.l/divs.l
+   (they trap into the support package), so use the generic code there.  */
+#if !defined(__mc68060__)
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("mulu%.l %3,%1:%0"						\
 	   : "=d" ((USItype)(w0)),					\
@@ -556,12 +559,15 @@ extern USItype __udiv_qrnnd ();
 	   : "0" ((USItype)(n0)),					\
 	     "1" ((USItype)(n1)),					\
 	     "dmi" ((USItype)(d)))
+#endif /* !__mc68060__ */
 #define count_leading_zeros(count, x) \
   __asm__ ("bfffo %1{%b2:%b2},%0"					\
 	   : "=d" ((USItype)(count))					\
 	   : "od" ((USItype)(x)), "n" (0))
 #define COUNT_LEADING_ZEROS_0 32
-#else /* not mc68020 */
+#endif /* mc68020 */
+#if !(defined (__mc68020__) || defined(__mc68030__) || defined(__mc68040__) \
+  || defined (__NeXT__)) || defined(__mc68060__)
 #define umul_ppmm(xh, xl, a, b) \
   do { USItype __umul_tmp1, __umul_tmp2;				\
 	__asm__ ("| Inlined umul_ppmm\n"	\
@@ -592,7 +598,7 @@ extern USItype __udiv_qrnnd ();
   } while (0)
 #define UMUL_TIME 100
 #define UDIV_TIME 400
-#endif /* not mc68020 */
+#endif /* no 64-bit mul/div instructions */
 #endif /* mc68000 */
 
 #if defined (__m88000__) && W_TYPE_SIZE == 32
