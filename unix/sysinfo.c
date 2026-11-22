@@ -473,7 +473,7 @@ static const char* const platforms[] = {
   "hades",
   "aranym",
   "firebee",
-  "cfevb"
+  "cfevb",
   "atariclone",
 };
 
@@ -521,12 +521,6 @@ si_platform (char* buf, long bufsize)
       /* lo = (_mch & 0xffff); */
 
       switch (hi) {
-        case -1:
-          if(coldfire) {
-            platform = platforms[_PLATFORM_CFEVB];
-            hw_provider = hw_providers[_HW_PROVIDER_FREESCALE];
-          }
-          break;
         case 0:
           platform = platforms[_PLATFORM_ST];
           hw_provider = hw_providers[_HW_PROVIDER_ATARI];
@@ -556,6 +550,13 @@ si_platform (char* buf, long bufsize)
           platform = platforms[_PLATFORM_ARANYM];
           hw_provider = hw_providers[_HW_PROVIDER_ARANYM];
           break;
+        case -1:
+          if (coldfire) {
+            platform = platforms[_PLATFORM_CFEVB];
+            hw_provider = hw_providers[_HW_PROVIDER_FREESCALE];
+            break;
+          }
+          /* Fall through.  */
         default:
           platform = platforms[_PLATFORM_CLONE];
           hw_provider = hw_providers[_HW_PROVIDER_UNKNOWN];
