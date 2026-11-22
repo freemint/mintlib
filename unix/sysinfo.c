@@ -692,7 +692,6 @@ mint_get_clock_mode (char* buf, long bufsize)
   lclock_mode = Ssystem (100, -1, 0);
   if (lclock_mode == -ENOSYS) {
     __set_errno (ENOSYS);
-    no_build_time = 1;
     return -1;
   } else if (lclock_mode < 0) {
     __set_errno (EINVAL);
@@ -705,7 +704,7 @@ mint_get_clock_mode (char* buf, long bufsize)
   }
 
   fast_strncpy (buf, clock_mode, bufsize);
-  return strlen (clock_mode);
+  return strlen (clock_mode) + 1;
 }
 
 static int
