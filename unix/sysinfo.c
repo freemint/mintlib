@@ -366,6 +366,8 @@ si_architecture (char* buf, long bufsize)
     int cpu = _CPU_00;
     MCF_COOKIE *mcf_cookie;
 
+    isalist = isalists[cpu];
+
     /* m68k */
     if (!Getcookie (C__CPU, &value)) {
       if (value >= 60)
@@ -378,11 +380,10 @@ si_architecture (char* buf, long bufsize)
         cpu = _CPU_20;
       else if (value >= 10)
         cpu = _CPU_10;
-      architecture_len = sizeof ("mc68xxx");
       isalist = isalists[cpu];
     }
     /* ColdFire */
-    else if (!Getcookie (C__MCF, &value)) {
+    else if (!Getcookie (C__MCF, &value) && value != 0) {
       mcf_cookie = (MCF_COOKIE *)value;
 
       if (mcf_cookie->magic[0] == 'M' &&
@@ -420,12 +421,15 @@ si_architecture (char* buf, long bufsize)
           case MCF_ISA_A_PLUS:
             isalist = isalists[_ISA_A_PLUS];
             break;
+          default:
+            isalist = "unknown";
+            break;
          }
-        architecture_len = sizeof ("cfvx");
       }
     }
 
     architecture = architectures[cpu];
+    architecture_len = strlen (architecture) + 1;
     isalist_len = strlen (isalist) + 1;
   }
 
